@@ -1,14 +1,14 @@
 version: '3.8'
 
 services:
-  app1:
+  front1:
     build: .
     ports:
       - "8081:8080"
     networks:
       - app-network
 
-  app2:
+  front2:
     build: .
     ports:
       - "8082:8080"
@@ -24,8 +24,8 @@ services:
     networks:
       - app-network
     depends_on:
-      - app1
-      - app2
+      - front1
+      - front2
 
 networks:
   app-network:
