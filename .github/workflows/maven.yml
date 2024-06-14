@@ -52,7 +52,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
           source: "."
-          target: "/home/ubuntu/test"
+          target: "/home/ubuntu/front"
 
       - name: Stop existing containers on port 80 and 8080
         uses: appleboy/ssh-action@master
@@ -79,7 +79,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            cd /home/ubuntu/test
+            cd /home/ubuntu/front
             docker-compose pull
             docker-compose down || true
             docker-compose up -d
