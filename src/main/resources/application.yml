@@ -1,12 +1,25 @@
-logging:
-  level:
-    root: debug
+
 
 spring:
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+    properties:
+      hibernate:
+      format_sql: true
+      use_sql_comments: true
+      highlight_sql: true
+      auto_quote_keyword: true
+
   profiles:
     active: dev
+
   lifecycle:
     timeout-per-shutdown-phase: 30s
+
   application:
     name: 3runner-bookstore
 
@@ -31,3 +44,8 @@ management:
 
 server:
   shutdown: graceful
+
+logging:
+  level:
+    org.hibernate.orm.jdbc.bind: trace
+    org.springframework.transaction.interceptor: trace
