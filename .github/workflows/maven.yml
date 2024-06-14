@@ -32,7 +32,7 @@ jobs:
         run: mvn -B package --file pom.xml
 
       - name: Run SonarQube
-        run: mvn clean verify sonar:sonar -Dsonar.projectKey=${{secrets.SONAR_KEY}} -Dsonar.projectName=${{secrets.SONAR_NAME}} -Dsonar.host.url=${{secrets.SONAR_HOST}} -Dsonar.token=${{secrets.SONAR_TOKEN}}
+        run: mvn clean verify sonar:sonar -Dsonar.projectKey=${{secrets.SONAR_KEY}} -Dsonar.projectName=${{secrets.SONAR_HOST}} -Dsonar.host.url=${{secrets.SONAR_HOST}} -Dsonar.token=${{secrets.SONAR_TOKEN}}
 
       - name: Log in to Docker Hub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | sudo docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
@@ -52,7 +52,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
           source: "."
-          target: "/home/ubuntu/front"
+          target: "/home/ubuntu/test"
 
       - name: Stop existing containers on port 80 and 8080
         uses: appleboy/ssh-action@master
@@ -79,7 +79,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            cd /home/ubuntu/front
-            sudo docker-compose pull
-            sudo docker-compose down || true
-            sudo docker-compose up -d
+            cd /home/ubuntu/test
+            docker-compose pull
+            docker-compose down || true
+            docker-compose up -d

@@ -3,4 +3,4 @@
 
 nginx &
 
-java -jar /front/front.jar
+java -jar /app/hello.jar
