@@ -63,23 +63,6 @@ jobs:
           source: "."
           target: "/home/nhnacademy/bookstore"
 
-      - name: Stop existing containers on port 80 and 8080
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SSH_IP }}
-          username: ${{ secrets.SSH_ID }}
-          key: ${{ secrets.SSH_KEY }}
-          port: ${{ secrets.SSH_PORT }}
-          script: |
-            ports_to_check=("8080")
-            for port in "${ports_to_check[@]}"; do
-              existing_container=$(sudo lsof -i:$port -t)
-              if [ ! -z "$existing_container" ]; then
-                sudo docker stop $existing_container
-                sudo docker rm $existing_container
-              fi
-            done
-
       - name: Deploy to server via SSH
         uses: appleboy/ssh-action@master
         with:
