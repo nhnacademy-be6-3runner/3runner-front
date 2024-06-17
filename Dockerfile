@@ -5,7 +5,7 @@ WORKDIR /front
 COPY target/front.jar /front/front.jar
 COPY nginx.conf /etc/nginx/nginx.conf
 
-EXPOSE 80, 8080
+EXPOSE 8080 80
 
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
