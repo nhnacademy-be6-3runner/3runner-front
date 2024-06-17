@@ -71,7 +71,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            ports_to_check=("80" "8080")
+            ports_to_check=("8080")
             for port in "${ports_to_check[@]}"; do
               existing_container=$(sudo lsof -i:$port -t)
               if [ ! -z "$existing_container" ]; then
@@ -88,7 +88,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            cd /home/ubuntu/front
+            cd /home/nhnacademy
             sudo docker-compose pull
             sudo docker-compose down || true
             sudo docker-compose up -d
