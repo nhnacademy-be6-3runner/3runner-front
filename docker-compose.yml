@@ -21,7 +21,6 @@ services:
       - "80:80"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
-      - /dev/null:/etc/nginx/conf.d/default.conf
     networks:
       - front-network
     depends_on:
