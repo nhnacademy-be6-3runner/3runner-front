@@ -2,7 +2,7 @@ FROM eclipse-temurin:21-jre
 
 WORKDIR /app
 
-COPY target/bookstore.jar /bookstore/bookstore.jar
+COPY target/bookstore-0.0.1-SNAPSHOT.jar /bookstore/bookstore.jar
 
 EXPOSE 8080
 
