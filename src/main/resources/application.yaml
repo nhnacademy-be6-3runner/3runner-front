@@ -1,6 +1,0 @@
-server:
-  port: 8079
-spring:
-  application:
-    name: 3runner-front
-
