@@ -3,6 +3,7 @@ FROM eclipse-temurin:21-jre
 WORKDIR /front
 
 COPY target/front.jar /front/front.jar
+COPY nginx.conf /etc/nginx/nginx.conf
 
 EXPOSE 80, 8080
 
