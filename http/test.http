@@ -1,0 +1,6 @@
+POST http://localhost:8081/tag
+Content-Type:application/json
+
+{
+  "tagName" : "Test Tag"
+}
