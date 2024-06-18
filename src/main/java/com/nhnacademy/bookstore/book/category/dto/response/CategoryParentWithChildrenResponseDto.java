@@ -1,0 +1,21 @@
+package com.nhnacademy.bookstore.book.category.dto.response;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
+
+/**
+ * 부모 카테고리 조회
+ */
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Builder
+public class CategoryParentWithChildrenResponseDto {
+    private long id;
+    private String name;
+    private List<CategoryChildrenResponseDto> childrenList;
+}
