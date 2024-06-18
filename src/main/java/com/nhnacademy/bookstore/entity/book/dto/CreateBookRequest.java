@@ -8,6 +8,22 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.ZonedDateTime;
 
+/**
+ * book request form validate
+ * @author 김병우
+ * @param title
+ * @param description
+ * @param publishedDate
+ * @param price
+ * @param quantity
+ * @param sellingPrice
+ * @param viewCount
+ * @param packing
+ * @param author
+ * @param isbn
+ * @param publisher
+ * @param createdAt
+ */
 public record CreateBookRequest(
         @NotBlank(message = "title is mandatory") String title,
         @NotBlank(message = "description is mandatory")  String description,
