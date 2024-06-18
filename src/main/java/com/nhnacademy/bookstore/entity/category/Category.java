@@ -23,7 +23,7 @@ public class Category {
 
     @NotNull
     @Size(min = 1, max = 30)
-    @UniqueElements
+    @Column(unique = true)
     private String name;
 
     @ManyToOne

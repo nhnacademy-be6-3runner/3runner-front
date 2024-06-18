@@ -9,5 +9,5 @@ import lombok.*;
 public class UpdateCategoryRequestDto {
     private String name;
     @Setter
-    private long parentId;
+    private Long parentId;
 }

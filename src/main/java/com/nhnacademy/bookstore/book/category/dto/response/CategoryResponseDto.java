@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
- * 카테고리 조회
+ * 카테고리 + 부모 카테고리 조회
  */
 @Getter
 @AllArgsConstructor

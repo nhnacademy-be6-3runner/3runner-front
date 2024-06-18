@@ -1,4 +1,4 @@
 package com.nhnacademy.bookstore.book.category.exception;
 
-public class DuplicateCategoryNameException {
+public class DuplicateCategoryNameException extends RuntimeException{
 }

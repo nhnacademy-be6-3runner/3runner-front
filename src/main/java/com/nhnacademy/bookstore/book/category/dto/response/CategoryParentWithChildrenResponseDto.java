@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 /**
- * 부모 카테고리 조회
+ * 카테고리 + 자식 카테고리 조회
  */
 @AllArgsConstructor
 @NoArgsConstructor

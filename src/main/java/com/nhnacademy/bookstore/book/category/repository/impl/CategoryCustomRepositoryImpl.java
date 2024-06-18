@@ -13,6 +13,11 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ *
+ * @author 김은비
+ *
+ */
 @Slf4j
 @Repository
 public class CategoryCustomRepositoryImpl implements CategoryCustomRepository {
@@ -39,6 +44,7 @@ public class CategoryCustomRepositoryImpl implements CategoryCustomRepository {
 
     /**
      * 상위 카테고리 조회
+     * @return
      */
     @Override
     public List<CategoryResponseDto> findParentCategories() {
@@ -70,6 +76,7 @@ public class CategoryCustomRepositoryImpl implements CategoryCustomRepository {
     /**
      * 상위 카테고리 아이디로 하위 카테고리 조회
      * @param id 상위 카테고리 아이디
+     * @return 하위 카테고리 list
      */
     @Override
     public List<CategoryChildrenResponseDto> findChildrenCategoriesByParentId(Long id) {
