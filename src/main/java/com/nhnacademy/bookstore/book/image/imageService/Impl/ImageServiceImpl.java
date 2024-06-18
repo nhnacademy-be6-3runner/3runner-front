@@ -8,6 +8,7 @@ import com.amazonaws.services.s3.model.S3Object;
 import com.nhnacademy.bookstore.book.image.exception.FailUploadImageException;
 import com.nhnacademy.bookstore.book.image.exception.NotFindImageException;
 import com.nhnacademy.bookstore.book.image.imageService.ImageService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -23,10 +24,10 @@ import java.util.Objects;
  * bucketName 은 nhn object storage => 컨테이너 이름
  */
 @Service
+@RequiredArgsConstructor
 public class ImageServiceImpl implements ImageService {
 
-    @Autowired
-    private AmazonS3 amazonS3;
+    private final AmazonS3 amazonS3;
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucketName;
@@ -62,13 +63,8 @@ public class ImageServiceImpl implements ImageService {
      * @return 조회할 파일을 S3Object 형식으로 받아옴
      */
     @Override
-    public S3Object downloadImage(String fileName) {
-        S3Object s3Object = amazonS3.getObject(bucketName, fileName);
+    public S3Object downloadImage(String fileName) throws NotFindImageException {
+        return amazonS3.getObject(bucketName, fileName);
 
-        if(Objects.isNull(s3Object)){
-            throw new NotFindImageException();
-        }
-
-        return s3Object;
     }
 }

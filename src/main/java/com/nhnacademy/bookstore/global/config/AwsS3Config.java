@@ -1,4 +1,4 @@
-package com.nhnacademy.bookstore.book.image.confing;
+package com.nhnacademy.bookstore.global.config;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
