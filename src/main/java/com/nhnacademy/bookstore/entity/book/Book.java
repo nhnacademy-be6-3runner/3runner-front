@@ -40,7 +40,7 @@ public class Book {
 
     @NotNull
     @Min(0)
-    private int account;
+    private int quantity;
 
     @NotNull
     @Min(0)
@@ -88,4 +88,20 @@ public class Book {
         this.createdAt = ZonedDateTime.now();
     }
 
+    public Book(String title, String description, ZonedDateTime publishedDate, int price, int quantity, int sellingPrice, int view_count, boolean packing, String author, String isbn, String publisher,  Set<BookCategory> bookCategorySet, Set<BookTag> bookTagSet, Set<BookImage> bookImageSet) {
+        this.title = title;
+        this.description = description;
+        this.publishedDate = publishedDate;
+        this.price = price;
+        this.quantity = quantity;
+        this.sellingPrice = sellingPrice;
+        this.view_count = view_count;
+        this.packing = packing;
+        this.author = author;
+        this.isbn = isbn;
+        this.publisher = publisher;
+        this.bookCategorySet = bookCategorySet;
+        this.bookTagSet = bookTagSet;
+        this.bookImageSet = bookImageSet;
+    }
 }
