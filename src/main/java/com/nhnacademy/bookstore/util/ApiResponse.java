@@ -1,4 +1,5 @@
 package com.nhnacademy.bookstore.util;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,6 +8,7 @@ import lombok.Setter;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Getter
 @Setter
+
 public class ApiResponse<T>{
     private Header header;
 
@@ -53,4 +55,5 @@ public class ApiResponse<T>{
                 new Header(true, errorCode, errorMessage)
         );
     }
+
 }
