@@ -37,6 +37,8 @@ class CategoryServiceTest {
     void setUp() {
     }
 
+    // TODO 상위/하위 생성, 수정 카테고리 테스트 수정
+
     @DisplayName("상위 카테고리 생성 테스트")
     @Test
     void createParentCategoryTest() {
@@ -137,5 +139,6 @@ class CategoryServiceTest {
                 .isInstanceOf(CategoryNotFoundException.class);
     }
 
+    // TODO 상위,하위, 전체 카테고리 테스트 추가
 }
 
