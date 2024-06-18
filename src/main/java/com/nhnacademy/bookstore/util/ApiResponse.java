@@ -8,12 +8,13 @@ import lombok.Setter;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Getter
 @Setter
-public class ApiResponse<T> {
+
+public class ApiResponse<T>{
     private Header header;
 
-    private Body body;
+    private Body<T> body;
 
-    public ApiResponse(Header header, Body body) {
+    public ApiResponse(Header header, Body<T> body) {
         this.header = header;
         this.body = body;
     }
