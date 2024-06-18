@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+// TODO record 형으로 수정
 public class CategoryChildrenResponseDto {
     private long id;
     private String name;

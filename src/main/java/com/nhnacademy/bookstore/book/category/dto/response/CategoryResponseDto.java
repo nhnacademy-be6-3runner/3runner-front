@@ -2,6 +2,7 @@ package com.nhnacademy.bookstore.book.category.dto.response;
 
 import com.nhnacademy.bookstore.entity.category.Category;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class CategoryResponseDto {
     private long id;
     private String name;

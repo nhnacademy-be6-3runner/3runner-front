@@ -6,6 +6,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+// TODO record 형으로 수정
 public class UpdateCategoryRequestDto {
     private String name;
     @Setter
