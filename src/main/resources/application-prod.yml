@@ -1,6 +1,5 @@
 server:
-  port: 8082
+  port:
 eureka:
   instance:
-    hostname: localhost
-    instance-id: bookstore8082
+    hostname:
