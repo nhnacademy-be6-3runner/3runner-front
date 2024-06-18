@@ -34,11 +34,10 @@ public class ImageServiceImpl implements ImageService {
     /**
      *  this -> object storage (bucket)
      * @param file     저장할 파일
-     * @param fileName 저장할 파일의 이름
-     * @return 저장 되어있는 url
+     * @param fileName 저장할 파일의 위치 + 저장할 파일의 이름
      */
     @Override
-    public String uploadImage(MultipartFile file, String fileName) {
+    public void uploadImage(MultipartFile file, String fileName) {
         try {
             // MultipartFile을 바이트 배열로 변환
             byte[] bytes = file.getBytes();
@@ -52,16 +51,14 @@ public class ImageServiceImpl implements ImageService {
             amazonS3.putObject(new PutObjectRequest(bucketName, fileName, byteArrayInputStream, metadata)
                     .withCannedAcl(CannedAccessControlList.PublicRead));
 
-
         } catch (IOException e) {
             throw new FailUploadImageException();
         }
-        return amazonS3.getUrl(bucketName, fileName).toString();
     }
 
     /**
      *  파일 이름으로 파일 조회
-     * @param fileName -> 조회할 파일 이름
+     * @param fileName -> 조회할 파일 위치 + 파일 이름
      * @return 조회할 파일을 S3Object 형식으로 받아옴
      */
     @Override
