@@ -1,6 +1,7 @@
 package com.nhnacademy.bookstore.book.book.service;
 
 import com.nhnacademy.bookstore.book.book.dto.request.CreateBookRequest;
+import com.nhnacademy.bookstore.book.book.dto.response.ReadBookResponse;
 import com.nhnacademy.bookstore.book.book.exception.BookDoesNotExistException;
 import com.nhnacademy.bookstore.book.book.repository.BookRepository;
 import com.nhnacademy.bookstore.book.book.service.impl.BookServiceImpl;
@@ -65,13 +66,28 @@ class BookServiceImplTest {
                 null,
                 null
         );
+        ReadBookResponse bookResponse = new ReadBookResponse(
+                1l,
+                "Test Title",
+                "Test Description",
+                ZonedDateTime.now(),
+                1000,
+                10,
+                900,
+                0,
+                true,
+                "Test Author",
+                "123456789",
+                "Test Publisher",
+                ZonedDateTime.now()
+        );
         book.setId(1L);
 
         when(bookRepository.findById(1L)).thenReturn(Optional.of(book));
 
-        Book foundBook = bookService.readBookById(1L);
+        ReadBookResponse foundBook = bookService.readBookById(1L);
 
-        assertEquals(book, foundBook);
+        assertEquals(book.getId(), foundBook.id());
         verify(bookRepository, times(1)).findById(1L);
     }
 
