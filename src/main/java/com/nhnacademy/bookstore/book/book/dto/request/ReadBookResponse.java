@@ -10,7 +10,7 @@ import java.time.ZonedDateTime;
 
 
 /**
- * book request form validate.
+ * book response form validate.
  *
  * @author 김병우
  * @param title

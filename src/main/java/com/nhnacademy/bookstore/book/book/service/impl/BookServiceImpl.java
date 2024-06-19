@@ -21,7 +21,7 @@ public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
 
     /**
-     * 책 등록 기능
+     * 책 등록 기능.
      *
      * @param createBookRequest createBookRequest form
      */
@@ -47,7 +47,7 @@ public class BookServiceImpl implements BookService {
     }
 
     /**
-     * 책 조회 기능
+     * 책 조회 기능.
      *
      * @param bookId book entity id
      */
