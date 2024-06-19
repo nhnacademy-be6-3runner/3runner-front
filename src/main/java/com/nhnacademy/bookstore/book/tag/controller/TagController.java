@@ -1,12 +1,18 @@
 package com.nhnacademy.bookstore.book.tag.controller;
 
+import com.nhnacademy.bookstore.book.bookTag.exception.ReadBookTagRequestFormException;
 import com.nhnacademy.bookstore.book.tag.dto.request.CreateTagRequest;
 import com.nhnacademy.bookstore.book.tag.dto.request.DeleteTagRequest;
 import com.nhnacademy.bookstore.book.tag.dto.request.UpdateTagRequest;
+import com.nhnacademy.bookstore.book.tag.exception.CreateTagRequestFormException;
+import com.nhnacademy.bookstore.book.tag.exception.DeleteTagRequestFormException;
+import com.nhnacademy.bookstore.book.tag.exception.UpdateTagRequestFormException;
 import com.nhnacademy.bookstore.book.tag.service.TagService;
-import com.nhnacademy.bookstore.entity.tag.Tag;
 import com.nhnacademy.bookstore.util.ApiResponse;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -28,10 +34,21 @@ public class TagController {
      * @return ApiResponse<Void> 성공시 success헤더만 보냄
      */
     @PostMapping
-    public ApiResponse<Void> addTag(@RequestBody CreateTagRequest createTagRequest) {
-        tagService.addTag(createTagRequest);
+    public ApiResponse<Void> createTag(@Valid CreateTagRequest createTagRequest,
+                                    BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            StringBuilder errorMessage = new StringBuilder();
+            bindingResult.getFieldErrors().forEach(error ->
+                    errorMessage.append(error.getField())
+                            .append(": ")
+                            .append(error.getDefaultMessage())
+                            .append("\n")
+            );
+            throw new CreateTagRequestFormException(errorMessage.toString());
+        }
+        tagService.createTag(createTagRequest);
 
-        return ApiResponse.success(null);
+        return new ApiResponse<>(new ApiResponse.Header(true, HttpStatus.CREATED.value(), "SUCCESS_CREATE"), new ApiResponse.Body<>(null));
     }
 
     /**
@@ -41,9 +58,21 @@ public class TagController {
      * @return ApiResponse<Void> 성공시 success헤더만 보냄
      */
     @DeleteMapping
-    public ApiResponse<Void> deleteTag(@RequestParam DeleteTagRequest deleteTagRequest) {
+    public ApiResponse<Void> deleteTag(@Valid DeleteTagRequest deleteTagRequest,
+                                       BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            StringBuilder errorMessage = new StringBuilder();
+            bindingResult.getFieldErrors().forEach(error ->
+                    errorMessage.append(error.getField())
+                            .append(": ")
+                            .append(error.getDefaultMessage())
+                            .append("\n")
+            );
+            throw new DeleteTagRequestFormException(errorMessage.toString());
+        }
         tagService.deleteTag(deleteTagRequest);
-        return ApiResponse.success(null);
+        return new ApiResponse<>(new ApiResponse.Header(true, HttpStatus.NO_CONTENT.value(), "SUCCESS_DELETE"), new ApiResponse.Body<>(null));
+
 
     }
 
@@ -54,7 +83,18 @@ public class TagController {
      * @return 성공시 success헤더만 보냄
      */
     @PutMapping
-    public ApiResponse<Void> updateTag(@RequestParam UpdateTagRequest updateTagRequest) {
+    public ApiResponse<Void> updateTag(@Valid UpdateTagRequest updateTagRequest,
+                                       BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            StringBuilder errorMessage = new StringBuilder();
+            bindingResult.getFieldErrors().forEach(error ->
+                    errorMessage.append(error.getField())
+                            .append(": ")
+                            .append(error.getDefaultMessage())
+                            .append("\n")
+            );
+            throw new UpdateTagRequestFormException(errorMessage.toString());
+        }
         tagService.updateTag(updateTagRequest);
         return ApiResponse.success(null);
     }

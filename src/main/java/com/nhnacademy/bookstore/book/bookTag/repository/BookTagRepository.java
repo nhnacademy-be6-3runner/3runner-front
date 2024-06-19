@@ -35,5 +35,5 @@ public interface BookTagRepository extends JpaRepository<BookTag, Long> {
      * @return Set<Tag> 해당 책에 달린 태그들
      */
     @Query("select bi.tag from BookTag bi where bi.book.id = :bookId")
-    Set<Tag> findAllTagIdByBookId(Long bookId);
+    Set<Tag> findAllTagIdByBookId(long bookId);
 }

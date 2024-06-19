@@ -3,6 +3,8 @@ package com.nhnacademy.bookstore.book.tag.service;
 import com.nhnacademy.bookstore.book.tag.dto.request.CreateTagRequest;
 import com.nhnacademy.bookstore.book.tag.dto.request.DeleteTagRequest;
 import com.nhnacademy.bookstore.book.tag.dto.request.UpdateTagRequest;
+import com.nhnacademy.bookstore.book.tag.exception.AlreadyHaveTagException;
+import com.nhnacademy.bookstore.book.tag.exception.NotExistsTagException;
 import com.nhnacademy.bookstore.book.tag.repository.TagRepository;
 import com.nhnacademy.bookstore.entity.tag.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +30,13 @@ public class TagServiceImpl implements TagService {
      *
      */
     @Override
-    public void addTag(CreateTagRequest tag) {
+    public void createTag(CreateTagRequest tag) {
         Tag tagEntity =new Tag();
+        if(tagRepository.findByName(tag.name()).isPresent()){
+            throw new AlreadyHaveTagException("태그가 이미 있습니다.");
+        }
         tagEntity.setName(tag.name());
+        tagRepository.save(tagEntity);
 
     }
 
@@ -42,6 +48,9 @@ public class TagServiceImpl implements TagService {
      */
     @Override
     public void deleteTag(DeleteTagRequest tag) {
+        if(!tagRepository.existsById(tag.tagId())){
+            throw new NotExistsTagException("해당 태그가 없습니다.");
+        }
         tagRepository.deleteById(tag.tagId());
     }
 
@@ -54,8 +63,7 @@ public class TagServiceImpl implements TagService {
     public void updateTag(UpdateTagRequest tag) {
         Tag tagEntity = tagRepository.findById(tag.tagId()).orElse(null);
         if(tagEntity == null) {
-
-            throw new NullPointerException();
+            throw new NotExistsTagException("해당 태그가 없습니다.");
         }
         tagEntity.setName(tag.tagName());
         tagRepository.save(tagEntity);

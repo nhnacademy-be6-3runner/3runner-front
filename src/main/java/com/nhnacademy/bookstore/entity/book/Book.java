@@ -16,8 +16,9 @@ import java.util.Set;
 
 @Entity
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @Getter
+@Setter
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -82,6 +83,8 @@ public class Book {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<BookImage> bookImageSet = new HashSet<>();
+
+
 
     @PrePersist
     protected void onCreate() {

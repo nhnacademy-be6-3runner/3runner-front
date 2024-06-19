@@ -5,9 +5,13 @@ import com.nhnacademy.bookstore.book.tag.dto.request.DeleteTagRequest;
 import com.nhnacademy.bookstore.book.tag.dto.request.UpdateTagRequest;
 import com.nhnacademy.bookstore.entity.tag.Tag;
 
+/**
+ * Tag CRUD 서비스
+ * @author 정주혁
+ */
 public interface TagService {
 
-    public void addTag(CreateTagRequest tag);
+    public void createTag(CreateTagRequest tag);
     public void deleteTag(DeleteTagRequest tag);
     public void updateTag(UpdateTagRequest tag);
 }
