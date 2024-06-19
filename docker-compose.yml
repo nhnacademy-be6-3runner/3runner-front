@@ -2,14 +2,14 @@ version: '3.8'
 
 services:
   front1:
-    build: .
+    build: ./
     ports:
       - "3000:8080"
     networks:
       - front-network
 
   front2:
-    build: .
+    build: ./
     ports:
       - "3001:8080"
     networks:
