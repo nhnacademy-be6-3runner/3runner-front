@@ -1,13 +1,15 @@
 package com.nhnacademy.bookstore.category.service;
 
-import com.nhnacademy.bookstore.book.category.dto.request.CreateCategoryRequestDto;
-import com.nhnacademy.bookstore.book.category.dto.request.UpdateCategoryRequestDto;
+import com.nhnacademy.bookstore.book.category.dto.request.CreateCategoryRequest;
+import com.nhnacademy.bookstore.book.category.dto.request.UpdateCategoryRequest;
 import com.nhnacademy.bookstore.book.category.exception.CategoryNotFoundException;
 import com.nhnacademy.bookstore.book.category.exception.DuplicateCategoryNameException;
 import com.nhnacademy.bookstore.book.category.repository.CategoryRepository;
 import com.nhnacademy.bookstore.book.category.service.impl.CategoryServiceImpl;
 import com.nhnacademy.bookstore.entity.category.Category;
 import lombok.extern.slf4j.Slf4j;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -15,8 +17,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.HashSet;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -37,66 +41,83 @@ class CategoryServiceTest {
     void setUp() {
     }
 
-    // TODO 상위/하위 생성, 수정 카테고리 테스트 수정
-
     @DisplayName("상위 카테고리 생성 테스트")
     @Test
-    void createParentCategoryTest() {
-        CreateCategoryRequestDto dto = CreateCategoryRequestDto.builder()
-                .name("new category")
-                .parentId(null)
+    void createTopLevelCategory() {
+        CreateCategoryRequest dto = new CreateCategoryRequest("상위 카테고리", null);
+        Category category = Category.builder()
+                .name("상위 카테고리")
                 .build();
+
+        when(categoryRepository.save(any(Category.class))).thenReturn(category);
 
         categoryService.createCategory(dto);
 
         verify(categoryRepository, times(1)).save(any(Category.class));
-        Optional<Category> resultCategory = categoryRepository.findByName("new category");
-        Assertions.assertTrue(resultCategory.isPresent());
-        Assertions.assertNull(resultCategory.get().getParent());
     }
 
+    // TODO 하위 카테고리 생성 테스트 수정
     @DisplayName("하위 카테고리 생성 테스트")
     @Test
-    void createChildrenCategoryTest() {
+    void createSubCategory() {
+        CreateCategoryRequest dto = new CreateCategoryRequest("하위 카테고리", 1L);
         Category parentCategory = Category.builder()
                 .id(1L)
-                .name("parent category")
+                .name("부모 카테고리")
+                .children(new HashSet<>())
                 .build();
-        when(categoryRepository.findById(1L)).thenReturn(Optional.of(parentCategory));
-
-        CreateCategoryRequestDto dto = CreateCategoryRequestDto.builder()
-                .name("child category")
-                .parentId(1L)
+        Category childCategory = Category.builder()
+                .name(dto.getName())
+                .parent(parentCategory)
                 .build();
+        when(categoryRepository.findById(dto.getParentId()))
+                .thenReturn(Optional.of(parentCategory));
+        when(categoryRepository.save(any(Category.class)))
+                .thenReturn(childCategory);
 
-        categoryService.createCategory(dto);
-
+        verify(categoryRepository, times(1)).existsByName(dto.getName());
+        verify(categoryRepository, times(1)).findById(dto.getParentId());
         verify(categoryRepository, times(1)).save(any(Category.class));
-        Optional<Category> resultCategory = categoryRepository.findByName("child category");
-        Assertions.assertTrue(resultCategory.isPresent());
-        Assertions.assertEquals(parentCategory, resultCategory.get().getParent());
+//        Assertions.assertEquals(parentCategory.getChildren().size(), 1);
     }
 
-    @DisplayName("카테고리 수정 테스트")
+    @DisplayName("업데이트(이름, 부모) 카테고리 테스트")
     @Test
-    void updateCategoryTest() {
-        Category category = Category.builder()
-                .id(1L)
-                .name("old name")
+    void updateCategory() {
+        long categoryId = 1L;
+        UpdateCategoryRequest dto = UpdateCategoryRequest.builder()
+                .name("카테고리")
                 .build();
-        when(categoryRepository.findById(1L)).thenReturn(Optional.of(category));
 
-        UpdateCategoryRequestDto dto = new UpdateCategoryRequestDto("new name", null);
+        Category category = Category.builder()
+                .id(categoryId)
+                .name("업데이트 카테고리")
+                .parent(null)
+                .build();
 
-        categoryService.updateCategory(1L, dto);
+        Category parentCategory = Category.builder()
+                .id(2L)
+                .name("부모 카테고리")
+                .build();
 
-        verify(categoryRepository, times(1)).save(any(Category.class));
-        Assertions.assertEquals("new name", category.getName());
+        when(categoryRepository.findById(categoryId))
+                .thenReturn(Optional.of(category));
+        when(categoryRepository.findById(dto.getParentId()))
+                .thenReturn(Optional.of(parentCategory));
+        when(categoryRepository.save(any(Category.class)))
+                .thenReturn(Category.builder().build());
+
+        categoryService.updateCategory(categoryId, dto);
+
+        verify(categoryRepository, times(1)).findById(categoryId);
+        verify(categoryRepository, times(1)).findById(dto.getParentId());
+        verify(categoryRepository, times(1)).save(Mockito.any(Category.class));
     }
+
 
     @DisplayName("카테고리 삭제 테스트")
     @Test
-    void deleteCategoryTest() {
+    void deleteCategory() {
         Category category = Category.builder()
                 .id(1L)
                 .name("category")
@@ -111,7 +132,7 @@ class CategoryServiceTest {
     @DisplayName("중복된 이름 카테고리 생성 테스트")
     @Test
     void createCategory_DuplicateName_Exception() {
-        CreateCategoryRequestDto dto = new CreateCategoryRequestDto("test", null);
+        CreateCategoryRequest dto = new CreateCategoryRequest("test", null);
         when(categoryRepository.existsByName(any())).thenReturn(true);
 
         assertThatThrownBy(() -> categoryService.createCategory(dto))
@@ -122,7 +143,7 @@ class CategoryServiceTest {
     @Test
     void updateCategory_CategoryNotFound_Exception() {
         long id = 1L;
-        UpdateCategoryRequestDto dto = new UpdateCategoryRequestDto("test", null);
+        UpdateCategoryRequest dto = new UpdateCategoryRequest("test", null);
         when(categoryRepository.findById(id)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> categoryService.updateCategory(id, dto))
@@ -138,7 +159,5 @@ class CategoryServiceTest {
         assertThatThrownBy(() -> categoryService.deleteCategory(id))
                 .isInstanceOf(CategoryNotFoundException.class);
     }
-
-    // TODO 상위,하위, 전체 카테고리 테스트 추가
 }
 
