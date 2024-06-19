@@ -1,7 +1,7 @@
 package com.nhnacademy.bookstore.category.repository;
 
-import com.nhnacademy.bookstore.book.category.dto.response.CategoryChildrenResponseDto;
-import com.nhnacademy.bookstore.book.category.dto.response.CategoryResponseDto;
+import com.nhnacademy.bookstore.book.category.dto.response.CategoryChildrenResponse;
+import com.nhnacademy.bookstore.book.category.dto.response.CategoryResponse;
 import com.nhnacademy.bookstore.book.category.repository.CategoryRepository;
 import com.nhnacademy.bookstore.book.category.repository.impl.CategoryCustomRepositoryImpl;
 import com.nhnacademy.bookstore.entity.category.Category;
@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Import;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 
 @Slf4j
@@ -80,7 +81,7 @@ public class CategoryRepositoryTest {
         categoryRepository.saveAll(categoryList);
         log.info("size = {}", categoryList.size()); // size = 5
         log.info("{}", categoryList);
-        List<CategoryResponseDto> parentCategories = categoryRepository.findParentCategories();
+        Set<CategoryResponse> parentCategories = categoryRepository.findParentCategories();
         log.info("size = {}", parentCategories.size());
 
         Assertions.assertEquals(2, parentCategories.size());
@@ -91,7 +92,7 @@ public class CategoryRepositoryTest {
     void findCategoriesTest() {
         long categoryId = 1;
         categoryRepository.saveAll(categoryList);
-        List<CategoryChildrenResponseDto> result = categoryRepository.findChildrenCategoriesByParentId(categoryId);
+        Set<CategoryChildrenResponse> result = categoryRepository.findChildrenCategoriesByParentId(categoryId);
 
         Assertions.assertEquals(2, result.size());
     }
