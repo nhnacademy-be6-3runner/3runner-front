@@ -47,3 +47,14 @@ logging:
   level:
     org.hibernate.orm.jdbc.bind: trace
     org.springframework.transaction.interceptor: trace
+
+cloud:
+  aws:
+    credentials:
+      access-key: f0a3fad864f3468293faa98da2807b67
+      secret-key: 4f48b4901ffe47b0b64cb9d909e87364
+    region:
+      static: KR1
+    s3:
+      endpoint: https://kr1-api-object-storage.nhncloudservice.com
+      bucket: nhnacademy-be6-3runner

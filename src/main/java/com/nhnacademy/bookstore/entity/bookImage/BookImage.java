@@ -13,6 +13,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@RequiredArgsConstructor
 public class BookImage {
 
     @Id
@@ -29,7 +30,6 @@ public class BookImage {
     private BookImageType type;
 
 
-    @NotNull
     @MapsId
     @ManyToOne(cascade = CascadeType.ALL)
     private Book book;
