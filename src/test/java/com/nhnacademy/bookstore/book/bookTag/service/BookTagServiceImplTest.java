@@ -1,4 +1,4 @@
-package com.nhnacademy.bookstore.book.booktag.service;
+package com.nhnacademy.bookstore.book.bookTag.service;
 
 import com.nhnacademy.bookstore.book.bookTag.dto.request.ReadBookIdRequest;
 import com.nhnacademy.bookstore.book.bookTag.dto.request.ReadTagRequest;

@@ -1,6 +1,5 @@
-package com.nhnacademy.bookstore.book.booktag.controller;
+package com.nhnacademy.bookstore.book.bookTag.controller;
 
-import com.nhnacademy.bookstore.book.bookTag.controller.BookTagController;
 import com.nhnacademy.bookstore.book.bookTag.dto.request.ReadBookIdRequest;
 import com.nhnacademy.bookstore.book.bookTag.dto.request.ReadTagRequest;
 import com.nhnacademy.bookstore.book.bookTag.dto.response.ReadBookByTagResponse;

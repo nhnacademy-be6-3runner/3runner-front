@@ -1,6 +1,5 @@
 package com.nhnacademy.bookstore.book.tag.controller;
 
-import com.nhnacademy.bookstore.book.bookTag.exception.ReadBookTagRequestFormException;
 import com.nhnacademy.bookstore.book.tag.dto.request.CreateTagRequest;
 import com.nhnacademy.bookstore.book.tag.dto.request.DeleteTagRequest;
 import com.nhnacademy.bookstore.book.tag.dto.request.UpdateTagRequest;
@@ -9,6 +8,7 @@ import com.nhnacademy.bookstore.book.tag.exception.DeleteTagRequestFormException
 import com.nhnacademy.bookstore.book.tag.exception.UpdateTagRequestFormException;
 import com.nhnacademy.bookstore.book.tag.service.TagService;
 import com.nhnacademy.bookstore.util.ApiResponse;
+import com.nhnacademy.bookstore.util.ValidationUtils;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,9 +36,7 @@ public class TagController {
     @PostMapping
     public ApiResponse<Void> createTag(@Valid CreateTagRequest createTagRequest,
                                     BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) {
-            throw new CreateTagRequestFormException(bindingResult.getFieldErrors().toString());
-        }
+        ValidationUtils.validateBindingResult(bindingResult,new DeleteTagRequestFormException(bindingResult.getFieldErrors().toString()));
         tagService.createTag(createTagRequest);
 
         return new ApiResponse<>(new ApiResponse.Header(true, HttpStatus.CREATED.value(), "SUCCESS_CREATE"), new ApiResponse.Body<>(null));
@@ -53,10 +51,7 @@ public class TagController {
     @DeleteMapping
     public ApiResponse<Void> deleteTag(@Valid DeleteTagRequest deleteTagRequest,
                                        BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) {
-
-            throw new DeleteTagRequestFormException(bindingResult.getFieldErrors().toString());
-        }
+        ValidationUtils.validateBindingResult(bindingResult,new DeleteTagRequestFormException(bindingResult.getFieldErrors().toString()));
         tagService.deleteTag(deleteTagRequest);
         return new ApiResponse<>(new ApiResponse.Header(true, HttpStatus.NO_CONTENT.value(), "SUCCESS_DELETE"), new ApiResponse.Body<>(null));
 
@@ -72,10 +67,7 @@ public class TagController {
     @PutMapping
     public ApiResponse<Void> updateTag(@Valid UpdateTagRequest updateTagRequest,
                                        BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) {
-
-            throw new UpdateTagRequestFormException(bindingResult.getFieldErrors().toString());
-        }
+        ValidationUtils.validateBindingResult(bindingResult,new DeleteTagRequestFormException(bindingResult.getFieldErrors().toString()));
         tagService.updateTag(updateTagRequest);
         return ApiResponse.success(null);
     }

@@ -7,10 +7,9 @@ import com.nhnacademy.bookstore.book.bookTag.dto.request.ReadBookIdRequest;
 import com.nhnacademy.bookstore.book.bookTag.dto.request.ReadTagRequest;
 import com.nhnacademy.bookstore.book.bookTag.dto.response.ReadTagByBookResponse;
 import com.nhnacademy.bookstore.book.bookTag.exception.AlreadyExistsBookTagException;
+import com.nhnacademy.bookstore.book.bookTag.exception.NotExistsBookTagException;
 import com.nhnacademy.bookstore.book.bookTag.repository.BookTagRepository;
 import com.nhnacademy.bookstore.book.bookTag.service.BookTagService;
-import com.nhnacademy.bookstore.book.tag.exception.AlreadyHaveTagException;
-import com.nhnacademy.bookstore.book.tag.exception.NotExistsTagException;
 import com.nhnacademy.bookstore.book.tag.repository.TagRepository;
 import com.nhnacademy.bookstore.entity.book.Book;
 import com.nhnacademy.bookstore.entity.bookTag.BookTag;
@@ -52,7 +51,7 @@ public class BookTagServiceImpl implements BookTagService {
     public Page<ReadBookByTagResponse> readBookByTagId(ReadTagRequest tagId, Pageable pageable) {
         Page<Book> books = bookTagRepository.findAllBookIdByTagId(tagId.tagId(),pageable);
         if(!books.hasContent()) {
-            throw new NotExistsTagException("해당 태그를 가진 책을 찾을수 없습니다.");
+            throw new NotExistsBookTagException("해당 태그를 가진 책을 찾을수 없습니다.");
         }
 
         return books.map(book-> ReadBookByTagResponse.builder()
@@ -72,7 +71,7 @@ public class BookTagServiceImpl implements BookTagService {
 
         Set<Tag> tags = bookTagRepository.findAllTagIdByBookId(bookId.bookId());
         if(tags.isEmpty()) {
-            throw new NotExistsTagException("해당 책엔 태그가 없습니다.");
+            throw new NotExistsBookTagException("해당 책엔 태그가 없습니다.");
         }
 
         return tags.stream().map(tag->ReadTagByBookResponse.builder().name(tag.getName()).build()).collect(Collectors.toSet());

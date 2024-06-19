@@ -1,7 +1,6 @@
-package com.nhnacademy.bookstore.book.booktag.repository;
+package com.nhnacademy.bookstore.book.bookTag.repository;
 
 import com.nhnacademy.bookstore.book.book.repository.BookRepository;
-import com.nhnacademy.bookstore.book.bookTag.repository.BookTagRepository;
 import com.nhnacademy.bookstore.book.tag.repository.TagRepository;
 import com.nhnacademy.bookstore.entity.book.Book;
 import com.nhnacademy.bookstore.entity.bookTag.BookTag;
