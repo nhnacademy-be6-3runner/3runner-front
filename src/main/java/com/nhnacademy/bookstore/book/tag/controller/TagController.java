@@ -37,14 +37,7 @@ public class TagController {
     public ApiResponse<Void> createTag(@Valid CreateTagRequest createTagRequest,
                                     BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
-            StringBuilder errorMessage = new StringBuilder();
-            bindingResult.getFieldErrors().forEach(error ->
-                    errorMessage.append(error.getField())
-                            .append(": ")
-                            .append(error.getDefaultMessage())
-                            .append("\n")
-            );
-            throw new CreateTagRequestFormException(errorMessage.toString());
+            throw new CreateTagRequestFormException(bindingResult.getFieldErrors().toString());
         }
         tagService.createTag(createTagRequest);
 
@@ -61,14 +54,8 @@ public class TagController {
     public ApiResponse<Void> deleteTag(@Valid DeleteTagRequest deleteTagRequest,
                                        BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
-            StringBuilder errorMessage = new StringBuilder();
-            bindingResult.getFieldErrors().forEach(error ->
-                    errorMessage.append(error.getField())
-                            .append(": ")
-                            .append(error.getDefaultMessage())
-                            .append("\n")
-            );
-            throw new DeleteTagRequestFormException(errorMessage.toString());
+
+            throw new DeleteTagRequestFormException(bindingResult.getFieldErrors().toString());
         }
         tagService.deleteTag(deleteTagRequest);
         return new ApiResponse<>(new ApiResponse.Header(true, HttpStatus.NO_CONTENT.value(), "SUCCESS_DELETE"), new ApiResponse.Body<>(null));
@@ -86,14 +73,8 @@ public class TagController {
     public ApiResponse<Void> updateTag(@Valid UpdateTagRequest updateTagRequest,
                                        BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
-            StringBuilder errorMessage = new StringBuilder();
-            bindingResult.getFieldErrors().forEach(error ->
-                    errorMessage.append(error.getField())
-                            .append(": ")
-                            .append(error.getDefaultMessage())
-                            .append("\n")
-            );
-            throw new UpdateTagRequestFormException(errorMessage.toString());
+
+            throw new UpdateTagRequestFormException(bindingResult.getFieldErrors().toString());
         }
         tagService.updateTag(updateTagRequest);
         return ApiResponse.success(null);

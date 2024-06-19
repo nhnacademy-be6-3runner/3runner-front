@@ -44,14 +44,8 @@ public class  BookTagController {
     public ApiResponse< Page<ReadBookByTagResponse>> readBookByTagId(@Valid ReadTagRequest tagId,
                                                                     BindingResult bindingResult) {
         if(bindingResult.hasErrors()){
-            StringBuilder errorMessage = new StringBuilder();
-            bindingResult.getFieldErrors().forEach(error ->
-                    errorMessage.append(error.getField())
-                            .append(": ")
-                            .append(error.getDefaultMessage())
-                            .append("\n")
-            );
-            throw new ReadBookTagRequestFormException(errorMessage.toString());
+
+            throw new ReadBookTagRequestFormException(bindingResult.getFieldErrors().toString());
         }
 
         Pageable pageable;
@@ -81,14 +75,8 @@ public class  BookTagController {
     public ApiResponse<Set<ReadTagByBookResponse>> readTagByBookId(@Valid ReadBookIdRequest bookId,
                                                                   BindingResult bindingResult) {
         if(bindingResult.hasErrors()){
-            StringBuilder errorMessage = new StringBuilder();
-            bindingResult.getFieldErrors().forEach(error ->
-                    errorMessage.append(error.getField())
-                            .append(": ")
-                            .append(error.getDefaultMessage())
-                            .append("\n")
-            );
-            throw new ReadBookTagRequestFormException(errorMessage.toString());
+
+            throw new ReadBookTagRequestFormException(bindingResult.getFieldErrors().toString());
         }
         Set<ReadTagByBookResponse> tags = bookTagService.readTagByBookId(bookId);
         if(tags.isEmpty()){

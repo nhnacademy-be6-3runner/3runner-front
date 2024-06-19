@@ -1,4 +1,4 @@
-package com.nhnacademy.bookstore.book.bookTag.service;
+package com.nhnacademy.bookstore.book.bookTag.service.Impl;
 
 import com.nhnacademy.bookstore.book.book.repository.BookRepository;
 import com.nhnacademy.bookstore.book.bookTag.dto.request.CreateBookTagRequest;
@@ -6,7 +6,9 @@ import com.nhnacademy.bookstore.book.bookTag.dto.response.ReadBookByTagResponse;
 import com.nhnacademy.bookstore.book.bookTag.dto.request.ReadBookIdRequest;
 import com.nhnacademy.bookstore.book.bookTag.dto.request.ReadTagRequest;
 import com.nhnacademy.bookstore.book.bookTag.dto.response.ReadTagByBookResponse;
+import com.nhnacademy.bookstore.book.bookTag.exception.AlreadyExistsBookTagException;
 import com.nhnacademy.bookstore.book.bookTag.repository.BookTagRepository;
+import com.nhnacademy.bookstore.book.bookTag.service.BookTagService;
 import com.nhnacademy.bookstore.book.tag.exception.AlreadyHaveTagException;
 import com.nhnacademy.bookstore.book.tag.exception.NotExistsTagException;
 import com.nhnacademy.bookstore.book.tag.repository.TagRepository;
@@ -79,7 +81,7 @@ public class BookTagServiceImpl implements BookTagService {
     @Override
     public void createBookTag(CreateBookTagRequest bookTagRequest) {
         if(bookRepository.existsById(bookTagRequest.bookId())&&tagRepository.existsById(bookTagRequest.tagId())) {
-            throw new AlreadyHaveTagException("이미 해당 책에 달린 태그가 존재합니다.");
+            throw new AlreadyExistsBookTagException("이미 해당 책에 달린 태그가 존재합니다.");
         }
         BookTag bookTag = new BookTag(bookRepository.findById(bookTagRequest.bookId()).orElse(null),
                 tagRepository.findById(bookTagRequest.tagId()).orElse(null));

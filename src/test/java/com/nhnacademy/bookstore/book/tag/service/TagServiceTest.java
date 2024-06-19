@@ -4,6 +4,7 @@ import com.nhnacademy.bookstore.book.tag.dto.request.CreateTagRequest;
 import com.nhnacademy.bookstore.book.tag.dto.request.DeleteTagRequest;
 import com.nhnacademy.bookstore.book.tag.dto.request.UpdateTagRequest;
 import com.nhnacademy.bookstore.book.tag.repository.TagRepository;
+import com.nhnacademy.bookstore.book.tag.service.Impl.TagServiceImpl;
 import com.nhnacademy.bookstore.entity.tag.Tag;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

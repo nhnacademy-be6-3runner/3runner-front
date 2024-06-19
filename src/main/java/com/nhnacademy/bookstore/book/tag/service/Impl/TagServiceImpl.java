@@ -1,4 +1,4 @@
-package com.nhnacademy.bookstore.book.tag.service;
+package com.nhnacademy.bookstore.book.tag.service.Impl;
 
 import com.nhnacademy.bookstore.book.tag.dto.request.CreateTagRequest;
 import com.nhnacademy.bookstore.book.tag.dto.request.DeleteTagRequest;
@@ -6,6 +6,7 @@ import com.nhnacademy.bookstore.book.tag.dto.request.UpdateTagRequest;
 import com.nhnacademy.bookstore.book.tag.exception.AlreadyHaveTagException;
 import com.nhnacademy.bookstore.book.tag.exception.NotExistsTagException;
 import com.nhnacademy.bookstore.book.tag.repository.TagRepository;
+import com.nhnacademy.bookstore.book.tag.service.TagService;
 import com.nhnacademy.bookstore.entity.tag.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
