@@ -22,11 +22,9 @@ public class BookServiceImpl implements BookService{
     public void createBook(Book book) {
         bookRepository.save(book);
     }
-
     @Override
     public Book readBookById(Long bookId) {
-        return null;
+        bookRepository.findById(bookId).orElseThrow(()->{})
     }
-
 
 }
