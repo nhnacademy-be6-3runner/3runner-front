@@ -16,6 +16,7 @@ import java.time.ZonedDateTime;
 @RestControllerAdvice
 public class WebControllerAdvice {
 
+    // 응답, 성공,실패 폼 맞추기
     /**
      * INTERNAL_SERVER_ERROR 처리 메소드
      * @param ex
