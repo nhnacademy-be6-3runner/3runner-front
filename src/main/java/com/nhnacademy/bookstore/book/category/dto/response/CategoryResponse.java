@@ -13,12 +13,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CategoryResponseDto {
+public class CategoryResponse {
     private long id;
     private String name;
     private Category parent;
 
-    public CategoryResponseDto (long id, String name) {
+
+    public CategoryResponse(long id, String name) {
         this.id = id;
         this.name = name;
     }
