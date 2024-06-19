@@ -1,12 +1,10 @@
 package com.nhnacademy.bookstore.book.image.imageService.Impl;
 
-import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.S3Object;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.io.DefaultResourceLoader;
@@ -48,22 +46,25 @@ class ImageServiceImplTest {
         MultipartFile multipartFile = new MockMultipartFile("file",
                 testFileName, "image/png", inputStream.readAllBytes());
 
-        imageService.uploadImage(multipartFile, "test/" + testFileName);
+        imageService.createImage(multipartFile, "test");
 
     }
 
+    /**
+     * 미리 저장해둔 파일 확인
+     */
     @DisplayName("downloadImage 확인")
     @Test
     @Order(2)
     void downloadImage() {
-        S3Object object = imageService.downloadImage("test/test.png");
+        S3Object object = imageService.readImage("test/test.png");
         assertNotNull(object);
     }
 
     @DisplayName("존재하지 않는 파일을 불러올시 ")
     @Test
     void NotFindDownloadImage(){
-        assertThrows(AmazonS3Exception.class, () ->imageService.downloadImage("test/123344test.png"));
+        assertThrows(AmazonS3Exception.class, () -> imageService.readImage("test/123344test.png"))
 
     }
 }

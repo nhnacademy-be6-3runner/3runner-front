@@ -15,6 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.Objects;
+import java.util.UUID;
 
 /**
  * @author 한민기
@@ -32,14 +34,18 @@ public class ImageServiceImpl implements ImageService {
 
     /**
      *  this -> object storage (bucket)
-     * @param file     저장할 파일
-     * @param fileName 저장할 파일의 위치 + 저장할 파일의 이름
+     * @param image     저장할 파일
+     * @param storagePlace 저장할 파일의 위치/타입 -> book, review, test
      */
     @Override
-    public void uploadImage(MultipartFile file, String fileName) {
+    public String createImage(MultipartFile image, String storagePlace) {
+        String orgFilename = image.getOriginalFilename();
+
+        String fileName = fileNameMade(orgFilename, storagePlace);
+
         try {
             // MultipartFile을 바이트 배열로 변환
-            byte[] bytes = file.getBytes();
+            byte[] bytes = image.getBytes();
             ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
 
             // 메타데이터 설정 (필요한 경우)
@@ -53,6 +59,8 @@ public class ImageServiceImpl implements ImageService {
         } catch (IOException e) {
             throw new FailUploadImageException();
         }
+
+        return fileName;
     }
 
     /**
@@ -61,8 +69,22 @@ public class ImageServiceImpl implements ImageService {
      * @return 조회할 파일을 S3Object 형식으로 받아옴
      */
     @Override
-    public S3Object downloadImage(String fileName) throws NotFindImageException {
+    public S3Object readImage(String fileName) throws NotFindImageException {
         return amazonS3.getObject(bucketName, fileName);
 
     }
+
+
+    /**
+     *  UUID 를 사용해서 파일 이름을 선정
+     * @param orgFilename -> 파일의 원래 이름
+     * @param storagePlace -> 저장하는 위치
+     * @return -> 새로운 파일이름 + 저장하는 위치
+     */
+    private String fileNameMade(String orgFilename, String storagePlace) {
+        String uuid = UUID.randomUUID().toString().replaceAll("-", "");                                   // 32자리 랜덤 문자열
+        String extension = Objects.requireNonNull(orgFilename).substring(orgFilename.lastIndexOf(".") + 1);  // 확장자
+        return storagePlace + "/" + uuid + "." + extension;
+    }
+
 }

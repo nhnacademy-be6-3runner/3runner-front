@@ -88,4 +88,8 @@ public class Book {
         this.createdAt = ZonedDateTime.now();
     }
 
+    public void addBookImage(BookImage bookImage) {
+        bookImageSet.add(bookImage);
+    }
+
 }

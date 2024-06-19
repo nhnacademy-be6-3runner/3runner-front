@@ -3,6 +3,7 @@ package com.nhnacademy.bookstore.book.image.controller;
 import com.amazonaws.services.s3.model.S3Object;
 import com.nhnacademy.bookstore.book.image.exception.NotFindImageException;
 import com.nhnacademy.bookstore.book.image.imageService.ImageService;
+import com.nhnacademy.bookstore.util.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,10 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.UUID;
 
+/**
+ * @author 한민기
+ *
+ */
 @RestController
 @RequiredArgsConstructor
 public class ImageController {
@@ -30,18 +35,10 @@ public class ImageController {
      * @return 저장할 파일명 (새로운 UUID.확장자)
      */
     @PostMapping("/image/{type}/upload")
-    public String uploadFile(@RequestParam MultipartFile image, @PathVariable String type) {
-
-        String orgFilename = image.getOriginalFilename();                                                                   // 원본 파일명
-        String uuid = UUID.randomUUID().toString().replaceAll("-", "");                                   // 32자리 랜덤 문자열
-        String extension = Objects.requireNonNull(orgFilename).substring(orgFilename.lastIndexOf(".") + 1);  // 확장자
-        String saveFilename = uuid + "." + extension;                                                          // 디스크에 저장할 파일명
-        imageService.uploadImage(image, type + "/" + saveFilename);
-
-        return saveFilename;
-
+    public ApiResponse<String> uploadImage(@RequestParam MultipartFile image, @PathVariable String type){
+        String result  = imageService.createImage(image, type);
+        return ApiResponse.success(result);
     }
-
 
     /**
      * front (fileName) -> this -> nhn cloud (object storage) -> this -> front (image)
@@ -51,9 +48,9 @@ public class ImageController {
      * @return 서버에서 가져온 파일
      */
     @GetMapping("/image/{type}/download")
-    public ResponseEntity<byte[]> downloadFile(@RequestParam("fileName") String fileName, @PathVariable String type)  {
+    public ApiResponse<ResponseEntity<byte[]>> downloadFile(@RequestParam("fileName") String fileName, @PathVariable String type)  {
         byte[] content;
-        try (S3Object s3Object = imageService.downloadImage(type + "/" + fileName)) {
+        try (S3Object s3Object = imageService.readImage(type + "/" + fileName)) {
 
             content = s3Object.getObjectContent().readAllBytes();
         } catch (IOException e) {
@@ -64,9 +61,8 @@ public class ImageController {
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
         headers.setContentDispositionFormData("attachment", fileName);
 
-        return new ResponseEntity<>(content, headers, HttpStatus.OK);
+
+        return ApiResponse.success(new ResponseEntity<>(content, headers, HttpStatus.OK));
     }
-
-
 
 }
