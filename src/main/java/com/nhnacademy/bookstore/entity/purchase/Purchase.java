@@ -64,4 +64,19 @@ public class Purchase {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchase", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<PurchaseCoupon> purchaseCouponSet = new HashSet<>();
+
+    public Purchase(UUID orderNumber, PurchaseStatus status, int deliveryPrice, int totalPrice, ZonedDateTime createdAt, String road, String password, MemberType memberType, Member member, PointRecord pointRecord, Set<PurchaseBook> purchaseBookSet, Set<PurchaseCoupon> purchaseCouponSet) {
+        this.orderNumber = orderNumber;
+        this.status = status;
+        this.deliveryPrice = deliveryPrice;
+        this.totalPrice = totalPrice;
+        this.createdAt = createdAt;
+        this.road = road;
+        this.password = password;
+        this.memberType = memberType;
+        this.member = member;
+        this.pointRecord = pointRecord;
+        this.purchaseBookSet = purchaseBookSet;
+        this.purchaseCouponSet = purchaseCouponSet;
+    }
 }
