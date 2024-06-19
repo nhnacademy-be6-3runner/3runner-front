@@ -66,6 +66,15 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             cd /home/nhnacademy/front
-            sudo docker-compose pull
-            sudo docker-compose down || true
-            sudo docker-compose up -d
+            
+            sudo docker stop front1 || true
+            sudo docker rm front1 || true
+            sudo docker build -t front-image1 .
+            sudo docker run -d -p 8081:8081 --name front1 --net front_network front-image1
+            
+            sudo docker stop front2 || true
+            sudo docker rm front2 || true
+            sudo docker build -t front-image2 .
+            sudo docker run -d -p 8081:8081 --name front2 --net front_network front-image2
+            
+            docker run --name nginx -d -p 80:80 -v ./nginx.conf:/etc/nginx/nginx.conf nginx
