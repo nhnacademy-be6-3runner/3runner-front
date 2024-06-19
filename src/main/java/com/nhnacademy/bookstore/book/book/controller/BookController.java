@@ -1,22 +1,18 @@
 package com.nhnacademy.bookstore.book.book.controller;
 
-import com.nhnacademy.bookstore.book.book.dto.request.ReadBookResponse;
+import com.nhnacademy.bookstore.book.book.dto.response.ReadBookResponse;
 import com.nhnacademy.bookstore.book.book.exception.CreateBookRequestFormException;
 import com.nhnacademy.bookstore.book.book.service.BookService;
 import com.nhnacademy.bookstore.entity.book.Book;
 import com.nhnacademy.bookstore.book.book.dto.request.CreateBookRequest;
-import com.nhnacademy.bookstore.global.exceptionHandler.ErrorResponseForm;
 import com.nhnacademy.bookstore.util.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.time.ZonedDateTime;
 
 /**
  * 책 요청 컨트롤러.
@@ -50,25 +46,11 @@ public class BookController {
 
     @GetMapping("/book/{bookId}")
     public ApiResponse<ReadBookResponse> readBook(@PathVariable("bookId") Long bookId) {
-        Book book = bookService.readBookById(bookId);
+        ReadBookResponse book = bookService.readBookById(bookId);
 
         return new ApiResponse<ReadBookResponse>(
                 new ApiResponse.Header(true, 200, "Book found"),
-                new ApiResponse.Body<ReadBookResponse>(ReadBookResponse.builder()
-                        .id(bookId)
-                        .title(book.getTitle())
-                        .description(book.getDescription())
-                        .publishedDate(book.getPublishedDate())
-                        .price(book.getPrice())
-                        .quantity(book.getQuantity())
-                        .sellingPrice(book.getSellingPrice())
-                        .viewCount(book.getViewCount())
-                        .packing(book.isPacking())
-                        .author(book.getAuthor())
-                        .isbn(book.getIsbn())
-                        .publisher(book.getPublisher())
-                        .createdAt(book.getCreatedAt())
-                        .build())
+                new ApiResponse.Body<ReadBookResponse>(book)
         );
     }
 }
