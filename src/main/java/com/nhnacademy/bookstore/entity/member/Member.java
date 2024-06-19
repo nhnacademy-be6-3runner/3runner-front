@@ -6,12 +6,11 @@ import com.nhnacademy.bookstore.entity.member.enums.Grade;
 import com.nhnacademy.bookstore.entity.member.enums.Status;
 import com.nhnacademy.bookstore.entity.memberAuth.MemberAuth;
 import com.nhnacademy.bookstore.entity.pointRecord.PointRecord;
+import com.nhnacademy.bookstore.member.member.dto.request.CreateMemberRequest;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.ZonedDateTime;
 import java.util.HashSet;
@@ -19,8 +18,10 @@ import java.util.Set;
 
 @Entity
 @AllArgsConstructor
-@NoArgsConstructor
 @Getter
+@NoArgsConstructor
+@Setter
+@Builder
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,6 +45,7 @@ public class Member {
     private String phone;
 
     @NotNull
+    @Column(unique = true)
     private String email;
 
     private ZonedDateTime birthday;
@@ -72,5 +74,17 @@ public class Member {
     @OneToMany(mappedBy = "member",cascade = CascadeType.ALL,orphanRemoval = true)
     private Set<PointRecord> pointSet = new HashSet<>();
 
+    public Member(CreateMemberRequest request){
+        this.setPassword(request.password());
+        this.setPoint(5000L);
+        this.setName(request.name());
+        this.setAge(request.age());
+        this.setStatus(Status.Active);
+        this.setPhone(request.phone());
+        this.setEmail(request.email());
+        this.setBirthday(request.birthday());
+        this.setGrade(Grade.General);
+        this.setCreated_at(ZonedDateTime.now());
+    }
 
 }
