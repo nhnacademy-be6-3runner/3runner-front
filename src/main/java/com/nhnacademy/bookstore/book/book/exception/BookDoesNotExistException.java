@@ -5,8 +5,8 @@ package com.nhnacademy.bookstore.book.book.exception;
  *
  * @author 김병우
  */
-public class CreateBookRequestFormException extends RuntimeException{
-    public CreateBookRequestFormException(String message) {
+public class BookDoesNotExistException extends RuntimeException{
+    public BookDoesNotExistException(String message) {
         super(message);
     }
 }
