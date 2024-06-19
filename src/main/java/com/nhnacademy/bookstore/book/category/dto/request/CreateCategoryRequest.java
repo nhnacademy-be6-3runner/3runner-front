@@ -8,7 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 // TODO record 형으로 수정
-public class CreateCategoryRequestDto {
+public class CreateCategoryRequest {
     private String name;
     @Setter
     private Long parentId;
