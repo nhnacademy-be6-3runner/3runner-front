@@ -1,4 +1,4 @@
-package com.nhnacademy.bookstore.purchase.purchase.dto.response;
+package com.nhnacademy.bookstore.purchase.purchase.dto.request;
 
 public record CreatePurchaseRequest(
         int deliveryPrice,

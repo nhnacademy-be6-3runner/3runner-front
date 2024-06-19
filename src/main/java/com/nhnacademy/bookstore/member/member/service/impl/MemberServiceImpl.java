@@ -11,6 +11,8 @@ import com.nhnacademy.bookstore.member.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.ZonedDateTime;
@@ -20,6 +22,7 @@ import java.time.ZonedDateTime;
  *
  * @author 오연수, 유지아
  */
+@Transactional
 @RequiredArgsConstructor
 @Service
 public class MemberServiceImpl implements MemberService {
@@ -44,6 +47,7 @@ public class MemberServiceImpl implements MemberService {
      * @return the member -member 반환
      * @author 유지아 Find by id member. -memberid를 받아 멤버자체를 가져온다.
      */
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Member findById(Long id) {
         if(memberRepository.findById(id).isPresent()){
             return memberRepository.findById(id).get();

@@ -8,10 +8,7 @@ import com.nhnacademy.bookstore.entity.purchaseCoupon.PurchaseCoupon;
 import com.nhnacademy.bookstore.entity.member.Member;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.ZonedDateTime;
 import java.util.HashSet;
@@ -32,6 +29,7 @@ public class Purchase {
     private UUID orderNumber;
 
     @NotNull
+    @Setter
     private PurchaseStatus status;
 
     @NotNull
