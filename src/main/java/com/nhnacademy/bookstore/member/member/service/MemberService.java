@@ -5,7 +5,9 @@ import com.nhnacademy.bookstore.entity.member.Member;
 import com.nhnacademy.bookstore.entity.member.enums.Grade;
 import com.nhnacademy.bookstore.entity.member.enums.Status;
 import com.nhnacademy.bookstore.member.member.dto.request.UpdateMemberRequest;
+import org.springframework.stereotype.Service;
 
+@Service
 public interface MemberService {
     Member save(Member member);
 
