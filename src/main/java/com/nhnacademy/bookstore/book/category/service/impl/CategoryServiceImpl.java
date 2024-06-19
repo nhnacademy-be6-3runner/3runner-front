@@ -111,10 +111,7 @@ public class CategoryServiceImpl implements CategoryService {
      * @return 카테고리 set
      */
     public Set<CategoryResponse> getCategories() {
-        List<Category> categories = categoryRepository.findAll();
-        return categories.stream()
-                .map(category -> new CategoryResponse(category.getId(), category.getName(), category.getParent()))
-                .collect(Collectors.toSet());
+        return categoryRepository.findCategories();
     }
 
     /**

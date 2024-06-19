@@ -16,9 +16,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
- *
+ * query dsl 인터페이스 구현체
  * @author 김은비
- *
  */
 @Slf4j
 @Repository

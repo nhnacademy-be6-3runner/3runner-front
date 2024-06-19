@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+// TODO Record 수정
 public class CategoryResponse {
     private long id;
     private String name;
