@@ -10,9 +10,8 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.time.ZonedDateTime;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @AllArgsConstructor
@@ -76,20 +75,20 @@ public class Book {
 
     @Setter
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<BookCategory> bookCategorySet = new HashSet<>();
+    private List<BookCategory> bookCategorySet = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<BookTag> bookTagSet = new HashSet<>();
+    private List<BookTag> bookTagSet = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<BookImage> bookImageSet = new HashSet<>();
+    private List<BookImage> bookImageSet = new ArrayList<>();
 
     @PrePersist
     protected void onCreate() {
         this.createdAt = ZonedDateTime.now();
     }
 
-    public Book(String title, String description, ZonedDateTime publishedDate, int price, int quantity, int sellingPrice, int viewCount, boolean packing, String author, String isbn, String publisher,  Set<BookCategory> bookCategorySet, Set<BookTag> bookTagSet, Set<BookImage> bookImageSet) {
+    public Book(String title, String description, ZonedDateTime publishedDate, int price, int quantity, int sellingPrice, int viewCount, boolean packing, String author, String isbn, String publisher,  List<BookCategory> bookCategorySet, List<BookTag> bookTagSet, List<BookImage> bookImageSet) {
         this.title = title;
         this.description = description;
         this.publishedDate = publishedDate;
