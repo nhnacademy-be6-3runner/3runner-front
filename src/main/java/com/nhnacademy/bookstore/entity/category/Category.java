@@ -27,9 +27,8 @@ public class Category {
     @JoinColumn(name = "parent_id")
     private Category parent;
 
-
     //연결
-
+    // TODO
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent", cascade = CascadeType.ALL)
     private Set<Category> children = new HashSet<>();
 
@@ -37,4 +36,11 @@ public class Category {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<BookCategory> bookCategorySet = new HashSet<>();
 
+    public void setParent(Category parent) {
+        this.parent = parent;
+    }
+    public void addChildren(Category children) {
+        children.setParent(this);
+        this.children.add(children);
+    }
 }
