@@ -10,8 +10,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.time.ZonedDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Review {
@@ -49,12 +49,12 @@ public class Review {
     // 연결
 
     @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<ReviewImage> reviewImageSet  = new HashSet<>();
+    private List<ReviewImage> reviewImageSet  = new ArrayList<>();
 
     @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Comment> commentSet  = new HashSet<>();
+    private List<Comment> commentSet  = new ArrayList<>();
 
     @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<ReviewLike> reviewLikeSet  = new HashSet<>();
+    private List<ReviewLike> reviewLikeSet  = new ArrayList<>();
 
 }

@@ -13,8 +13,8 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.time.ZonedDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -66,13 +66,13 @@ public class Member {
 
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL,orphanRemoval = true)
-    private Set<Address> addressSet = new HashSet<>();
+    private List<Address> addressSet = new ArrayList<>();
 
     @OneToMany(mappedBy = "member",cascade = CascadeType.ALL,orphanRemoval = true)
-    private Set<MemberAuth> memberAuthSet = new HashSet<>();
+    private List<MemberAuth> memberAuthSet = new ArrayList<>();
 
     @OneToMany(mappedBy = "member",cascade = CascadeType.ALL,orphanRemoval = true)
-    private Set<PointRecord> pointSet = new HashSet<>();
+    private List<PointRecord> pointSet = new ArrayList<>();
 
     public Member(CreateMemberRequest request){
         this.setPassword(request.password());

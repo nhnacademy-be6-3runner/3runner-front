@@ -7,7 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -22,6 +23,6 @@ public class Auth {
     private String name;
 
     @OneToMany(mappedBy = "auth",cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<MemberAuth> memberAuthSet;
+    private List<MemberAuth> memberAuthSet = new ArrayList<>();
 
 }
