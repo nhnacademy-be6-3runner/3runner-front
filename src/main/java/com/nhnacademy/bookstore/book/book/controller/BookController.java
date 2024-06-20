@@ -40,6 +40,8 @@ public class BookController {
 
         // controller 쪽은 entity X -> OSIV(Open session in view) view에 오기전에 닫아버리기? -> service에서 처리
         bookService.createBook(createBookRequest);
+        //TODO 북 카테고리 서비스로 추가
+        //TODO 북 태그 서비스로 추가
 
         return new ApiResponse<Void>(new ApiResponse.Header(true, 201));
     }
