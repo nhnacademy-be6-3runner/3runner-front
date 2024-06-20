@@ -11,15 +11,13 @@ import com.nhnacademy.bookstore.purchase.purchase.exception.PurchaseAlreadyExist
 import com.nhnacademy.bookstore.purchase.purchase.exception.PurchaseDoesNotExistException;
 import com.nhnacademy.bookstore.purchase.purchase.exception.PurchaseNoAuthorizationException;
 import com.nhnacademy.bookstore.purchase.purchase.repository.PurchaseRepository;
-import com.nhnacademy.bookstore.purchase.purchase.service.PurchaseService;
+import com.nhnacademy.bookstore.purchase.purchase.service.PurchaseMemberService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -30,7 +28,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class PurchaseMemberServiceImpl implements PurchaseService {
+public class PurchaseMemberServiceImpl implements PurchaseMemberService {
     private final PurchaseRepository purchaseRepository;
     private final MemberService memberService;
 
