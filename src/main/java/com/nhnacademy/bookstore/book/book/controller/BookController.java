@@ -9,10 +9,7 @@ import com.nhnacademy.bookstore.util.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 책 요청 컨트롤러.
@@ -32,7 +29,7 @@ public class BookController {
      * @return ApiResponse<>
      */
     @PostMapping("/book")
-    public ApiResponse<Void> createBook(@Valid CreateBookRequest createBookRequest,
+    public ApiResponse<Void> createBook(@Valid @RequestBody CreateBookRequest createBookRequest,
                                         BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new CreateBookRequestFormException(bindingResult.getFieldErrors().toString());

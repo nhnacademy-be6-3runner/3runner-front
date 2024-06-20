@@ -8,17 +8,17 @@ import com.nhnacademy.bookstore.entity.purchaseCoupon.PurchaseCoupon;
 import com.nhnacademy.bookstore.entity.member.Member;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Getter
+@Getter@Setter
 @Entity
 public class Purchase {
     @Id
@@ -62,4 +62,32 @@ public class Purchase {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchase", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PurchaseCoupon> purchaseCouponList = new ArrayList<>();
+
+    public Purchase(UUID orderNumber, PurchaseStatus status, int deliveryPrice, int totalPrice, ZonedDateTime createdAt, String road, String password, MemberType memberType, Member member, PointRecord pointRecord, List<PurchaseBook> purchaseBookList, List<PurchaseCoupon> purchaseCouponList) {
+        this.orderNumber = orderNumber;
+        this.status = status;
+        this.deliveryPrice = deliveryPrice;
+        this.totalPrice = totalPrice;
+        this.createdAt = createdAt;
+        this.road = road;
+        this.password = password;
+        this.memberType = memberType;
+        this.member = member;
+        this.pointRecord = pointRecord;
+        this.purchaseBookList = purchaseBookList;
+        this.purchaseCouponList = purchaseCouponList;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Purchase purchase)) return false;
+        return Objects.equals(getOrderNumber(), purchase.getOrderNumber());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(getOrderNumber());
+    }
+
 }
