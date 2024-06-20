@@ -34,7 +34,6 @@ public class BookController {
      * @param bindingResult binding result
      * @return ApiResponse<>
      */
-    @Transactional(propagation = Propagation.MANDATORY)
     @PostMapping("/book")
     public ApiResponse<Void> createBook(@Valid CreateBookRequest createBookRequest,
                                         BindingResult bindingResult) {
