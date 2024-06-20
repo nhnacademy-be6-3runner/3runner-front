@@ -20,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -50,9 +51,6 @@ public class BookTagServiceImpl implements BookTagService {
      */
     public Page<ReadBookByTagResponse> readBookByTagId(ReadTagRequest tagId, Pageable pageable) {
         Page<Book> books = bookTagRepository.findAllBookIdByTagId(tagId.tagId(),pageable);
-        if(!books.hasContent()) {
-            throw new NotExistsBookTagException("해당 태그를 가진 책을 찾을수 없습니다.");
-        }
 
         return books.map(book-> ReadBookByTagResponse.builder()
                 .price(book.getPrice()).author(book.getAuthor()).quantity(book.getQuantity())
@@ -67,24 +65,21 @@ public class BookTagServiceImpl implements BookTagService {
      * @param bookId 해당 책에 달린 태그들을 가져오기위한 책 id
      * @return Set<ReadTagByBookResponse> 해당 책에 달린 태그들
      */
-    public Set<ReadTagByBookResponse> readTagByBookId(ReadBookIdRequest bookId) {
+    public List<ReadTagByBookResponse> readTagByBookId(ReadBookIdRequest bookId) {
 
-        Set<Tag> tags = bookTagRepository.findAllTagIdByBookId(bookId.bookId());
-        if(tags.isEmpty()) {
-            throw new NotExistsBookTagException("해당 책엔 태그가 없습니다.");
-        }
+        List<Tag> tags = bookTagRepository.findAllTagIdByBookId(bookId.bookId());
 
-        return tags.stream().map(tag->ReadTagByBookResponse.builder().name(tag.getName()).build()).collect(Collectors.toSet());
+        return tags.stream().map(tag->ReadTagByBookResponse.builder().name(tag.getName()).build()).collect(Collectors.toList());
     }
 
     @Override
-    public void createBookTag(CreateBookTagRequest bookTagRequest) {
+    public Long createBookTag(CreateBookTagRequest bookTagRequest) {
         if(bookRepository.existsById(bookTagRequest.bookId())&&tagRepository.existsById(bookTagRequest.tagId())) {
             throw new AlreadyExistsBookTagException("이미 해당 책에 달린 태그가 존재합니다.");
         }
         BookTag bookTag = new BookTag(bookRepository.findById(bookTagRequest.bookId()).orElse(null),
                 tagRepository.findById(bookTagRequest.tagId()).orElse(null));
-        bookTagRepository.save(bookTag);
+        return bookTagRepository.save(bookTag).getId();
 
     }
 

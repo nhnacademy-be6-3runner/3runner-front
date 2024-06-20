@@ -11,7 +11,7 @@ import com.nhnacademy.bookstore.entity.tag.Tag;
  */
 public interface TagService {
 
-    public void createTag(CreateTagRequest tag);
+    public Long createTag(CreateTagRequest tag);
     public void deleteTag(DeleteTagRequest tag);
-    public void updateTag(UpdateTagRequest tag);
+    public Long updateTag(UpdateTagRequest tag);
 }

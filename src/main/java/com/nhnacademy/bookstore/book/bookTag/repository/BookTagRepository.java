@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -35,5 +36,5 @@ public interface BookTagRepository extends JpaRepository<BookTag, Long> {
      * @return Set<Tag> 해당 책에 달린 태그들
      */
     @Query("select bi.tag from BookTag bi where bi.book.id = :bookId")
-    Set<Tag> findAllTagIdByBookId(long bookId);
+    List<Tag> findAllTagIdByBookId(long bookId);
 }

@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -69,7 +70,7 @@ class BookTagRepositoryTest {
 
     @Test
     public void testFindAllTagIdByBookId() {
-        Set<Tag> tags = bookTagRepository.findAllTagIdByBookId(book.getId());
+        List<Tag> tags = bookTagRepository.findAllTagIdByBookId(book.getId());
 
         assertThat(tags).isNotEmpty();
         assertThat(tags.iterator().next().getName()).isEqualTo(tag.getName());

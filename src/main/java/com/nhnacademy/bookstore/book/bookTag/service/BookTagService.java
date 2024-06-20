@@ -8,6 +8,7 @@ import com.nhnacademy.bookstore.book.bookTag.dto.response.ReadTagByBookResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -18,8 +19,8 @@ public interface BookTagService {
 
     public Page<ReadBookByTagResponse> readBookByTagId(ReadTagRequest tagId, Pageable pageable);
 
-    public Set<ReadTagByBookResponse> readTagByBookId(ReadBookIdRequest bookId);
+    public List<ReadTagByBookResponse> readTagByBookId(ReadBookIdRequest bookId);
 
-    public void createBookTag(CreateBookTagRequest createBookTagRequest);
+    public Long createBookTag(CreateBookTagRequest createBookTagRequest);
 
 }

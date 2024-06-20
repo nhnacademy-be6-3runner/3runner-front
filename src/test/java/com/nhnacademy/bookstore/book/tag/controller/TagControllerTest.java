@@ -20,8 +20,7 @@ import java.util.HashMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -44,17 +43,18 @@ public class TagControllerTest {
         CreateTagRequest createTagRequest = CreateTagRequest.builder().name("Test Tag").build();
 
         // Mock service method
-        doNothing().when(tagService).createTag(any(CreateTagRequest.class));
+        Long expectedId = 1L;
+        when(tagService.createTag(any(CreateTagRequest.class))).thenReturn(expectedId);
 
         BindingResult bindingResult = new MapBindingResult(new HashMap<>(), "createTagRequest");
 
         // Call controller method
-        ApiResponse<Void> responseEntity = tagController.createTag(createTagRequest,bindingResult);
+        ApiResponse<Long> responseEntity = tagController.createTag(createTagRequest, bindingResult);
 
         // Verify
         assertEquals(201, responseEntity.getHeader().getResultCode());
-        assertEquals("SUCCESS_CREATE", responseEntity.getHeader().getResultMessage());
         assertTrue(responseEntity.getHeader().isSuccessful());
+        assertEquals(expectedId, responseEntity.getBody().getData());
 
         verify(tagService).createTag(createTagRequest);
     }
@@ -73,7 +73,6 @@ public class TagControllerTest {
 
         // Verify
         assertEquals(204, responseEntity.getHeader().getResultCode());
-        assertEquals("SUCCESS_DELETE", responseEntity.getHeader().getResultMessage());
         assertTrue(responseEntity.getHeader().isSuccessful());
         verify(tagService).deleteTag(deleteTagRequest);
     }
@@ -82,16 +81,20 @@ public class TagControllerTest {
     void testUpdateTag() {
         // Mock data
         UpdateTagRequest updateTagRequest = UpdateTagRequest.builder().tagId(1L).tagName("Updated Tag").build();
+
         // Mock service method
-        doNothing().when(tagService).updateTag(any(UpdateTagRequest.class));
+        Long expectedId = 1L;
+        when(tagService.updateTag(any(UpdateTagRequest.class))).thenReturn(expectedId);
 
         BindingResult bindingResult = new MapBindingResult(new HashMap<>(), "updateTagRequest");
+
         // Call controller method
-        ApiResponse<Void> responseEntity = tagController.updateTag(updateTagRequest,bindingResult);
+        ApiResponse<Long> responseEntity = tagController.updateTag(updateTagRequest, bindingResult);
+
         // Verify
         assertEquals(200, responseEntity.getHeader().getResultCode());
-        assertEquals("SUCCESS", responseEntity.getHeader().getResultMessage());
         assertTrue(responseEntity.getHeader().isSuccessful());
+        assertEquals(expectedId, responseEntity.getBody().getData());
 
         verify(tagService).updateTag(updateTagRequest);
     }

@@ -19,9 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 
 import java.time.ZonedDateTime;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -63,7 +61,6 @@ class BookTagControllerTest {
 
         // Assertions
         assertEquals(HttpStatus.OK, HttpStatus.valueOf(response.getHeader().getResultCode()));
-        assertEquals("SUCCESS", response.getHeader().getResultMessage());
         assertEquals(1, response.getBody().getData().getContent().size());
         assertEquals("Sample Book", response.getBody().getData().getContent().getFirst().title());
     }
@@ -74,20 +71,19 @@ class BookTagControllerTest {
         ReadBookIdRequest bookIdRequest = new ReadBookIdRequest(1L);
 
         // Mocking service response
-        Set<ReadTagByBookResponse> mockSet = new HashSet<>(Collections.singletonList(
-                new ReadTagByBookResponse("Fantasy")
-        ));
+        List<ReadTagByBookResponse> mockSet = new ArrayList<>();
+        mockSet.add(new ReadTagByBookResponse("Fantasy"));
+
         when(bookTagService.readTagByBookId(any())).thenReturn(mockSet);
 
         // Calling the controller method
-        ApiResponse<Set<ReadTagByBookResponse>> response = bookTagController.readTagByBookId(bookIdRequest, mock(BindingResult.class));
+        ApiResponse<List<ReadTagByBookResponse>> response = bookTagController.readTagByBookId(bookIdRequest, mock(BindingResult.class));
 
         // Verifying service method invocation
         verify(bookTagService, times(1)).readTagByBookId(any());
 
         // Assertions
         assertEquals(HttpStatus.OK, HttpStatus.valueOf(response.getHeader().getResultCode()));
-        assertEquals("SUCCESS", response.getHeader().getResultMessage());
         assertEquals(1, response.getBody().getData().size());
         assertEquals("Fantasy", response.getBody().getData().iterator().next().name());
     }

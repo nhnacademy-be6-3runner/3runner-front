@@ -60,7 +60,7 @@ public class BookController {
                 null
         ));
 
-        return new ApiResponse<Void>(new ApiResponse.Header(true, 203, "book created"));
+        return new ApiResponse<Void>(new ApiResponse.Header(true, 203));
     }
 }
 

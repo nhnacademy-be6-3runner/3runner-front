@@ -19,7 +19,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -71,13 +73,12 @@ class BookTagServiceImplTest {
         Tag t = new Tag();
         t.setName("Fantasy");
         // Mocking repository response
-        Set<Tag> mockSet = Collections.singleton(
-                t
-        );
+        List<Tag> mockSet = new ArrayList<>();
+        mockSet.add(t);
         when(bookTagRepository.findAllTagIdByBookId(anyLong())).thenReturn(mockSet);
 
         // Calling the service method
-        Set<ReadTagByBookResponse> response = bookTagService.readTagByBookId(bookIdRequest);
+        List<ReadTagByBookResponse> response = bookTagService.readTagByBookId(bookIdRequest);
 
         // Verifying repository method invocation
         verify(bookTagRepository, times(1)).findAllTagIdByBookId(anyLong());

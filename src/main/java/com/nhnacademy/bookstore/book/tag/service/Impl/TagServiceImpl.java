@@ -31,14 +31,14 @@ public class TagServiceImpl implements TagService {
      *
      */
     @Override
-    public void createTag(CreateTagRequest tag) {
+    public Long createTag(CreateTagRequest tag) {
         Tag tagEntity =new Tag();
         if(tagRepository.findByName(tag.name()).isPresent()){
             throw new AlreadyHaveTagException("태그가 이미 있습니다.");
         }
         tagEntity.setName(tag.name());
-        tagRepository.save(tagEntity);
 
+        return tagRepository.save(tagEntity).getId();
     }
 
     /**
@@ -61,12 +61,13 @@ public class TagServiceImpl implements TagService {
      * @param tag 변경할 태그 내용
      */
     @Override
-    public void updateTag(UpdateTagRequest tag) {
+    public Long updateTag(UpdateTagRequest tag) {
         Tag tagEntity = tagRepository.findById(tag.tagId()).orElse(null);
         if(tagEntity == null) {
             throw new NotExistsTagException("해당 태그가 없습니다.");
         }
         tagEntity.setName(tag.tagName());
         tagRepository.save(tagEntity);
+        return tagEntity.getId();
     }
 }

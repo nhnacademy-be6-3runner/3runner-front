@@ -16,6 +16,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 import java.util.Set;
 
 
@@ -71,13 +73,13 @@ public class  BookTagController {
      * @return ApiResponse< Page<ReadBookByTagResponse>> 커스터마이징 한 헤더와 불러온 해당 책에 달린 태그들로 이루어진 바디를 합친 실행 값
      */
     @GetMapping("/books/{bookId}/tags")
-    public ApiResponse<Set<ReadTagByBookResponse>> readTagByBookId(@Valid ReadBookIdRequest bookId,
+    public ApiResponse<List<ReadTagByBookResponse>> readTagByBookId(@Valid ReadBookIdRequest bookId,
                                                                   BindingResult bindingResult) {
         if(bindingResult.hasErrors()){
 
             throw new ReadBookTagRequestFormException(bindingResult.getFieldErrors().toString());
         }
-        Set<ReadTagByBookResponse> tags = bookTagService.readTagByBookId(bookId);
+        List<ReadTagByBookResponse> tags = bookTagService.readTagByBookId(bookId);
         if(tags.isEmpty()){
             throw new ReadBookTagNotFoundResponseException("Tag가 없습니다.");
         }

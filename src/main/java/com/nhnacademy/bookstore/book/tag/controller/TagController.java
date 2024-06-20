@@ -34,12 +34,12 @@ public class TagController {
      * @return ApiResponse<Void> 성공시 success헤더만 보냄
      */
     @PostMapping
-    public ApiResponse<Void> createTag(@Valid CreateTagRequest createTagRequest,
+    public ApiResponse<Long> createTag(@Valid CreateTagRequest createTagRequest,
                                     BindingResult bindingResult) {
         ValidationUtils.validateBindingResult(bindingResult,new DeleteTagRequestFormException(bindingResult.getFieldErrors().toString()));
-        tagService.createTag(createTagRequest);
+        Long id = tagService.createTag(createTagRequest);
 
-        return new ApiResponse<>(new ApiResponse.Header(true, HttpStatus.CREATED.value(), "SUCCESS_CREATE"), new ApiResponse.Body<>(null));
+        return new ApiResponse<>(new ApiResponse.Header(true, HttpStatus.CREATED.value()), new ApiResponse.Body<>(id));
     }
 
     /**
@@ -53,7 +53,7 @@ public class TagController {
                                        BindingResult bindingResult) {
         ValidationUtils.validateBindingResult(bindingResult,new DeleteTagRequestFormException(bindingResult.getFieldErrors().toString()));
         tagService.deleteTag(deleteTagRequest);
-        return new ApiResponse<>(new ApiResponse.Header(true, HttpStatus.NO_CONTENT.value(), "SUCCESS_DELETE"), new ApiResponse.Body<>(null));
+        return new ApiResponse<>(new ApiResponse.Header(true, HttpStatus.NO_CONTENT.value()), new ApiResponse.Body<>(null));
 
 
     }
@@ -65,11 +65,11 @@ public class TagController {
      * @return 성공시 success헤더만 보냄
      */
     @PutMapping
-    public ApiResponse<Void> updateTag(@Valid UpdateTagRequest updateTagRequest,
+    public ApiResponse<Long> updateTag(@Valid UpdateTagRequest updateTagRequest,
                                        BindingResult bindingResult) {
         ValidationUtils.validateBindingResult(bindingResult,new DeleteTagRequestFormException(bindingResult.getFieldErrors().toString()));
-        tagService.updateTag(updateTagRequest);
-        return ApiResponse.success(null);
+        Long id = tagService.updateTag(updateTagRequest);
+        return ApiResponse.success(id);
     }
 
 }
