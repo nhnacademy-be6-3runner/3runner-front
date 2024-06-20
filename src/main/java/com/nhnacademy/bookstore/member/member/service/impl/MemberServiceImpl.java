@@ -5,6 +5,7 @@ import com.nhnacademy.bookstore.entity.member.Member;
 import com.nhnacademy.bookstore.entity.member.enums.Grade;
 import com.nhnacademy.bookstore.entity.member.enums.Status;
 import com.nhnacademy.bookstore.member.member.dto.request.UpdateMemberRequest;
+import com.nhnacademy.bookstore.member.member.exception.AlreadyExistsEmailException;
 import com.nhnacademy.bookstore.member.member.exception.MemberNotExistsException;
 import com.nhnacademy.bookstore.member.member.repository.MemberRepository;
 import com.nhnacademy.bookstore.member.member.service.MemberService;
@@ -33,6 +34,9 @@ public class MemberServiceImpl implements MemberService {
      * @author 유지아 Save member. -멤버값을 받아와 저장한다.(이메일 중복하는걸로 확인하면 좋을듯)
      */
     public Member save(Member member) {
+        if(memberRepository.findByEmail(member.getEmail())!=null){
+            throw new AlreadyExistsEmailException();
+        }
         //이메일 중복 확인안해도 되려나,,
         return memberRepository.save(member);
     }
@@ -44,11 +48,12 @@ public class MemberServiceImpl implements MemberService {
      * @return the member -member 반환
      * @author 유지아 Find by id member. -memberid를 받아 멤버자체를 가져온다.
      */
-    public Member findById(Long id) {
+    public Member readById(Long id) {
         if(memberRepository.findById(id).isPresent()){
             return memberRepository.findById(id).get();
         }else{
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Member not found");
+            throw new MemberNotExistsException();
+            //throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Member not found");
         }
     }
 
@@ -60,7 +65,7 @@ public class MemberServiceImpl implements MemberService {
      * @return the member -해당하는 member를 반환한다.
      * @author 유지아 Find by email and password member. -이메일과 패스워드 값으로 조회한다.
      */
-    public Member findByEmailAndPassword(String email, String password) {
+    public Member readByEmailAndPassword(String email, String password) {
         if(memberRepository.findByEmailAndPassword(email,password) !=null){
             return memberRepository.findByEmailAndPassword(email,password);
         }else{

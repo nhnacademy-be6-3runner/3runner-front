@@ -9,7 +9,7 @@ import java.util.List;
 public interface AddressService {
     void save(Address address);
 
-    List<Address> findAll(Member member);
+    List<Address> readAll(Member member);
 
     Address updateAddress(String addressId, UpdateAddressRequest updateAddressRequest);
 

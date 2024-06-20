@@ -4,13 +4,15 @@ package com.nhnacademy.bookstore.member.member.controller;
 import com.nhnacademy.bookstore.entity.auth.Auth;
 import com.nhnacademy.bookstore.entity.member.Member;
 import com.nhnacademy.bookstore.entity.pointRecord.PointRecord;
+import com.nhnacademy.bookstore.member.auth.dto.AuthResponse;
 import com.nhnacademy.bookstore.member.member.dto.request.CreateMemberRequest;
+import com.nhnacademy.bookstore.member.member.dto.request.LoginRequest;
 import com.nhnacademy.bookstore.member.member.dto.request.UpdateMemberRequest;
 import com.nhnacademy.bookstore.member.member.dto.response.GetMemberResponse;
 import com.nhnacademy.bookstore.member.member.dto.response.UpdateMemberResponse;
-import com.nhnacademy.bookstore.member.auth.service.AuthService;
-import com.nhnacademy.bookstore.member.memberAuth.service.MemberAuthService;
-import com.nhnacademy.bookstore.member.pointRecord.service.PointService;
+import com.nhnacademy.bookstore.member.auth.service.impl.AuthServiceImpl;
+import com.nhnacademy.bookstore.member.memberAuth.service.impl.MemberAuthServiceImpl;
+import com.nhnacademy.bookstore.member.pointRecord.service.impl.PointServiceImpl;
 import com.nhnacademy.bookstore.member.member.service.impl.MemberServiceImpl;
 import com.nhnacademy.bookstore.util.ApiResponse;
 import jakarta.validation.Valid;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -32,9 +35,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MemberController {
     private final MemberServiceImpl memberService;
-    private final PointService pointRecordService;
-    private final AuthService authService;
-    private final MemberAuthService memberAuthService;
+    private final PointServiceImpl pointRecordService;
+    private final AuthServiceImpl authService;
+    private final MemberAuthServiceImpl memberAuthService;
 
 
     /**
@@ -44,7 +47,7 @@ public class MemberController {
      * @author 유지아
      */
     @PostMapping("/members")
-    public ApiResponse<Void> createMember(@RequestBody CreateMemberRequest request) {
+    public ApiResponse<Void> createMember(@RequestBody @Valid CreateMemberRequest request) {
         try {
                 Member member = new Member(request);
                 Auth auth = authService.getAuth("USER");
@@ -53,9 +56,9 @@ public class MemberController {
                 pointRecordService.save(pointRecord);
                 memberAuthService.saveAuth(member, auth);
                 memberService.save(member);
-            return ApiResponse.success(null);
+              return new ApiResponse<Void>(new ApiResponse.Header(true,201,"User Created"),new ApiResponse.Body<Void>(null));
         }catch (RuntimeException e) {
-            return ApiResponse.fail(HttpStatus.BAD_REQUEST.value(),e.getMessage());
+            return new ApiResponse<>(new ApiResponse.Header(false,422,"Email Already Exists"));
         }
     }
 
@@ -67,9 +70,37 @@ public class MemberController {
      * @author 유지아
      */
     @GetMapping("/members")
-    public ApiResponse<GetMemberResponse> findById(@RequestHeader("member-id") Long memberId) {
+    public ApiResponse<GetMemberResponse> readById(@RequestHeader("member-id") Long memberId) {
         try {
-            Member member = memberService.findById(memberId);
+            Member member = memberService.readById(memberId);
+            GetMemberResponse getMemberResponse = GetMemberResponse.builder()
+                    .age(member.getAge())
+                    .grade(member.getGrade())
+                    .point(member.getPoint())
+                    .phone(member.getPhone())
+                    .created_at(member.getCreated_at())
+                    .birthday(member.getBirthday())
+                    .email(member.getEmail())
+                    .name(member.getName())
+                    .password(member.getPassword()).build();
+            return new ApiResponse<GetMemberResponse>(new ApiResponse.Header(true,200,"Member Found"),new ApiResponse.Body<>(getMemberResponse));
+        }catch (RuntimeException e) {
+            return new ApiResponse<>(new ApiResponse.Header(false,404,"Member Not Found"));
+        }
+    }
+
+    /**
+     * Find by email and password response entity. -이메일과 비밀번호에 맞는 멤버정보를 반환한다.
+     *
+     * @param
+     * @return the response entity -멤버 정보에 대한 응답을 담아서 apiresponse로 응답한다.
+     * @author 유지아
+     */
+    @PostMapping("/members/login")
+    public ApiResponse<GetMemberResponse> readByEmailAndPassword(
+            @RequestBody @Valid LoginRequest loginRequest) {
+        try{
+            Member member = memberService.readByEmailAndPassword(loginRequest.email(), loginRequest.password());
             GetMemberResponse getMemberResponse = GetMemberResponse.builder()
                     .age(member.getAge())
                     .grade(member.getGrade())
@@ -81,25 +112,10 @@ public class MemberController {
                     .name(member.getName())
                     .password(member.getPassword()).build();
 
-            return ApiResponse.success(getMemberResponse);
+            return new ApiResponse<GetMemberResponse>(new ApiResponse.Header(true,200,"Member(Login) Found"),new ApiResponse.Body<>(getMemberResponse));
         }catch (RuntimeException e) {
-            return ApiResponse.fail(HttpStatus.BAD_REQUEST.value(),e.getMessage());
+            return new ApiResponse<>(new ApiResponse.Header(false,401,"Member Unauthorized"));
         }
-    }
-
-    /**
-     * Find by email and password response entity. -이메일과 비밀번호에 맞는 멤버정보를 반환한다.
-     *
-     * @param email    the email -이메일값을 문자열로 받는다.
-     * @param password the password -비밀번호값을 문자열로 받는다.
-     * @return the response entity -멤버 정보에 대한 응답을 담아서 apiresponse로 응답한다.
-     * @author 유지아
-     */
-    @GetMapping("/members/login")
-    public ResponseEntity<Member> findByEmailAndPassword(
-            @RequestHeader("email") String email,
-            @RequestHeader("password") String password) {
-        return ResponseEntity.ok(memberService.findByEmailAndPassword(email, password));
     }
 
     /**
@@ -110,8 +126,13 @@ public class MemberController {
      * @author 유지아
      */
     @GetMapping("/members/auths")
-    public List<Auth> findAuths(@RequestHeader("member-id")Long memberId){
-        return memberAuthService.findAllAuths(memberId);
+    public ApiResponse<List<AuthResponse>> readAuths(@RequestHeader("member-id")Long memberId){
+        try {
+            return new ApiResponse<List<AuthResponse>>(new ApiResponse.Header(true,200,"Auths Found"),
+                    new ApiResponse.Body<>(memberAuthService.readAllAuths(memberId).stream().map(a->AuthResponse.builder().auth(a.getName()).build()).collect(Collectors.toList())));
+        }catch (RuntimeException e) {
+            return new ApiResponse<>(new ApiResponse.Header(false,401,"Auths Not Found"));
+        }
     }
 
     /**

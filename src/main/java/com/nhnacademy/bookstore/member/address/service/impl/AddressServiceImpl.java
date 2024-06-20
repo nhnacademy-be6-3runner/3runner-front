@@ -38,7 +38,7 @@ public class AddressServiceImpl implements AddressService {
      * @return the list -Address 리스트를 반환해준다.
      * @author 유지아  Find all list. -유저를 받아 유저에 저장된 주소들을 반환한다.
      */
-    public List<Address> findAll(Member member) {
+    public List<Address> readAll(Member member) {
         return addressRepository.findByMember(member);
     }
 

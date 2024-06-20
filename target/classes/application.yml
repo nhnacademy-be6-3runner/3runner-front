@@ -1,4 +1,9 @@
 spring:
+  datasource:
+    url: jdbc:mysql://133.186.241.167:3306/be6_3runner_dev
+    username: be6_3runner
+    password: tHos2g5st4@XH7mT
+    driver-class-name: com.mysql.cj.jdbc.Driver
   data:
     elasticsearch:
       repositories:
@@ -52,3 +57,4 @@ logging:
   level:
     org.hibernate.orm.jdbc.bind: trace
     org.springframework.transaction.interceptor: trace
+

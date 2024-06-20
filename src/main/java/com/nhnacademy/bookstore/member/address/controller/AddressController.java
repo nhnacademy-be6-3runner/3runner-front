@@ -9,10 +9,12 @@ import com.nhnacademy.bookstore.member.address.dto.response.UpdateAddressRespons
 import com.nhnacademy.bookstore.member.address.service.impl.AddressServiceImpl;
 import com.nhnacademy.bookstore.member.member.service.impl.MemberServiceImpl;
 import com.nhnacademy.bookstore.util.ApiResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -37,17 +39,17 @@ public class AddressController {
      *
      */
     @PostMapping("/members/addresses")
-    public ApiResponse<Set<AddressResponse>> createAddress(@RequestBody CreateAddressRequest request) {
+    public ApiResponse<List<AddressResponse>> createAddress(@RequestBody @Valid CreateAddressRequest request) {
         try{
-            Member member = memberService.findById(request.memberId());
+            Member member = memberService.readById(request.memberId());
             Address address = new Address(request,member);
             addressServiceImpl.save(address);
-
-            return ApiResponse.success(addressServiceImpl.findAll(member).stream().map(a-> AddressResponse.builder()
-                    .name(a.getName()).country(a.getCountry()).city(a.getCity()).state(a.getState()).road(a.getRoad()).postalCode(a.getPostalCode())
-                    .build()).collect(Collectors.toSet()));//이거 찾는거에서 오류 해주나? 이것두?
+            return new ApiResponse<List<AddressResponse>>(new ApiResponse.Header(true, 201,"Address Create"),
+                    new ApiResponse.Body<>(addressServiceImpl.readAll(member).stream().map(a->AddressResponse.builder()
+                            .name(a.getName()).country(a.getCountry()).city(a.getCity()).state(a.getState()).road(a.getRoad()).postalCode(a.getPostalCode())
+                            .build()).collect(Collectors.toList())));
         }catch (RuntimeException e){
-            return ApiResponse.fail(HttpStatus.BAD_REQUEST.value(),e.getMessage());
+            return ApiResponse.fail(HttpStatus.BAD_REQUEST.value(),e.getMessage());//TODO:이거도 고쳐야함.
         }
 
     }
@@ -60,14 +62,16 @@ public class AddressController {
      */
 //주소를 추가한다.
     @GetMapping("/members/addresses")
-    public ApiResponse<Set<AddressResponse>> findAllAddresses(@RequestHeader("member-id") Long memberId) {
+    public ApiResponse<List<AddressResponse>> readAllAddresses(@RequestHeader("member-id") Long memberId) {
         try{
-            Member member = memberService.findById(memberId);
-            return ApiResponse.success(addressServiceImpl.findAll(member).stream().map(a->AddressResponse.builder()
-                    .name(a.getName()).country(a.getCountry()).city(a.getCity()).state(a.getState()).road(a.getRoad()).postalCode(a.getPostalCode())
-                    .build()).collect(Collectors.toSet()));
+            Member member = memberService.readById(memberId);
+
+            return new ApiResponse<List<AddressResponse>>(new ApiResponse.Header(true,200,"Addresses found"),
+                    new ApiResponse.Body<>(addressServiceImpl.readAll(member).stream().map(a->AddressResponse.builder()
+                            .name(a.getName()).country(a.getCountry()).city(a.getCity()).state(a.getState()).road(a.getRoad()).postalCode(a.getPostalCode()).build()).collect(Collectors.toList())));
+
         }catch (RuntimeException e){
-            return ApiResponse.fail(HttpStatus.BAD_REQUEST.value(),e.getMessage());
+            return ApiResponse.fail(HttpStatus.BAD_REQUEST.value(),e.getMessage());//TODO:고쳐야함
         }
     }
     //멤버의 주소를 가져온다.
