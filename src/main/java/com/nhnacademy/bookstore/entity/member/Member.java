@@ -64,13 +64,13 @@ public class Member {
 
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL,orphanRemoval = true)
-    private List<Address> addressSet = new ArrayList<>();
+    private List<Address> addressList = new ArrayList<>();
 
     @OneToMany(mappedBy = "member",cascade = CascadeType.ALL,orphanRemoval = true)
-    private List<MemberAuth> memberAuthSet = new ArrayList<>();
+    private List<MemberAuth> memberAuthList = new ArrayList<>();
 
     @OneToMany(mappedBy = "member",cascade = CascadeType.ALL,orphanRemoval = true)
-    private List<PointRecord> pointSet = new ArrayList<>();
+    private List<PointRecord> pointRecordList = new ArrayList<>();
 
 
 }

@@ -18,6 +18,6 @@ public class Cart {
     private Member member;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "cart", cascade = CascadeType.ALL)
-    private List<BookCart> bookCartSet = new ArrayList<>();
+    private List<BookCart> bookCartList = new ArrayList<>();
 
 }

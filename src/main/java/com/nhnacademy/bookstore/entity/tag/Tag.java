@@ -20,5 +20,5 @@ public class Tag {
     //연결
 
     @OneToMany(mappedBy = "tag", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<BookTag> bookTagSet = new ArrayList<>();
+    private List<BookTag> bookTagList = new ArrayList<>();
 }

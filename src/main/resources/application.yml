@@ -17,6 +17,11 @@ spring:
       highlight_sql: true
       auto_quote_keyword: true
 
+  datasource:
+    url: jdbc:mysql://133.186.241.167:3306/be6_3runner_dev
+    username: be6_3runner
+    password: tHos2g5st4@XH7mT
+
   profiles:
     active: dev
 
