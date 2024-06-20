@@ -1,4 +1,4 @@
-package com.nhnacademy.front.book.book.domain;
+package com.nhnacademy.front.book.book.dto.request;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -9,7 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.ZonedDateTime;
 
-public record CreateBookRequest(
+public record UserCreateBookRequest(
         @NotBlank(message = "title is entry") String title,
         @NotBlank String description,
         @NotBlank String publishedDate,
@@ -22,5 +22,6 @@ public record CreateBookRequest(
         @NotBlank String isbn,
         @NotBlank String publisher,
         @RequestParam("tagList") String tagList,
-        @RequestParam("categoryList") String categoryList) {
+        @RequestParam("categoryList") String categoryList
+) {
 }
