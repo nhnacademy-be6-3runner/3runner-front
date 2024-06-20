@@ -4,8 +4,8 @@ import com.nhnacademy.bookstore.entity.bookTag.BookTag;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Tag {
@@ -20,5 +20,5 @@ public class Tag {
     //연결
 
     @OneToMany(mappedBy = "tag", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<BookTag> bookTagSet = new HashSet<>();
+    private List<BookTag> bookTagList = new ArrayList<>();
 }
