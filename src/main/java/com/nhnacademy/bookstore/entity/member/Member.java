@@ -21,7 +21,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@NoArgsConstructor
 @Setter
 @Builder
 public class Member {

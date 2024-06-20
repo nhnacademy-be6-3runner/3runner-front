@@ -11,6 +11,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -61,7 +63,7 @@ public class Purchase {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchase", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PurchaseCoupon> purchaseCouponList = new ArrayList<>();
 
-    public Purchase(UUID orderNumber, PurchaseStatus status, int deliveryPrice, int totalPrice, ZonedDateTime createdAt, String road, String password, MemberType memberType, Member member, PointRecord pointRecord, Set<PurchaseBook> purchaseBookSet, Set<PurchaseCoupon> purchaseCouponSet) {
+    public Purchase(UUID orderNumber, PurchaseStatus status, int deliveryPrice, int totalPrice, ZonedDateTime createdAt, String road, String password, MemberType memberType, Member member, PointRecord pointRecord, List<PurchaseBook> purchaseBookList, List<PurchaseCoupon> purchaseCouponList) {
         this.orderNumber = orderNumber;
         this.status = status;
         this.deliveryPrice = deliveryPrice;
@@ -72,8 +74,8 @@ public class Purchase {
         this.memberType = memberType;
         this.member = member;
         this.pointRecord = pointRecord;
-        this.purchaseBookSet = purchaseBookSet;
-        this.purchaseCouponSet = purchaseCouponSet;
+        this.purchaseBookList = purchaseBookList;
+        this.purchaseCouponList = purchaseCouponList;
     }
 
     @Override

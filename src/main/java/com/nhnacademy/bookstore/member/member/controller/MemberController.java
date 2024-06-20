@@ -45,7 +45,6 @@ public class MemberController {
      */
     @PostMapping("/members")
     public ApiResponse<Void> createMember(@RequestBody CreateMemberRequest request) {
-        try {
                 Member member = new Member(request);
                 Auth auth = authService.getAuth("USER");
 
@@ -54,9 +53,6 @@ public class MemberController {
                 memberAuthService.saveAuth(member, auth);
                 memberService.save(member);
             return ApiResponse.success(null);
-        }catch (RuntimeException e) {
-            return ApiResponse.fail(HttpStatus.BAD_REQUEST.value(),e.getMessage());
-        }
     }
 
     /**
@@ -68,7 +64,6 @@ public class MemberController {
      */
     @GetMapping("/members")
     public ApiResponse<GetMemberResponse> findById(@RequestHeader("member-id") Long memberId) {
-        try {
             Member member = memberService.findById(memberId);
             GetMemberResponse getMemberResponse = GetMemberResponse.builder()
                     .age(member.getAge())
@@ -82,9 +77,6 @@ public class MemberController {
                     .password(member.getPassword()).build();
 
             return ApiResponse.success(getMemberResponse);
-        }catch (RuntimeException e) {
-            return ApiResponse.fail(HttpStatus.BAD_REQUEST.value(),e.getMessage());
-        }
     }
 
     /**
@@ -125,15 +117,12 @@ public class MemberController {
     @PutMapping("/members")
     public ApiResponse<UpdateMemberResponse> updateMember(@RequestHeader(name = "Member-Id") String memberId,
                                                           @Valid @RequestBody UpdateMemberRequest updateMemberRequest) {
-        try {
+
             Member updatedMember = memberService.updateMember(memberId, updateMemberRequest);
             UpdateMemberResponse updateMemberResponse = UpdateMemberResponse.builder()
                     .id(String.valueOf(updatedMember.getId()))
                     .name(updatedMember.getName()).build();
             return ApiResponse.success(updateMemberResponse);
-        } catch (RuntimeException e) {
-            return ApiResponse.fail(HttpStatus.BAD_REQUEST.value(), e.getMessage());
-        }
     }
 
     /**
@@ -145,12 +134,8 @@ public class MemberController {
      */
     @DeleteMapping("/members")
     public ApiResponse<Void> deleteMember(@RequestHeader(name = "Member-Id") String memberId) {
-        try {
             memberService.deleteMember(memberId);
-            return new ApiResponse<>(new ApiResponse.Header(true, HttpStatus.NO_CONTENT.value(), "Member deleted"));
-        } catch (RuntimeException e) {
-            return ApiResponse.fail(HttpStatus.BAD_REQUEST.value(), e.getMessage());
-        }
+            return new ApiResponse<>(new ApiResponse.Header(true, HttpStatus.NO_CONTENT.value()));
     }
 }
 

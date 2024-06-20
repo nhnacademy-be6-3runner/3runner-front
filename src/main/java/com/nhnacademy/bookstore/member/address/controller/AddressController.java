@@ -6,7 +6,9 @@ import com.nhnacademy.bookstore.member.address.dto.request.AddressResponse;
 import com.nhnacademy.bookstore.member.address.dto.request.CreateAddressRequest;
 import com.nhnacademy.bookstore.member.address.dto.request.UpdateAddressRequest;
 import com.nhnacademy.bookstore.member.address.dto.response.UpdateAddressResponse;
+import com.nhnacademy.bookstore.member.address.service.AddressService;
 import com.nhnacademy.bookstore.member.address.service.impl.AddressServiceImpl;
+import com.nhnacademy.bookstore.member.member.service.MemberService;
 import com.nhnacademy.bookstore.member.member.service.impl.MemberServiceImpl;
 import com.nhnacademy.bookstore.util.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +27,8 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 public class AddressController {
-    private final MemberServiceImpl memberService;
-    private final AddressServiceImpl addressServiceImpl;
+    private final MemberService memberService;
+    private final AddressService addressService;
 
     /**
      * Create address response entity.
@@ -38,17 +40,15 @@ public class AddressController {
      */
     @PostMapping("/members/addresses")
     public ApiResponse<Set<AddressResponse>> createAddress(@RequestBody CreateAddressRequest request) {
-        try{
+
             Member member = memberService.findById(request.memberId());
             Address address = new Address(request,member);
-            addressServiceImpl.save(address);
+        addressService.save(address);
 
-            return ApiResponse.success(addressServiceImpl.findAll(member).stream().map(a-> AddressResponse.builder()
+            return ApiResponse.success(addressService.findAll(member).stream().map(a-> AddressResponse.builder()
                     .name(a.getName()).country(a.getCountry()).city(a.getCity()).state(a.getState()).road(a.getRoad()).postalCode(a.getPostalCode())
                     .build()).collect(Collectors.toSet()));//이거 찾는거에서 오류 해주나? 이것두?
-        }catch (RuntimeException e){
-            return ApiResponse.fail(HttpStatus.BAD_REQUEST.value(),e.getMessage());
-        }
+
 
     }
     /**
@@ -61,14 +61,12 @@ public class AddressController {
 //주소를 추가한다.
     @GetMapping("/members/addresses")
     public ApiResponse<Set<AddressResponse>> findAllAddresses(@RequestHeader("member-id") Long memberId) {
-        try{
+
             Member member = memberService.findById(memberId);
-            return ApiResponse.success(addressServiceImpl.findAll(member).stream().map(a->AddressResponse.builder()
+            return ApiResponse.success(addressService.findAll(member).stream().map(a->AddressResponse.builder()
                     .name(a.getName()).country(a.getCountry()).city(a.getCity()).state(a.getState()).road(a.getRoad()).postalCode(a.getPostalCode())
                     .build()).collect(Collectors.toSet()));
-        }catch (RuntimeException e){
-            return ApiResponse.fail(HttpStatus.BAD_REQUEST.value(),e.getMessage());
-        }
+
     }
     //멤버의 주소를 가져온다.
 
@@ -83,18 +81,14 @@ public class AddressController {
     @PutMapping("/members/addresses")
     public ApiResponse<UpdateAddressResponse> updateAddress(@RequestHeader(name = "Address-Id") String addressId,
                                                             @RequestBody UpdateAddressRequest updateAddressRequest) {
-        try {
-            Address address = addressServiceImpl.updateAddress(addressId, updateAddressRequest);
+            Address address = addressService.updateAddress(addressId, updateAddressRequest);
             UpdateAddressResponse updateAddressResponse = UpdateAddressResponse.builder()
                     .id(addressId)
                     .name(address.getName())
                     .build();
             return ApiResponse.success(updateAddressResponse);
         }
-        catch (RuntimeException e) {
-            return ApiResponse.fail(HttpStatus.BAD_REQUEST.value(), e.getMessage());
-        }
-    }
+
 
 
     /**
@@ -106,12 +100,7 @@ public class AddressController {
      */
     @DeleteMapping("/members/addresses")
     public ApiResponse<Void> deleteAddress(@RequestHeader(name = "Address-Id") String addressId) {
-        try {
-            addressServiceImpl.deleteAddress(addressId);
-            return new ApiResponse<>(new ApiResponse.Header(true, HttpStatus.NO_CONTENT.value(), "Address deleted"));
-        }
-        catch (RuntimeException e) {
-            return ApiResponse.fail(HttpStatus.BAD_REQUEST.value(), e.getMessage());
-        }
+        addressService.deleteAddress(addressId);
+        return new ApiResponse<>(new ApiResponse.Header(true, HttpStatus.NO_CONTENT.value()));
     }
 }
