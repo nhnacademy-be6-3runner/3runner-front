@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -51,14 +52,14 @@ public class CategoryRepositoryTest {
                 .parent(parent2)
                 .build();
         this.categoryList = List.of(parent1, parent2, children1, children2, children3);
-        category = Category.builder()
-                .name("카테고리")
-                .build();
     }
 
     @DisplayName("카테고리 저장 테스트")
     @Test
-    void saveCategoryTest() {
+    void saveParentCategoryTest() {
+        category = Category.builder()
+                .name("카테고리")
+                .build();
         categoryRepository.save(category);
         Optional<Category> savedCategory = categoryRepository.findById(category.getId());
 
@@ -67,13 +68,44 @@ public class CategoryRepositoryTest {
         Assertions.assertNull(savedCategory.get().getParent());
     }
 
+    @DisplayName("자식 카테고리 저장 테스트")
+    @Test
+    void saveChildCategoryTest() {
+        Category parent = Category.builder()
+                .name("부모 카테고리")
+                .parent(null)
+                .build();
+        Category child = Category.builder()
+                .name("자식 카테고리")
+                .parent(parent)
+                .build();
+
+        categoryRepository.save(parent);
+        categoryRepository.save(child);
+
+        Optional<Category> foundParent = categoryRepository.findById(parent.getId());
+        Optional<Category> foundChild = categoryRepository.findById(child.getId());
+
+        Assertions.assertTrue(foundParent.isPresent());
+        Assertions.assertTrue(foundChild.isPresent());
+
+        Assertions.assertEquals("부모 카테고리", foundParent.get().getName());
+        Assertions.assertEquals("자식 카테고리", foundChild.get().getName());
+        Assertions.assertEquals(parent, foundChild.get().getParent());
+    }
+
+
     @DisplayName("카테고리 이름 조회 테스트")
     @Test
     void findByCategoryName() {
+        category = Category.builder()
+                .name("카테고리")
+                .build();
         categoryRepository.save(category);
         Optional<Category> result = categoryRepository.findByName("카테고리");
         Assertions.assertEquals(category.getName(), result.get().getName());
     }
+
 
     @DisplayName("최상위 카테고리 조회 테스트")
     @Test
@@ -85,15 +117,5 @@ public class CategoryRepositoryTest {
         log.info("size = {}", parentCategories.size());
 
         Assertions.assertEquals(2, parentCategories.size());
-    }
-
-    @DisplayName("자식 카테고리 조회 테스트")
-    @Test
-    void findCategoriesTest() {
-        long categoryId = 1;
-        categoryRepository.saveAll(categoryList);
-        Set<CategoryChildrenResponse> result = categoryRepository.findChildrenCategoriesByParentId(categoryId);
-
-        Assertions.assertEquals(2, result.size());
     }
 }

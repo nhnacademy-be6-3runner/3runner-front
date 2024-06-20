@@ -13,11 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * @author 김은비
@@ -33,27 +29,22 @@ public class CategoryServiceImpl implements CategoryService {
      * dto parentId = null 이면 최상위 카테고리
      * @param dto 생성 내용
      */
+    // TODO 아이디 long 넘기기
     @Override
     public void createCategory(CreateCategoryRequest dto) {
         duplicateCategoryName(dto.getName());
-        Category category;
 
-        // TODO 변경감지
         if (dto.getParentId() != null) {
-            // 부모 찾기
             Category parentCategory = categoryRepository.findById(dto.getParentId())
                     .orElseThrow(() -> new CategoryNotFoundException(""));
-            // 자식 생성
             Category child = Category.builder()
                     .name(dto.getName())
                     .parent(parentCategory.getParent())
                     .build();
-            // 부모 카테고리의 자식 목록에 생성한 자식 카테고리 추가
             parentCategory.addChildren(child);
-            // 자식 카테고리 저장
             categoryRepository.save(child);
         } else {
-            category = Category.builder()
+            Category category = Category.builder()
                     .name(dto.getName())
                     .build();
             categoryRepository.save(category);

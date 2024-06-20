@@ -19,8 +19,8 @@ import java.util.Set;
  * Category Controller
  * @author 김은비
  */
-@RequestMapping
-@RestController("/api/categories")
+@RestController
+@RequestMapping(("/categories"))
 @RequiredArgsConstructor
 public class CategoryController {
     private final CategoryService categoryService;
