@@ -38,6 +38,6 @@ public record CreateBookRequest(
         @NotBlank(message = "publisher is mandatory") String publisher,
         MultipartFile image,
         List<String> imageList,
-        @NotBlank(message = "tag is mandatory")List<Long> tagList,
-        @NotBlank(message = "category is mandatory")List<Long> categoryList) {
+        @NotBlank(message = "tag is mandatory")List<Long> tagIds,
+        @NotBlank(message = "category is mandatory")List<Long>  categoryIds) {
 }

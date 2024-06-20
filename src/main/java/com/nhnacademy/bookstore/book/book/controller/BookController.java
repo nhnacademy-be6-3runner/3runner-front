@@ -8,6 +8,7 @@ import com.nhnacademy.bookstore.book.book.dto.request.CreateBookRequest;
 import com.nhnacademy.bookstore.util.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequiredArgsConstructor
+
 public class BookController {
     private final BookService bookService;
 
@@ -31,6 +33,7 @@ public class BookController {
      * @param bindingResult binding result
      * @return ApiResponse<>
      */
+    @Transactional
     @PostMapping("/book")
     public ApiResponse<Void> createBook(@Valid CreateBookRequest createBookRequest,
                                         BindingResult bindingResult) {
@@ -38,7 +41,6 @@ public class BookController {
             throw new CreateBookRequestFormException(bindingResult.getFieldErrors().toString());
         }
 
-        // controller 쪽은 entity X -> OSIV(Open session in view) view에 오기전에 닫아버리기? -> service에서 처리
         bookService.createBook(createBookRequest);
         //TODO 북 카테고리 서비스로 추가
         //TODO 북 태그 서비스로 추가
