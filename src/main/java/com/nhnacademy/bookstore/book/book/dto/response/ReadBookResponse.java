@@ -1,4 +1,4 @@
-package com.nhnacademy.bookstore.book.book.dto.request;
+package com.nhnacademy.bookstore.book.book.dto.response;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;

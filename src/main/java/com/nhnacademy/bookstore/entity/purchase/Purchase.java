@@ -11,9 +11,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.ZonedDateTime;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -30,7 +28,6 @@ public class Purchase {
     private UUID orderNumber;
 
     @NotNull
-    @Setter
     private PurchaseStatus status;
 
     @NotNull
@@ -50,7 +47,7 @@ public class Purchase {
     @NotNull
     private MemberType memberType;
 
-    @ManyToOne(optional = false)
+    @ManyToOne
     private Member member;
 
     @OneToOne
@@ -59,10 +56,10 @@ public class Purchase {
 
     //연결
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchase", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<PurchaseBook> purchaseBookSet = new HashSet<>();
+    private List<PurchaseBook> purchaseBookList = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchase", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<PurchaseCoupon> purchaseCouponSet = new HashSet<>();
+    private List<PurchaseCoupon> purchaseCouponList = new ArrayList<>();
 
     public Purchase(UUID orderNumber, PurchaseStatus status, int deliveryPrice, int totalPrice, ZonedDateTime createdAt, String road, String password, MemberType memberType, Member member, PointRecord pointRecord, Set<PurchaseBook> purchaseBookSet, Set<PurchaseCoupon> purchaseCouponSet) {
         this.orderNumber = orderNumber;
@@ -90,4 +87,5 @@ public class Purchase {
     public int hashCode() {
         return Objects.hashCode(getOrderNumber());
     }
+
 }

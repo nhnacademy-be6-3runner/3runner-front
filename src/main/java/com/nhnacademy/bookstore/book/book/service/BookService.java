@@ -1,6 +1,7 @@
 package com.nhnacademy.bookstore.book.book.service;
 
 import com.nhnacademy.bookstore.book.book.dto.request.CreateBookRequest;
+import com.nhnacademy.bookstore.book.book.dto.response.ReadBookResponse;
 import com.nhnacademy.bookstore.book.book.repository.BookRepository;
 import com.nhnacademy.bookstore.entity.book.Book;
 
@@ -15,7 +16,7 @@ public interface BookService {
      *
      * @param createBookRequest createBookRequest form param
      */
-    public void createBook(CreateBookRequest createBookRequest);
+    public Long createBook(CreateBookRequest createBookRequest);
 
     /**
      * 책 조회 기능.
@@ -23,5 +24,5 @@ public interface BookService {
      * @param bookId book entity id param
      * @return Book
      */
-    public Book readBookById(Long bookId);
+    public ReadBookResponse readBookById(Long bookId);
 }

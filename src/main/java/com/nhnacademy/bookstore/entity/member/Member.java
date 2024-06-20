@@ -15,12 +15,11 @@ import lombok.*;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @NoArgsConstructor
 @Setter
@@ -69,13 +68,13 @@ public class Member {
 
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL,orphanRemoval = true)
-    private Set<Address> addressSet = new HashSet<>();
+    private List<Address> addressList = new ArrayList<>();
 
     @OneToMany(mappedBy = "member",cascade = CascadeType.ALL,orphanRemoval = true)
-    private Set<MemberAuth> memberAuthSet = new HashSet<>();
+    private List<MemberAuth> memberAuthList = new ArrayList<>();
 
     @OneToMany(mappedBy = "member",cascade = CascadeType.ALL,orphanRemoval = true)
-    private Set<PointRecord> pointSet = new HashSet<>();
+    private List<PointRecord> pointRecordList = new ArrayList<>();
 
     @OneToMany(mappedBy = "member",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Purchase> purchaseList = new ArrayList<>();

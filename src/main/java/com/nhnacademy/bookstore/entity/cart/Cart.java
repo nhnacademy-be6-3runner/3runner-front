@@ -4,8 +4,8 @@ import com.nhnacademy.bookstore.entity.bookCart.BookCart;
 import com.nhnacademy.bookstore.entity.member.Member;
 import jakarta.persistence.*;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Cart {
@@ -18,6 +18,6 @@ public class Cart {
     private Member member;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "cart", cascade = CascadeType.ALL)
-    private Set<BookCart> bookCartSet = new HashSet<>();
+    private List<BookCart> bookCartList = new ArrayList<>();
 
 }
