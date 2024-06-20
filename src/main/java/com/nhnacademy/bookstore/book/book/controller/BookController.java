@@ -42,6 +42,7 @@ public class BookController {
         bookService.createBook(createBookRequest);
         //TODO 북 카테고리 서비스로 추가
         //TODO 북 태그 서비스로 추가
+        //TODO 북 이미지 서비스로 추가
 
         return new ApiResponse<Void>(new ApiResponse.Header(true, 201));
     }

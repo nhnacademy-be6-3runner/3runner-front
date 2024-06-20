@@ -37,6 +37,7 @@ public record CreateBookRequest(
         @NotBlank(message = "isbn is mandatory") String isbn,
         @NotBlank(message = "publisher is mandatory") String publisher,
         MultipartFile image,
-        @RequestParam("tagList") List<Long> tagList,
-        @RequestParam("categoryList") List<Long> categoryList) {
+        List<String> imageList,
+        @NotBlank(message = "tag is mandatory")List<Long> tagList,
+        @NotBlank(message = "category is mandatory")List<Long> categoryList) {
 }

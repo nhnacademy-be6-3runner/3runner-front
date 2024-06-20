@@ -36,7 +36,7 @@ public class BookServiceImpl implements BookService {
                 createBookRequest.price(),
                 createBookRequest.quantity(),
                 createBookRequest.sellingPrice(),
-                createBookRequest.viewCount(),
+                0,
                 createBookRequest.packing(),
                 createBookRequest.author(),
                 createBookRequest.isbn(),
