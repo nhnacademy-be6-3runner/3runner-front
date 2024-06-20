@@ -5,6 +5,8 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
+import com.fasterxml.uuid.Generators;
+import com.fasterxml.uuid.impl.TimeBasedGenerator;
 import com.nhnacademy.bookstore.book.image.exception.FailUploadImageException;
 import com.nhnacademy.bookstore.book.image.exception.NotFindImageException;
 import com.nhnacademy.bookstore.book.image.imageService.ImageService;
@@ -82,7 +84,9 @@ public class ImageServiceImpl implements ImageService {
      * @return -> 새로운 파일이름 + 저장하는 위치
      */
     private String fileNameMade(String orgFilename, String storagePlace) {
-        String uuid = UUID.randomUUID().toString().replaceAll("-", "");                                   // 32자리 랜덤 문자열
+
+        TimeBasedGenerator timeBasedGenerator = Generators.timeBasedGenerator();
+        String uuid = timeBasedGenerator.generate().toString().replaceAll("-", "");                       // time 을 사용한 UUID
         String extension = Objects.requireNonNull(orgFilename).substring(orgFilename.lastIndexOf(".") + 1);  // 확장자
         return storagePlace + "/" + uuid + "." + extension;
     }
