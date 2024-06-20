@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.nio.channels.AlreadyBoundException;
 import java.time.ZonedDateTime;
 
 /**
@@ -16,7 +17,6 @@ import java.time.ZonedDateTime;
 @RestControllerAdvice
 public class WebControllerAdvice {
 
-    // 응답, 성공,실패 폼 맞추기
     /**
      * INTERNAL_SERVER_ERROR 처리 메소드
      * @param ex
@@ -26,13 +26,14 @@ public class WebControllerAdvice {
     @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ApiResponse<ErrorResponseForm> runtimeExceptionHandler(Exception ex, Model model) {
-        return new ApiResponse<>(
-                new ApiResponse.Header(false, 500, "server error"),
-                new ApiResponse.Body<ErrorResponseForm>(ErrorResponseForm.builder()
-                                        .title(ex.getMessage())
-                                        .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                                        .timestamp(ZonedDateTime.now().toString())
-                                        .build())
+
+        return ApiResponse.fail(500,
+                new ApiResponse.Body<>(
+                        ErrorResponseForm.builder()
+                                .title(ex.getMessage())
+                                .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                                .timestamp(ZonedDateTime.now().toString())
+                                .build())
         );
     }
 
@@ -43,45 +44,61 @@ public class WebControllerAdvice {
      * @return ApiResponse<ErrorResponseForm>
      */
     @ExceptionHandler({
-            CreateBookRequestFormException.class
+            CreateBookRequestFormException.class,
+            AlreadyBoundException.class,
     })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiResponse<ErrorResponseForm> badRequestHandler(Exception ex, Model model) {
-        return new ApiResponse<>(
-                new ApiResponse.Header(false, 400, "bad request"),
+        return ApiResponse.badRequestFail(
                 new ApiResponse.Body<>(ErrorResponseForm.builder()
                         .title(ex.getMessage())
                         .status(HttpStatus.BAD_REQUEST.value())
                         .timestamp(ZonedDateTime.now().toString())
                         .build())
         );
+
     }
 
+    /**
+     * NOT_FOUND 처리 메소드
+     * @param ex
+     * @param model
+     * @return ApiResponse<ErrorResponseForm>
+     *
+     * @author 정주혁
+     */
+    @ExceptionHandler({
+    })
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ApiResponse<ErrorResponseForm> notFoundHandler(Exception ex, Model model) {
+        return ApiResponse.notFoundFail(
+                new ApiResponse.Body<>(ErrorResponseForm.builder()
+                        .title(ex.getMessage())
+                        .status(HttpStatus.NOT_FOUND.value())
+                        .timestamp(ZonedDateTime.now().toString())
+                        .build())
+        );
+    }
 
-//    @ExceptionHandler({})
-//    @ResponseStatus(HttpStatus.NOT_FOUND)
-//    public ApiResponse<ErrorResponseForm> notFoundHandler(Exception ex, Model model) {
-//        return new ApiResponse<>(
-//                new ApiResponse.Header(false, 404, "not found"),
-//                new ApiResponse.Body<>(ErrorResponseForm.builder()
-//                        .title(ex.getMessage())
-//                        .status(HttpStatus.NOT_FOUND.value())
-//                        .timestamp(ZonedDateTime.now().toString())
-//                        .build())
-//        );
-//    }
-//
-//
-//    @ExceptionHandler({})
-//    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-//    public ApiResponse<ErrorResponseForm> unauthorizedHandler(Exception ex, Model model) {
-//        return new ApiResponse<>(
-//                new ApiResponse.Header(false, 405, "unauthorized"),
-//                new ApiResponse.Body<>(ErrorResponseForm.builder()
-//                        .title(ex.getMessage())
-//                        .status(HttpStatus.UNAUTHORIZED.value())
-//                        .timestamp(ZonedDateTime.now().toString())
-//                        .build())
-//        );
-//    }
+    /**
+     * METHOD_NOT_ALLOWED 처리 메소드
+     * @param ex
+     * @param model
+     * @return ApiResponse<ErrorResponseForm>
+     *
+     * @author 정주혁
+     */
+
+    @ExceptionHandler({})
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ApiResponse<ErrorResponseForm> unauthorizedHandler(Exception ex, Model model) {
+        return new ApiResponse<>(
+                new ApiResponse.Header(false, HttpStatus.METHOD_NOT_ALLOWED.value()),
+                new ApiResponse.Body<>(ErrorResponseForm.builder()
+                        .title(ex.getMessage())
+                        .status(HttpStatus.UNAUTHORIZED.value())
+                        .timestamp(ZonedDateTime.now().toString())
+                        .build())
+        );
+    }
 }
