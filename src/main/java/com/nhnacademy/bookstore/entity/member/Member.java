@@ -6,6 +6,7 @@ import com.nhnacademy.bookstore.entity.member.enums.Grade;
 import com.nhnacademy.bookstore.entity.member.enums.Status;
 import com.nhnacademy.bookstore.entity.memberAuth.MemberAuth;
 import com.nhnacademy.bookstore.entity.pointRecord.PointRecord;
+import com.nhnacademy.bookstore.entity.purchase.Purchase;
 import com.nhnacademy.bookstore.member.member.dto.request.CreateMemberRequest;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -13,7 +14,9 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -73,6 +76,9 @@ public class Member {
 
     @OneToMany(mappedBy = "member",cascade = CascadeType.ALL,orphanRemoval = true)
     private Set<PointRecord> pointSet = new HashSet<>();
+
+    @OneToMany(mappedBy = "member",cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<Purchase> purchaseList = new ArrayList<>();
 
     public Member(CreateMemberRequest request){
         this.setPassword(request.password());

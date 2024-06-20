@@ -7,7 +7,7 @@ import com.nhnacademy.bookstore.purchase.purchase.dto.response.ReadPurchaseRespo
 
 public interface PurchaseService {
     Long createPurchase(CreatePurchaseRequest createPurchaseRequest, Long memberId);
-    Long updatePurchase(UpdatePurchaseRequest updatePurchaseRequest, Long purchaseId);
-    ReadPurchaseResponse readPurchase(Long purchaseId);
-    void deletePurchase(Long purchaseId);
+    Long updatePurchase(UpdatePurchaseRequest updatePurchaseRequest, Long memberId, Long purchaseId);
+    ReadPurchaseResponse readPurchase(Long memberId, Long purchaseId);
+    void deletePurchase(Long memberId, Long purchaseId);
 }

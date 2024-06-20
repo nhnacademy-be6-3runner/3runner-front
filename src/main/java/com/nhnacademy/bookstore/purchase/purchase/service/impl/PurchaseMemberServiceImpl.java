@@ -7,7 +7,9 @@ import com.nhnacademy.bookstore.member.member.service.MemberService;
 import com.nhnacademy.bookstore.purchase.purchase.dto.request.CreatePurchaseRequest;
 import com.nhnacademy.bookstore.purchase.purchase.dto.request.UpdatePurchaseRequest;
 import com.nhnacademy.bookstore.purchase.purchase.dto.response.ReadPurchaseResponse;
+import com.nhnacademy.bookstore.purchase.purchase.exception.PurchaseAlreadyExistException;
 import com.nhnacademy.bookstore.purchase.purchase.exception.PurchaseDoesNotExistException;
+import com.nhnacademy.bookstore.purchase.purchase.exception.PurchaseNoAuthorizationException;
 import com.nhnacademy.bookstore.purchase.purchase.repository.PurchaseRepository;
 import com.nhnacademy.bookstore.purchase.purchase.service.PurchaseService;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -25,7 +28,6 @@ import java.util.UUID;
 public class PurchaseMemberServiceImpl implements PurchaseService {
     private final PurchaseRepository purchaseRepository;
     private final MemberService memberService;
-    private final EnableSpringDataWebSupport.SpringDataWebSettingsRegistar springDataWebSettingsRegistar;
 
     @Override
     public Long createPurchase(CreatePurchaseRequest createPurchaseRequest, Long memberId) {
@@ -39,17 +41,28 @@ public class PurchaseMemberServiceImpl implements PurchaseService {
                 null,
                 MemberType.MEMBER,
                 memberService.findById(memberId),
-                null,
+                null, //TODO : Point 구현 후 연결 필요
                 null,
                 null
         );
+
+        if(purchaseRepository.existsPurchaseByOrderNumber(purchase.getOrderNumber())) {
+            throw new PurchaseAlreadyExistException("주문 번호가 중복되었습니다.");
+        }
+
         purchaseRepository.save(purchase);
         return purchase.getId();
     }
 
     @Override
-    public Long updatePurchase(UpdatePurchaseRequest updatePurchaseRequest, Long purchaseId) {
+    public Long updatePurchase(UpdatePurchaseRequest updatePurchaseRequest,Long memberId, Long purchaseId) {
+        List<Purchase> purchaseList = purchaseRepository.findPurchasesByMember(memberService.findById(MemberId));
         Purchase purchase = purchaseRepository.findById(purchaseId).orElseThrow(()-> new PurchaseDoesNotExistException(""));
+
+        if (!purchaseList.contains(purchase)) {
+            throw new PurchaseNoAuthorizationException("권한이 없습니다");
+        }
+
         purchase.setStatus(updatePurchaseRequest.purchaseStatus());
 
         purchaseRepository.save(purchase);
@@ -57,9 +70,15 @@ public class PurchaseMemberServiceImpl implements PurchaseService {
         return purchase.getId();
     }
 
+
     @Override
-    public ReadPurchaseResponse readPurchase(Long purchaseId) {
+    public ReadPurchaseResponse readPurchase(Long MemberId, Long purchaseId) {
+        List<Purchase> purchaseList = purchaseRepository.findPurchasesByMember(memberService.findById(MemberId));
         Purchase purchase = purchaseRepository.findById(purchaseId).orElseThrow(()-> new PurchaseDoesNotExistException(""));
+
+        if (!purchaseList.contains(purchase)) {
+            throw new PurchaseNoAuthorizationException("권한이 없습니다");
+        }
 
         return ReadPurchaseResponse.builder()
                 .id(purchase.getId())
@@ -74,8 +93,14 @@ public class PurchaseMemberServiceImpl implements PurchaseService {
     }
 
     @Override
-    public void deletePurchase(Long purchaseId) {
-        Optional<Purchase> purchase = purchaseRepository.findById(purchaseId);
-        purchase.ifPresent(purchaseRepository::delete);
+    public void deletePurchase(Long MemberId, Long purchaseId) {
+        List<Purchase> purchaseList = purchaseRepository.findPurchasesByMember(memberService.findById(MemberId));
+        Purchase purchase = purchaseRepository.findById(purchaseId).orElseThrow(()-> new PurchaseDoesNotExistException(""));
+
+        if (!purchaseList.contains(purchase)) {
+            throw new PurchaseNoAuthorizationException("권한이 없습니다");
+        }
+
+        purchaseRepository.delete(purchase);
     }
 }
