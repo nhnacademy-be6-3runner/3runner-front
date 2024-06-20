@@ -10,10 +10,8 @@ import com.nhnacademy.bookstore.purchase.purchase.dto.request.CreatePurchaseRequ
 import com.nhnacademy.bookstore.purchase.purchase.dto.request.UpdatePurchaseRequest;
 import com.nhnacademy.bookstore.purchase.purchase.dto.response.ReadPurchaseResponse;
 import com.nhnacademy.bookstore.purchase.purchase.exception.PurchaseAlreadyExistException;
-import com.nhnacademy.bookstore.purchase.purchase.exception.PurchaseDoesNotExistException;
 import com.nhnacademy.bookstore.purchase.purchase.exception.PurchaseNoAuthorizationException;
 import com.nhnacademy.bookstore.purchase.purchase.repository.PurchaseRepository;
-import com.nhnacademy.bookstore.purchase.purchase.service.PurchaseService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,8 +19,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.ZonedDateTime;
 import java.util.List;

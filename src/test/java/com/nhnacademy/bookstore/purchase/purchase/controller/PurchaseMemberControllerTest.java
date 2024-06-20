@@ -19,8 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.time.ZonedDateTime;
-
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
@@ -78,6 +77,18 @@ class PurchaseMemberControllerTest {
                 .andExpect(jsonPath("$.body.data.totalPrice").value(readPurchaseResponse.totalPrice()))
                 .andExpect(jsonPath("$.body.data.road").value(readPurchaseResponse.road()));
     }
+
+    @Test
+    void readPurchases() throws Exception {
+        when(memberService.getPurchasesByMemberId(anyLong())).thenReturn(java.util.List.of(readPurchaseResponse));
+
+        ResultActions result = mockMvc.perform(get("/members/purchases")
+                .header("Member-Id",1L)
+                .contentType(MediaType.APPLICATION_JSON));
+
+        result.andExpect(status().isOk());
+    }
+
 
     @Test
     void createPurchase() throws Exception{
