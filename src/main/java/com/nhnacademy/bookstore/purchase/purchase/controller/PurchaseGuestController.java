@@ -52,7 +52,7 @@ public class PurchaseGuestController {
      * @param bindingResult 오류검증
      * @return ApiResponse
      */
-    @PostMapping("/members/purchases")
+    @PostMapping("/guests/purchases")
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<Void> createPurchase (@Valid @RequestBody CreatePurchaseRequest createPurchaseRequest,
                                              BindingResult bindingResult) {
@@ -73,7 +73,7 @@ public class PurchaseGuestController {
      * @param bindingResult Validator
      * @return ApiResponse
      */
-    @PutMapping("members/purchases")
+    @PutMapping("/guests/purchases")
     public ApiResponse<Void> updatePurchaseStatus (@Valid @RequestBody UpdatePurchaseGuestRequest updatePurchaseGuestRequest,
                                                    BindingResult bindingResult) {
         if(bindingResult.hasErrors()){
@@ -91,7 +91,7 @@ public class PurchaseGuestController {
      * @param bindingResult 오류검증
      * @return ApiResponse
      */
-    @DeleteMapping("members/purchases/{purchaseId}")
+    @DeleteMapping("/guests/purchases")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ApiResponse<Void> deletePurchases (@Valid @RequestBody ReadDeletePurchaseGuestRequest readDeletePurchaseGuestRequest,
                                               BindingResult bindingResult) {

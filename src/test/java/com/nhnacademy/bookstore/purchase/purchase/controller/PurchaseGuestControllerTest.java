@@ -83,7 +83,7 @@ class PurchaseGuestControllerTest {
     void createPurchase() throws Exception{
         Mockito.when(purchaseGuestService.createPurchase(any(CreatePurchaseRequest.class))).thenReturn(1L);
 
-        ResultActions result = mockMvc.perform(post("/members/purchases")
+        ResultActions result = mockMvc.perform(post("/guests/purchases")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(createPurchaseRequest)));
 
@@ -94,7 +94,7 @@ class PurchaseGuestControllerTest {
     void updatePurchaseStatus() throws Exception {
         Mockito.when(purchaseGuestService.updatePurchase(any(UpdatePurchaseGuestRequest.class))).thenReturn(1L);
 
-        ResultActions result = mockMvc.perform(put("/members/purchases")
+        ResultActions result = mockMvc.perform(put("/guests/purchases")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updatePurchaseGuestRequest)));
 
@@ -105,7 +105,7 @@ class PurchaseGuestControllerTest {
     void deletePurchases() throws Exception{
         Mockito.doNothing().when(purchaseGuestService).deletePurchase(any(UUID.class), anyString());
 
-        ResultActions result = mockMvc.perform(delete("/members/purchases/{purchaseId}", 1L)
+        ResultActions result = mockMvc.perform(delete("/guests/purchases")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(readDeletePurchaseGuestRequest)));
 
