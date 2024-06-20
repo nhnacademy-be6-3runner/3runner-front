@@ -41,7 +41,7 @@ public class BookController {
         // controller 쪽은 entity X -> OSIV(Open session in view) view에 오기전에 닫아버리기? -> service에서 처리
         bookService.createBook(createBookRequest);
 
-        return new ApiResponse<Void>(new ApiResponse.Header(true, 201, "book created"));
+        return new ApiResponse<Void>(new ApiResponse.Header(true, 201));
     }
 
     @GetMapping("/book/{bookId}")
@@ -49,7 +49,7 @@ public class BookController {
         ReadBookResponse book = bookService.readBookById(bookId);
 
         return new ApiResponse<ReadBookResponse>(
-                new ApiResponse.Header(true, 200, "Book found"),
+                new ApiResponse.Header(true, 200),
                 new ApiResponse.Body<ReadBookResponse>(book)
         );
     }

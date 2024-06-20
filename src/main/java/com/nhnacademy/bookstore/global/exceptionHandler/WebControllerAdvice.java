@@ -58,47 +58,46 @@ public class WebControllerAdvice {
         );
 
     }
-
-    /**
-     * NOT_FOUND 처리 메소드
-     * @param ex
-     * @param model
-     * @return ApiResponse<ErrorResponseForm>
-     *
-     * @author 정주혁
-     */
-    @ExceptionHandler({
-    })
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ApiResponse<ErrorResponseForm> notFoundHandler(Exception ex, Model model) {
-        return ApiResponse.notFoundFail(
-                new ApiResponse.Body<>(ErrorResponseForm.builder()
-                        .title(ex.getMessage())
-                        .status(HttpStatus.NOT_FOUND.value())
-                        .timestamp(ZonedDateTime.now().toString())
-                        .build())
-        );
-    }
-
-    /**
-     * METHOD_NOT_ALLOWED 처리 메소드
-     * @param ex
-     * @param model
-     * @return ApiResponse<ErrorResponseForm>
-     *
-     * @author 정주혁
-     */
-
-    @ExceptionHandler({})
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ApiResponse<ErrorResponseForm> unauthorizedHandler(Exception ex, Model model) {
-        return new ApiResponse<>(
-                new ApiResponse.Header(false, HttpStatus.METHOD_NOT_ALLOWED.value()),
-                new ApiResponse.Body<>(ErrorResponseForm.builder()
-                        .title(ex.getMessage())
-                        .status(HttpStatus.UNAUTHORIZED.value())
-                        .timestamp(ZonedDateTime.now().toString())
-                        .build())
-        );
-    }
+//
+//    /**
+//     * NOT_FOUND 처리 메소드
+//     * @param ex
+//     * @param model
+//     * @return ApiResponse<ErrorResponseForm>
+//     *
+//     * @author 정주혁
+//     */
+//    @ExceptionHandler({
+//    })
+//    @ResponseStatus(HttpStatus.NOT_FOUND)
+//    public ApiResponse<ErrorResponseForm> notFoundHandler(Exception ex, Model model) {
+//        return ApiResponse.notFoundFail(
+//                new ApiResponse.Body<>(ErrorResponseForm.builder()
+//                        .title(ex.getMessage())
+//                        .status(HttpStatus.NOT_FOUND.value())
+//                        .timestamp(ZonedDateTime.now().toString())
+//                        .build())
+//        );
+//    }
+//    /**
+//     * METHOD_NOT_ALLOWED 처리 메소드
+//     * @param ex
+//     * @param model
+//     * @return ApiResponse<ErrorResponseForm>
+//     *
+//     * @author 정주혁
+//     */
+//
+//    @ExceptionHandler({})
+//    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+//    public ApiResponse<ErrorResponseForm> unauthorizedHandler(Exception ex, Model model) {
+//        return new ApiResponse<>(
+//                new ApiResponse.Header(false, HttpStatus.METHOD_NOT_ALLOWED.value()),
+//                new ApiResponse.Body<>(ErrorResponseForm.builder()
+//                        .title(ex.getMessage())
+//                        .status(HttpStatus.UNAUTHORIZED.value())
+//                        .timestamp(ZonedDateTime.now().toString())
+//                        .build())
+//        );
+//    }
 }
