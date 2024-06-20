@@ -2,6 +2,8 @@ package com.nhnacademy.bookstore.book.image.imageService.Impl;
 
 import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.S3Object;
+import com.nhnacademy.bookstore.book.image.exception.NotFindImageException;
+import com.nhnacademy.bookstore.book.image.imageService.ImageService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +28,7 @@ class ImageServiceImplTest {
 
 
     @Autowired
-    private ImageServiceImpl imageService;
+    private ImageService imageService;
 
     /**
      * uploadImage 성공시 -> object storage 컨테이너에 /test/test.png 저장
@@ -64,7 +66,9 @@ class ImageServiceImplTest {
     @DisplayName("존재하지 않는 파일을 불러올시 ")
     @Test
     void NotFindDownloadImage(){
-        assertThrows(AmazonS3Exception.class, () -> imageService.readImage("test/123344test.png"))
+        assertThrows(NotFindImageException.class, () -> {
+            imageService.readImage("test/notExist.png");
+        });
 
     }
 }

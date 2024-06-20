@@ -1,10 +1,7 @@
 package com.nhnacademy.bookstore.book.image.imageService.Impl;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.*;
 import com.fasterxml.uuid.Generators;
 import com.fasterxml.uuid.impl.TimeBasedGenerator;
 import com.nhnacademy.bookstore.book.image.exception.FailUploadImageException;
@@ -71,8 +68,12 @@ public class ImageServiceImpl implements ImageService {
      * @return 조회할 파일을 S3Object 형식으로 받아옴
      */
     @Override
-    public S3Object readImage(String fileName) throws NotFindImageException {
-        return amazonS3.getObject(bucketName, fileName);
+    public S3Object readImage(String fileName){
+        try {
+            return amazonS3.getObject(bucketName, fileName);
+        }catch (AmazonS3Exception e){
+            throw new NotFindImageException();
+        }
 
     }
 
