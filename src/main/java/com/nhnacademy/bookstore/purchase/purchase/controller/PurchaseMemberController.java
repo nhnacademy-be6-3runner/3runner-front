@@ -37,7 +37,7 @@ public class PurchaseMemberController {
         ReadPurchaseResponse response = purchaseService.readPurchase(memberId, purchaseId);
 
         return new ApiResponse<ReadPurchaseResponse>(
-                new ApiResponse.Header(true, 200, "read purchase"),
+                new ApiResponse.Header(true, 200),
                 new ApiResponse.Body<>(response)
         );
     }
@@ -61,7 +61,7 @@ public class PurchaseMemberController {
 
         purchaseService.createPurchase(createPurchaseRequest, memberId);
 
-        return new ApiResponse<Void>(new ApiResponse.Header(true, 201, ""));
+        return new ApiResponse<Void>(new ApiResponse.Header(true, 201));
     }
 
     /**
@@ -83,7 +83,7 @@ public class PurchaseMemberController {
         }
         purchaseService.updatePurchase(updatePurchaseRequest, memberId, purchaseId);
 
-        return new ApiResponse<>(new ApiResponse.Header(true, 200, ""));
+        return new ApiResponse<>(new ApiResponse.Header(true, 200));
     }
 
     /**
@@ -100,7 +100,7 @@ public class PurchaseMemberController {
 
         purchaseService.deletePurchase(memberId, purchaseId);
 
-        return new ApiResponse<>(new ApiResponse.Header(true, 204, ""));
+        return new ApiResponse<>(new ApiResponse.Header(true, 204));
     }
 
 }
