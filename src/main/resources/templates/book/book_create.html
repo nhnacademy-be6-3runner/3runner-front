@@ -325,7 +325,7 @@
                     const formData = new FormData();
                     formData.append('image', blob);
 
-                    const response = await fetch('/images/book/upload', {
+                    const response = await fetch('/api/images/book/upload', {
                         method: 'POST',
                         body: formData,
                     });
@@ -333,7 +333,7 @@
                     const filename = await response.text();
                     console.log('서버에 저장된 파일명 : ', filename);
 
-                    const imageUrl = `/images/book/download?fileName=${filename}`;
+                    const imageUrl = `/api/images/book/download?fileName=${filename}`;
                     callback(imageUrl, 'image alt attribute');
 
                 } catch (error) {
