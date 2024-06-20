@@ -6,8 +6,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -30,10 +30,10 @@ public class Category {
     //연결
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent", cascade = CascadeType.ALL)
-    private Set<Category> children = new HashSet<>();
+    private List<Category> children = new ArrayList<>();
 
     @Setter
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<BookCategory> bookCategorySet = new HashSet<>();
+    private List<BookCategory> bookCategorySet = new ArrayList<>();
 
 }

@@ -1,64 +1,86 @@
 package com.nhnacademy.bookstore.book.book.service;
 
+import com.nhnacademy.bookstore.book.book.dto.request.CreateBookRequest;
+import com.nhnacademy.bookstore.book.book.exception.BookDoesNotExistException;
 import com.nhnacademy.bookstore.book.book.repository.BookRepository;
+import com.nhnacademy.bookstore.book.book.service.impl.BookServiceImpl;
 import com.nhnacademy.bookstore.entity.book.Book;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Import;
 
 import java.time.ZonedDateTime;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
-
-@SpringBootTest
-@ComponentScan(basePackages = "com.nhnacademy.bookstore")
+@ExtendWith(MockitoExtension.class)
 class BookServiceImplTest {
-    @MockBean
+    @Mock
     private BookRepository bookRepository;
+    @InjectMocks
+    private BookServiceImpl bookService;
 
-    @Autowired
-    private BookService bookService;
-
-    @DisplayName("책 등록 테스트")
     @Test
     public void testCreateBook() {
-        //given
-        Book book =new Book(
-                        "title",
-                        "desciprtion",
-                        ZonedDateTime.now(),
-                        1000,
-                        1,
-                        900,
-                        1,
-                        false,
-                        "author",
-                        "123123",
-                        "1233123",
-                        null,
-                        null,
-                        null
-                );
+        CreateBookRequest request = new CreateBookRequest(
+                "Test Title",
+                "Test Description",
+                ZonedDateTime.now(),
+                1000,
+                10,
+                900,
+                0,
+                true,
+                "Test Author",
+                "123456789",
+                "Test Publisher",
+                ZonedDateTime.now()
+        );
 
-        // when
-        bookService.createBook(book);
+        bookService.createBook(request);
 
-        // then
-        verify(bookRepository, times(1)).save(book);
+        verify(bookRepository, times(1)).save(any(Book.class));
+    }
+
+    @Test
+    public void testReadBookById_Success() {
+        Book book = new Book(
+                "Test Title",
+                "Test Description",
+                ZonedDateTime.now(),
+                1000,
+                10,
+                900,
+                0,
+                true,
+                "Test Author",
+                "123456789",
+                "Test Publisher",
+                null,
+                null,
+                null
+        );
+        book.setId(1L);
+
+        when(bookRepository.findById(1L)).thenReturn(Optional.of(book));
+
+        Book foundBook = bookService.readBookById(1L);
+
+        assertEquals(book, foundBook);
+        verify(bookRepository, times(1)).findById(1L);
+    }
+
+    @Test
+    public void testReadBookById_NotFound() {
+        when(bookRepository.findById(1L)).thenReturn(Optional.empty());
+
+        assertThrows(BookDoesNotExistException.class, () -> bookService.readBookById(1L));
+
+        verify(bookRepository, times(1)).findById(1L);
     }
 }
