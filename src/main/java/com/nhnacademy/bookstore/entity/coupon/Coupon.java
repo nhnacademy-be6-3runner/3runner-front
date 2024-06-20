@@ -32,7 +32,7 @@ public class Coupon {
 
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "coupon", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PurchaseCoupon> purchaseCouponSet = new ArrayList<>();
+    private List<PurchaseCoupon> purchaseCouponList = new ArrayList<>();
 
 
 }

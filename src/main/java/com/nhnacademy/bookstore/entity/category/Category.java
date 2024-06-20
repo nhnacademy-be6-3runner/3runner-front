@@ -34,6 +34,6 @@ public class Category {
 
     @Setter
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<BookCategory> bookCategorySet = new ArrayList<>();
+    private List<BookCategory> bookCategoryList = new ArrayList<>();
 
 }

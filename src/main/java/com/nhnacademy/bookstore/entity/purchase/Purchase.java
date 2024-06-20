@@ -58,8 +58,8 @@ public class Purchase {
 
     //연결
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchase", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PurchaseBook> purchaseBookSet = new ArrayList<>();
+    private List<PurchaseBook> purchaseBookList = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchase", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PurchaseCoupon> purchaseCouponSet = new ArrayList<>();
+    private List<PurchaseCoupon> purchaseCouponList = new ArrayList<>();
 }
