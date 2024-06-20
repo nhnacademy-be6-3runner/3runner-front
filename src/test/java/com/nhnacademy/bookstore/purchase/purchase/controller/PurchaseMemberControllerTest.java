@@ -5,10 +5,9 @@ import com.nhnacademy.bookstore.entity.purchase.enums.MemberType;
 import com.nhnacademy.bookstore.entity.purchase.enums.PurchaseStatus;
 import com.nhnacademy.bookstore.member.member.service.impl.MemberServiceImpl;
 import com.nhnacademy.bookstore.purchase.purchase.dto.request.CreatePurchaseRequest;
-import com.nhnacademy.bookstore.purchase.purchase.dto.request.UpdatePurchaseRequest;
+import com.nhnacademy.bookstore.purchase.purchase.dto.request.UpdatePurchaseMemberRequest;
 import com.nhnacademy.bookstore.purchase.purchase.dto.response.ReadPurchaseResponse;
 import com.nhnacademy.bookstore.purchase.purchase.service.impl.PurchaseMemberServiceImpl;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,6 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.time.ZonedDateTime;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
@@ -44,13 +42,13 @@ class PurchaseMemberControllerTest {
     private ObjectMapper objectMapper;
 
     CreatePurchaseRequest createPurchaseRequest;
-    UpdatePurchaseRequest updatePurchaseRequest;
+    UpdatePurchaseMemberRequest updatePurchaseRequest;
     ReadPurchaseResponse readPurchaseResponse;
 
     @BeforeEach
     void setUp() {
         createPurchaseRequest = CreatePurchaseRequest.builder().deliveryPrice(100).totalPrice(10).road("orad").build();
-        updatePurchaseRequest = UpdatePurchaseRequest.builder().purchaseStatus(PurchaseStatus.SHIPPED).build();
+        updatePurchaseRequest = UpdatePurchaseMemberRequest.builder().purchaseStatus(PurchaseStatus.SHIPPED).build();
         readPurchaseResponse = ReadPurchaseResponse.builder().
                 id(1L).
                 status(PurchaseStatus.SHIPPED).
@@ -93,7 +91,7 @@ class PurchaseMemberControllerTest {
 
     @Test
     void updatePurchaseStatus() throws Exception{
-        when(purchaseService.updatePurchase(any(UpdatePurchaseRequest.class), anyLong(), anyLong())).thenReturn(1L);
+        when(purchaseService.updatePurchase(any(UpdatePurchaseMemberRequest.class), anyLong(), anyLong())).thenReturn(1L);
 
         ResultActions result = mockMvc.perform(put("/members/purchases/1")
                 .header("Member-Id", 1L)

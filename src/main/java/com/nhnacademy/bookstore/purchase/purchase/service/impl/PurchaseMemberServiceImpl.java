@@ -5,21 +5,19 @@ import com.nhnacademy.bookstore.entity.purchase.enums.MemberType;
 import com.nhnacademy.bookstore.entity.purchase.enums.PurchaseStatus;
 import com.nhnacademy.bookstore.member.member.service.MemberService;
 import com.nhnacademy.bookstore.purchase.purchase.dto.request.CreatePurchaseRequest;
-import com.nhnacademy.bookstore.purchase.purchase.dto.request.UpdatePurchaseRequest;
+import com.nhnacademy.bookstore.purchase.purchase.dto.request.UpdatePurchaseMemberRequest;
 import com.nhnacademy.bookstore.purchase.purchase.dto.response.ReadPurchaseResponse;
 import com.nhnacademy.bookstore.purchase.purchase.exception.PurchaseAlreadyExistException;
 import com.nhnacademy.bookstore.purchase.purchase.exception.PurchaseDoesNotExistException;
 import com.nhnacademy.bookstore.purchase.purchase.exception.PurchaseNoAuthorizationException;
 import com.nhnacademy.bookstore.purchase.purchase.repository.PurchaseRepository;
-import com.nhnacademy.bookstore.purchase.purchase.service.PurchaseService;
+import com.nhnacademy.bookstore.purchase.purchase.service.PurchaseMemberService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -30,7 +28,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class PurchaseMemberServiceImpl implements PurchaseService {
+public class PurchaseMemberServiceImpl implements PurchaseMemberService {
     private final PurchaseRepository purchaseRepository;
     private final MemberService memberService;
 
@@ -75,7 +73,7 @@ public class PurchaseMemberServiceImpl implements PurchaseService {
      * @return purchaseId
      */
     @Override
-    public Long updatePurchase(UpdatePurchaseRequest updatePurchaseRequest, Long memberId, Long purchaseId) {
+    public Long updatePurchase(UpdatePurchaseMemberRequest updatePurchaseRequest, Long memberId, Long purchaseId) {
         List<Purchase> purchaseList = purchaseRepository.findByMember(memberService.findById(memberId));
         Purchase purchase = purchaseRepository.findById(purchaseId).orElseThrow(()-> new PurchaseDoesNotExistException(""));
 
