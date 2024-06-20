@@ -8,6 +8,7 @@ import com.nhnacademy.bookstore.book.book.service.BookService;
 import com.nhnacademy.bookstore.entity.book.Book;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -17,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional(propagation = Propagation.MANDATORY)
 public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
 

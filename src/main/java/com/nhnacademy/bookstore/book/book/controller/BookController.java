@@ -8,6 +8,7 @@ import com.nhnacademy.bookstore.book.book.dto.request.CreateBookRequest;
 import com.nhnacademy.bookstore.util.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,7 +34,7 @@ public class BookController {
      * @param bindingResult binding result
      * @return ApiResponse<>
      */
-    @Transactional
+    @Transactional(propagation = Propagation.MANDATORY)
     @PostMapping("/book")
     public ApiResponse<Void> createBook(@Valid CreateBookRequest createBookRequest,
                                         BindingResult bindingResult) {
