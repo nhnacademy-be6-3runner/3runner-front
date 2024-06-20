@@ -1,14 +1,11 @@
 package com.nhnacademy.bookstore.book.category.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
 /**
- * 카테고리 + 자식 카테고리 조회
+ * 상위 카테고리의 자식 카테고리 조회
  */
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,5 +15,11 @@ import java.util.List;
 public class CategoryParentWithChildrenResponse {
     private long id;
     private String name;
+    @Setter
     private List<CategoryChildrenResponse> childrenList;
+
+    public CategoryParentWithChildrenResponse(long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 }

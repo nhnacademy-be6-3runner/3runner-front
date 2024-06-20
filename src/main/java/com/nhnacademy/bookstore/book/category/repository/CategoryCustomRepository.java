@@ -16,11 +16,11 @@ public interface CategoryCustomRepository {
     List<CategoryResponse> findCategories();
 
     // 상위 카테고리 조회
-    Set<CategoryResponse> findParentCategories();
+    List<CategoryResponse> findTopCategories();
 
     // 상위 + 하위 카테고리 조회
-    Set<CategoryParentWithChildrenResponse> findParentWithChildrenCategories();
+    List<CategoryParentWithChildrenResponse> findParentWithChildrenCategories();
 
     // 하위 카테고리 조회
-    Set<CategoryChildrenResponse> findChildrenCategoriesByParentId(Long id);
+    List<CategoryChildrenResponse> findChildrenCategoriesByParentId(Long id);
 }

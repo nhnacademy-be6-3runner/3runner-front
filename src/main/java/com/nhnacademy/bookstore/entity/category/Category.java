@@ -27,8 +27,8 @@ public class Category {
     @JoinColumn(name = "parent_id")
     private Category parent;
 
-    //연결
-    // TODO
+    // 연결
+    @Setter
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent", cascade = CascadeType.ALL)
     private List<Category> children = new ArrayList<>();
 
@@ -39,8 +39,11 @@ public class Category {
     public void setParent(Category parent) {
         this.parent = parent;
     }
-    public void addChildren(Category children) {
-        children.setParent(this);
-        this.children.add(children);
+    public void addChildren(Category child) {
+        if (this.children == null) {
+            this.children = new ArrayList<>();
+        }
+        child.setParent(this);
+        this.children.add(child);
     }
 }

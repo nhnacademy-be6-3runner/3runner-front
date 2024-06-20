@@ -11,9 +11,7 @@ import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * query dsl 인터페이스 구현체
@@ -35,32 +33,33 @@ public class CategoryCustomRepositoryImpl implements CategoryCustomRepository {
      */
     @Override
     public List<CategoryResponse> findCategories() {
+        QCategory parentCategory = new QCategory("parent");
         return jpaQueryFactory
-                .select(Projections.fields(CategoryResponse.class,
+                .select(Projections.constructor(CategoryResponse.class,
                         qCategory.id,
                         qCategory.name,
-                        qCategory.parent.id.as("parentId"),
-                        qCategory.parent.name.as("parentName")))
+                        Projections.constructor(CategoryResponse.class,
+                                parentCategory.id,
+                                parentCategory.name)))
                 .from(qCategory)
+                .leftJoin(qCategory.parent, parentCategory)
                 .fetch();
     }
 
 
     /**
-     * 상위 카테고리 조회
+     * 최상위 카테고리 조회
      * @return 상위 카테고리 list
      */
     @Override
-    public Set<CategoryResponse> findParentCategories() {
-        List<CategoryResponse> parentCategories = jpaQueryFactory
+    public List<CategoryResponse> findTopCategories() {
+        return jpaQueryFactory
                 .select(Projections.constructor(CategoryResponse.class,
                         qCategory.id,
                         qCategory.name))
                 .from(qCategory)
                 .where(qCategory.parent.isNull())
                 .fetch();
-
-        return new HashSet<>(parentCategories);
     }
 
     /**
@@ -68,17 +67,31 @@ public class CategoryCustomRepositoryImpl implements CategoryCustomRepository {
      * @return 상위(하위) 카테고리 list
      */
     @Override
-    public Set<CategoryParentWithChildrenResponse> findParentWithChildrenCategories() {
-        List<CategoryParentWithChildrenResponse> parentWithChildrenCategories = jpaQueryFactory
-                .select(Projections.constructor(CategoryParentWithChildrenResponse.class,
-                        qCategory.id,
-                        qCategory.name,
-                        qCategory.children.as("children")))
-                .from(qCategory)
-                .where(qCategory.parent.isNull())
-                .fetch();
+    public List<CategoryParentWithChildrenResponse> findParentWithChildrenCategories() {
+        QCategory parent = QCategory.category;
+        QCategory child = new QCategory("child");
 
-        return new HashSet<>(parentWithChildrenCategories);
+        // 부모 카테고리 조회
+        List<CategoryParentWithChildrenResponse> parentList = jpaQueryFactory
+                .select(Projections.constructor(CategoryParentWithChildrenResponse.class,
+                        parent.id,
+                        parent.name))
+                .from(parent)
+                .where(parent.parent.isNull())
+                .orderBy(parent.name.asc())
+                .fetch();
+        // 부모의 자식 카테고리 조회
+        parentList.forEach(p -> {
+            List<CategoryChildrenResponse> childList = jpaQueryFactory
+                    .select(Projections.constructor(CategoryChildrenResponse.class,
+                            child.id, child.name))
+                    .from(child)
+                    .where(child.parent.id.eq(p.getId()))
+                    .orderBy(child.name.asc())
+                    .fetch();
+            p.setChildrenList(childList);
+        });
+        return parentList;
     }
 
     /**
@@ -86,15 +99,13 @@ public class CategoryCustomRepositoryImpl implements CategoryCustomRepository {
      * @param id 상위 카테고리 아이디
      * @return 하위 카테고리 list
      */
-    public Set<CategoryChildrenResponse> findChildrenCategoriesByParentId(Long id) {
-        List<CategoryChildrenResponse> childrenCategories = jpaQueryFactory
+    public List<CategoryChildrenResponse> findChildrenCategoriesByParentId(Long id) {
+        return jpaQueryFactory
                 .select(Projections.constructor(CategoryChildrenResponse.class,
                         qCategory.id,
                         qCategory.name))
                 .from(qCategory)
                 .where(qCategory.parent.id.eq(id))
                 .fetch();
-
-        return new HashSet<>(childrenCategories);
     }
 }
