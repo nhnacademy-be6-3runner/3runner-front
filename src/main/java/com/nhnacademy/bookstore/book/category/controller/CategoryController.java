@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -74,7 +75,7 @@ public class CategoryController {
      * @return 모든 카테고리 set
      */
     @GetMapping
-    public ApiResponse<Set<CategoryResponse>> readAllCategories() {
+    public ApiResponse<List<CategoryResponse>> readAllCategories() {
         return ApiResponse.success(categoryService.getCategories());
     }
 

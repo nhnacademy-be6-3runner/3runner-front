@@ -5,6 +5,7 @@ import com.nhnacademy.bookstore.book.category.dto.request.UpdateCategoryRequest;
 import com.nhnacademy.bookstore.book.category.dto.response.CategoryChildrenResponse;
 import com.nhnacademy.bookstore.book.category.dto.response.CategoryResponse;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -21,7 +22,7 @@ public interface CategoryService {
     // 카테고리 단건 조회
     CategoryResponse getCategory(long id);
     // 카테고리 전체 조회
-    Set<CategoryResponse> getCategories();
+    List<CategoryResponse> getCategories();
     Set<CategoryResponse> getParentCategories();
     // 특정 상위 카테고리의 하위 카테고리 목록 조회
     Set<CategoryChildrenResponse> getChildrenCategoriesByParentId(long id);

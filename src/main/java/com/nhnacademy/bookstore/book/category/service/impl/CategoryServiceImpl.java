@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -29,20 +31,22 @@ public class CategoryServiceImpl implements CategoryService {
      * dto parentId = null 이면 최상위 카테고리
      * @param dto 생성 내용
      */
-    // TODO 아이디 long 넘기기
     @Override
     public void createCategory(CreateCategoryRequest dto) {
+        // 이름 중복 확인
         duplicateCategoryName(dto.getName());
 
+        // 부모가 있으면
         if (dto.getParentId() != null) {
+            // dto parentId 존재하나? -> 부모 객체 생성
             Category parentCategory = categoryRepository.findById(dto.getParentId())
-                    .orElseThrow(() -> new CategoryNotFoundException(""));
+                    .orElseThrow(() -> new CategoryNotFoundException("존재하지 않는 상위 카테고리입니다."));
             Category child = Category.builder()
                     .name(dto.getName())
-                    .parent(parentCategory.getParent())
+                    .parent(parentCategory) // 부모 지정
                     .build();
-            parentCategory.addChildren(child);
             categoryRepository.save(child);
+            parentCategory.addChildren(child);
         } else {
             Category category = Category.builder()
                     .name(dto.getName())
@@ -101,9 +105,26 @@ public class CategoryServiceImpl implements CategoryService {
      * 모든 카테고리 조회
      * @return 카테고리 set
      */
-    public Set<CategoryResponse> getCategories() {
-        return categoryRepository.findCategories();
+    public List<CategoryResponse> getCategories() {
+        List<CategoryResponse> categories = categoryRepository.findCategories();
+        List<CategoryResponse> categoryResponses = new ArrayList<>();
+
+        for (CategoryResponse category : categories) {
+            CategoryResponse categoryResponse = CategoryResponse.builder()
+                    .id(category.getId())
+                    .name(category.getName())
+                    .parent(category.getParent() != null
+                            ? new CategoryResponse(
+                            category.getParent().getId(),
+                            category.getParent().getName(),
+                            category.getParent().getParent()).getParent()
+                            : null)
+                    .build();
+            categoryResponses.add(categoryResponse);
+        }
+        return categoryResponses;
     }
+
 
     /**
      * 상위 카테고리 조회

@@ -34,15 +34,15 @@ public class CategoryCustomRepositoryImpl implements CategoryCustomRepository {
      * @return 모든 카테고리 list
      */
     @Override
-    public Set<CategoryResponse> findCategories() {
-        List<CategoryResponse> categoryResponses = jpaQueryFactory
-                .select(Projections.constructor(CategoryResponse.class,
+    public List<CategoryResponse> findCategories() {
+        return jpaQueryFactory
+                .select(Projections.fields(CategoryResponse.class,
                         qCategory.id,
                         qCategory.name,
-                        qCategory.parent))
+                        qCategory.parent.id.as("parentId"),
+                        qCategory.parent.name.as("parentName")))
                 .from(qCategory)
                 .fetch();
-        return new HashSet<>(categoryResponses);
     }
 
 

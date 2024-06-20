@@ -1,0 +1,17 @@
+### 카테고리 생성
+POST http://localhost:8080/categories
+Content-Type: application/json
+
+{
+  "name": "하위 카테고리2",
+  "parentId": 1
+}
+
+### 카테고리 단건 조회
+GET http://localhost:8080/categories/1
+
+### 카테고리 모두 조회
+GET http://localhost:8080/categories
+
+
+

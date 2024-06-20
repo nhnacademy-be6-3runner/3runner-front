@@ -4,7 +4,6 @@ import com.nhnacademy.bookstore.book.book.dto.response.BookListResponse;
 import com.nhnacademy.bookstore.book.bookCartegory.dto.response.BookCategoriesResponse;
 import com.nhnacademy.bookstore.book.bookCartegory.repository.BookCategoryCustomRepository;
 import com.nhnacademy.bookstore.entity.bookCategory.QBookCategory;
-import com.nhnacademy.bookstore.entity.category.QCategory;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
