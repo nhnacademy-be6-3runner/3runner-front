@@ -1,10 +1,7 @@
 package com.nhnacademy.bookstore.book.category.dto.response;
 
 import com.nhnacademy.bookstore.entity.category.Category;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 /**
  * 카테고리 + 부모 카테고리 조회
@@ -13,12 +10,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@ToString
 // TODO Record 수정
 public class CategoryResponse {
     private long id;
     private String name;
-    private Category parent;
-
+    @Setter
+    private CategoryResponse parent;
 
     public CategoryResponse(long id, String name) {
         this.id = id;

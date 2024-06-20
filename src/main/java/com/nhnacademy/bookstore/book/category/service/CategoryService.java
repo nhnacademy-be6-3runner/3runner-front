@@ -23,7 +23,7 @@ public interface CategoryService {
     CategoryResponse getCategory(long id);
     // 카테고리 전체 조회
     List<CategoryResponse> getCategories();
-    Set<CategoryResponse> getParentCategories();
+    List<CategoryResponse> getParentCategories();
     // 특정 상위 카테고리의 하위 카테고리 목록 조회
-    Set<CategoryChildrenResponse> getChildrenCategoriesByParentId(long id);
+    List<CategoryChildrenResponse> getChildrenCategoriesByParentId(long id);
 }

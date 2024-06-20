@@ -46,7 +46,6 @@ public class CategoryCustomRepositoryImpl implements CategoryCustomRepository {
                 .fetch();
     }
 
-
     /**
      * 최상위 카테고리 조회
      * @return 상위 카테고리 list

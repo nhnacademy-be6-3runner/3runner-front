@@ -13,9 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author 김은비
@@ -36,22 +34,21 @@ public class CategoryServiceImpl implements CategoryService {
         // 이름 중복 확인
         duplicateCategoryName(dto.getName());
 
-        // 부모가 있으면
+        Category parent = null;
         if (dto.getParentId() != null) {
-            // dto parentId 존재하나? -> 부모 객체 생성
-            Category parentCategory = categoryRepository.findById(dto.getParentId())
+            parent = categoryRepository.findById(dto.getParentId())
                     .orElseThrow(() -> new CategoryNotFoundException("존재하지 않는 상위 카테고리입니다."));
-            Category child = Category.builder()
-                    .name(dto.getName())
-                    .parent(parentCategory) // 부모 지정
-                    .build();
-            categoryRepository.save(child);
-            parentCategory.addChildren(child);
+        }
+        Category category = Category.builder()
+                .name(dto.getName())
+                .parent(parent)
+                .build();
+        if (parent != null) {
+            // 부모 카테고리에 자식 추가
+            parent.addChildren(category);
+            categoryRepository.save(parent); // 부모 카테고리 저장
         } else {
-            Category category = Category.builder()
-                    .name(dto.getName())
-                    .build();
-            categoryRepository.save(category);
+            categoryRepository.save(category); // 상위 카테고리 저장
         }
     }
 
@@ -103,49 +100,33 @@ public class CategoryServiceImpl implements CategoryService {
 
     /**
      * 모든 카테고리 조회
-     * @return 카테고리 set
+     * @return 카테고리 list
      */
     public List<CategoryResponse> getCategories() {
-        List<CategoryResponse> categories = categoryRepository.findCategories();
-        List<CategoryResponse> categoryResponses = new ArrayList<>();
-
-        for (CategoryResponse category : categories) {
-            CategoryResponse categoryResponse = CategoryResponse.builder()
-                    .id(category.getId())
-                    .name(category.getName())
-                    .parent(category.getParent() != null
-                            ? new CategoryResponse(
-                            category.getParent().getId(),
-                            category.getParent().getName(),
-                            category.getParent().getParent()).getParent()
-                            : null)
-                    .build();
-            categoryResponses.add(categoryResponse);
-        }
-        return categoryResponses;
+        return categoryRepository.findCategories();
     }
-
 
     /**
      * 상위 카테고리 조회
-     * @return 해당 키테고리 set
+     * @return 해당 키테고리 list
      */
     @Override
-    public Set<CategoryResponse> getParentCategories() {
-        return categoryRepository.findParentCategories();
+    public List<CategoryResponse> getParentCategories() {
+        return categoryRepository.findTopCategories();
     }
-
 
     /**
      * 부모 카테고리 아이디로 자식 카테고리 조회
      * @param id 부모 카테고리 아이디
-     * @return 자식 카테고리 set
+     * @return 자식 카테고리 list
      */
     @Override
-    public Set<CategoryChildrenResponse> getChildrenCategoriesByParentId(long id) {
+    public List<CategoryChildrenResponse> getChildrenCategoriesByParentId(long id) {
+        if (!categoryRepository.existsById(id)) {
+            throw new CategoryNotFoundException("존제하지 않는 카테고리입니다.");
+        }
         return categoryRepository.findChildrenCategoriesByParentId(id);
     }
-
 
     /**
      * 이름 중복 검사 메서드

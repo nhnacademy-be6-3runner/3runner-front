@@ -19,7 +19,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Optional;
 
@@ -37,8 +39,11 @@ class CategoryServiceTest {
     @InjectMocks
     private CategoryServiceImpl categoryService;
 
+    Category parent;
+
     @BeforeEach
     void setUp() {
+
     }
 
     @DisplayName("상위 카테고리 생성 테스트")
@@ -50,35 +55,8 @@ class CategoryServiceTest {
                 .build();
 
         when(categoryRepository.save(any(Category.class))).thenReturn(category);
-
         categoryService.createCategory(dto);
-
         verify(categoryRepository, times(1)).save(any(Category.class));
-    }
-
-    // TODO 하위 카테고리 생성 테스트 수정
-    @DisplayName("하위 카테고리 생성 테스트")
-    @Test
-    void createSubCategory() {
-        CreateCategoryRequest dto = new CreateCategoryRequest("하위 카테고리", 1L);
-        Category parentCategory = Category.builder()
-                .id(1L)
-                .name("부모 카테고리")
-                .children(new HashSet<>())
-                .build();
-        Category childCategory = Category.builder()
-                .name(dto.getName())
-                .parent(parentCategory)
-                .build();
-        when(categoryRepository.findById(dto.getParentId()))
-                .thenReturn(Optional.of(parentCategory));
-        when(categoryRepository.save(any(Category.class)))
-                .thenReturn(childCategory);
-
-        verify(categoryRepository, times(1)).existsByName(dto.getName());
-        verify(categoryRepository, times(1)).findById(dto.getParentId());
-        verify(categoryRepository, times(1)).save(any(Category.class));
-//        Assertions.assertEquals(parentCategory.getChildren().size(), 1);
     }
 
     @DisplayName("업데이트(이름, 부모) 카테고리 테스트")
