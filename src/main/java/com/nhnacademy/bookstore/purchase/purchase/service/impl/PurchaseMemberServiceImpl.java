@@ -22,6 +22,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * 회원 주문 서비스 구현체.
+ *
+ * @author 김병우
+ */
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -29,6 +34,13 @@ public class PurchaseMemberServiceImpl implements PurchaseService {
     private final PurchaseRepository purchaseRepository;
     private final MemberService memberService;
 
+    /**
+     * 주문 생성.
+     *
+     * @param createPurchaseRequest 주문 생성 폼
+     * @param memberId 회원 아이디
+     * @return purchaseId
+     */
     @Override
     public Long createPurchase(CreatePurchaseRequest createPurchaseRequest, Long memberId) {
         Purchase purchase = new Purchase(
@@ -54,9 +66,17 @@ public class PurchaseMemberServiceImpl implements PurchaseService {
         return purchase.getId();
     }
 
+    /**
+     * 주문 상태 업데이트.
+     *
+     * @param updatePurchaseRequest 주문수정폼
+     * @param memberId 맴버아이디
+     * @param purchaseId 주문아이디
+     * @return purchaseId
+     */
     @Override
-    public Long updatePurchase(UpdatePurchaseRequest updatePurchaseRequest,Long memberId, Long purchaseId) {
-        List<Purchase> purchaseList = purchaseRepository.findPurchasesByMember(memberService.findById(MemberId));
+    public Long updatePurchase(UpdatePurchaseRequest updatePurchaseRequest, Long memberId, Long purchaseId) {
+        List<Purchase> purchaseList = purchaseRepository.findByMember(memberService.findById(memberId));
         Purchase purchase = purchaseRepository.findById(purchaseId).orElseThrow(()-> new PurchaseDoesNotExistException(""));
 
         if (!purchaseList.contains(purchase)) {
@@ -71,9 +91,16 @@ public class PurchaseMemberServiceImpl implements PurchaseService {
     }
 
 
+    /**
+     * 회원 주문 찾기.
+     *
+     * @param MemberId 맴버 아이디
+     * @param purchaseId 주문 아이디
+     * @return ReadPurchaseResponse
+     */
     @Override
     public ReadPurchaseResponse readPurchase(Long MemberId, Long purchaseId) {
-        List<Purchase> purchaseList = purchaseRepository.findPurchasesByMember(memberService.findById(MemberId));
+        List<Purchase> purchaseList = purchaseRepository.findByMember(memberService.findById(MemberId));
         Purchase purchase = purchaseRepository.findById(purchaseId).orElseThrow(()-> new PurchaseDoesNotExistException(""));
 
         if (!purchaseList.contains(purchase)) {
@@ -92,9 +119,15 @@ public class PurchaseMemberServiceImpl implements PurchaseService {
                 .build();
     }
 
+    /**
+     * 회원 주문 삭제.
+     *
+     * @param MemberId 회원 아이디
+     * @param purchaseId 주문 아이디
+     */
     @Override
     public void deletePurchase(Long MemberId, Long purchaseId) {
-        List<Purchase> purchaseList = purchaseRepository.findPurchasesByMember(memberService.findById(MemberId));
+        List<Purchase> purchaseList = purchaseRepository.findByMember(memberService.findById(MemberId));
         Purchase purchase = purchaseRepository.findById(purchaseId).orElseThrow(()-> new PurchaseDoesNotExistException(""));
 
         if (!purchaseList.contains(purchase)) {

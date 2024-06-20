@@ -4,10 +4,12 @@ package com.nhnacademy.bookstore.member.member.service.impl;
 import com.nhnacademy.bookstore.entity.member.Member;
 import com.nhnacademy.bookstore.entity.member.enums.Grade;
 import com.nhnacademy.bookstore.entity.member.enums.Status;
+import com.nhnacademy.bookstore.entity.purchase.Purchase;
 import com.nhnacademy.bookstore.member.member.dto.request.UpdateMemberRequest;
 import com.nhnacademy.bookstore.member.member.exception.MemberNotExistsException;
 import com.nhnacademy.bookstore.member.member.repository.MemberRepository;
 import com.nhnacademy.bookstore.member.member.service.MemberService;
+import com.nhnacademy.bookstore.purchase.purchase.repository.PurchaseRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 
 /**
  * The type Member service.
@@ -27,6 +30,7 @@ import java.time.ZonedDateTime;
 @Service
 public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
+    private final PurchaseRepository purchaseRepository;
 
     /**
      * Save member.
@@ -35,6 +39,7 @@ public class MemberServiceImpl implements MemberService {
      * @return the member -저장 후 member값을 그대로 반환한다.
      * @author 유지아 Save member. -멤버값을 받아와 저장한다.(이메일 중복하는걸로 확인하면 좋을듯)
      */
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Member save(Member member) {
         //이메일 중복 확인안해도 되려나,,
         return memberRepository.save(member);
@@ -143,4 +148,10 @@ public class MemberServiceImpl implements MemberService {
         return memberRepository.save(member);
     }
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public List<Purchase> getPurchasesByMemberId(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(MemberNotExistsException::new);
+        return purchaseRepository.findByMember(member);
+    }
 }

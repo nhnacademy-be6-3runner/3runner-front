@@ -12,12 +12,13 @@ import lombok.*;
 
 import java.time.ZonedDateTime;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Getter
+@Getter@Setter
 @Entity
 public class Purchase {
     @Id
@@ -49,7 +50,7 @@ public class Purchase {
     @NotNull
     private MemberType memberType;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Member member;
 
     @OneToOne
@@ -76,5 +77,17 @@ public class Purchase {
         this.pointRecord = pointRecord;
         this.purchaseBookSet = purchaseBookSet;
         this.purchaseCouponSet = purchaseCouponSet;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Purchase purchase)) return false;
+        return Objects.equals(getOrderNumber(), purchase.getOrderNumber());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(getOrderNumber());
     }
 }

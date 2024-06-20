@@ -4,8 +4,11 @@ package com.nhnacademy.bookstore.member.member.service;
 import com.nhnacademy.bookstore.entity.member.Member;
 import com.nhnacademy.bookstore.entity.member.enums.Grade;
 import com.nhnacademy.bookstore.entity.member.enums.Status;
+import com.nhnacademy.bookstore.entity.purchase.Purchase;
 import com.nhnacademy.bookstore.member.member.dto.request.UpdateMemberRequest;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public interface MemberService {
@@ -22,4 +25,6 @@ public interface MemberService {
     Member updateStatus(String memberId, Status status);
 
     Member updateGrade(String memberId, Grade grade);
+
+    List<Purchase> getPurchasesByMemberId(Long memberId);
 }
