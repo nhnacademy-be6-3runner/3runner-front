@@ -8,5 +8,6 @@ import lombok.Builder;
 public record CreatePurchaseRequest(
         @Min(value = 0, message = "must be bigger then 0") int deliveryPrice,
         @Min(value = 0, message = "must be bigger then 0")  int totalPrice,
-        @NotBlank(message = "road is mandatory") String road) {
+        @NotBlank(message = "road is mandatory") String road,
+        String password) {
 }

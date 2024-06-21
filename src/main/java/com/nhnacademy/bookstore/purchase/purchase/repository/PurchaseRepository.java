@@ -16,4 +16,5 @@ import java.util.UUID;
 public interface PurchaseRepository extends JpaRepository<Purchase, Long> {
     Boolean existsPurchaseByOrderNumber(@NotNull UUID orderNumber);
     List<Purchase> findByMember(Member member);
+    Optional<Purchase> findPurchaseByOrderNumber(@NotNull UUID orderNumber);
 }

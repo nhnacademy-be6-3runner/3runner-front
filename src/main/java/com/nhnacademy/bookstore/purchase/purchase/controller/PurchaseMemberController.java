@@ -1,13 +1,11 @@
 package com.nhnacademy.bookstore.purchase.purchase.controller;
 
 import com.nhnacademy.bookstore.purchase.purchase.dto.request.CreatePurchaseRequest;
-import com.nhnacademy.bookstore.purchase.purchase.dto.request.UpdatePurchaseRequest;
+import com.nhnacademy.bookstore.purchase.purchase.dto.request.UpdatePurchaseMemberRequest;
 import com.nhnacademy.bookstore.purchase.purchase.dto.response.ReadPurchaseResponse;
 import com.nhnacademy.bookstore.purchase.purchase.exception.PurchaseFormArgumentErrorException;
-import com.nhnacademy.bookstore.purchase.purchase.service.PurchaseService;
+import com.nhnacademy.bookstore.purchase.purchase.service.PurchaseMemberService;
 import com.nhnacademy.bookstore.util.ApiResponse;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 public class PurchaseMemberController {
-    private final PurchaseService purchaseService;
+    private final PurchaseMemberService purchaseMemberService;
 
     /**
      * 회원 주문 찾기.
@@ -34,7 +32,7 @@ public class PurchaseMemberController {
     @GetMapping("/members/purchases/{purchaseId}")
     public ApiResponse<ReadPurchaseResponse> readPurchase (@RequestHeader("Member-Id") Long memberId,
                                                            @PathVariable("purchaseId") Long purchaseId) {
-        ReadPurchaseResponse response = purchaseService.readPurchase(memberId, purchaseId);
+        ReadPurchaseResponse response = purchaseMemberService.readPurchase(memberId, purchaseId);
 
         return new ApiResponse<ReadPurchaseResponse>(
                 new ApiResponse.Header(true, 200),
@@ -59,7 +57,7 @@ public class PurchaseMemberController {
             throw new PurchaseFormArgumentErrorException(bindingResult.getFieldErrors().toString());
         }
 
-        purchaseService.createPurchase(createPurchaseRequest, memberId);
+        purchaseMemberService.createPurchase(createPurchaseRequest, memberId);
 
         return new ApiResponse<Void>(new ApiResponse.Header(true, 201));
     }
@@ -75,13 +73,13 @@ public class PurchaseMemberController {
      */
     @PutMapping("members/purchases/{purchaseId}")
     public ApiResponse<Void> updatePurchaseStatus (@RequestHeader("Member-Id") Long memberId,
-                                                   @Valid @RequestBody UpdatePurchaseRequest updatePurchaseRequest,
+                                                   @Valid @RequestBody UpdatePurchaseMemberRequest updatePurchaseRequest,
                                                    BindingResult bindingResult,
                                                    @PathVariable Long purchaseId) {
         if(bindingResult.hasErrors()){
             throw new PurchaseFormArgumentErrorException(bindingResult.getFieldErrors().toString());
         }
-        purchaseService.updatePurchase(updatePurchaseRequest, memberId, purchaseId);
+        purchaseMemberService.updatePurchase(updatePurchaseRequest, memberId, purchaseId);
 
         return new ApiResponse<>(new ApiResponse.Header(true, 200));
     }
@@ -98,7 +96,7 @@ public class PurchaseMemberController {
     public ApiResponse<Void> deletePurchases (@RequestHeader("Member-Id") Long memberId,
                                                    @PathVariable Long purchaseId) {
 
-        purchaseService.deletePurchase(memberId, purchaseId);
+        purchaseMemberService.deletePurchase(memberId, purchaseId);
 
         return new ApiResponse<>(new ApiResponse.Header(true, 204));
     }
