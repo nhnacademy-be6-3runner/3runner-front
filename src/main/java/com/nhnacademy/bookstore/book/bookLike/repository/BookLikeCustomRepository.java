@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface BookLikeCustomRepository {
   // TODO 회원 아이디로 좋아요한 도서 목록 조회
-  Page<BookListResponse> findBookLikeByMemberId(Long memberId, Pageable pageable);
+  Page<BookListResponse> findBookLikeByMemberId(long memberId, Pageable pageable);
 
   // TODO 도서의 좋아요 count 조회
   long countLikeByBookId(long bookId);

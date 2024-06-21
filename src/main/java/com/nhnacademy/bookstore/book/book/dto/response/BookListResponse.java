@@ -13,6 +13,6 @@ import lombok.Builder;
 
 @Builder
 public record BookListResponse(
-        String title, int price, int sellingPrice, String author
+        String title, int price, int sellingPrice, String author, String thumbnail
 ) {
 }

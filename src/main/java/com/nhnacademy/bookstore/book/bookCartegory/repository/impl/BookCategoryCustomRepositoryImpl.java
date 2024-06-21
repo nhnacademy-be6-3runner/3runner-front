@@ -14,8 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
-
 /**
  * book-category query dsl 인터페이스 구현체
  * @author 김은비
@@ -50,13 +48,12 @@ public class BookCategoryCustomRepositoryImpl implements BookCategoryCustomRepos
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        Long totalCount = Optional.ofNullable(
-                jpaQueryFactory
+        Long totalCount = jpaQueryFactory
                         .select(qBookCategory.count())
                         .from(qBookCategory)
                         .where(qBookCategory.category.id.eq(categoryId))
-                        .fetchOne()
-        ).orElse(0L);
+                        .fetchOne();
+        totalCount = totalCount != null ? totalCount : 0L;
 
         return new PageImpl<>(content, pageable, totalCount);
     }
@@ -96,13 +93,12 @@ public class BookCategoryCustomRepositoryImpl implements BookCategoryCustomRepos
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
-        Long totalCount = Optional.ofNullable(
-                jpaQueryFactory
+        Long totalCount = jpaQueryFactory
                         .select(qBookCategory.count())
                         .from(qBookCategory)
                         .where(qBookCategory.category.id.in(categoryList))
-                        .fetchOne()
-        ).orElse(0L);
+                        .fetchOne();
+        totalCount = totalCount != null ? totalCount : 0L;
         return new PageImpl<>(content, pageable, totalCount);
     }
 }
