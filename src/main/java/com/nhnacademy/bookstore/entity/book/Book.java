@@ -10,9 +10,8 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.time.ZonedDateTime;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @AllArgsConstructor
@@ -22,6 +21,7 @@ import java.util.Set;
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Setter
     private long id;
 
     @Size(min = 1, max = 50)
@@ -50,7 +50,7 @@ public class Book {
     @NotNull
     @Min(0)
     @Column(columnDefinition = "int default 0")
-    private int view_count;
+    private int viewCount;
 
 //    @Column(nullable = false, columnDefinition = "bit(1) default 1")
     @NotNull
@@ -76,13 +76,13 @@ public class Book {
 
     @Setter
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<BookCategory> bookCategorySet = new HashSet<>();
+    private List<BookCategory> bookCategoryList = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<BookTag> bookTagSet = new HashSet<>();
+    private List<BookTag> bookTagList = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<BookImage> bookImageSet = new HashSet<>();
+    private List<BookImage> bookImageList = new ArrayList<>();
 
 
 
@@ -91,20 +91,20 @@ public class Book {
         this.createdAt = ZonedDateTime.now();
     }
 
-    public Book(String title, String description, ZonedDateTime publishedDate, int price, int quantity, int sellingPrice, int view_count, boolean packing, String author, String isbn, String publisher,  Set<BookCategory> bookCategorySet, Set<BookTag> bookTagSet, Set<BookImage> bookImageSet) {
+    public Book(String title, String description, ZonedDateTime publishedDate, int price, int quantity, int sellingPrice, int viewCount, boolean packing, String author, String isbn, String publisher,  List<BookCategory> bookCategoryList, List<BookTag> bookTagList, List<BookImage> bookImageList) {
         this.title = title;
         this.description = description;
         this.publishedDate = publishedDate;
         this.price = price;
         this.quantity = quantity;
         this.sellingPrice = sellingPrice;
-        this.view_count = view_count;
+        this.viewCount = viewCount;
         this.packing = packing;
         this.author = author;
         this.isbn = isbn;
         this.publisher = publisher;
-        this.bookCategorySet = bookCategorySet;
-        this.bookTagSet = bookTagSet;
-        this.bookImageSet = bookImageSet;
+        this.bookCategoryList = bookCategoryList;
+        this.bookTagList = bookTagList;
+        this.bookImageList = bookImageList;
     }
 }

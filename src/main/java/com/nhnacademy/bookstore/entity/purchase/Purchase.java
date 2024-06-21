@@ -14,9 +14,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.ZonedDateTime;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -60,8 +58,8 @@ public class Purchase {
 
     //연결
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchase", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<PurchaseBook> purchaseBookSet = new HashSet<>();
+    private List<PurchaseBook> purchaseBookList = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchase", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<PurchaseCoupon> purchaseCouponSet = new HashSet<>();
+    private List<PurchaseCoupon> purchaseCouponList = new ArrayList<>();
 }

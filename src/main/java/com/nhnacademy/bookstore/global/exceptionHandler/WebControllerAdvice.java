@@ -1,7 +1,5 @@
 package com.nhnacademy.bookstore.global.exceptionHandler;
 import com.nhnacademy.bookstore.book.book.exception.CreateBookRequestFormException;
-import com.nhnacademy.bookstore.book.bookTag.exception.ReadBookTagNotFoundResponseException;
-import com.nhnacademy.bookstore.book.bookTag.exception.ReadBookTagRequestFormException;
 import com.nhnacademy.bookstore.util.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
@@ -48,42 +46,53 @@ public class WebControllerAdvice {
     @ExceptionHandler({
             CreateBookRequestFormException.class,
             AlreadyBoundException.class,
-            ReadBookTagRequestFormException.class
     })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiResponse<ErrorResponseForm> badRequestHandler(Exception ex, Model model) {
         return ApiResponse.badRequestFail(
                 new ApiResponse.Body<>(ErrorResponseForm.builder()
-                .title(ex.getMessage())
-                .status(HttpStatus.BAD_REQUEST.value())
-                .timestamp(ZonedDateTime.now().toString())
-                .build())
-        );
-
-    }
-
-
-    @ExceptionHandler({
-            ReadBookTagNotFoundResponseException.class,
-
-    })
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ApiResponse<ErrorResponseForm> notFoundHandler(Exception ex, Model model) {
-        return ApiResponse.notFoundFail(
-                new ApiResponse.Body<>(ErrorResponseForm.builder()
                         .title(ex.getMessage())
-                        .status(HttpStatus.NOT_FOUND.value())
+                        .status(HttpStatus.BAD_REQUEST.value())
                         .timestamp(ZonedDateTime.now().toString())
                         .build())
         );
+
     }
 //
+//    /**
+//     * NOT_FOUND 처리 메소드
+//     * @param ex
+//     * @param model
+//     * @return ApiResponse<ErrorResponseForm>
+//     *
+//     * @author 정주혁
+//     */
+//    @ExceptionHandler({
+//    })
+//    @ResponseStatus(HttpStatus.NOT_FOUND)
+//    public ApiResponse<ErrorResponseForm> notFoundHandler(Exception ex, Model model) {
+//        return ApiResponse.notFoundFail(
+//                new ApiResponse.Body<>(ErrorResponseForm.builder()
+//                        .title(ex.getMessage())
+//                        .status(HttpStatus.NOT_FOUND.value())
+//                        .timestamp(ZonedDateTime.now().toString())
+//                        .build())
+//        );
+//    }
+//    /**
+//     * METHOD_NOT_ALLOWED 처리 메소드
+//     * @param ex
+//     * @param model
+//     * @return ApiResponse<ErrorResponseForm>
+//     *
+//     * @author 정주혁
+//     */
 //
 //    @ExceptionHandler({})
 //    @ResponseStatus(HttpStatus.UNAUTHORIZED)
 //    public ApiResponse<ErrorResponseForm> unauthorizedHandler(Exception ex, Model model) {
 //        return new ApiResponse<>(
-//                new ApiResponse.Header(false, 405, "unauthorized"),
+//                new ApiResponse.Header(false, HttpStatus.METHOD_NOT_ALLOWED.value()),
 //                new ApiResponse.Body<>(ErrorResponseForm.builder()
 //                        .title(ex.getMessage())
 //                        .status(HttpStatus.UNAUTHORIZED.value())
