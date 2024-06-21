@@ -13,6 +13,7 @@ import com.nhnacademy.bookstore.book.bookCartegory.service.impl.BookCategoryServ
 import com.nhnacademy.bookstore.book.category.exception.CategoryNotFoundException;
 import com.nhnacademy.bookstore.book.category.repository.CategoryRepository;
 import com.nhnacademy.bookstore.entity.book.Book;
+import com.nhnacademy.bookstore.entity.bookCategory.BookCategory;
 import com.nhnacademy.bookstore.entity.category.Category;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -49,7 +50,7 @@ class BookCategoryServiceTest {
     private BookCategoryRepository bookCategoryRepository;
 
     @InjectMocks
-    private BookCategoryServiceImpl bookCategoryService; // 구현체를 명시적으로 주입
+    private BookCategoryServiceImpl bookCategoryService;
 
     private Book book;
     private Category category;
@@ -124,19 +125,28 @@ class BookCategoryServiceTest {
 
         bookCategoryService.updateBookCategory(book.getId(), dto);
 
-        verify(bookCategoryRepository, times(1)).deleteByBook(any());
-        verify(bookCategoryRepository, times(1)).saveAll(anyList());
+        verify(bookRepository, times(1)).findById(anyLong());
+        verify(categoryRepository, times(1)).findAllById(anyList());
+        verify(bookRepository, times(1)).save(any(Book.class));
+
+        assertEquals(1, book.getBookCategoryList().size());
+        assertEquals(category, book.getBookCategoryList().get(0).getCategory());
     }
 
     @DisplayName("도서-카테고리 삭제 테스트")
     @Test
     void deletedBookCategory() {
-        when(bookCategoryRepository.existsById(anyLong())).thenReturn(true);
+        BookCategory bookCategory = BookCategory.create(book, category);
+        book.addBookCategory(bookCategory);
+
+        when(bookCategoryRepository.findById(anyLong())).thenReturn(Optional.of(bookCategory));
 
         bookCategoryService.deletedBookCategory(1L);
 
         verify(bookCategoryRepository, times(1)).deleteById(anyLong());
     }
+
+
 
     @DisplayName("도서에 해당하는 카테고리 목록 조회 테스트")
     @Test

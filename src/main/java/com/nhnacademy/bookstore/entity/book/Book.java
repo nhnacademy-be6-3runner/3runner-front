@@ -100,8 +100,17 @@ public class Book {
         this.author = author;
         this.isbn = isbn;
         this.publisher = publisher;
-        this.bookCategoryList = bookCategoryList;
-        this.bookTagList = bookTagList;
-        this.bookImageList = bookImageList;
+        this.bookCategoryList = bookCategoryList != null ? bookCategoryList : new ArrayList<>();
+        this.bookTagList = bookTagList != null ? bookTagList : new ArrayList<>();
+        this.bookImageList = bookImageList != null ? bookImageList : new ArrayList<>();
+    }
+    public void addBookCategory(BookCategory bookCategory) {
+        this.bookCategoryList.add(bookCategory);
+        bookCategory.setBook(this);
+    }
+
+    public void removeBookCategory(BookCategory bookCategory) {
+        this.bookCategoryList.remove(bookCategory);
+        bookCategory.setBook(null);
     }
 }

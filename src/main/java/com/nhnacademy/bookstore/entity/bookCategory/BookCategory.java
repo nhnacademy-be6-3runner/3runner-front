@@ -5,12 +5,15 @@ import com.nhnacademy.bookstore.entity.category.Category;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Getter
 public class BookCategory {
 
     @Id
@@ -18,6 +21,7 @@ public class BookCategory {
     private long id;
 
     @ManyToOne
+    @Setter
     private Book book;
 
     @ManyToOne

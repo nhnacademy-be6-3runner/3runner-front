@@ -44,13 +44,8 @@ public class BookCategoryServiceImpl implements BookCategoryService {
     @Override
     @Transactional(propagation = Propagation.MANDATORY)
     public void createBookCategory(CreateBookCategoryRequest dto) {
-        Book book = bookRepository.findById(dto.bookId())
-                .orElseThrow(() -> new BookDoesNotExistException("존재하지 않는 책입니다."));
-
-        List<Category> categories = categoryRepository.findAllById(dto.categoryIds());
-        if (categories.size() != dto.categoryIds().size()) {
-            throw new CategoryNotFoundException("존재하지 않는 카테고리입니다.");
-        }
+        Book book = getBookById(dto.bookId());
+        List<Category> categories = getCategoriesByIds(dto.categoryIds());
 
         for (Category category : categories) {
             if (bookCategoryRepository.existsByBookAndCategory(book, category)) {
@@ -58,10 +53,12 @@ public class BookCategoryServiceImpl implements BookCategoryService {
             }
         }
 
-        List<BookCategory> bookCategories = categories.stream()
-                .map(category -> BookCategory.create(book, category))
-                .collect(Collectors.toList());
-        bookCategoryRepository.saveAll(bookCategories);
+        for (Category category : categories) {
+            BookCategory bookCategory = BookCategory.create(book, category);
+            book.addBookCategory(bookCategory);
+        }
+
+        bookRepository.save(book);
     }
 
     /**
@@ -72,31 +69,36 @@ public class BookCategoryServiceImpl implements BookCategoryService {
     @Transactional(propagation = Propagation.MANDATORY)
     public void updateBookCategory(long bookId, UpdateBookCategoryRequest dto) {
         Book book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new BookDoesNotExistException("존재하지 않는 도서입니다."));
+            .orElseThrow(() -> new BookDoesNotExistException("존재하지 않는 도서입니다."));
         List<Category> categories = categoryRepository.findAllById(dto.categoryIds());
         if (categories.size() != dto.categoryIds().size()) {
             throw new CategoryNotFoundException("존재하지 않는 카테고리입니다.");
         }
+
         // 기존의 모든 카테고리 삭제
-        bookCategoryRepository.deleteByBook(book);
-        List<BookCategory> newBookCategories = categories.stream()
-                .map(category -> BookCategory.create(book, category))
-                .collect(Collectors.toList());
-        bookCategoryRepository.saveAll(newBookCategories);
+        book.getBookCategoryList().clear();
+
+        for (Category category : categories) {
+            BookCategory bookCategory = BookCategory.create(book, category);
+            book.addBookCategory(bookCategory);
+        }
+
+        // 엔티티의 상태 변경이 반영되도록 book을 save
+        bookRepository.save(book);
     }
 
-    /**
-     * 도서-카테고리 삭제
-     * @param id
-     */
+
     @Override
     public void deletedBookCategory(Long id) {
-        // TODO 근데 궁금한게 삭제할 때 도서 아이디를 받아서 삭제를 진행해야 할까요? 지금은 도서-카테고리 아이디 기준입니다.
-        if (!bookCategoryRepository.existsById(id)) {
-           throw new BookCategoryNotFoundException("도서에 등록되지 않은 카테고리입니다.");
-        }
+        BookCategory bookCategory = bookCategoryRepository.findById(id)
+            .orElseThrow(() -> new BookCategoryNotFoundException("도서에 등록되지 않은 카테고리입니다."));
+
+        Book book = bookCategory.getBook();
+        book.removeBookCategory(bookCategory);
+
         bookCategoryRepository.deleteById(id);
     }
+
 
     /**
      * 도서에 해당하는 카테고리 목록 불러오는 메서드
@@ -121,5 +123,18 @@ public class BookCategoryServiceImpl implements BookCategoryService {
             throw new CategoryNotFoundException("존재하지 않는 카테고리가 있습니다.");
         }
         return bookCategoryRepository.categoriesWithBookList(categoryIds, pageable);
+    }
+
+    private Book getBookById(Long bookId) {
+        return bookRepository.findById(bookId)
+            .orElseThrow(() -> new BookDoesNotExistException("존재하지 않는 책입니다."));
+    }
+
+    private List<Category> getCategoriesByIds(List<Long> categoryIds) {
+        List<Category> categories = categoryRepository.findAllById(categoryIds);
+        if (categories.size() != categoryIds.size()) {
+            throw new CategoryNotFoundException("존재하지 않는 카테고리입니다.");
+        }
+        return categories;
     }
 }
