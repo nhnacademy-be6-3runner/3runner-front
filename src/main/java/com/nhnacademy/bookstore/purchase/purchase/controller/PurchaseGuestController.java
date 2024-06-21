@@ -33,7 +33,7 @@ public class PurchaseGuestController {
     @GetMapping("/guests/purchases")
     public ApiResponse<ReadPurchaseResponse> readPurchase (@Valid @RequestBody ReadDeletePurchaseGuestRequest readPurchaseRequest,
                                                            BindingResult bindingResult) {
-        if(bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             throw new PurchaseFormArgumentErrorException(bindingResult.getFieldErrors().toString());
         }
 
@@ -56,7 +56,7 @@ public class PurchaseGuestController {
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<Void> createPurchase (@Valid @RequestBody CreatePurchaseRequest createPurchaseRequest,
                                              BindingResult bindingResult) {
-        if(bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             throw new PurchaseFormArgumentErrorException(bindingResult.getFieldErrors().toString());
         }
 
