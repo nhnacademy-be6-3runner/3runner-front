@@ -15,8 +15,9 @@ import java.util.List;
 
 @Entity
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @Getter
+@Setter
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -82,6 +83,8 @@ public class Book {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BookImage> bookImageList = new ArrayList<>();
+
+
 
     @PrePersist
     protected void onCreate() {
