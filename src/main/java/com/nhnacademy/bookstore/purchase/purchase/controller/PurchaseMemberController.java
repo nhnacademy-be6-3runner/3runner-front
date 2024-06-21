@@ -2,7 +2,7 @@ package com.nhnacademy.bookstore.purchase.purchase.controller;
 
 import com.nhnacademy.bookstore.member.member.service.MemberService;
 import com.nhnacademy.bookstore.purchase.purchase.dto.request.CreatePurchaseRequest;
-import com.nhnacademy.bookstore.purchase.purchase.dto.request.UpdatePurchaseRequest;
+import com.nhnacademy.bookstore.purchase.purchase.dto.request.UpdatePurchaseMemberRequest;
 import com.nhnacademy.bookstore.purchase.purchase.dto.response.ReadPurchaseResponse;
 import com.nhnacademy.bookstore.purchase.purchase.exception.PurchaseFormArgumentErrorException;
 import com.nhnacademy.bookstore.purchase.purchase.service.PurchaseMemberService;
@@ -96,7 +96,7 @@ public class PurchaseMemberController {
      */
     @PutMapping("members/purchases/{purchaseId}")
     public ApiResponse<Void> updatePurchaseStatus (@RequestHeader("Member-Id") Long memberId,
-                                                   @Valid @RequestBody UpdatePurchaseRequest updatePurchaseRequest,
+                                                   @Valid @RequestBody UpdatePurchaseMemberRequest updatePurchaseRequest,
                                                    BindingResult bindingResult,
                                                    @PathVariable Long purchaseId) {
         if(bindingResult.hasErrors()){
