@@ -44,7 +44,7 @@ class BookTagRepositoryTest {
         book.setPrice(100);
         book.setQuantity(50);
         book.setSellingPrice(80);
-        book.setView_count(500);
+        book.setViewCount(500);
         book.setPacking(true);
         book.setIsbn("123456789");
         book.setAuthor("John Doe");

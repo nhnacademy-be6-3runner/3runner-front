@@ -55,7 +55,7 @@ public class BookTagServiceImpl implements BookTagService {
         return books.map(book-> ReadBookByTagResponse.builder()
                 .price(book.getPrice()).author(book.getAuthor()).quantity(book.getQuantity())
                 .description(book.getDescription()).title(book.getTitle()).packing(book.isPacking())
-                .publishedDate(book.getPublishedDate()).creationDate(book.getCreatedAt()).view_count(book.getView_count())
+                .publishedDate(book.getPublishedDate()).creationDate(book.getCreatedAt()).view_count(book.getViewCount())
                 .sellingPrice(book.getSellingPrice()).build());
     }
 
