@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * book-category query dsl 인터페이스 구현체
@@ -30,6 +31,7 @@ public class BookCategoryCustomRepositoryImpl implements BookCategoryCustomRepos
     }
 
     /**
+     * 카테고리로 도서 조회 메서드
      * @param categoryId 조회할 카테고리 아이디
      * @param pageable 페이지
      * @return 조회된 도서 list
@@ -37,41 +39,46 @@ public class BookCategoryCustomRepositoryImpl implements BookCategoryCustomRepos
     @Override
     public Page<BookListResponse> categoryWithBookList(Long categoryId, Pageable pageable) {
         List<BookListResponse> content = jpaQueryFactory
-                // bookListResponse 객체 생성
                 .select(Projections.constructor(BookListResponse.class,
-                        qBookCategory.book.id,
                         qBookCategory.book.title,
-                        qBookCategory.book.author,
-                        qBookCategory.book.price))
+                        qBookCategory.book.price,
+                        qBookCategory.book.sellingPrice,
+                        qBookCategory.book.author))
                 .from(qBookCategory)
-                // 두 값이 같은지 확인
                 .where(qBookCategory.category.id.eq(categoryId))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
-        long totalCount = jpaQueryFactory
-                .select(QBookCategory.bookCategory.count())
-                .from(qBookCategory)
-                .where(qBookCategory.category.id.eq(categoryId))
-                // .fetchCount() -> 중단될 예정, 불필요한 쿼리도 불러와서 데이터베이스 성능 저하
-                .stream().count();
+
+        Long totalCount = Optional.ofNullable(
+                jpaQueryFactory
+                        .select(qBookCategory.count())
+                        .from(qBookCategory)
+                        .where(qBookCategory.category.id.eq(categoryId))
+                        .fetchOne()
+        ).orElse(0L);
+
         return new PageImpl<>(content, pageable, totalCount);
     }
 
 
+    /**
+     * 도서 아이디로 카테고리 list 조회 리스트
+     * @param bookId 도서 아이디
+     * @return 카테고리 list
+     */
     @Override
     public List<BookCategoriesResponse> bookWithCategoryList(Long bookId) {
         return jpaQueryFactory
                 .select(Projections.constructor(BookCategoriesResponse.class,
-                        qBookCategory.category.id,
                         qBookCategory.category.name))
                 .from(qBookCategory)
                 .where(qBookCategory.book.id.eq(bookId))
                 .fetch();
     }
 
-
     /**
+     * 카테고리 리스트로 도서 조회 메서드
      * @param categoryList 조회할 카테고리 아이디 리스트
      * @param pageable 페이지
      * @return 조회된 도서 list
@@ -80,22 +87,22 @@ public class BookCategoryCustomRepositoryImpl implements BookCategoryCustomRepos
     public Page<BookListResponse> categoriesWithBookList(List<Long> categoryList, Pageable pageable) {
         List<BookListResponse> content = jpaQueryFactory
                 .select(Projections.constructor(BookListResponse.class,
-                        qBookCategory.book.id,
                         qBookCategory.book.title,
-                        qBookCategory.book.author,
-                        qBookCategory.book.price))
+                        qBookCategory.book.price,
+                        qBookCategory.book.sellingPrice,
+                        qBookCategory.book.author))
                 .from(qBookCategory)
                 .where(qBookCategory.category.id.in(categoryList))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
-
-        long totalCount = jpaQueryFactory
-                .select(QBookCategory.bookCategory.count())
-                .from(qBookCategory)
-                .where(qBookCategory.category.id.in(categoryList))
-                .stream().count();
-
+        Long totalCount = Optional.ofNullable(
+                jpaQueryFactory
+                        .select(qBookCategory.count())
+                        .from(qBookCategory)
+                        .where(qBookCategory.category.id.in(categoryList))
+                        .fetchOne()
+        ).orElse(0L);
         return new PageImpl<>(content, pageable, totalCount);
     }
 }

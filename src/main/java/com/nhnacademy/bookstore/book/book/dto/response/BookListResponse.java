@@ -10,6 +10,7 @@ import lombok.Builder;
  * @param sellingPrice
  * @param author
  */
+
 @Builder
 public record BookListResponse(
         String title, int price, int sellingPrice, String author
