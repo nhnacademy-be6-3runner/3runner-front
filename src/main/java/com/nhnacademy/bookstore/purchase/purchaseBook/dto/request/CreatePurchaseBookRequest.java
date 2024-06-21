@@ -5,5 +5,5 @@ import com.nhnacademy.bookstore.entity.purchase.Purchase;
 import lombok.Builder;
 
 @Builder
-public record CreatePurchaseBookRequest(Book book, int quantity, int price, Purchase purchase) {
+public record CreatePurchaseBookRequest(long bookId, int quantity, int price, long purchaseId) {
 }
