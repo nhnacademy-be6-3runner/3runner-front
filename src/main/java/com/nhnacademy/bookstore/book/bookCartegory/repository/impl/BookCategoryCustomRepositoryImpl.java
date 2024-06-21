@@ -3,7 +3,10 @@ package com.nhnacademy.bookstore.book.bookCartegory.repository.impl;
 import com.nhnacademy.bookstore.book.book.dto.response.BookListResponse;
 import com.nhnacademy.bookstore.book.bookCartegory.dto.response.BookCategoriesResponse;
 import com.nhnacademy.bookstore.book.bookCartegory.repository.BookCategoryCustomRepository;
+import com.nhnacademy.bookstore.entity.book.QBook;
 import com.nhnacademy.bookstore.entity.bookCategory.QBookCategory;
+import com.nhnacademy.bookstore.entity.bookImage.QBookImage;
+import com.nhnacademy.bookstore.entity.bookImage.enums.BookImageType;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -14,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+
 /**
  * book-category query dsl 인터페이스 구현체
  * @author 김은비
@@ -23,6 +27,8 @@ import java.util.List;
 public class BookCategoryCustomRepositoryImpl implements BookCategoryCustomRepository {
     private final JPAQueryFactory jpaQueryFactory;
     private final QBookCategory qBookCategory = QBookCategory.bookCategory;
+    private final QBookImage qBookImage = QBookImage.bookImage;
+    private final QBook qBook = QBook.book;
 
     public BookCategoryCustomRepositoryImpl(EntityManager entityManager) {
         this.jpaQueryFactory = new JPAQueryFactory(entityManager);
@@ -41,8 +47,12 @@ public class BookCategoryCustomRepositoryImpl implements BookCategoryCustomRepos
                         qBookCategory.book.title,
                         qBookCategory.book.price,
                         qBookCategory.book.sellingPrice,
-                        qBookCategory.book.author))
+                        qBookCategory.book.author,
+                        qBookImage.url))
                 .from(qBookCategory)
+                .join(qBookCategory.book, qBook)
+                .leftJoin(qBookImage)
+                .on(qBookImage.book.id.eq(qBook.id).and(qBookImage.type.eq(BookImageType.MAIN)))
                 .where(qBookCategory.category.id.eq(categoryId))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -57,7 +67,6 @@ public class BookCategoryCustomRepositoryImpl implements BookCategoryCustomRepos
 
         return new PageImpl<>(content, pageable, totalCount);
     }
-
 
     /**
      * 도서 아이디로 카테고리 list 조회 리스트
@@ -87,8 +96,12 @@ public class BookCategoryCustomRepositoryImpl implements BookCategoryCustomRepos
                         qBookCategory.book.title,
                         qBookCategory.book.price,
                         qBookCategory.book.sellingPrice,
-                        qBookCategory.book.author))
+                        qBookCategory.book.author,
+                        qBookImage.url))
                 .from(qBookCategory)
+                .join(qBookCategory.book, qBook)
+                .leftJoin(qBookImage)
+                .on(qBookImage.book.id.eq(qBook.id).and(qBookImage.type.eq(BookImageType.MAIN)))
                 .where(qBookCategory.category.id.in(categoryList))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())

@@ -179,7 +179,7 @@ class BookCategoryServiceTest {
         Pageable pageable = PageRequest.of(0, 10);
         List<BookListResponse> bookList = List.of(
             new BookListResponse(book.getTitle(), book.getPrice(), book.getSellingPrice(),
-                book.getAuthor()));
+                book.getAuthor(), null));
         Page<BookListResponse> expectedPage = new PageImpl<>(bookList, pageable, bookList.size());
 
         when(categoryRepository.findAllById(anyList())).thenReturn(categoryList);

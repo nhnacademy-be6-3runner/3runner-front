@@ -34,6 +34,7 @@ public class BookCategoryRepositoryTest {
     @Autowired
     private CategoryRepository categoryRepository;
     private Book book;
+    private Category category;
     private List<Category> categoryList;
 
     @BeforeEach
@@ -130,6 +131,11 @@ public class BookCategoryRepositoryTest {
         Assertions.assertFalse(bookPage.isEmpty());
         Assertions.assertEquals(1, bookPage.getTotalElements());
         Assertions.assertEquals(book.getTitle(), bookPage.getContent().get(0).title());
+        Assertions.assertEquals(book.getPrice(), bookPage.getContent().get(0).price());
+        Assertions.assertEquals(book.getSellingPrice(), bookPage.getContent().get(0).sellingPrice());
+        Assertions.assertEquals(book.getAuthor(), bookPage.getContent().get(0).author());
+        // Add assertion for thumbnail if needed
+        // Assertions.assertEquals(expectedThumbnail, bookPage.getContent().get(0).thumbnail());
     }
 
     @DisplayName("도서 아이디로 카테고리 리스트 조회 테스트")
@@ -171,5 +177,10 @@ public class BookCategoryRepositoryTest {
         Assertions.assertFalse(bookPage.isEmpty());
         Assertions.assertEquals(1, bookPage.getTotalElements());
         Assertions.assertEquals(book.getTitle(), bookPage.getContent().get(0).title());
+        Assertions.assertEquals(book.getPrice(), bookPage.getContent().get(0).price());
+        Assertions.assertEquals(book.getSellingPrice(), bookPage.getContent().get(0).sellingPrice());
+        Assertions.assertEquals(book.getAuthor(), bookPage.getContent().get(0).author());
+        // Add assertion for thumbnail if needed
+//         Assertions.assertEquals(expectedThumbnail, bookPage.getContent().get(0).thumbnail());
     }
 }
