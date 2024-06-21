@@ -11,7 +11,6 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Builder
-// TODO record 형으로 수정
 public class CategoryParentWithChildrenResponse {
     private long id;
     private String name;

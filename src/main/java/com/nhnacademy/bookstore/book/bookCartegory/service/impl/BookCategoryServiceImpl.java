@@ -87,11 +87,10 @@ public class BookCategoryServiceImpl implements BookCategoryService {
 
     /**
      * 도서-카테고리 삭제
-     * @param id
+     * @param id 도서-카테고리 아이디
      */
     @Override
     public void deletedBookCategory(Long id) {
-        // TODO 근데 궁금한게 삭제할 때 도서 아이디를 받아서 삭제를 진행해야 할까요? 지금은 도서-카테고리 아이디 기준입니다.
         if (!bookCategoryRepository.existsById(id)) {
            throw new BookCategoryNotFoundException("도서에 등록되지 않은 카테고리입니다.");
         }
