@@ -22,7 +22,7 @@ import java.util.Set;
  * @author 김은비
  */
 @RestController
-@RequestMapping(("/categories"))
+@RequestMapping(("/bookstore/categories"))
 @RequiredArgsConstructor
 public class CategoryController {
     private final CategoryService categoryService;

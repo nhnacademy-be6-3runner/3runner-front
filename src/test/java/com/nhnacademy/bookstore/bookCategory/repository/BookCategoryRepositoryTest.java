@@ -26,6 +26,7 @@ import java.util.List;
 @DataJpaTest
 @Import(BookCategoryCustomRepositoryImpl.class)
 public class BookCategoryRepositoryTest {
+
     @Autowired
     private BookCategoryRepository bookCategoryRepository;
     @Autowired
@@ -88,7 +89,6 @@ public class BookCategoryRepositoryTest {
                 .build();
         bookCategoryRepository.saveAll(List.of(bookCategory1, bookCategory2, bookCategory3));
 
-
         bookCategoryRepository.deleteByBook(book);
 
         List<BookCategory> remainingBookCategories = bookCategoryRepository.findAll();
@@ -124,7 +124,8 @@ public class BookCategoryRepositoryTest {
         bookCategoryRepository.save(bookCategory1);
 
         Pageable pageable = PageRequest.of(0, 10);
-        Page<BookListResponse> bookPage = bookCategoryRepository.categoryWithBookList(categoryList.get(0).getId(), pageable);
+        Page<BookListResponse> bookPage = bookCategoryRepository.categoryWithBookList(
+                categoryList.get(0).getId(), pageable);
 
         Assertions.assertFalse(bookPage.isEmpty());
         Assertions.assertEquals(1, bookPage.getTotalElements());
@@ -143,7 +144,8 @@ public class BookCategoryRepositoryTest {
                 .build();
         bookCategoryRepository.save(bookCategory1);
 
-        List<BookCategoriesResponse> categories = bookCategoryRepository.bookWithCategoryList(book.getId());
+        List<BookCategoriesResponse> categories = bookCategoryRepository.bookWithCategoryList(
+                book.getId());
 
         Assertions.assertFalse(categories.isEmpty());
         Assertions.assertEquals(1, categories.size());
@@ -163,7 +165,8 @@ public class BookCategoryRepositoryTest {
         bookCategoryRepository.save(bookCategory1);
 
         Pageable pageable = PageRequest.of(0, 10);
-        Page<BookListResponse> bookPage = bookCategoryRepository.categoriesWithBookList(List.of(categoryList.get(0).getId()), pageable);
+        Page<BookListResponse> bookPage = bookCategoryRepository.categoriesWithBookList(
+                List.of(categoryList.get(0).getId()), pageable);
 
         Assertions.assertFalse(bookPage.isEmpty());
         Assertions.assertEquals(1, bookPage.getTotalElements());

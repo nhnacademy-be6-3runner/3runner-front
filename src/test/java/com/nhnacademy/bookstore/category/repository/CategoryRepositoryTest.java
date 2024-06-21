@@ -8,6 +8,8 @@ import com.nhnacademy.bookstore.book.category.repository.impl.CategoryCustomRepo
 import com.nhnacademy.bookstore.entity.category.Category;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
+import java.util.List;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,14 +19,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
-import java.util.List;
-import java.util.Optional;
-
 
 @Slf4j
 @DataJpaTest
 @Import(CategoryCustomRepositoryImpl.class)
 public class CategoryRepositoryTest {
+
     @Autowired
     private CategoryRepository categoryRepository;
     private List<Category> categoryList;
@@ -39,25 +39,25 @@ public class CategoryRepositoryTest {
     void setUp() {
         queryFactory = new JPAQueryFactory(entityManager);
         Category parent1 = Category.builder()
-                .name("부모 카데고리1")
-                .parent(null)
-                .build();
+            .name("부모 카데고리1")
+            .parent(null)
+            .build();
         Category parent2 = Category.builder()
-                .name("부모 카테고리2")
-                .parent(null)
-                .build();
+            .name("부모 카테고리2")
+            .parent(null)
+            .build();
         Category children1 = Category.builder()
-                .name("자식 카데고리1")
-                .parent(parent1)
-                .build();
+            .name("자식 카데고리1")
+            .parent(parent1)
+            .build();
         Category children2 = Category.builder()
-                .name("자식 카데고리2")
-                .parent(parent1)
-                .build();
+            .name("자식 카데고리2")
+            .parent(parent1)
+            .build();
         Category children3 = Category.builder()
-                .name("자식 카데고리3")
-                .parent(parent2)
-                .build();
+            .name("자식 카데고리3")
+            .parent(parent2)
+            .build();
         parent1.addChildren(children1);
         parent1.addChildren(children2);
         parent2.addChildren(children3);
@@ -68,8 +68,8 @@ public class CategoryRepositoryTest {
     @Test
     void saveParentCategoryTest() {
         category = Category.builder()
-                .name("카테고리")
-                .build();
+            .name("카테고리")
+            .build();
         categoryRepository.save(category);
         Optional<Category> savedCategory = categoryRepository.findById(category.getId());
 
@@ -82,13 +82,14 @@ public class CategoryRepositoryTest {
     @Test
     void saveChildCategoryTest() {
         Category parent = Category.builder()
-                .name("부모 카테고리")
-                .parent(null)
-                .build();
+            .name("부모 카테고리")
+            .parent(null)
+            .bookCategoryList(null)
+            .build();
         Category child = Category.builder()
-                .name("자식 카테고리")
-                .parent(parent)
-                .build();
+            .name("자식 카테고리")
+            .parent(parent)
+            .build();
 
         categoryRepository.save(parent);
         categoryRepository.save(child);
@@ -108,15 +109,15 @@ public class CategoryRepositoryTest {
 
         // 부모-자식이 제대로 설정됐는지 확인
         Assertions.assertTrue(foundParent.get().getChildren().stream()
-                .anyMatch(c -> c.getId() == foundChild.get().getId()));
+            .anyMatch(c -> c.getId() == foundChild.get().getId()));
     }
 
     @DisplayName("카테고리 이름 조회 테스트")
     @Test
     void findByCategoryNameTest() {
         category = Category.builder()
-                .name("카테고리")
-                .build();
+            .name("카테고리")
+            .build();
         categoryRepository.save(category);
         Optional<Category> result = categoryRepository.findByName("카테고리");
         Assertions.assertEquals(category.getName(), result.get().getName());
@@ -159,7 +160,8 @@ public class CategoryRepositoryTest {
                 List<CategoryChildrenResponse> children1 = parentWithChildren.getChildrenList();
                 Assertions.assertEquals(2, children1.size());
                 for (CategoryChildrenResponse child : children1) {
-                    Assertions.assertTrue(child.getName().equals("자식 카데고리1") || child.getName().equals("자식 카데고리2"));
+                    Assertions.assertTrue(
+                        child.getName().equals("자식 카데고리1") || child.getName().equals("자식 카데고리2"));
                 }
             } else if (parentWithChildren.getName().equals("부모 카테고리2")) {
                 List<CategoryChildrenResponse> children2 = parentWithChildren.getChildrenList();
