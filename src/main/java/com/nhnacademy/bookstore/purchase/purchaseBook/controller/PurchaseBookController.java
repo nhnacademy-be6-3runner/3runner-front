@@ -8,12 +8,11 @@ import com.nhnacademy.bookstore.purchase.purchaseBook.dto.response.ReadPurchaseB
 import com.nhnacademy.bookstore.purchase.purchaseBook.exception.CreatePurchaseBookRequestFormException;
 import com.nhnacademy.bookstore.purchase.purchaseBook.exception.DeletePurchaseBookRequestFormException;
 import com.nhnacademy.bookstore.purchase.purchaseBook.exception.ReadPurchaseBookRequestFormException;
+import com.nhnacademy.bookstore.purchase.purchaseBook.exception.UpdatePurchaseBookRequestFormException;
 import com.nhnacademy.bookstore.purchase.purchaseBook.service.PurchaseBookService;
-import com.nhnacademy.bookstore.purchase.purchaseBook.service.impl.PurchaseBookServiceImpl;
 import com.nhnacademy.bookstore.util.ApiResponse;
 import com.nhnacademy.bookstore.util.ValidationUtils;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,7 +38,7 @@ public class PurchaseBookController {
      */
     @GetMapping
     public ApiResponse<List<ReadPurchaseBookResponse>> readPurchaseBook(@RequestBody @Valid ReadPurchaseIdRequest readPurchaseIdRequest,BindingResult bindingResult) {
-        ValidationUtils.validateBindingResult(bindingResult,new ReadPurchaseBookRequestFormException());
+        ValidationUtils.validateBindingResult(bindingResult,new ReadPurchaseBookRequestFormException(bindingResult ));
         return ApiResponse.success(purchaseBookService.readBookByPurchaseResponses(readPurchaseIdRequest));
     }
 
@@ -52,7 +51,7 @@ public class PurchaseBookController {
      */
     @PostMapping
     public ApiResponse<Long> createPurchaseBook(@RequestBody @Valid CreatePurchaseBookRequest createPurchaseBookRequest,BindingResult bindingResult) {
-        ValidationUtils.validateBindingResult(bindingResult,new CreatePurchaseBookRequestFormException());
+        ValidationUtils.validateBindingResult(bindingResult,new CreatePurchaseBookRequestFormException(bindingResult));
         return ApiResponse.createSuccess(purchaseBookService.createPurchaseBook(createPurchaseBookRequest));
     }
 
@@ -65,22 +64,22 @@ public class PurchaseBookController {
      */
     @DeleteMapping
     public ApiResponse<Void> deletePurchaseBook(@RequestBody @Valid DeletePurchaseBookRequest deletePurchaseBookRequest, BindingResult bindingResult) {
-        ValidationUtils.validateBindingResult(bindingResult,new DeletePurchaseBookRequestFormException());
+        ValidationUtils.validateBindingResult(bindingResult,new DeletePurchaseBookRequestFormException(bindingResult));
         purchaseBookService.deletePurchaseBook(deletePurchaseBookRequest);
         return ApiResponse.deleteSuccess(null);
     }
 
 
     /**
+     * 주문 책 수정
      *
-     *
-     * @param updatePurchaseBookRequest
-     * @param bindingResult
-     * @return
+     * @param updatePurchaseBookRequest 수정할 주문 책의 수정 내용
+     * @param bindingResult requestDto의 오류발생시 오류 처리를 위한 파라미터
+     * @return 수정한 주문책의 id
      */
     @PutMapping
     public ApiResponse<Long> updatePurchaseBook(@RequestBody @Valid UpdatePurchaseBookRequest updatePurchaseBookRequest, BindingResult bindingResult) {
-        ValidationUtils.validateBindingResult(bindingResult,new RuntimeException());
+        ValidationUtils.validateBindingResult(bindingResult,new UpdatePurchaseBookRequestFormException(bindingResult));
         return ApiResponse.success(purchaseBookService.updatePurchaseBook(updatePurchaseBookRequest));
     }
 }

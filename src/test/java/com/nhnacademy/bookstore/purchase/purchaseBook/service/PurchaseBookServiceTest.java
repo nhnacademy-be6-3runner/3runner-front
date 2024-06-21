@@ -15,6 +15,7 @@ import com.nhnacademy.bookstore.purchase.purchaseBook.repository.PurchaseBookRep
 import com.nhnacademy.bookstore.purchase.purchaseBook.service.PurchaseBookService;
 import com.nhnacademy.bookstore.purchase.purchaseBook.service.impl.PurchaseBookServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -56,6 +57,7 @@ public class PurchaseBookServiceTest {
         );
     }
 
+    @DisplayName("주문-책 생성서비스")
     @Test
     void testCreatePurchaseBook() {
         // Mock data
@@ -90,6 +92,7 @@ public class PurchaseBookServiceTest {
         verify(purchaseBookRepository).save(any(PurchaseBook.class));
     }
 
+    @DisplayName("주문-책 삭제서비스")
     @Test
     void testDeletePurchaseBook() {
         // Mock data
@@ -104,6 +107,8 @@ public class PurchaseBookServiceTest {
         verify(purchaseBookRepository).deleteById(deletePurchaseBookRequest.purchaseBookId());
     }
 
+
+    @DisplayName("주문-책 수정서비스")
     @Test
     void testUpdatePurchaseBook() {
         // Mock data
@@ -131,6 +136,7 @@ public class PurchaseBookServiceTest {
         verify(purchaseBookRepository).findByPurchaseIdAndBookId(updatePurchaseBookRequest.purchaseId(), updatePurchaseBookRequest.bookId());
     }
 
+    @DisplayName("주문-책 조회서비스")
     @Test
     void testReadBookByPurchaseResponses() {
         // Mock data

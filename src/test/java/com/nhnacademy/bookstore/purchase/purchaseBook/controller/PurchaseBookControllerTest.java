@@ -8,6 +8,7 @@ import com.nhnacademy.bookstore.purchase.purchaseBook.dto.response.ReadPurchaseB
 import com.nhnacademy.bookstore.purchase.purchaseBook.service.PurchaseBookService;
 import com.nhnacademy.bookstore.util.ApiResponse;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -41,6 +42,7 @@ public class PurchaseBookControllerTest {
         MockitoAnnotations.openMocks(this);
     }
 
+    @DisplayName("주문-책 해당 주문id로 모두 조회")
     @Test
     void testReadPurchaseBook() {
         // Mock data
@@ -65,6 +67,7 @@ public class PurchaseBookControllerTest {
         verify(purchaseBookService).readBookByPurchaseResponses(readPurchaseIdRequest);
     }
 
+    @DisplayName("주문-책 생성")
     @Test
     void testCreatePurchaseBook() {
         // Mock data
@@ -87,6 +90,7 @@ public class PurchaseBookControllerTest {
         verify(purchaseBookService).createPurchaseBook(createPurchaseBookRequest);
     }
 
+    @DisplayName("주문-책 삭제")
     @Test
     void testDeletePurchaseBook() {
         // Mock data
@@ -105,6 +109,7 @@ public class PurchaseBookControllerTest {
         verify(purchaseBookService).deletePurchaseBook(deletePurchaseBookRequest);
     }
 
+    @DisplayName("주문-책 수정")
     @Test
     void testUpdatePurchaseBook() {
         // Mock data

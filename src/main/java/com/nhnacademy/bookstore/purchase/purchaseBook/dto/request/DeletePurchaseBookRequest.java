@@ -2,14 +2,12 @@ package com.nhnacademy.bookstore.purchase.purchaseBook.dto.request;
 
 import lombok.Builder;
 
-
 /**
- * 주문-책 조회 requestDto
+ * 주문-책 삭제 requestDto
  *
  * @author 정주혁
- *
- * @param purchaseId
+ * @param purchaseBookId
  */
 @Builder
-public record ReadPurchaseIdRequest(Long purchaseId) {
+public record DeletePurchaseBookRequest(long purchaseBookId) {
 }

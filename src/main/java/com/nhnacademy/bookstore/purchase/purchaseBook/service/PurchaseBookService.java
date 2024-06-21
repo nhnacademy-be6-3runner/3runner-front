@@ -8,6 +8,11 @@ import com.nhnacademy.bookstore.purchase.purchaseBook.dto.response.ReadPurchaseB
 
 import java.util.List;
 
+/**
+ * 주문-책 interface
+ *
+ * @author 정주혁
+ */
 public interface PurchaseBookService {
     void deletePurchaseBook(DeletePurchaseBookRequest purchaseBookRequest);
     Long createPurchaseBook(CreatePurchaseBookRequest createPurchaseBookRequest);

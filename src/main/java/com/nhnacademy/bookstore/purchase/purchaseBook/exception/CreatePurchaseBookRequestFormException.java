@@ -1,7 +1,14 @@
 package com.nhnacademy.bookstore.purchase.purchaseBook.exception;
 
+import org.springframework.validation.BindingResult;
+
+/**
+ * 생성 dto가 잘못됐을경우 exception
+ *
+ * @author 정주혁
+ */
 public class CreatePurchaseBookRequestFormException extends RuntimeException {
-    public CreatePurchaseBookRequestFormException() {
-        super("해당 생성 request가 잘못되었습니다.");
+    public CreatePurchaseBookRequestFormException(BindingResult message) {
+        super(message.getFieldErrors().toString());
     }
 }
