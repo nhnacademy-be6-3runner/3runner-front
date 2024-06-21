@@ -42,7 +42,7 @@ public class  BookTagController {
      * @return ApiResponse< Page<ReadBookByTagResponse>> 커스터마이징 한 헤더와 불러온 해당 태그가 달린 책들로 이루어진 바디를 합친 실행 값
      */
     @GetMapping("/tags/{tagId}/books")
-    public ApiResponse< Page<ReadBookByTagResponse>> readBookByTagId(@Valid ReadTagRequest tagId,
+    public ApiResponse< Page<ReadBookByTagResponse>> readBookByTagId(@Valid @RequestBody ReadTagRequest tagId,
                                                                     BindingResult bindingResult) {
         if(bindingResult.hasErrors()){
 
@@ -73,7 +73,7 @@ public class  BookTagController {
      * @return ApiResponse< Page<ReadBookByTagResponse>> 커스터마이징 한 헤더와 불러온 해당 책에 달린 태그들로 이루어진 바디를 합친 실행 값
      */
     @GetMapping("/books/{bookId}/tags")
-    public ApiResponse<List<ReadTagByBookResponse>> readTagByBookId(@Valid ReadBookIdRequest bookId,
+    public ApiResponse<List<ReadTagByBookResponse>> readTagByBookId(@Valid @RequestBody ReadBookIdRequest bookId,
                                                                   BindingResult bindingResult) {
         if(bindingResult.hasErrors()){
 

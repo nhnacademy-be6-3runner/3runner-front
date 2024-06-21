@@ -34,11 +34,9 @@ public class TagController {
      * @return ApiResponse<Void> 성공시 success헤더만 보냄
      */
     @PostMapping
-    public ApiResponse<Long> createTag(@Valid CreateTagRequest createTagRequest,
-                                    BindingResult bindingResult) {
-        ValidationUtils.validateBindingResult(bindingResult,new DeleteTagRequestFormException(bindingResult.getFieldErrors().toString()));
+    public ApiResponse<Long> createTag(@Valid @RequestBody CreateTagRequest createTagRequest, BindingResult bindingResult) {
+        ValidationUtils.validateBindingResult(bindingResult, new DeleteTagRequestFormException(bindingResult.getFieldErrors().toString()));
         Long id = tagService.createTag(createTagRequest);
-
         return new ApiResponse<>(new ApiResponse.Header(true, HttpStatus.CREATED.value()), new ApiResponse.Body<>(id));
     }
 
@@ -49,7 +47,7 @@ public class TagController {
      * @return ApiResponse<Void> 성공시 success헤더만 보냄
      */
     @DeleteMapping
-    public ApiResponse<Void> deleteTag(@Valid DeleteTagRequest deleteTagRequest,
+    public ApiResponse<Void> deleteTag(@Valid @RequestBody DeleteTagRequest deleteTagRequest,
                                        BindingResult bindingResult) {
         ValidationUtils.validateBindingResult(bindingResult,new DeleteTagRequestFormException(bindingResult.getFieldErrors().toString()));
         tagService.deleteTag(deleteTagRequest);
@@ -65,7 +63,7 @@ public class TagController {
      * @return 성공시 success헤더만 보냄
      */
     @PutMapping
-    public ApiResponse<Long> updateTag(@Valid UpdateTagRequest updateTagRequest,
+    public ApiResponse<Long> updateTag(@Valid @RequestBody UpdateTagRequest updateTagRequest,
                                        BindingResult bindingResult) {
         ValidationUtils.validateBindingResult(bindingResult,new DeleteTagRequestFormException(bindingResult.getFieldErrors().toString()));
         Long id = tagService.updateTag(updateTagRequest);
