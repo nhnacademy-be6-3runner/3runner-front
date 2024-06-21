@@ -13,6 +13,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Builder
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,9 +27,8 @@ public class Category {
     @JoinColumn(name = "parent_id")
     private Category parent;
 
-
-    //연결
-
+    // 연결
+    @Setter
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent", cascade = CascadeType.ALL)
     private List<Category> children = new ArrayList<>();
 
@@ -36,4 +36,14 @@ public class Category {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BookCategory> bookCategoryList = new ArrayList<>();
 
+    public void setParent(Category parent) {
+        this.parent = parent;
+    }
+    public void addChildren(Category child) {
+        if (this.children == null) {
+            this.children = new ArrayList<>();
+        }
+        child.setParent(this);
+        this.children.add(child);
+    }
 }
