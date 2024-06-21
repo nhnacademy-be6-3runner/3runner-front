@@ -34,17 +34,24 @@ public class CategoryCustomRepositoryImpl implements CategoryCustomRepository {
     @Override
     public List<CategoryResponse> findCategories() {
         QCategory parentCategory = new QCategory("parent");
+        QCategory grandParentCategory = new QCategory("grandParent");
+
         return jpaQueryFactory
+                .from(qCategory)
                 .select(Projections.constructor(CategoryResponse.class,
                         qCategory.id,
                         qCategory.name,
                         Projections.constructor(CategoryResponse.class,
                                 parentCategory.id,
-                                parentCategory.name)))
-                .from(qCategory)
+                                parentCategory.name,
+                                Projections.constructor(CategoryResponse.class,
+                                        grandParentCategory.id,
+                                        grandParentCategory.name))))
                 .leftJoin(qCategory.parent, parentCategory)
+                .leftJoin(parentCategory.parent, grandParentCategory)
                 .fetch();
     }
+
 
     /**
      * 최상위 카테고리 조회
