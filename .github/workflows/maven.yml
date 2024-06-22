@@ -80,6 +80,6 @@ jobs:
             sudo docker run -d -p 3001:8080 --name front2 --net front_network front-image2
             
             
-            sudo docker stop nginx || true
-            sudo docker rm nginx || true
-            sudo docker run --name nginx -d -p 80:80 -v ./nginx.conf:/etc/nginx/nginx.conf nginx
+            sudo docker stop nginx80 || true
+            sudo docker rm nginx80 || true
+            sudo docker run --name nginx80 -d -p 80:80 -v ./nginx.conf:/etc/nginx/nginx.conf nginx
