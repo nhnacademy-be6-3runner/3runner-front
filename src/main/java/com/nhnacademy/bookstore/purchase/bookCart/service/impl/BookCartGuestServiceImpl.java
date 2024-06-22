@@ -15,6 +15,7 @@ import com.nhnacademy.bookstore.purchase.cart.repository.CartRepository;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -66,8 +67,13 @@ public class BookCartGuestServiceImpl implements BookCartGuestService {
         Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> new CartDoesNotExistException(cartId + "가 존재하지 않습니다"));
 
-        List<ReadBookCartGuestResponse> responses = bookCartRepository.findAllByCart(cart).stream().map()
-
-        return List.of();
+        return bookCartRepository.findAllByCart(cart)
+                .stream()
+                .map(bookCart -> ReadBookCartGuestResponse.builder()
+                        .bookId(bookCart.getBook().getId())
+                        .cartId(bookCart.getCart().getId())
+                        .quantity(bookCart.getQuantity())
+                        .createdAt(bookCart.getCreatedAt()).build())
+                .toList();
     }
 }
