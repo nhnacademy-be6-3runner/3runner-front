@@ -6,6 +6,7 @@ import com.nhnacademy.bookstore.entity.book.QBook;
 import com.nhnacademy.bookstore.entity.bookImage.QBookImage;
 import com.nhnacademy.bookstore.entity.bookImage.enums.BookImageType;
 import com.nhnacademy.bookstore.entity.bookLike.QBookLike;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -34,6 +35,10 @@ public class BookLikeCustomRepositoryImpl implements BookLikeCustomRepository {
 
     @Override
     public Page<BookListResponse> findBookLikeByMemberId(long memberId, Pageable pageable) {
+        // 동적 정렬 기준
+        OrderSpecifier<?> orderSpecifier;
+
+
         List<BookListResponse> content = jpaQueryFactory.select(
                         Projections.constructor(BookListResponse.class,
                                 qBook.title,
@@ -67,7 +72,7 @@ public class BookLikeCustomRepositoryImpl implements BookLikeCustomRepository {
     }
 
     @Override
-    public Page<BookListResponse> findBooksOrderByLike(Pageable pageable) {
+    public Page<BookListResponse> findBooksOrderByLikes(Pageable pageable) {
         List<BookListResponse> content = jpaQueryFactory.select(
                         Projections.constructor(BookListResponse.class,
                                 qBook.title,

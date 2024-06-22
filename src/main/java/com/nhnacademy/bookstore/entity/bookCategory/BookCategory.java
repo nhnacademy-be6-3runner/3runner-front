@@ -25,6 +25,7 @@ public class BookCategory {
     private Book book;
 
     @ManyToOne
+    @Setter
     private Category category;
 
     public static BookCategory create(Book book, Category category) {

@@ -11,9 +11,8 @@ import java.util.List;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,6 +20,7 @@ public class Category {
 
     @NotNull
     @Size(min = 1, max = 30)
+    @Setter
     private String name;
 
     @ManyToOne
@@ -30,12 +30,10 @@ public class Category {
     // 연결
     @Setter
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent", cascade = CascadeType.ALL)
-    @Builder.Default
     private List<Category> children = new ArrayList<>();
 
     @Setter
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
     private List<BookCategory> bookCategoryList = new ArrayList<>();
 
     public void setParent(Category parent) {

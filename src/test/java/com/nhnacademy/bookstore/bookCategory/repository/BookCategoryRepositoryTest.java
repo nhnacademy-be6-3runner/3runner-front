@@ -55,18 +55,18 @@ public class BookCategoryRepositoryTest {
                 null,
                 null
         );
-        Category parent1 = Category.builder()
-                .name("부모 카데고리1")
-                .parent(null)
-                .build();
-        Category children1 = Category.builder()
-                .name("자식 카데고리1")
-                .parent(parent1)
-                .build();
-        Category children2 = Category.builder()
-                .name("자식 카데고리2")
-                .parent(parent1)
-                .build();
+
+        Category parent1 = new Category();
+        parent1.setName("부모 카테고리1");
+
+        Category children1 = new Category();
+        children1.setName("자식 카테고리1");
+        children1.setParent(parent1);
+
+        Category children2 = new Category();
+        children2.setName("자식 카테고리2");
+        children2.setParent(parent1);
+
         this.categoryList = List.of(parent1, children1, children2);
     }
 
@@ -76,39 +76,40 @@ public class BookCategoryRepositoryTest {
         categoryRepository.saveAll(categoryList);
         bookRepository.save(book);
 
-        BookCategory bookCategory1 = BookCategory.builder()
-                .book(book)
-                .category(categoryList.get(0))
-                .build();
-        BookCategory bookCategory2 = BookCategory.builder()
-                .book(book)
-                .category(categoryList.get(1))
-                .build();
-        BookCategory bookCategory3 = BookCategory.builder()
-                .book(book)
-                .category(categoryList.get(2))
-                .build();
+        BookCategory bookCategory1 = new BookCategory();
+        bookCategory1.setBook(book);
+        bookCategory1.setCategory(categoryList.get(0));
+
+        BookCategory bookCategory2 = new BookCategory();
+        bookCategory2.setBook(book);
+        bookCategory2.setCategory(categoryList.get(1));
+
+        BookCategory bookCategory3 = new BookCategory();
+        bookCategory3.setBook(book);
+        bookCategory3.setCategory(categoryList.get(2));
+
         bookCategoryRepository.saveAll(List.of(bookCategory1, bookCategory2, bookCategory3));
 
         bookCategoryRepository.deleteByBook(book);
 
         List<BookCategory> remainingBookCategories = bookCategoryRepository.findAll();
-        Assertions.assertTrue((remainingBookCategories).isEmpty());
+        Assertions.assertTrue(remainingBookCategories.isEmpty());
     }
 
     @DisplayName("책이랑 카테고리가 존재하는지 확인하는 테스트")
     @Test
     void existsByBookAndCategory() {
-        Category category = Category.builder()
-                .name("카테고리")
-                .build();
+        Category category = new Category();
+        category.setName("카테고리");
+
         Category test = categoryRepository.save(category);
         bookRepository.save(book);
-        BookCategory bookCategory1 = BookCategory.builder()
-                .book(book)
-                .category(test)
-                .build();
-        bookCategoryRepository.saveAll(List.of(bookCategory1));
+
+        BookCategory bookCategory1 = new BookCategory();
+        bookCategory1.setBook(book);
+        bookCategory1.setCategory(test);
+
+        bookCategoryRepository.save(bookCategory1);
         Assertions.assertTrue(bookCategoryRepository.existsByBookAndCategory(book, test));
     }
 
@@ -118,10 +119,10 @@ public class BookCategoryRepositoryTest {
         categoryRepository.saveAll(categoryList);
         bookRepository.save(book);
 
-        BookCategory bookCategory1 = BookCategory.builder()
-                .book(book)
-                .category(categoryList.get(0))
-                .build();
+        BookCategory bookCategory1 = new BookCategory();
+        bookCategory1.setBook(book);
+        bookCategory1.setCategory(categoryList.get(0));
+
         bookCategoryRepository.save(bookCategory1);
 
         Pageable pageable = PageRequest.of(0, 10);
@@ -144,10 +145,10 @@ public class BookCategoryRepositoryTest {
         categoryRepository.saveAll(categoryList);
         bookRepository.save(book);
 
-        BookCategory bookCategory1 = BookCategory.builder()
-                .book(book)
-                .category(categoryList.get(0))
-                .build();
+        BookCategory bookCategory1 = new BookCategory();
+        bookCategory1.setBook(book);
+        bookCategory1.setCategory(categoryList.get(0));
+
         bookCategoryRepository.save(bookCategory1);
 
         List<BookCategoriesResponse> categories = bookCategoryRepository.bookWithCategoryList(
@@ -164,10 +165,10 @@ public class BookCategoryRepositoryTest {
         categoryRepository.saveAll(categoryList);
         bookRepository.save(book);
 
-        BookCategory bookCategory1 = BookCategory.builder()
-                .book(book)
-                .category(categoryList.get(0))
-                .build();
+        BookCategory bookCategory1 = new BookCategory();
+        bookCategory1.setBook(book);
+        bookCategory1.setCategory(categoryList.get(0));
+
         bookCategoryRepository.save(bookCategory1);
 
         Pageable pageable = PageRequest.of(0, 10);
@@ -180,7 +181,5 @@ public class BookCategoryRepositoryTest {
         Assertions.assertEquals(book.getPrice(), bookPage.getContent().get(0).price());
         Assertions.assertEquals(book.getSellingPrice(), bookPage.getContent().get(0).sellingPrice());
         Assertions.assertEquals(book.getAuthor(), bookPage.getContent().get(0).author());
-        // Add assertion for thumbnail if needed
-//         Assertions.assertEquals(expectedThumbnail, bookPage.getContent().get(0).thumbnail());
     }
 }

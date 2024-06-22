@@ -23,4 +23,8 @@ public class BookLike {
     @ManyToOne
     private Member member;
 
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = ZonedDateTime.now();
+    }
 }

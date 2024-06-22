@@ -62,25 +62,26 @@ class BookCategoryServiceTest {
 
     @BeforeEach
     void setUp() {
-        category = Category.builder()
-            .name("테스트 카테고리")
-            .build();
+        category = new Category();
+        category.setName("테스트 카테고리");
+
         categoryList = List.of(category);
+
         book = new Book(
-            "Test Title",
-            "Test Description",
-            ZonedDateTime.now(),
-            1000,
-            10,
-            900,
-            0,
-            true,
-            "Test Author",
-            "123456789",
-            "Test Publisher",
-            null,
-            null,
-            null
+                "Test Title",
+                "Test Description",
+                ZonedDateTime.now(),
+                1000,
+                10,
+                900,
+                0,
+                true,
+                "Test Author",
+                "123456789",
+                "Test Publisher",
+                null,
+                null,
+                null
         );
     }
 
@@ -100,37 +101,36 @@ class BookCategoryServiceTest {
                 .anyMatch(bc -> bc.getCategory().equals(category)));
     }
 
-
     @DisplayName("도서-카테고리 생성 예외 테스트 - 존재하지 않는 도서")
     @Test
     void createBookCategory_BookDoesNotExist() {
         CreateBookCategoryRequest dto = new CreateBookCategoryRequest(book.getId(),
-            categoryList.stream().map(Category::getId).collect(Collectors.toList()));
+                categoryList.stream().map(Category::getId).collect(Collectors.toList()));
 
         when(bookRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         assertThrows(BookDoesNotExistException.class,
-            () -> bookCategoryService.createBookCategory(dto));
+                () -> bookCategoryService.createBookCategory(dto));
     }
 
     @DisplayName("도서-카테고리 생성 예외 테스트 - 존재하지 않는 카테고리")
     @Test
     void createBookCategory_CategoryNotFound() {
         CreateBookCategoryRequest dto = new CreateBookCategoryRequest(book.getId(),
-            categoryList.stream().map(Category::getId).collect(Collectors.toList()));
+                categoryList.stream().map(Category::getId).collect(Collectors.toList()));
 
         when(bookRepository.findById(anyLong())).thenReturn(Optional.of(book));
         when(categoryRepository.findAllById(anyList())).thenReturn(Collections.emptyList());
 
         assertThrows(CategoryNotFoundException.class,
-            () -> bookCategoryService.createBookCategory(dto));
+                () -> bookCategoryService.createBookCategory(dto));
     }
 
     @DisplayName("도서-카테고리 수정 테스트")
     @Test
     void updateBookCategory() {
         UpdateBookCategoryRequest dto = new UpdateBookCategoryRequest(book.getId(),
-            categoryList.stream().map(Category::getId).collect(Collectors.toList()));
+                categoryList.stream().map(Category::getId).collect(Collectors.toList()));
 
         when(bookRepository.findById(anyLong())).thenReturn(Optional.of(book));
         when(categoryRepository.findAllById(anyList())).thenReturn(categoryList);
@@ -148,7 +148,9 @@ class BookCategoryServiceTest {
     @DisplayName("도서-카테고리 삭제 테스트")
     @Test
     void deletedBookCategory() {
-        BookCategory bookCategory = BookCategory.create(book, category);
+        BookCategory bookCategory = new BookCategory();
+        bookCategory.setBook(book);
+        bookCategory.setCategory(category);
         book.addBookCategory(bookCategory);
 
         when(bookCategoryRepository.findById(anyLong())).thenReturn(Optional.of(bookCategory));
@@ -158,17 +160,16 @@ class BookCategoryServiceTest {
         verify(bookCategoryRepository, times(1)).deleteById(anyLong());
     }
 
-
     @DisplayName("도서에 해당하는 카테고리 목록 조회 테스트")
     @Test
     void readBookWithCategoryList() {
         List<BookCategoriesResponse> expectedResponse = List.of(
-            new BookCategoriesResponse(category.getName()));
+                new BookCategoriesResponse(category.getName()));
 
         when(bookCategoryRepository.bookWithCategoryList(anyLong())).thenReturn(expectedResponse);
 
         List<BookCategoriesResponse> actualResponse = bookCategoryService.readBookWithCategoryList(
-            book.getId());
+                book.getId());
 
         assertEquals(expectedResponse, actualResponse);
     }
@@ -178,17 +179,17 @@ class BookCategoryServiceTest {
     void readCategoriesWithBookList() {
         Pageable pageable = PageRequest.of(0, 10);
         List<BookListResponse> bookList = List.of(
-            new BookListResponse(book.getTitle(), book.getPrice(), book.getSellingPrice(),
-                book.getAuthor(), null));
+                new BookListResponse(book.getTitle(), book.getPrice(), book.getSellingPrice(),
+                        book.getAuthor(), null));
         Page<BookListResponse> expectedPage = new PageImpl<>(bookList, pageable, bookList.size());
 
         when(categoryRepository.findAllById(anyList())).thenReturn(categoryList);
         when(bookCategoryRepository.categoriesWithBookList(anyList(),
-            any(Pageable.class))).thenReturn(
-            expectedPage);
+                any(Pageable.class))).thenReturn(
+                expectedPage);
 
         Page<BookListResponse> actualPage = bookCategoryService.readCategoriesWithBookList(
-            categoryList.stream().map(Category::getId).collect(Collectors.toList()), pageable);
+                categoryList.stream().map(Category::getId).collect(Collectors.toList()), pageable);
 
         assertEquals(expectedPage, actualPage);
     }

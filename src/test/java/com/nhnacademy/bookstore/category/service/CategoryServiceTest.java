@@ -50,9 +50,8 @@ class CategoryServiceTest {
     @Test
     void createTopLevelCategory() {
         CreateCategoryRequest dto = new CreateCategoryRequest("상위 카테고리", null);
-        Category category = Category.builder()
-                .name("상위 카테고리")
-                .build();
+        Category category = new Category();
+        category.setName("상위 카테고리");
 
         when(categoryRepository.save(any(Category.class))).thenReturn(category);
         categoryService.createCategory(dto);
@@ -62,13 +61,12 @@ class CategoryServiceTest {
     @DisplayName("카테고리 삭제 테스트")
     @Test
     void deleteCategory() {
-        Category category = Category.builder()
-                .id(1L)
-                .name("category")
-                .build();
-        when(categoryRepository.findById(1L)).thenReturn(Optional.of(category));
+        Category category = new Category();
+        category.setName("category");
 
-        categoryService.deleteCategory(1L);
+        when(categoryRepository.findById(category.getId())).thenReturn(Optional.of(category));
+
+        categoryService.deleteCategory(category.getId());
 
         verify(categoryRepository, times(1)).delete(any(Category.class));
     }
@@ -104,4 +102,3 @@ class CategoryServiceTest {
                 .isInstanceOf(CategoryNotFoundException.class);
     }
 }
-
