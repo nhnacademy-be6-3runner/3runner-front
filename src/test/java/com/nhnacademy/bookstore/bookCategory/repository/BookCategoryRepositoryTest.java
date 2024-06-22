@@ -135,8 +135,6 @@ public class BookCategoryRepositoryTest {
         Assertions.assertEquals(book.getPrice(), bookPage.getContent().get(0).price());
         Assertions.assertEquals(book.getSellingPrice(), bookPage.getContent().get(0).sellingPrice());
         Assertions.assertEquals(book.getAuthor(), bookPage.getContent().get(0).author());
-        // Add assertion for thumbnail if needed
-        // Assertions.assertEquals(expectedThumbnail, bookPage.getContent().get(0).thumbnail());
     }
 
     @DisplayName("도서 아이디로 카테고리 리스트 조회 테스트")

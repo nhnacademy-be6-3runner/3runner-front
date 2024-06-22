@@ -138,6 +138,6 @@ public class Book {
    */
   public void removeBookCategory(BookCategory bookCategory) {
     this.bookCategoryList.remove(bookCategory);
-    bookCategory.setBook(null);
+    bookCategory.setBook(null); // 양방향 해제
   }
 }

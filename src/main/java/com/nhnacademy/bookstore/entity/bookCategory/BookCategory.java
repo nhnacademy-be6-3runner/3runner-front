@@ -29,9 +29,11 @@ public class BookCategory {
     private Category category;
 
     public static BookCategory create(Book book, Category category) {
-        return BookCategory.builder()
+        BookCategory bookCategory = BookCategory.builder()
                 .book(book)
                 .category(category)
                 .build();
+        book.addBookCategory(bookCategory);  // 양방향 설정
+        return bookCategory;
     }
 }
