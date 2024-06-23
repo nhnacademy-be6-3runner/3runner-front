@@ -1,6 +1,7 @@
 package com.nhnacademy.bookstore.book.bookTag.controller;
 
 import com.nhnacademy.bookstore.book.bookTag.dto.request.ReadBookIdRequest;
+import com.nhnacademy.bookstore.book.bookTag.dto.response.BookTagResponse;
 import com.nhnacademy.bookstore.book.bookTag.dto.response.ReadBookByTagResponse;
 import com.nhnacademy.bookstore.book.bookTag.dto.request.ReadTagRequest;
 import com.nhnacademy.bookstore.book.bookTag.dto.response.ReadTagByBookResponse;
@@ -9,6 +10,7 @@ import com.nhnacademy.bookstore.book.bookTag.exception.ReadBookTagRequestFormExc
 import com.nhnacademy.bookstore.book.bookTag.service.BookTagService;
 import com.nhnacademy.bookstore.util.ApiResponse;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -28,10 +30,17 @@ import java.util.Set;
  */
 
 @RestController
-@RequestMapping
+@RequestMapping("/bookstore/booktags")
+@RequiredArgsConstructor
 public class  BookTagController {
-    @Autowired
-    BookTagService bookTagService;
+
+    private final BookTagService bookTagService;
+
+    /**
+     * @author 한민기
+     * 모든 태그 리스트 가져오기
+     *
+     */
 
 
     /**
@@ -41,7 +50,7 @@ public class  BookTagController {
      *
      * @return ApiResponse< Page<ReadBookByTagResponse>> 커스터마이징 한 헤더와 불러온 해당 태그가 달린 책들로 이루어진 바디를 합친 실행 값
      */
-    @GetMapping("/tags/{tagId}/books")
+    @GetMapping("/{tagId}/books")
     public ApiResponse< Page<ReadBookByTagResponse>> readBookByTagId(@Valid @RequestBody ReadTagRequest tagId,
                                                                     BindingResult bindingResult) {
         if(bindingResult.hasErrors()){
@@ -72,7 +81,7 @@ public class  BookTagController {
      * @param bookId 책에 달린 태그들을 가져오기 위한 책 id
      * @return ApiResponse< Page<ReadBookByTagResponse>> 커스터마이징 한 헤더와 불러온 해당 책에 달린 태그들로 이루어진 바디를 합친 실행 값
      */
-    @GetMapping("/books/{bookId}/tags")
+    @GetMapping("/{bookId}/tags")
     public ApiResponse<List<ReadTagByBookResponse>> readTagByBookId(@Valid @RequestBody ReadBookIdRequest bookId,
                                                                   BindingResult bindingResult) {
         if(bindingResult.hasErrors()){

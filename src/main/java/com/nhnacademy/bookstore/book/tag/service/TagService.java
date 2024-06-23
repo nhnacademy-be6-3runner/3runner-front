@@ -3,7 +3,9 @@ package com.nhnacademy.bookstore.book.tag.service;
 import com.nhnacademy.bookstore.book.tag.dto.request.CreateTagRequest;
 import com.nhnacademy.bookstore.book.tag.dto.request.DeleteTagRequest;
 import com.nhnacademy.bookstore.book.tag.dto.request.UpdateTagRequest;
+import com.nhnacademy.bookstore.book.tag.dto.response.TagResponse;
 import com.nhnacademy.bookstore.entity.tag.Tag;
+import java.util.List;
 
 /**
  * Tag CRUD 서비스
@@ -11,7 +13,8 @@ import com.nhnacademy.bookstore.entity.tag.Tag;
  */
 public interface TagService {
 
-    public Long createTag(CreateTagRequest tag);
-    public void deleteTag(DeleteTagRequest tag);
-    public Long updateTag(UpdateTagRequest tag);
+    List<TagResponse> getAllTags();
+    Long createTag(CreateTagRequest tag);
+    void deleteTag(DeleteTagRequest tag);
+    Long updateTag(UpdateTagRequest tag);
 }

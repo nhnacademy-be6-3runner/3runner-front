@@ -3,11 +3,15 @@ package com.nhnacademy.bookstore.book.tag.service.Impl;
 import com.nhnacademy.bookstore.book.tag.dto.request.CreateTagRequest;
 import com.nhnacademy.bookstore.book.tag.dto.request.DeleteTagRequest;
 import com.nhnacademy.bookstore.book.tag.dto.request.UpdateTagRequest;
+import com.nhnacademy.bookstore.book.tag.dto.response.TagResponse;
 import com.nhnacademy.bookstore.book.tag.exception.AlreadyHaveTagException;
 import com.nhnacademy.bookstore.book.tag.exception.NotExistsTagException;
 import com.nhnacademy.bookstore.book.tag.repository.TagRepository;
 import com.nhnacademy.bookstore.book.tag.service.TagService;
 import com.nhnacademy.bookstore.entity.tag.Tag;
+import java.util.ArrayList;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,9 +24,22 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class TagServiceImpl implements TagService {
-    @Autowired
-    private TagRepository tagRepository;
+    private final TagRepository tagRepository;
+
+    @Override
+    public List<TagResponse> getAllTags() {
+        List<Tag> tags = tagRepository.findAll();
+        List<TagResponse> tagResponses = new ArrayList<>();
+        for (Tag tag : tags) {
+            tagResponses.add(TagResponse.builder()
+                    .id(tag.getId())
+                    .name(tag.getName())
+                    .build());
+        }
+        return tagResponses;
+    }
 
     /**
      * tag 추가

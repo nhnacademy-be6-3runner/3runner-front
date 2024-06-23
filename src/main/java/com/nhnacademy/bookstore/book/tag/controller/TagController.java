@@ -3,6 +3,7 @@ package com.nhnacademy.bookstore.book.tag.controller;
 import com.nhnacademy.bookstore.book.tag.dto.request.CreateTagRequest;
 import com.nhnacademy.bookstore.book.tag.dto.request.DeleteTagRequest;
 import com.nhnacademy.bookstore.book.tag.dto.request.UpdateTagRequest;
+import com.nhnacademy.bookstore.book.tag.dto.response.TagResponse;
 import com.nhnacademy.bookstore.book.tag.exception.CreateTagRequestFormException;
 import com.nhnacademy.bookstore.book.tag.exception.DeleteTagRequestFormException;
 import com.nhnacademy.bookstore.book.tag.exception.UpdateTagRequestFormException;
@@ -10,8 +11,11 @@ import com.nhnacademy.bookstore.book.tag.service.TagService;
 import com.nhnacademy.bookstore.util.ApiResponse;
 import com.nhnacademy.bookstore.util.ValidationUtils;
 import jakarta.validation.Valid;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,10 +26,16 @@ import org.springframework.web.bind.annotation.*;
  * @author 정주혁
  */
 @RestController
-@RequestMapping("/tag")
+@RequestMapping("/bookstore/tags")
+@RequiredArgsConstructor
 public class TagController {
-    @Autowired
-    private TagService tagService;
+    final private TagService tagService;
+
+
+    @GetMapping
+    public ApiResponse<List<TagResponse>> getAllTags() {
+        return ApiResponse.success(tagService.getAllTags());
+    }
 
     /**
      * Tag 저장
@@ -37,7 +47,7 @@ public class TagController {
     public ApiResponse<Long> createTag(@Valid @RequestBody CreateTagRequest createTagRequest, BindingResult bindingResult) {
         ValidationUtils.validateBindingResult(bindingResult, new DeleteTagRequestFormException(bindingResult.getFieldErrors().toString()));
         Long id = tagService.createTag(createTagRequest);
-        return new ApiResponse<>(new ApiResponse.Header(true, HttpStatus.CREATED.value()), new ApiResponse.Body<>(id));
+        return ApiResponse.createSuccess(id);
     }
 
     /**
