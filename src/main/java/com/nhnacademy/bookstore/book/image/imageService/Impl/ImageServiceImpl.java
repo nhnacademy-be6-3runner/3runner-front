@@ -40,7 +40,7 @@ public class ImageServiceImpl implements ImageService {
     public String createImage(MultipartFile image, String storagePlace) {
         String orgFilename = image.getOriginalFilename();
 
-        String fileName = fileNameMade(orgFilename, storagePlace);
+        String fileName = fileNameMade(orgFilename);
 
         try {
             // MultipartFile을 바이트 배열로 변환
@@ -52,7 +52,7 @@ public class ImageServiceImpl implements ImageService {
             metadata.setContentLength(bytes.length);
 
             // S3에 파일 업로드
-            amazonS3.putObject(new PutObjectRequest(bucketName, fileName, byteArrayInputStream, metadata)
+            amazonS3.putObject(new PutObjectRequest(bucketName,storagePlace + "/" + fileName, byteArrayInputStream, metadata)
                     .withCannedAcl(CannedAccessControlList.PublicRead));
 
         } catch (IOException e) {
@@ -81,15 +81,14 @@ public class ImageServiceImpl implements ImageService {
     /**
      *  UUID 를 사용해서 파일 이름을 선정
      * @param orgFilename -> 파일의 원래 이름
-     * @param storagePlace -> 저장하는 위치
-     * @return -> 새로운 파일이름 + 저장하는 위치
+     * @return -> 새로운 파일이름
      */
-    private String fileNameMade(String orgFilename, String storagePlace) {
+    private String fileNameMade(String orgFilename) {
 
         TimeBasedGenerator timeBasedGenerator = Generators.timeBasedGenerator();
         String uuid = timeBasedGenerator.generate().toString().replaceAll("-", "");                       // time 을 사용한 UUID
         String extension = Objects.requireNonNull(orgFilename).substring(orgFilename.lastIndexOf(".") + 1);  // 확장자
-        return storagePlace + "/" + uuid + "." + extension;
+        return  uuid + "." + extension;
     }
 
 }
