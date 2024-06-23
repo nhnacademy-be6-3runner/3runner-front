@@ -20,7 +20,7 @@ public record UserCreateBookRequest(
         @NotBlank String author,
         @NotBlank String isbn,
         @NotBlank String publisher,
-        @RequestParam("tagList") String tagList
+        String tagList
 //        @RequestParam("categoryList") String categoryList
 ) {
 }

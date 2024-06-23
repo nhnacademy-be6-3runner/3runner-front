@@ -68,6 +68,13 @@ public class BookServiceImpl implements BookService {
      */
     private List<String> descriptionToImageList(String description) {
         List<String> imageList = new ArrayList<>();
+        String[] split = description.split("fileName=");
+        if(split.length > 1) {
+            for(int i = 1; i < split.length; i++) {
+                imageList.add(split[i].substring(0, split[i].indexOf(")") ));
+            }
+        }
+        log.info("imageList : {}", imageList);
         return imageList;
     }
 
@@ -79,6 +86,9 @@ public class BookServiceImpl implements BookService {
 
     private List<Long> stringIdToList(String StringId) {
         List<Long> idList = new ArrayList<>();
+        if(Objects.isNull(StringId)) {
+            return idList;
+        }
         String[]  idSplit = StringId.split(",");
 
         for (String idStr : idSplit) {
