@@ -10,6 +10,6 @@ public record CreateBookImageRequest(
         @NotBlank(message = "url is entry")
         @Size(max = 50)
         String url,
-        @NotNull
+        @NotNull(message = "type is entry")
         BookImageType type,
-        Long bookId){}
+        long bookId){}
