@@ -27,9 +27,10 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/bookstore/tags")
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class TagController {
-    final private TagService tagService;
+    @Autowired
+    private TagService tagService;
 
 
     @GetMapping

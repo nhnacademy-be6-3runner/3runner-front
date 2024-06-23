@@ -31,10 +31,10 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/bookstore/booktags")
-@RequiredArgsConstructor
 public class  BookTagController {
 
-    private final BookTagService bookTagService;
+    @Autowired
+    private BookTagService bookTagService;
 
     /**
      * @author 한민기

@@ -24,9 +24,9 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional
-@RequiredArgsConstructor
 public class TagServiceImpl implements TagService {
-    private final TagRepository tagRepository;
+    @Autowired
+    private TagRepository tagRepository;
 
     @Override
     public List<TagResponse> getAllTags() {
