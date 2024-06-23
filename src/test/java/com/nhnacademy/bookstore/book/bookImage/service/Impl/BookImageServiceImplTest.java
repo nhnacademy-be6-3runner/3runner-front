@@ -12,6 +12,7 @@ import com.nhnacademy.bookstore.entity.book.Book;
 import com.nhnacademy.bookstore.entity.bookImage.BookImage;
 import com.nhnacademy.bookstore.entity.bookImage.enums.BookImageType;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -38,6 +39,21 @@ class BookImageServiceImplTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
     }
+
+    @Test
+    void createBookImage_withList_shouldSaveAllBookImages() {
+        // Given
+        List<String> imageList = List.of("url1", "url2");
+        Book book = new Book();
+        when(bookRepository.findById(1L)).thenReturn(Optional.of(book));
+
+        // When
+        bookImageServiceImpl.createBookImage(imageList, 1L, BookImageType.MAIN);
+
+        // Then
+        verify(bookImageRepository, times(2)).save(any(BookImage.class));
+    }
+
 
     @Test
     void createBookImage_withValidList_shouldSaveAllBookImages() {
