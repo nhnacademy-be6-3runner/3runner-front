@@ -5,6 +5,7 @@ import com.nhnacademy.front.book.image.exception.ImageDownloadException;
 import com.nhnacademy.front.book.image.exception.ImageUploadException;
 import com.nhnacademy.front.book.image.service.ImageService;
 import com.nhnacademy.front.util.ApiResponse;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -50,11 +51,12 @@ public class ImageServiceImpl implements ImageService {
      */
     @Override
     public ResponseEntity<byte[]> download(String fileName, String type) {
-        ApiResponse<ResponseEntity<byte[]>> response = imageClient.downloadFile(fileName, type);
-        if(!response.getHeader().isSuccessful()){
+        ResponseEntity<byte[]> response = imageClient.downloadFile(fileName, type);
+
+        if(Objects.isNull(response)){
             throw new ImageDownloadException();
         }
 
-        return response.getBody().getData();
+        return response;
     }
 }

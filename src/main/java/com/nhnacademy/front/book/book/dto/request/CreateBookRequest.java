@@ -22,10 +22,11 @@ public record CreateBookRequest(
         @NotBlank(message = "author is mandatory") String author,
         @NotBlank(message = "isbn is mandatory") String isbn,
         @NotBlank(message = "publisher is mandatory") String publisher,
-
-        MultipartFile image,
-
+        String imageName,
         List<String> imageList,
-        @NotBlank(message = "tag is mandatory")List<Long> tagIds,
-        @NotBlank(message = "category is mandatory")List<Long> categoryIds) {
+        List<Long> tagIds,
+//        @NotBlank(message = "category is mandatory")
+        List<Long>  categoryIds
+
+) {
 }

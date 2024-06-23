@@ -246,7 +246,7 @@
 
         _renderCategory(id, name) {
             const span = document.createElement('span');
-            span.textContent = `${name} (ID: ${id})`;
+            span.textContent = `${name}`;
             span.dataset.id = id;
             span.onclick = () => this.removeCategory(id);
             this.selectedCategoriesContainer.appendChild(span);
@@ -290,7 +290,7 @@
 
         _renderTag(id, name) {
             const span = document.createElement('span');
-            span.textContent = `${name} (ID: ${id})`;
+            span.textContent = `${name}`;
             span.dataset.id = id;
             span.onclick = () => this.removeTag(id);
             this.selectedTagsContainer.appendChild(span);
@@ -324,8 +324,10 @@
                 try {
                     const formData = new FormData();
                     formData.append('image', blob);
+                    const type = 'book'; // 여기에 실제 값을 넣으세요.
+                    const url = `/api/images/${type}/upload`;
 
-                    const response = await fetch('/api/images/book/upload', {
+                    const response = await fetch(url, {
                         method: 'POST',
                         body: formData,
                     });
@@ -333,7 +335,7 @@
                     const filename = await response.text();
                     console.log('서버에 저장된 파일명 : ', filename);
 
-                    const imageUrl = `/api/images/book/download?fileName=${filename}`;
+                    const imageUrl = `/api/images/${type}/download?fileName=${filename}`;
                     callback(imageUrl, 'image alt attribute');
 
                 } catch (error) {

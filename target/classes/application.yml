@@ -1,5 +1,0 @@
-server:
-  port:
-spring:
-  application:
-    name: 3runner-front

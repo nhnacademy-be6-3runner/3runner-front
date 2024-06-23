@@ -5,7 +5,9 @@ import com.nhnacademy.front.book.book.dto.request.CreateBookRequest;
 import com.nhnacademy.front.book.book.dto.request.UserCreateBookRequest;
 import com.nhnacademy.front.book.book.service.BookService;
 
+
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -16,11 +18,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class BookServiceImpl implements BookService {
 
     private final BookClient bookClient;
+
 
     /**
      * 입력 받은 항목을 Api 서버에게 보내주기 위한 형태로 변형
@@ -28,7 +32,7 @@ public class BookServiceImpl implements BookService {
      * @param userCreateBookRequest 입력 받은 항목들
      */
     @Override
-    public void saveBook(UserCreateBookRequest userCreateBookRequest) {
+    public void saveBook(UserCreateBookRequest userCreateBookRequest, String imageName) {
 
 
         CreateBookRequest createBookRequest = CreateBookRequest.builder()
@@ -42,11 +46,15 @@ public class BookServiceImpl implements BookService {
                 .author(userCreateBookRequest.author())
                 .isbn(userCreateBookRequest.isbn())
                 .publisher(userCreateBookRequest.publisher())
-                .image(userCreateBookRequest.image())
+                .imageName(imageName)
                 .imageList(descriptionToImageList(userCreateBookRequest.description()))
                 .tagIds(stringIdToList(userCreateBookRequest.tagList()))
-                .categoryIds(stringIdToList(userCreateBookRequest.categoryList()))
+                //TODO 수정 필요
+                .categoryIds(List.of(1L, 2L))
+//                .categoryIds(stringIdToList(userCreateBookRequest.categoryList()))
                 .build();
+
+        log.info("Create book : {}", createBookRequest);
 
         bookClient.createBook(createBookRequest);
     }
@@ -76,6 +84,7 @@ public class BookServiceImpl implements BookService {
         for (String idStr : idSplit) {
             idList.add(Long.parseLong(idStr));
         }
+        log.info("list {}", idList);
         return idList;
     }
 

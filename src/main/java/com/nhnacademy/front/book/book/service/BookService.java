@@ -3,5 +3,5 @@ package com.nhnacademy.front.book.book.service;
 import com.nhnacademy.front.book.book.dto.request.UserCreateBookRequest;
 
 public interface BookService {
-    void saveBook(UserCreateBookRequest userCreateBookRequest);
+    void saveBook(UserCreateBookRequest createBookRequest, String imageName);
 }

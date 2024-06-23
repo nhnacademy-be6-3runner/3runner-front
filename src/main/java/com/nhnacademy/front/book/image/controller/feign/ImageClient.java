@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-@FeignClient(value="3runner-bookstore", path="/images")
+@FeignClient(name = "ImageClient", url ="http://${feign.client.url}/bookstore/images")
 public interface ImageClient {
 
     /**
@@ -15,7 +15,7 @@ public interface ImageClient {
      * @param type 저장할 이미지의 타입 (확장자가 아님 예시 -> book, review, test)
      * @return 저장한 이미지의 파일 이름
      */
-    @PostMapping("/{type}/upload")
+    @PostMapping(value = "/{type}/upload", consumes = "multipart/form-data")
     ApiResponse<String> uploadImage(@RequestBody MultipartFile image, @PathVariable String type);
 
     /**
@@ -24,6 +24,6 @@ public interface ImageClient {
      * @param type  가저올 이미지의 타입 (확장자가 아님 예시 -> book, review, test)
      * @return 이미지 파일
      */
-    @GetMapping("/{type}/download")
-    ApiResponse<ResponseEntity<byte[]>> downloadFile(@RequestParam("fileName") String fileName, @PathVariable String type);
+    @GetMapping(value = "/{type}/download")
+    ResponseEntity<byte[]> downloadFile(@RequestParam("fileName") String fileName, @PathVariable String type);
 }
