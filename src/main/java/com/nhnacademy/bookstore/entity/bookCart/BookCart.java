@@ -13,7 +13,7 @@ import java.time.ZonedDateTime;
 import java.util.Set;
 
 @NoArgsConstructor
-@Getter
+@Getter@Setter
 @Entity
 public class BookCart {
 
