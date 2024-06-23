@@ -7,7 +7,8 @@ import com.nhnacademy.bookstore.book.bookImage.service.BookImageService;
 import com.nhnacademy.bookstore.book.image.exception.NotFindImageException;
 import com.nhnacademy.bookstore.entity.book.Book;
 import com.nhnacademy.bookstore.entity.bookImage.BookImage;
-import jakarta.transaction.Transactional;
+import com.nhnacademy.bookstore.entity.bookImage.enums.BookImageType;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 
@@ -15,15 +16,26 @@ import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 import java.util.Optional;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class BookImageServiceImpl implements BookImageService {
 
     private final BookImageRepository bookImageRepository;
     private final BookRepository bookRepository;
 
+
+    @Transactional(propagation = Propagation.MANDATORY)
+    @Override
+    public void createBookImage(List<String> imageList, long bookId, BookImageType bookImageType) {
+        List<CreateBookImageRequest> createBookImageRequestList = new ArrayList<>();
+        for(String image : imageList) {
+            createBookImageRequestList.add(new CreateBookImageRequest(image, bookImageType, bookId));
+        }
+        createBookImage(createBookImageRequestList);
+    }
 
     /**
      * List 로 받아와서 한꺼번에 추가

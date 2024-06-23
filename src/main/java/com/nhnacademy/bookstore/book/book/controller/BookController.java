@@ -3,12 +3,17 @@ package com.nhnacademy.bookstore.book.book.controller;
 import com.nhnacademy.bookstore.book.book.dto.response.ReadBookResponse;
 import com.nhnacademy.bookstore.book.book.exception.CreateBookRequestFormException;
 import com.nhnacademy.bookstore.book.book.service.BookService;
+import com.nhnacademy.bookstore.book.bookImage.dto.request.CreateBookImageRequest;
+import com.nhnacademy.bookstore.book.bookImage.service.BookImageService;
+import com.nhnacademy.bookstore.book.image.imageService.ImageService;
 import com.nhnacademy.bookstore.entity.book.Book;
 import com.nhnacademy.bookstore.book.book.dto.request.CreateBookRequest;
+import com.nhnacademy.bookstore.entity.bookImage.enums.BookImageType;
 import com.nhnacademy.bookstore.util.ApiResponse;
 import jakarta.validation.Valid;
+import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/bookstore/books")
 public class BookController {
     private final BookService bookService;
+    private final BookImageService bookImageService;
 
     /**
      * 책 등록 요청 처리.
@@ -31,6 +37,7 @@ public class BookController {
      * @param bindingResult binding result
      * @return ApiResponse<>
      */
+    @Transactional
     @PostMapping
     public ApiResponse<Void> createBook(@Valid @RequestBody CreateBookRequest createBookRequest,
                                         BindingResult bindingResult) {
@@ -38,7 +45,11 @@ public class BookController {
             throw new CreateBookRequestFormException(bindingResult.getFieldErrors().toString());
         }
 
-        bookService.createBook(createBookRequest);
+        long bookId = bookService.createBook(createBookRequest);
+        bookImageService.createBookImage(createBookRequest.imageList(), bookId, BookImageType.DESCRIPTION);
+        if(!Objects.isNull(createBookRequest.imageName())) {
+            bookImageService.createBookImage(List.of(createBookRequest.imageName()), bookId, BookImageType.MAIN);
+        }
         //TODO 북 카테고리 서비스로 추가
         //TODO 북 태그 서비스로 추가
         //TODO 북 이미지 서비스로 추가
