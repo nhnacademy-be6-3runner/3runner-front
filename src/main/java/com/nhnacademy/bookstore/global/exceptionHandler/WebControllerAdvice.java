@@ -1,10 +1,12 @@
 package com.nhnacademy.bookstore.global.exceptionHandler;
 import com.nhnacademy.bookstore.book.book.exception.CreateBookRequestFormException;
+import com.nhnacademy.bookstore.book.image.exception.NotFindImageException;
 import com.nhnacademy.bookstore.purchase.purchase.exception.PurchaseAlreadyExistException;
 import com.nhnacademy.bookstore.purchase.purchase.exception.PurchaseDoesNotExistException;
 import com.nhnacademy.bookstore.purchase.purchase.exception.PurchaseFormArgumentErrorException;
 import com.nhnacademy.bookstore.purchase.purchase.exception.PurchaseNoAuthorizationException;
 import com.nhnacademy.bookstore.util.ApiResponse;
+import java.io.FileNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
 import org.springframework.validation.FieldError;
@@ -76,7 +78,8 @@ public class WebControllerAdvice {
      * @author 정주혁
      */
     @ExceptionHandler({
-            PurchaseDoesNotExistException.class
+            PurchaseDoesNotExistException.class,
+            NotFindImageException.class
     })
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ApiResponse<ErrorResponseForm> notFoundHandler(Exception ex, Model model) {

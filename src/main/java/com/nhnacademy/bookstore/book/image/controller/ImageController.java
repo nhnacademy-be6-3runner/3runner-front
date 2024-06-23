@@ -51,8 +51,8 @@ public class ImageController {
     @GetMapping("/{type}/download")
     public ResponseEntity<byte[]> downloadFile(@RequestParam("fileName") String fileName, @PathVariable String type)  {
         byte[] content;
-        try (S3Object s3Object = imageService.readImage(type + "/" + fileName)) {
-
+        try {
+            S3Object s3Object = imageService.readImage(type + "/" + fileName);
             content = s3Object.getObjectContent().readAllBytes();
         } catch (IOException e) {
             throw new NotFindImageException();
