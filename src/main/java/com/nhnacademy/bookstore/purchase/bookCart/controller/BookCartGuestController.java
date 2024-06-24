@@ -36,7 +36,7 @@ public class BookCartGuestController {
      * @return 카트 목록
      */
     @GetMapping("/carts")
-    public ApiResponse<List<ReadBookCartGuestResponse>> getCart(HttpServletRequest request) {
+    public ApiResponse<List<ReadBookCartGuestResponse>> readCart(HttpServletRequest request) {
         Long cartId = getCartIdFromCookie(request);
 
         return ApiResponse.createSuccess(bookCartGuestService.readAllBookCart(cartId));
@@ -52,7 +52,7 @@ public class BookCartGuestController {
      * @return api 응답
      */
     @PostMapping("/carts")
-    public ApiResponse<Void> addCart(
+    public ApiResponse<Void> createCart(
             @Valid @RequestBody CreateBookCartGuestRequest createBookCartGuestRequest,
             BindingResult bindingResult,
             HttpServletRequest request,
