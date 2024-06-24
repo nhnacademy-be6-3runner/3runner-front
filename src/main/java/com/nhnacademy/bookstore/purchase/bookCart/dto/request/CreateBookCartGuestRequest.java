@@ -12,6 +12,6 @@ import lombok.Value;
  * @param quantity 도서수량
  */
 public record CreateBookCartGuestRequest(
-        @NotNull(message = "bookId is mandatory") Long bookId,
-        @Min(value = 1, message = "min value is 0") int quantity) {
+        long bookId,
+        int quantity) {
     }

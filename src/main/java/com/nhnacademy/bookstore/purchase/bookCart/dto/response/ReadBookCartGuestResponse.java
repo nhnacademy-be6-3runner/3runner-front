@@ -1,8 +1,13 @@
 package com.nhnacademy.bookstore.purchase.bookCart.dto.response;
 
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
-import lombok.Builder;
-import lombok.Value;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.key.ZonedDateTimeKeyDeserializer;
+import lombok.*;
 
 /**
  * 카트 응답 폼
@@ -12,13 +17,15 @@ import lombok.Value;
  * @param cartId 장바구니 아이디
  * @param bookCartId 도서장바구니 아이디
  * @param quantity 수량
- * @param createdAt 생성일자
  */
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
 @Builder
-public record ReadBookCartGuestResponse(
-        Long bookId,
-        Long cartId,
-        Long bookCartId,
-        int quantity,
-        ZonedDateTime createdAt
-) { }
+public class ReadBookCartGuestResponse{
+    private Long bookId;
+    private Long cartId;
+    private Long bookCartId;
+    private int quantity;
+}

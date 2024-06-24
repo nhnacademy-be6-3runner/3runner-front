@@ -7,6 +7,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -29,7 +31,8 @@ public class BookCartRedisRepositoryImpl implements BookCartRedisRepository {
      */
     @Override
     public Long create(String hashName, Long id, ReadBookCartGuestResponse readBookCartGuestResponse) {
-        redisTemplate.opsForHash().put(hashName, id, readBookCartGuestResponse);
+        redisTemplate.opsForHash().put(hashName + ":", id.toString(), readBookCartGuestResponse);
+        redisTemplate.expire(hashName + ":", 1, TimeUnit.HOURS);
         return id;
     }
 
@@ -43,16 +46,16 @@ public class BookCartRedisRepositoryImpl implements BookCartRedisRepository {
      */
     @Override
     public Long update(String hashName, Long id, int quantity) {
-        ReadBookCartGuestResponse response = (ReadBookCartGuestResponse) redisTemplate.opsForHash().get(hashName,id);
+        ReadBookCartGuestResponse response = (ReadBookCartGuestResponse)redisTemplate.opsForHash().get(hashName + ":", id.toString());
 
-        assert response != null;
-        response = ReadBookCartGuestResponse.builder().bookCartId(response.bookCartId())
-                .cartId(response.cartId())
-                .bookId(response.bookId())
-                .quantity(response.quantity()+quantity)
-                .createdAt(response.createdAt()).build();
+        ReadBookCartGuestResponse updatedResponse = ReadBookCartGuestResponse.builder().bookCartId(response.getBookCartId())
+                .cartId(response.getCartId())
+                .bookId(response.getBookId())
+                .quantity(quantity)
+                .build();
 
-        redisTemplate.opsForHash().put(hashName, id, response);
+        redisTemplate.opsForHash().put(hashName + ":", id.toString(), updatedResponse);
+        redisTemplate.expire(hashName + ":", 1, TimeUnit.HOURS);
         return id;
     }
 
@@ -65,7 +68,7 @@ public class BookCartRedisRepositoryImpl implements BookCartRedisRepository {
      */
     @Override
     public Long delete(String hashName, Long id) {
-        redisTemplate.opsForHash().delete(hashName, id);
+        redisTemplate.opsForHash().delete(hashName + ":", id.toString());
         return id;
     }
 
@@ -77,11 +80,11 @@ public class BookCartRedisRepositoryImpl implements BookCartRedisRepository {
      */
     @Override
     public List<ReadBookCartGuestResponse> readAllHashName(String hashName) {
-        List<Object> bookCartList = redisTemplate.opsForHash().values(hashName);
+        List<Object> bookCartList = redisTemplate.opsForHash().values(hashName + ":");
 
         return  bookCartList
                 .stream()
-                .map(ReadBookCartResponse -> (ReadBookCartGuestResponse)ReadBookCartResponse)
+                .map(ReadBookCartGuestResponse.class::cast)
                 .toList();
     }
 
@@ -93,7 +96,7 @@ public class BookCartRedisRepositoryImpl implements BookCartRedisRepository {
      */
     @Override
     public boolean isHit(String hashName) {
-        return Boolean.TRUE.equals(redisTemplate.hasKey(hashName));
+        return Boolean.TRUE.equals(redisTemplate.hasKey(hashName + ":"));
     }
 
     /**
@@ -104,7 +107,7 @@ public class BookCartRedisRepositoryImpl implements BookCartRedisRepository {
      */
     @Override
     public boolean isMiss(String hashName) {
-        return Boolean.FALSE.equals(redisTemplate.hasKey(hashName));
+        return Boolean.FALSE.equals(redisTemplate.hasKey(hashName + ":"));
     }
 
     /**
@@ -115,8 +118,11 @@ public class BookCartRedisRepositoryImpl implements BookCartRedisRepository {
      */
     @Override
     public void loadData(List<ReadBookCartGuestResponse> bookCartGuestResponses, String hashName) {
-        for(ReadBookCartGuestResponse o : bookCartGuestResponses){
-            redisTemplate.opsForHash().put(hashName, o.bookCartId(), o);
+        for (ReadBookCartGuestResponse o : bookCartGuestResponses) {
+            if (Objects.nonNull(o)) {
+                redisTemplate.opsForHash().put(hashName + ":", o.getBookCartId().toString(), o);
+            }
         }
+        redisTemplate.expire(hashName + ":", 1, TimeUnit.HOURS);
     }
 }

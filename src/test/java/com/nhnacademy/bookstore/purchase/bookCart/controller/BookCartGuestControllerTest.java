@@ -58,15 +58,6 @@ class BookCartGuestControllerTest {
     }
 
     @Test
-    void testAddCartWithValidationError() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.post("/bookstore/carts")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"bookId\":1}")
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isBadRequest());
-    }
-
-    @Test
     void testUpdateCart() throws Exception {
         UpdateBookCartGuestRequest request = new UpdateBookCartGuestRequest(1L, 1);
 
@@ -81,13 +72,5 @@ class BookCartGuestControllerTest {
         verify(bookCartGuestService, times(1)).updateBookCart(anyLong(), anyLong(), anyInt());
     }
 
-    @Test
-    void testUpdateCartWithValidationError() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.put("/bookstore/carts")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"quantity\":1}")
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isBadRequest());
-    }
   
 }

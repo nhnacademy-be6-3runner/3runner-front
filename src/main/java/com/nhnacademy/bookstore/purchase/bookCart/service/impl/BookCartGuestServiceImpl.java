@@ -48,15 +48,16 @@ public class BookCartGuestServiceImpl implements BookCartGuestService {
     @Override
     public Long createBookCart(Long bookId, Long cartId, int quantity) {
         Book book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new BookDoesNotExistException(bookId + "가 존재하지 않습니다"));
+                .orElseThrow(() -> new BookDoesNotExistException("도서가 존재하지 않습니다"));
 
-        Cart cart = Optional.ofNullable(cartId)
-                .flatMap(cartRepository::findById)
-                .orElseGet(() -> {
-                    Cart newCart = new Cart();
-                    cartRepository.save(newCart);
-                    return newCart;
-                });
+        if (Objects.isNull(cartId)) {
+            Cart newCart = new Cart();
+            cartRepository.save(newCart);
+            cartId = newCart.getId();
+        }
+
+        Cart cart = cartRepository.findById(cartId)
+                .orElseThrow(() -> new CartDoesNotExistException("카트가 존재하지 않습니다"));
 
         hasDataToLoad(cart.getId());
 
@@ -64,7 +65,6 @@ public class BookCartGuestServiceImpl implements BookCartGuestService {
 
         bookCartRepository.save(bookCart);
 
-        assert cartId != null;
         bookCartRedisRepository.create(
                 cartId.toString(),
                 bookCart.getId(),
@@ -73,7 +73,7 @@ public class BookCartGuestServiceImpl implements BookCartGuestService {
                         .bookId(bookCart.getBook().getId())
                         .cartId(bookCart.getCart().getId())
                         .quantity(bookCart.getQuantity())
-                        .createdAt(bookCart.getCreatedAt()).build()
+                        .build()
         );
 
         return bookCart.getId();
@@ -100,8 +100,8 @@ public class BookCartGuestServiceImpl implements BookCartGuestService {
 
         hasDataToLoad(cartId);
 
-        int amount = bookCart.getQuantity()+quantity;
-        if(amount > 0){
+        int amount = bookCart.getQuantity() + quantity;
+        if (amount > 0) {
             bookCart.setQuantity(amount);
             bookCartRepository.save(bookCart);
             bookCartRedisRepository.update(cartId.toString(), bookCart.getId(), amount);
@@ -136,9 +136,9 @@ public class BookCartGuestServiceImpl implements BookCartGuestService {
      * @param cartId 장바구니아이디
      * @return 도서장바구니 목록
      */
-    private List<ReadBookCartGuestResponse> hasDataToLoad(Long cartId){
+    private List<ReadBookCartGuestResponse> hasDataToLoad(Long cartId) {
         List<ReadBookCartGuestResponse> readBookCartGuestResponses = readAllFromDb(cartId);
-        if(bookCartRedisRepository.isMiss(cartId.toString()) && !readBookCartGuestResponses.isEmpty()){
+        if (bookCartRedisRepository.isMiss(cartId.toString()) && !readBookCartGuestResponses.isEmpty()) {
             bookCartRedisRepository.loadData(readBookCartGuestResponses, cartId.toString());
         }
         return readBookCartGuestResponses;
@@ -150,7 +150,7 @@ public class BookCartGuestServiceImpl implements BookCartGuestService {
      * @param cartId 카트 아이디
      * @return DB 도서 장바구니 목록
      */
-    private List<ReadBookCartGuestResponse> readAllFromDb(Long cartId){
+    private List<ReadBookCartGuestResponse> readAllFromDb(Long cartId) {
         Optional<Cart> cart = cartRepository.findById(cartId);
 
         return cart.map(value -> bookCartRepository.findAllByCart(value)
@@ -160,7 +160,7 @@ public class BookCartGuestServiceImpl implements BookCartGuestService {
                         .bookId(bookCart.getBook().getId())
                         .cartId(bookCart.getCart().getId())
                         .quantity(bookCart.getQuantity())
-                        .createdAt(bookCart.getCreatedAt()).build())
+                        .build())
                 .toList()).orElseGet(List::of);
     }
 }

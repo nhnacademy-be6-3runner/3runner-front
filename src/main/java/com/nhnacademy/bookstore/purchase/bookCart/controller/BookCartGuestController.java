@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.Objects;
 
 import lombok.RequiredArgsConstructor;
 
@@ -39,7 +40,11 @@ public class BookCartGuestController {
     public ApiResponse<List<ReadBookCartGuestResponse>> readCart(HttpServletRequest request) {
         Long cartId = getCartIdFromCookie(request);
 
-        return ApiResponse.createSuccess(bookCartGuestService.readAllBookCart(cartId));
+        if (Objects.isNull(cartId)) {
+            return ApiResponse.success(List.of());
+        }
+
+        return ApiResponse.success(bookCartGuestService.readAllBookCart(cartId));
     }
 
     /**
@@ -70,7 +75,7 @@ public class BookCartGuestController {
 
         Cookie cartCookie = new Cookie("cartId", cartId.toString());
         cartCookie.setPath("/");
-        cartCookie.setMaxAge(60*60*24*7);
+        cartCookie.setMaxAge(60 * 60 * 24 * 7);
         response.addCookie(cartCookie);
 
         return ApiResponse.createSuccess(null);
@@ -112,10 +117,11 @@ public class BookCartGuestController {
      */
     private Long getCartIdFromCookie(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
-
-        for (Cookie c : cookies) {
-            if (c.getName().equals("cartId")) {
-                return Long.parseLong(c.getValue());
+        if (Objects.nonNull(cookies)) {
+            for (Cookie c : cookies) {
+                if (c.getName().equals("cartId")) {
+                    return Long.parseLong(c.getValue());
+                }
             }
         }
         return null;

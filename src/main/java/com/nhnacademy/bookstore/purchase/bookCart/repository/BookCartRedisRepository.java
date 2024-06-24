@@ -10,11 +10,11 @@ import java.util.List;
  * @author 김병우
  */
 public interface BookCartRedisRepository {
-    public Long create(String hashName, Long id, ReadBookCartGuestResponse readBookCartGuestResponse);
-    public Long update(String hashName, Long id , int quantity);
-    public Long delete(String hashName, Long id);
-    public List<ReadBookCartGuestResponse> readAllHashName(String hashName);
-    public boolean isHit(String hashName);
-    public boolean isMiss(String hashName);
-    public void loadData(List<ReadBookCartGuestResponse> bookCartGuestResponses,String hashName);
+    Long create(String hashName, Long id, ReadBookCartGuestResponse readBookCartGuestResponse);
+    Long update(String hashName, Long id, int quantity);
+    Long delete(String hashName, Long id);
+    List<ReadBookCartGuestResponse> readAllHashName(String hashName);
+    boolean isHit(String hashName);
+    boolean isMiss(String hashName);
+    void loadData(List<ReadBookCartGuestResponse> bookCartGuestResponses,String hashName);
 }

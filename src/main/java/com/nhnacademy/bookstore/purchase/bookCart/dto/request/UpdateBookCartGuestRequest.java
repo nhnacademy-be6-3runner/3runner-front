@@ -13,6 +13,6 @@ import jakarta.validation.constraints.NotNull;
  */
 
 public record UpdateBookCartGuestRequest(
-        @NotNull(message = "bookCartId is mandatory") Long bookId,
-        @Min(value = 1, message = "min value is 0") int quantity) {
+        long bookId,
+        int quantity) {
 }
