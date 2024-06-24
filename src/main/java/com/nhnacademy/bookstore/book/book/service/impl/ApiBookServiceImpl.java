@@ -1,5 +1,10 @@
 package com.nhnacademy.bookstore.book.book.service.impl;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -12,16 +17,22 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.nhnacademy.bookstore.book.book.dto.response.ApiCreateBookResponse;
+import com.nhnacademy.bookstore.book.book.dto.response.ImageMultipartFile;
 import com.nhnacademy.bookstore.book.book.repository.ApiBookRepository;
 import com.nhnacademy.bookstore.book.book.repository.BookRepository;
 import com.nhnacademy.bookstore.book.book.service.ApiBookService;
 import com.nhnacademy.bookstore.book.bookCartegory.repository.BookCategoryRepository;
+import com.nhnacademy.bookstore.book.bookImage.repository.BookImageRepository;
 import com.nhnacademy.bookstore.book.category.exception.CategoryNotFoundException;
 import com.nhnacademy.bookstore.book.category.repository.CategoryRepository;
+import com.nhnacademy.bookstore.book.image.imageService.ImageService;
 import com.nhnacademy.bookstore.entity.book.Book;
 import com.nhnacademy.bookstore.entity.bookCategory.BookCategory;
+import com.nhnacademy.bookstore.entity.bookImage.BookImage;
+import com.nhnacademy.bookstore.entity.bookImage.enums.BookImageType;
 import com.nhnacademy.bookstore.entity.category.Category;
 
 import lombok.RequiredArgsConstructor;
@@ -39,12 +50,18 @@ public class ApiBookServiceImpl implements ApiBookService {
 	private final BookRepository bookRepository;
 	private final CategoryRepository categoryRepository;
 	private final BookCategoryRepository bookCategoryRepository;
+	private final ImageService imageService;
+	private final BookImageRepository bookImageRepository;
 
+	/**
+	 *  Api 로 받아온 책을 저장하는 코드
+	 * @param isbnId 저장할 책의 isbn13
+	 */
 	@Transactional
 	@Override
 	public void save(String isbnId) {
 		ApiCreateBookResponse bookResponse = apiBookRepository.getBookResponse(isbnId);
-		log.info("bookResponse : {}", bookResponse);
+
 		Book book = new Book(
 			bookResponse.title(),
 			bookResponse.item().getFirst().description(),
@@ -54,18 +71,16 @@ public class ApiBookServiceImpl implements ApiBookService {
 			bookResponse.item().getFirst().priceSales(),
 			0,
 			true,
-			bookResponse.item().getFirst().author(),
+			realAuthorName(bookResponse.item().getFirst().author()),
 			bookResponse.item().getFirst().isbn13(),
 			bookResponse.item().getFirst().publisher(),
 			null,
 			null,
 			null
 		);
-		bookRepository.save(book);
+		book = bookRepository.save(book);
 
 		List<String> categories = categoryNameStringToList(bookResponse.item().getFirst().categoryName());
-
-		log.info("categories : {}", categories);
 
 		for (String categoryName : categories) {
 			Optional<Category> category = categoryRepository.findByName(categoryName);
@@ -78,11 +93,67 @@ public class ApiBookServiceImpl implements ApiBookService {
 			bookCategoryRepository.save(bookCategory);
 		}
 
+		String fileName = imageService.createImage(downloadImageAsMultipartFile(bookResponse.item().getFirst().cover()),
+			"book");
+		BookImage bookImage = new BookImage(fileName, BookImageType.MAIN, book);
+		bookImageRepository.save(bookImage);
+
+	}
+
+	/**
+	 *
+	 * @param author Api 에서 받아오는 작가 이름 => 지음 엮은이등이 포함되어있어서 이름만 받도록 수정
+	 * @return 작가의 이름
+	 */
+	private String realAuthorName(String author) {
+		if (author.contains("지음")) {
+			return author.substring(0, author.indexOf("지음"));
+		} else if (author.contains("엮은이")) {
+			return author.substring(0, author.indexOf("엮은이"));
+		}
+		if (author.contains("옮김")) {
+			return author.substring(0, author.indexOf("옮김"));
+		}
+		return author;
+	}
+
+	/**
+	 * imageUrl 에서 이미지 파일을 MultipartFile로 가져옴
+	 * @param imageUrl api 에서 받은 cover 이미지의 사진
+	 * @return multipartFile 형식의 이미지  -> 이걸 나중에 image 등록
+	 */
+	public MultipartFile downloadImageAsMultipartFile(String imageUrl) {
+		// 1. URL에서 이미지 다운로드
+		URL url = null;
+		try {
+			url = new URL(imageUrl);
+			HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+			connection.setRequestMethod("GET");
+			connection.connect();
+
+			// 2. 이미지를 바이트 배열로 변환
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			try (InputStream is = connection.getInputStream()) {
+				byte[] buffer = new byte[1024];
+				int len;
+				while ((len = is.read(buffer)) != -1) {
+					baos.write(buffer, 0, len);
+				}
+			}
+
+			// 3. 바이트 배열을 MultipartFile로 변환
+			byte[] imageBytes = baos.toByteArray();
+
+			return new ImageMultipartFile(imageBytes);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+
 	}
 
 	/**
 	 * String -> ZoneDateTime 으로 변경
-	 * @param dateStr 바꿀 date String  형태는 yyyy-MM-dd
+	 * @param dateStr 바꿀 date String
 	 * @return ZoneDateTime 의 날짜
 	 */
 	private ZonedDateTime stringToZonedDateTime(String dateStr) {

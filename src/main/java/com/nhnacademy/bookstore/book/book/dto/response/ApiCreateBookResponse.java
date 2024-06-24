@@ -8,7 +8,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public record ApiCreateBookResponse(
 	String title,
 	String pubDate,
-	String imageUrl,
 	List<AladinItem> item
 
 ) {

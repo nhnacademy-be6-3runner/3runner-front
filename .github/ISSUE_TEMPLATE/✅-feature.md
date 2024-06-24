@@ -8,15 +8,18 @@ assignees: ''
 ---
 
 ## Description
-front 에서 간단한 정보를 받아오면 
-알라딘 에서 정보를 받아와 처리 
+
+front 에서 간단한 정보를 받아오면
+알라딘 에서 정보를 받아와 처리
 
 ## TODO
-- [ ] TODO 1 알라딘 feign client 연동
-- [ ] TODO 2 front 와 연동
-- [ ] TODO 3 해당 관련 controller
-- [ ] TODO 4 해당 관련 dto
+
+- [x] TODO 1 알라딘 feign client 연동
+- [x] TODO 2 front 와 연동
+- [x] TODO 3 해당 관련 controller
+- [x] TODO 4 해당 관련 dto
 - [ ] TODO 5 test code 작성
 
 ## ETC
+
 기타사항
