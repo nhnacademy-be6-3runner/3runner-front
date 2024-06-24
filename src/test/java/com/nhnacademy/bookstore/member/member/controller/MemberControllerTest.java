@@ -79,7 +79,7 @@ public class MemberControllerTest {
                 .birthday(ZonedDateTime.now())
                 .build();
         Mockito.when(memberService.save(any())).thenReturn(member);
-        mockMvc.perform(post("/members")
+        mockMvc.perform(post("/bookstore/members")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(createMemberRequest)))
                 .andDo(print())
@@ -136,7 +136,7 @@ public class MemberControllerTest {
         Mockito.when(memberService.readByEmailAndPassword(loginRequest.email(), loginRequest.password())).thenReturn(member);
         Mockito.when(memberService.updateStatus(Mockito.anyString(), Mockito.eq(Status.Active))).thenReturn(member);
         Mockito.when(memberService.updateLastLogin(Mockito.anyString(), Mockito.any(ZonedDateTime.class))).thenReturn(member);
-        mockMvc.perform(post("/members/login")
+        mockMvc.perform(post("/bookstore/members/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(loginRequest)))
                 .andDo(print())
@@ -156,7 +156,7 @@ public class MemberControllerTest {
         List<Auth> authList = Arrays.asList(auth1, auth2); // Auth 엔티티를 가정
         Mockito.when(memberAuthService.readAllAuths(memberId)).thenReturn(authList);
 
-        mockMvc.perform(get("/members/auths")
+        mockMvc.perform(get("/bookstore/members/auths")
                         .header("member-id", memberId))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -177,7 +177,7 @@ public class MemberControllerTest {
                 .build();
         Mockito.when(memberService.updateMember(anyString(), any(UpdateMemberRequest.class))).thenReturn(member);
 
-        mockMvc.perform(put("/members")
+        mockMvc.perform(put("/bookstore/members")
                         .header("Member-Id", "1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateMemberRequest)))
@@ -190,7 +190,7 @@ public class MemberControllerTest {
     public void testMemberDelete() throws Exception {
         Mockito.doNothing().when(memberService).deleteMember(anyString());
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/members")
+        mockMvc.perform(MockMvcRequestBuilders.delete("/bookstore/members")
                         .header("Member-Id", "1"))
                 .andExpect(content().json("{\"header\":{\"resultCode\":204,\"resultMessage\":\"Member deleted\",\"successful\":true}}"));
     }

@@ -74,7 +74,7 @@ public class AddressControllerTest {
 
         String requestJson = "{ \"name\": \"Name\", \"country\": \"Country\", \"city\": \"City\", \"state\": \"State\", \"road\": \"Road\",\"postalCode\": \"12345\" }";
 
-        mockMvc.perform(post("/members/addresses")
+        mockMvc.perform(post("/bookstore/members/addresses")
                         .header("member-id", memberId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson))
@@ -91,7 +91,7 @@ public class AddressControllerTest {
         Address address = new Address(createAddressRequest, member);
         when(memberServiceImpl.readById(anyLong())).thenReturn(member);
         when(addressServiceImpl.readAll(any(Member.class))).thenReturn(Arrays.asList(address));
-        mockMvc.perform(get("/members/addresses")
+        mockMvc.perform(get("/bookstore/members/addresses")
                         .header("member-id", memberId)
                         )
                 .andDo(print());
@@ -114,8 +114,8 @@ public class AddressControllerTest {
 
         String requestJson = "{ \"name\": \"New Address Name\", \"country\": \"Country\", \"city\": \"City\", \"state\": \"State\", \"road\": \"Road\", \"postalCode\": \"12345\" }";
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/members/addresses")
-                        .header("Address-Id", "1")
+        mockMvc.perform(MockMvcRequestBuilders.put("/bookstore/members/addresses")
+                        .header("Address-Id", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson))
                 .andDo(print())
@@ -127,8 +127,8 @@ public class AddressControllerTest {
     void deleteAddress() throws Exception {
         Mockito.doNothing().when(addressServiceImpl).deleteAddress(anyLong());
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/members/addresses")
-                        .header("Address-Id", "1"))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/bookstore/members/addresses")
+                        .header("Address-Id", 1L))
                 .andDo(print())
                 .andExpect(content().json("{\"header\":{\"resultCode\":204,\"resultMessage\":\"Address deleted\",\"successful\":true}}"));
     }
