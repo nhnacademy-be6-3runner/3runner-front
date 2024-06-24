@@ -30,10 +30,12 @@ public class Category {
     // 연결
     @Setter
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<Category> children = new ArrayList<>();
 
     @Setter
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<BookCategory> bookCategoryList = new ArrayList<>();
 
     public void setParent(Category parent) {

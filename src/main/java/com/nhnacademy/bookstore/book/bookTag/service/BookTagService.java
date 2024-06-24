@@ -1,6 +1,7 @@
 package com.nhnacademy.bookstore.book.bookTag.service;
 
 import com.nhnacademy.bookstore.book.bookTag.dto.request.CreateBookTagRequest;
+import com.nhnacademy.bookstore.book.bookTag.dto.response.BookTagResponse;
 import com.nhnacademy.bookstore.book.bookTag.dto.response.ReadBookByTagResponse;
 import com.nhnacademy.bookstore.book.bookTag.dto.request.ReadBookIdRequest;
 import com.nhnacademy.bookstore.book.bookTag.dto.request.ReadTagRequest;

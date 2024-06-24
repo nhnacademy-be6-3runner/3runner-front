@@ -28,7 +28,6 @@ public class BookServiceImpl implements BookService {
      */
     // Dto -> save book
     @Override
-    @Transactional(propagation = Propagation.MANDATORY)
     public Long createBook(CreateBookRequest createBookRequest) {
         Book book = new Book(
                 createBookRequest.title(),

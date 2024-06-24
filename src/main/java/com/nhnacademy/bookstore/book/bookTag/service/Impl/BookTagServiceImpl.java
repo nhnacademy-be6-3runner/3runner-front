@@ -2,6 +2,7 @@ package com.nhnacademy.bookstore.book.bookTag.service.Impl;
 
 import com.nhnacademy.bookstore.book.book.repository.BookRepository;
 import com.nhnacademy.bookstore.book.bookTag.dto.request.CreateBookTagRequest;
+import com.nhnacademy.bookstore.book.bookTag.dto.response.BookTagResponse;
 import com.nhnacademy.bookstore.book.bookTag.dto.response.ReadBookByTagResponse;
 import com.nhnacademy.bookstore.book.bookTag.dto.request.ReadBookIdRequest;
 import com.nhnacademy.bookstore.book.bookTag.dto.request.ReadTagRequest;
@@ -14,6 +15,7 @@ import com.nhnacademy.bookstore.book.tag.repository.TagRepository;
 import com.nhnacademy.bookstore.entity.book.Book;
 import com.nhnacademy.bookstore.entity.bookTag.BookTag;
 import com.nhnacademy.bookstore.entity.tag.Tag;
+import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -44,18 +46,18 @@ public class BookTagServiceImpl implements BookTagService {
     /**
      * 태그가 달린 책들을 불러오기위한 메소드
      *
-     * @param tagId 해당 태그가 달린 책의 정보들을 가져오기위한 태그 id
+     * @param tagId    해당 태그가 달린 책의 정보들을 가져오기위한 태그 id
      * @param pageable Page<book>의 pageable 정보
      * @return Page<ReadBookByTagResponse> 해당 태그가 달린 책의 정보들
-     *
      */
     public Page<ReadBookByTagResponse> readBookByTagId(ReadTagRequest tagId, Pageable pageable) {
-        Page<Book> books = bookTagRepository.findAllBookIdByTagId(tagId.tagId(),pageable);
+        Page<Book> books = bookTagRepository.findAllBookIdByTagId(tagId.tagId(), pageable);
 
-        return books.map(book-> ReadBookByTagResponse.builder()
+        return books.map(book -> ReadBookByTagResponse.builder()
                 .price(book.getPrice()).author(book.getAuthor()).quantity(book.getQuantity())
                 .description(book.getDescription()).title(book.getTitle()).packing(book.isPacking())
-                .publishedDate(book.getPublishedDate()).creationDate(book.getCreatedAt()).view_count(book.getViewCount())
+                .publishedDate(book.getPublishedDate()).creationDate(book.getCreatedAt())
+                .view_count(book.getViewCount())
                 .sellingPrice(book.getSellingPrice()).build());
     }
 
@@ -69,12 +71,14 @@ public class BookTagServiceImpl implements BookTagService {
 
         List<Tag> tags = bookTagRepository.findAllTagIdByBookId(bookId.bookId());
 
-        return tags.stream().map(tag->ReadTagByBookResponse.builder().name(tag.getName()).build()).collect(Collectors.toList());
+        return tags.stream().map(tag -> ReadTagByBookResponse.builder().name(tag.getName()).build())
+                .collect(Collectors.toList());
     }
 
     @Override
     public Long createBookTag(CreateBookTagRequest bookTagRequest) {
-        if(bookRepository.existsById(bookTagRequest.bookId())&&tagRepository.existsById(bookTagRequest.tagId())) {
+        if (bookRepository.existsById(bookTagRequest.bookId()) && tagRepository.existsById(
+                bookTagRequest.tagId())) {
             throw new AlreadyExistsBookTagException("이미 해당 책에 달린 태그가 존재합니다.");
         }
         BookTag bookTag = new BookTag(bookRepository.findById(bookTagRequest.bookId()).orElse(null),
@@ -82,6 +86,8 @@ public class BookTagServiceImpl implements BookTagService {
         return bookTagRepository.save(bookTag).getId();
 
     }
+
+
 
 
 }

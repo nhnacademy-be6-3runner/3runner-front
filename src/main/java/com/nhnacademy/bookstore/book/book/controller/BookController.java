@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequiredArgsConstructor
-
+@RequestMapping("/bookstore/books")
 public class BookController {
     private final BookService bookService;
 
@@ -31,7 +31,7 @@ public class BookController {
      * @param bindingResult binding result
      * @return ApiResponse<>
      */
-    @PostMapping("/book")
+    @PostMapping
     public ApiResponse<Void> createBook(@Valid @RequestBody CreateBookRequest createBookRequest,
                                         BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -46,7 +46,7 @@ public class BookController {
         return new ApiResponse<Void>(new ApiResponse.Header(true, 201));
     }
 
-    @GetMapping("/book/{bookId}")
+    @GetMapping("/{bookId}")
     public ApiResponse<ReadBookResponse> readBook(@PathVariable("bookId") Long bookId) {
         ReadBookResponse book = bookService.readBookById(bookId);
 
