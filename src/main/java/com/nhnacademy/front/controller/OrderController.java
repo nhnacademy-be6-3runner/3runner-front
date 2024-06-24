@@ -5,8 +5,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class OrderController {
+    @GetMapping("/home")
+    public String testMain(){
+
+        return "test-main";
+    }
     @GetMapping("/cart")
     public String cart(){
+
         return "cart";
     }
 
