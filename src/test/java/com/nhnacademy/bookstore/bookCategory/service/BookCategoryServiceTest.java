@@ -13,6 +13,7 @@ import com.nhnacademy.bookstore.book.category.repository.CategoryRepository;
 import com.nhnacademy.bookstore.entity.book.Book;
 import com.nhnacademy.bookstore.entity.bookCategory.BookCategory;
 import com.nhnacademy.bookstore.entity.category.Category;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,6 +36,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
+@Slf4j
 @ExtendWith(MockitoExtension.class)
 class BookCategoryServiceTest {
 
@@ -77,6 +79,8 @@ class BookCategoryServiceTest {
                 null,
                 null
         );
+
+        book.getBookCategoryList().clear();
     }
 
     @DisplayName("도서-카테고리 생성 테스트")
@@ -135,6 +139,7 @@ class BookCategoryServiceTest {
         verify(categoryRepository, times(1)).findAllById(anyList());
         verify(bookRepository, times(1)).save(any(Book.class));
 
+        log.info(book.getBookCategoryList().toString());
         assertEquals(1, book.getBookCategoryList().size());
         assertEquals(category, book.getBookCategoryList().get(0).getCategory());
     }
