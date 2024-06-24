@@ -6,6 +6,7 @@ import com.nhnacademy.bookstore.entity.member.enums.Grade;
 import com.nhnacademy.bookstore.entity.member.enums.Status;
 import com.nhnacademy.bookstore.member.member.dto.request.UpdateMemberRequest;
 import com.nhnacademy.bookstore.member.member.exception.AlreadyExistsEmailException;
+import com.nhnacademy.bookstore.member.member.exception.LoginFailException;
 import com.nhnacademy.bookstore.member.member.exception.MemberNotExistsException;
 import com.nhnacademy.bookstore.member.member.repository.MemberRepository;
 import com.nhnacademy.bookstore.member.member.service.MemberService;
@@ -14,7 +15,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.swing.text.html.Option;
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
+import java.util.Optional;
 
 /**
  * The type Member service.
@@ -34,10 +38,10 @@ public class MemberServiceImpl implements MemberService {
      * @author 유지아 Save member. -멤버값을 받아와 저장한다.(이메일 중복하는걸로 확인하면 좋을듯)
      */
     public Member save(Member member) {
-        if(memberRepository.findByEmail(member.getEmail())!=null){
+        Optional<Member> findmember = memberRepository.findByEmail(member.getEmail());
+        if(findmember.isPresent()){
             throw new AlreadyExistsEmailException();
         }
-        //이메일 중복 확인안해도 되려나,,
         return memberRepository.save(member);
     }
 
@@ -49,11 +53,11 @@ public class MemberServiceImpl implements MemberService {
      * @author 유지아 Find by id member. -memberid를 받아 멤버자체를 가져온다.
      */
     public Member readById(Long id) {
-        if(memberRepository.findById(id).isPresent()){
-            return memberRepository.findById(id).get();
+        Optional<Member> member = memberRepository.findById(id);
+        if(member.isPresent()){
+            return member.get();
         }else{
             throw new MemberNotExistsException();
-            //throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Member not found");
         }
     }
 
@@ -66,10 +70,11 @@ public class MemberServiceImpl implements MemberService {
      * @author 유지아 Find by email and password member. -이메일과 패스워드 값으로 조회한다.
      */
     public Member readByEmailAndPassword(String email, String password) {
-        if(memberRepository.findByEmailAndPassword(email,password) !=null){
-            return memberRepository.findByEmailAndPassword(email,password);
+        Optional<Member> member = memberRepository.findByEmailAndPassword(email, password);
+        if(member.isPresent()){
+            return member.get();
         }else{
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Member not found");
+            throw new LoginFailException();
         }
     }
 
@@ -144,4 +149,11 @@ public class MemberServiceImpl implements MemberService {
         return memberRepository.save(member);
     }
 
+    @Override
+    public Member updateLastLogin(String memberId, ZonedDateTime lastLogin) {
+        Long id = Long.parseLong(memberId);
+        Member member = memberRepository.findById(id).orElseThrow(MemberNotExistsException::new);
+        member.setLast_login_date(lastLogin);
+        return memberRepository.save(member);
+    }
 }

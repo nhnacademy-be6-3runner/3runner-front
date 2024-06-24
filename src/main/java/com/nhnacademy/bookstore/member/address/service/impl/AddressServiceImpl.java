@@ -3,6 +3,7 @@ package com.nhnacademy.bookstore.member.address.service.impl;
 import com.nhnacademy.bookstore.entity.address.Address;
 import com.nhnacademy.bookstore.entity.member.Member;
 import com.nhnacademy.bookstore.member.address.dto.request.UpdateAddressRequest;
+import com.nhnacademy.bookstore.member.address.exception.AddressFullException;
 import com.nhnacademy.bookstore.member.address.exception.AddressNotExistsException;
 import com.nhnacademy.bookstore.member.address.repository.AddressRepository;
 import com.nhnacademy.bookstore.member.address.service.AddressService;
@@ -27,7 +28,10 @@ public class AddressServiceImpl implements AddressService {
      * @param address the address -Address값을 받아 repository에 저장한다.  null -컨트롤러에서 전체 주소조회해서 반환하기 때문에 void반환으로 해둠.
      * @author 유지아, 오연수 Save. -주소를 받아 저장한다.
      */
-    public void save(Address address) {
+    public void save(Address address,Member member) {
+        if(this.readAll(member).size()>9) {
+            throw new AddressFullException();
+        }
         addressRepository.save(address);
     }
 
@@ -50,9 +54,8 @@ public class AddressServiceImpl implements AddressService {
      * @return the address
      * @author 오연수
      */
-    public Address updateAddress(String addressId, UpdateAddressRequest updateAddressRequest) {
-        Long id = Long.parseLong(addressId);
-        Address address = addressRepository.findById(id).orElseThrow(AddressNotExistsException::new);
+    public Address updateAddress(Long addressId, UpdateAddressRequest updateAddressRequest) {
+        Address address = addressRepository.findById(addressId).orElseThrow(AddressNotExistsException::new);
 
         address.setName(updateAddressRequest.name());
         address.setCountry(updateAddressRequest.country());
@@ -70,8 +73,7 @@ public class AddressServiceImpl implements AddressService {
      * @param addressId 주소 id
      * @author 오연수
      */
-    public void deleteAddress(String addressId) {
-        Long id = Long.parseLong(addressId);
-        addressRepository.deleteById(id);
+    public void deleteAddress(Long addressId) {
+        addressRepository.deleteById(addressId);
     }
 }

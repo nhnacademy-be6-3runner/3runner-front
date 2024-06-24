@@ -1,13 +1,23 @@
 package com.nhnacademy.bookstore.global.exceptionHandler;
 import com.nhnacademy.bookstore.book.book.exception.CreateBookRequestFormException;
+import com.nhnacademy.bookstore.member.address.exception.AddressFullException;
+import com.nhnacademy.bookstore.member.address.exception.AddressNotExistsException;
+import com.nhnacademy.bookstore.member.member.exception.AlreadyExistsEmailException;
+import com.nhnacademy.bookstore.member.member.exception.MemberNotExistsException;
 import com.nhnacademy.bookstore.util.ApiResponse;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.security.auth.login.LoginException;
 import java.time.ZonedDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Error Handler Controller
@@ -43,7 +53,12 @@ public class WebControllerAdvice {
      * @return ApiResponse<ErrorResponseForm>
      */
     @ExceptionHandler({
-            CreateBookRequestFormException.class
+            CreateBookRequestFormException.class,
+            MemberNotExistsException.class,
+            AlreadyExistsEmailException.class,
+            AddressNotExistsException.class,
+            LoginException.class,
+            AddressFullException.class
     })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiResponse<ErrorResponseForm> badRequestHandler(Exception ex, Model model) {
@@ -56,7 +71,23 @@ public class WebControllerAdvice {
                         .build())
         );
     }
-
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiResponse<ErrorResponseForm> handleValidationExceptions(MethodArgumentNotValidException ex, Model model) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return new ApiResponse<>(
+                new ApiResponse.Header(false,400,"bad request"),
+                new ApiResponse.Body<>(ErrorResponseForm.builder()
+                        .title(errors.toString())
+                        .status(HttpStatus.BAD_REQUEST.value())
+                        .timestamp(ZonedDateTime.now().toString()).build())
+        );
+    }
 
 //    @ExceptionHandler({})
 //    @ResponseStatus(HttpStatus.NOT_FOUND)
