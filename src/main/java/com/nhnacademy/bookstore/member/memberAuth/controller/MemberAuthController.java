@@ -14,6 +14,11 @@ import com.nhnacademy.bookstore.member.memberAuth.dto.request.MemberAuthRequest;
 import com.nhnacademy.bookstore.member.memberAuth.dto.response.MemberAuthResponse;
 import com.nhnacademy.bookstore.member.memberAuth.service.MemberAuthService;
 
+/**
+ * 멤버 권한 정보를 관리하는 컨트롤러
+ *
+ * @author 오연수
+ */
 @RestController()
 public class MemberAuthController {
 	private final MemberService memberService;
@@ -24,6 +29,12 @@ public class MemberAuthController {
 		this.memberAuthService = memberAuthService;
 	}
 
+	/**
+	 * 이메일을 통해 로그인에 필요한 멤버 정보를 반환한다.
+	 *
+	 * @param memberAuthRequest email
+	 * @return 이메일, 패스워드, 권한 리스트, 멤버 아이디
+	 */
 	@PostMapping("/bookstore/login")
 	public MemberAuthResponse getMemberAuth(@RequestBody MemberAuthRequest memberAuthRequest) {
 		String email = memberAuthRequest.email();

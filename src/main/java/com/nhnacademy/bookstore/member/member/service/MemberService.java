@@ -17,11 +17,11 @@ public interface MemberService {
 
 	Member readByEmail(String email);
 
-	Member updateMember(String memberId, UpdateMemberRequest updateMemberRequest);
+	Member updateMember(Long memberId, UpdateMemberRequest updateMemberRequest);
 
-	void deleteMember(String memberId);
+	void deleteMember(Long memberId);
 
-	Member updateStatus(String memberId, Status status);
+	Member updateStatus(Long memberId, Status status);
 
-	Member updateGrade(String memberId, Grade grade);
+	Member updateGrade(Long memberId, Grade grade);
 }
