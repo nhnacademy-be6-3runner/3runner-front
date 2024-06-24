@@ -17,6 +17,11 @@ spring:
         highlight_sql: true
         auto_quote_keyword: true
 
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
   datasource:
     url: jdbc:mysql://133.186.241.167:3306/be6_3runner_dev
     username: be6_3runner
@@ -24,7 +29,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   profiles:
-    active: dev
+    active: prod
   lifecycle:
     timeout-per-shutdown-phase: 30s
   application:
