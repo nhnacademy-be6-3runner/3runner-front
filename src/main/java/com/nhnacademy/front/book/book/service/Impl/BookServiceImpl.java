@@ -1,5 +1,6 @@
 package com.nhnacademy.front.book.book.service.Impl;
 
+import com.nhnacademy.front.book.book.controller.feign.ApiBookClient;
 import com.nhnacademy.front.book.book.controller.feign.BookClient;
 import com.nhnacademy.front.book.book.dto.request.CreateBookRequest;
 import com.nhnacademy.front.book.book.dto.request.UserCreateBookRequest;
@@ -24,6 +25,7 @@ import java.util.Objects;
 public class BookServiceImpl implements BookService {
 
     private final BookClient bookClient;
+    private final ApiBookClient apiBookClient;
 
 
     /**
@@ -57,6 +59,11 @@ public class BookServiceImpl implements BookService {
         log.info("Create book : {}", createBookRequest);
 
         bookClient.createBook(createBookRequest);
+    }
+
+    @Override
+    public void saveApiBook(String isbn) {
+        apiBookClient.createApiBook(isbn);
     }
 
     //TODO 아직 미구현

@@ -33,4 +33,16 @@ public class BookController {
 
         return "book/book_create";
     }
+
+    @GetMapping("/api/create")
+    public String apiCreateBook(){
+        return "book/api_book_create";
+    }
+
+    @PostMapping("/api/create")
+    public String apiCreateBook(String isbnId, Model model){
+        bookService.saveApiBook(isbnId);
+        return "book/api_book_create";
+    }
+
 }
