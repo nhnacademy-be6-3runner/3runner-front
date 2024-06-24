@@ -4,10 +4,17 @@ import com.nhnacademy.bookstore.entity.book.Book;
 import com.nhnacademy.bookstore.entity.member.Member;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.ZonedDateTime;
 
 @Entity
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class BookLike {
 
     @Id
@@ -18,9 +25,11 @@ public class BookLike {
     private ZonedDateTime createdAt;
 
     @ManyToOne
+    @Setter
     private Book book;
 
     @ManyToOne
+    @Setter
     private Member member;
 
     @PrePersist
