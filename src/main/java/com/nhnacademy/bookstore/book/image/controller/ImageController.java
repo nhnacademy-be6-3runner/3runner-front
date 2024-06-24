@@ -23,6 +23,7 @@ import java.util.UUID;
  */
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/bookstore/images")
 public class ImageController {
 
     private final ImageService imageService;
@@ -34,7 +35,7 @@ public class ImageController {
      * @param type 파일을 저장할 위치 -> ex) book, review
      * @return 저장할 파일명 (새로운 UUID.확장자)
      */
-    @PostMapping("/images/{type}/upload")
+    @PostMapping("/{type}/upload")
     public ApiResponse<String> uploadImage(@RequestParam MultipartFile image, @PathVariable String type){
         String result  = imageService.createImage(image, type);
         return ApiResponse.success(result);
@@ -47,8 +48,8 @@ public class ImageController {
      * @param type 파일을 보여줄 위치 -> ex) book, review
      * @return 서버에서 가져온 파일
      */
-    @GetMapping("/images/{type}/download")
-    public ApiResponse<ResponseEntity<byte[]>> downloadFile(@RequestParam("fileName") String fileName, @PathVariable String type)  {
+    @GetMapping("/{type}/download")
+    public ResponseEntity<byte[]> downloadFile(@RequestParam("fileName") String fileName, @PathVariable String type)  {
         byte[] content;
         try (S3Object s3Object = imageService.readImage(type + "/" + fileName)) {
 
@@ -62,7 +63,7 @@ public class ImageController {
         headers.setContentDispositionFormData("attachment", fileName);
 
 
-        return ApiResponse.success(new ResponseEntity<>(content, headers, HttpStatus.OK));
+        return new ResponseEntity<>(content, headers, HttpStatus.OK);
     }
 
 }
