@@ -1,6 +1,6 @@
 package com.nhnacademy.bookstore.book.book.repository.impl;
 
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,7 +13,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @AllArgsConstructor
-@Service
+@Repository
 @Slf4j
 public class ApiBookRepositoryImpl implements ApiBookRepository {
 

@@ -2,11 +2,13 @@ package com.nhnacademy.bookstore.book.book.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import lombok.Builder;
+
+@Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record AladinItem(
 	String title,
 	String author,
-	String pubDate,
 	String description,
 	String isbn13,
 	int priceSales,

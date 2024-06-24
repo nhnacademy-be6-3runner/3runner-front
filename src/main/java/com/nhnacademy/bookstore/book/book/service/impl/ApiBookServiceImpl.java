@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,6 +29,7 @@ import com.nhnacademy.bookstore.book.bookCartegory.repository.BookCategoryReposi
 import com.nhnacademy.bookstore.book.bookImage.repository.BookImageRepository;
 import com.nhnacademy.bookstore.book.category.exception.CategoryNotFoundException;
 import com.nhnacademy.bookstore.book.category.repository.CategoryRepository;
+import com.nhnacademy.bookstore.book.image.exception.MultipartFileException;
 import com.nhnacademy.bookstore.book.image.imageService.ImageService;
 import com.nhnacademy.bookstore.entity.book.Book;
 import com.nhnacademy.bookstore.entity.bookCategory.BookCategory;
@@ -43,15 +45,22 @@ import lombok.extern.slf4j.Slf4j;
  *
  */
 @Slf4j
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
 public class ApiBookServiceImpl implements ApiBookService {
-	private final ApiBookRepository apiBookRepository;
-	private final BookRepository bookRepository;
-	private final CategoryRepository categoryRepository;
-	private final BookCategoryRepository bookCategoryRepository;
-	private final ImageService imageService;
-	private final BookImageRepository bookImageRepository;
+
+	@Autowired
+	private ApiBookRepository apiBookRepository;
+	@Autowired
+	private BookRepository bookRepository;
+	@Autowired
+	private CategoryRepository categoryRepository;
+	@Autowired
+	private BookCategoryRepository bookCategoryRepository;
+	@Autowired
+	private ImageService imageService;
+	@Autowired
+	private BookImageRepository bookImageRepository;
 
 	/**
 	 *  Api 로 받아온 책을 저장하는 코드
@@ -105,7 +114,7 @@ public class ApiBookServiceImpl implements ApiBookService {
 	 * @param author Api 에서 받아오는 작가 이름 => 지음 엮은이등이 포함되어있어서 이름만 받도록 수정
 	 * @return 작가의 이름
 	 */
-	private String realAuthorName(String author) {
+	public String realAuthorName(String author) {
 		if (author.contains("지음")) {
 			return author.substring(0, author.indexOf("지음"));
 		} else if (author.contains("엮은이")) {
@@ -146,7 +155,7 @@ public class ApiBookServiceImpl implements ApiBookService {
 
 			return new ImageMultipartFile(imageBytes);
 		} catch (IOException e) {
-			throw new RuntimeException(e);
+			throw new MultipartFileException();
 		}
 
 	}
@@ -156,7 +165,7 @@ public class ApiBookServiceImpl implements ApiBookService {
 	 * @param dateStr 바꿀 date String
 	 * @return ZoneDateTime 의 날짜
 	 */
-	private ZonedDateTime stringToZonedDateTime(String dateStr) {
+	public ZonedDateTime stringToZonedDateTime(String dateStr) {
 		if (Objects.isNull(dateStr)) {
 			return null;
 		}
@@ -172,7 +181,7 @@ public class ApiBookServiceImpl implements ApiBookService {
 	 * @param categoryName 하나로 길게 되어 있는 카테고리 이름
 	 * @return List 로 나눠진 카테고리
 	 */
-	private List<String> categoryNameStringToList(String categoryName) {
+	public List<String> categoryNameStringToList(String categoryName) {
 		String[] categoryNameArray = categoryName.split(">");
 		return new ArrayList<>(Arrays.asList(categoryNameArray));
 	}
