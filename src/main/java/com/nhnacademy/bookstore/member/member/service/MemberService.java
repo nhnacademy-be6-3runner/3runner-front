@@ -1,25 +1,27 @@
 package com.nhnacademy.bookstore.member.member.service;
 
+import org.springframework.stereotype.Service;
 
 import com.nhnacademy.bookstore.entity.member.Member;
 import com.nhnacademy.bookstore.entity.member.enums.Grade;
 import com.nhnacademy.bookstore.entity.member.enums.Status;
 import com.nhnacademy.bookstore.member.member.dto.request.UpdateMemberRequest;
-import org.springframework.stereotype.Service;
 
 @Service
 public interface MemberService {
-    Member save(Member member);
+	Member save(Member member);
 
-    Member readById(Long id);
+	Member readById(Long id);
 
-    Member readByEmailAndPassword(String email, String password);
+	Member readByEmailAndPassword(String email, String password);
 
-    Member updateMember(String memberId, UpdateMemberRequest updateMemberRequest);
+	Member readByEmail(String email);
 
-    void deleteMember(String memberId);
+	Member updateMember(String memberId, UpdateMemberRequest updateMemberRequest);
 
-    Member updateStatus(String memberId, Status status);
+	void deleteMember(String memberId);
 
-    Member updateGrade(String memberId, Grade grade);
+	Member updateStatus(String memberId, Status status);
+
+	Member updateGrade(String memberId, Grade grade);
 }

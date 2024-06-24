@@ -7,7 +7,7 @@ spring:
   data:
     elasticsearch:
       repositories:
-        enabled: true 
+        enabled: true
       url: localhost:9200
   jpa:
     open-in-view: false
@@ -36,7 +36,7 @@ eureka:
     fetch-registry: true
     register-with-eureka: true
     service-url:
-      defaultZone: http://admin:1234@eureka:8761/eureka
+      defaultZone: http://admin:1234@localhost:8761/eureka
   instance:
     prefer-ip-address: true
 
@@ -52,6 +52,7 @@ management:
 
 server:
   shutdown: graceful
+  port: 8081
 
 logging:
   level:
