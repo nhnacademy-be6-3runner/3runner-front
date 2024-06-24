@@ -1,5 +1,9 @@
 package com.nhnacademy.bookstore.global.exceptionHandler;
+import com.nhnacademy.bookstore.book.book.exception.BookDoesNotExistException;
 import com.nhnacademy.bookstore.book.book.exception.CreateBookRequestFormException;
+import com.nhnacademy.bookstore.purchase.bookCart.exception.BookCartArgumentErrorException;
+import com.nhnacademy.bookstore.purchase.bookCart.exception.BookCartDoesNotExistException;
+import com.nhnacademy.bookstore.purchase.cart.exception.CartDoesNotExistException;
 import com.nhnacademy.bookstore.purchase.purchase.exception.PurchaseAlreadyExistException;
 import com.nhnacademy.bookstore.purchase.purchase.exception.PurchaseDoesNotExistException;
 import com.nhnacademy.bookstore.purchase.purchase.exception.PurchaseFormArgumentErrorException;
@@ -53,7 +57,8 @@ public class WebControllerAdvice {
             CreateBookRequestFormException.class,
             AlreadyBoundException.class,
             PurchaseFormArgumentErrorException.class,
-            PurchaseAlreadyExistException.class
+            PurchaseAlreadyExistException.class,
+            BookCartArgumentErrorException.class
     })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiResponse<ErrorResponseForm> badRequestHandler(Exception ex, Model model) {
@@ -76,7 +81,10 @@ public class WebControllerAdvice {
      * @author 정주혁
      */
     @ExceptionHandler({
-            PurchaseDoesNotExistException.class
+            PurchaseDoesNotExistException.class,
+            BookDoesNotExistException.class,
+            BookCartDoesNotExistException.class,
+            CartDoesNotExistException.class
     })
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ApiResponse<ErrorResponseForm> notFoundHandler(Exception ex, Model model) {

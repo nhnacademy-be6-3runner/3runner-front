@@ -60,10 +60,11 @@ jobs:
             sudo docker rm bookstore1 || true
             sudo docker build -t bookstore-image1 .
             sudo docker run -d -p 8081:8080 --name bookstore1 --net back_network bookstore-image1
-            
+
             sleep 90
             
             sudo docker stop bookstore2 || true
             sudo docker rm bookstore2 || true
             sudo docker build -t bookstore-image2 .
             sudo docker run -d -p 8082:8080 --name bookstore2 --net back_network bookstore-image2
+
