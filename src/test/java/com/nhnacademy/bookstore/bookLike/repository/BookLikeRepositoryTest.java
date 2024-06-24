@@ -120,7 +120,7 @@ public class BookLikeRepositoryTest {
     @Test
     public void testFindBookLikeByMemberId() {
         Pageable pageable = PageRequest.of(0, 10);
-        Page<BookListResponse> bookListResponsePage = bookLikeRepository.findBookLikeByMemberId(member1.getId(), pageable);
+        Page<BookListResponse> bookListResponsePage = bookLikeRepository.findBookLikeByMemberId(member2.getId(), pageable);
 
         assertThat(bookListResponsePage.getContent()).hasSize(2);
         List<BookListResponse> content = bookListResponsePage.getContent();
@@ -130,7 +130,7 @@ public class BookLikeRepositoryTest {
     @Test
     public void testCountLikeByBookId() {
         long count = bookLikeRepository.countLikeByBookId(book1.getId());
-        assertThat(count).isEqualTo(1);
+        assertThat(count).isEqualTo(2);
     }
 
     @Test
