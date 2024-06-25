@@ -95,9 +95,8 @@ public class MemberServiceImpl implements MemberService {
      * @return the member
      * @author 오연수
      */
-    public Member updateMember(String memberId, UpdateMemberRequest updateMemberRequest) {
-        Long id = Long.parseLong(memberId);
-        Member member = memberRepository.findById(id).orElseThrow(MemberNotExistsException::new);
+    public Member updateMember(Long memberId, UpdateMemberRequest updateMemberRequest) {
+        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotExistsException::new);
 
         member.setPassword(updateMemberRequest.password());
         member.setName(updateMemberRequest.name());
@@ -116,9 +115,8 @@ public class MemberServiceImpl implements MemberService {
      * @param memberId the member id
      * @author 오연수
      */
-    public void deleteMember(String memberId) {
-        Long id = Long.parseLong(memberId);
-        Member member = memberRepository.findById(id).orElseThrow(MemberNotExistsException::new);
+    public void deleteMember(Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotExistsException::new);
 
         member.setStatus(Status.Withdrawn);
         member.setDeleted_at(ZonedDateTime.now());
@@ -134,9 +132,8 @@ public class MemberServiceImpl implements MemberService {
      * @return the member
      * @author 오연수
      */
-    public Member updateStatus(String memberId, Status status) {
-        Long id = Long.parseLong(memberId);
-        Member member = memberRepository.findById(id).orElseThrow(MemberNotExistsException::new);
+    public Member updateStatus(Long memberId, Status status) {
+        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotExistsException::new);
         member.setStatus(status);
         member.setModified_at(ZonedDateTime.now());
         return memberRepository.save(member);
@@ -150,18 +147,16 @@ public class MemberServiceImpl implements MemberService {
      * @return the member
      * @author 오연수
      */
-    public Member updateGrade(String memberId, Grade grade) {
-        Long id = Long.parseLong(memberId);
-        Member member = memberRepository.findById(id).orElseThrow(MemberNotExistsException::new);
+    public Member updateGrade(Long memberId, Grade grade) {
+        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotExistsException::new);
         member.setGrade(grade);
         member.setModified_at(ZonedDateTime.now());
         return memberRepository.save(member);
     }
 
     @Override
-    public Member updateLastLogin(String memberId, ZonedDateTime lastLogin) {
-        Long id = Long.parseLong(memberId);
-        Member member = memberRepository.findById(id).orElseThrow(MemberNotExistsException::new);
+    public Member updateLastLogin(Long memberId, ZonedDateTime lastLogin) {
+        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotExistsException::new);
         member.setLast_login_date(lastLogin);
         return memberRepository.save(member);
     }

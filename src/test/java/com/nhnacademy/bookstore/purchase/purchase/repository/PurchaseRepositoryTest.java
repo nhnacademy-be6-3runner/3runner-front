@@ -26,11 +26,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class PurchaseRepositoryTest {
-    /*
+
     @Autowired
     private PurchaseRepository purchaseRepository;
     @Autowired
-    private MemberService memberService;
+    private MemberServiceImpl memberService;
 
     private Member member1;
     private Member member2;
@@ -38,8 +38,8 @@ class PurchaseRepositoryTest {
     private Purchase purchase2;
     private Purchase purchase3;
     private Purchase purchase4;
-*/
-    /*
+
+
     @BeforeEach
     void setUp() {
         member1 = new Member(CreateMemberRequest.builder().password("1").name("1").age(1).phone("1").birthday(ZonedDateTime.now()).email("dfdaf@nav.com").build());
@@ -63,18 +63,18 @@ class PurchaseRepositoryTest {
         purchaseRepository.save(purchase4);
 
     }
-*/
-    /*
+
+
     @AfterEach
     void tearDown() {
-        memberService.deleteMember(member1.getId().toString());
-        memberService.deleteMember(member2.getId().toString());
+        memberService.deleteMember(member1.getId());
+        memberService.deleteMember(member2.getId());
         purchaseRepository.delete(purchase1);
         purchaseRepository.delete(purchase2);
         purchaseRepository.delete(purchase3);
         purchaseRepository.delete(purchase4);
     }
-*/
+
     @Test
     void existsPurchaseByOrderNumber(){
         // assertTrue(purchaseRepository.existsPurchaseByOrderNumber(purchase1.getOrderNumber()));

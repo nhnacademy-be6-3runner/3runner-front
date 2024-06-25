@@ -20,14 +20,14 @@ public interface MemberService {
 
     Member readByEmailAndPassword(String email, String password);
 
-    Member updateMember(String memberId, UpdateMemberRequest updateMemberRequest);
+    Member updateMember(Long memberId, UpdateMemberRequest updateMemberRequest);
 
-    void deleteMember(String memberId);
+    void deleteMember(Long memberId);
 
-    Member updateStatus(String memberId, Status status);
+    Member updateStatus(Long memberId, Status status);
 
-    Member updateGrade(String memberId, Grade grade);
-    Member updateLastLogin(String memberId, ZonedDateTime lastLogin);
+    Member updateGrade(Long memberId, Grade grade);
+    Member updateLastLogin(Long memberId, ZonedDateTime lastLogin);
 
     List<ReadPurchaseResponse> getPurchasesByMemberId(Long memberId);
 }

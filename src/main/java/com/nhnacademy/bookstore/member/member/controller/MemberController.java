@@ -111,8 +111,8 @@ public class MemberController {
                     .email(member.getEmail())
                     .name(member.getName())
                     .password(member.getPassword()).build();
-            memberService.updateStatus(member.getId().toString(), Status.Active);//응답이 만들어 졌다는거는 로그인성공이란 소리니까 멤버를 업데이트 해야할 것같다..
-            memberService.updateLastLogin(member.getId().toString(),ZonedDateTime.now());
+            memberService.updateStatus(member.getId(), Status.Active);//응답이 만들어 졌다는거는 로그인성공이란 소리니까 멤버를 업데이트 해야할 것같다..
+            memberService.updateLastLogin(member.getId(),ZonedDateTime.now());
 
             return new ApiResponse<GetMemberResponse>(new ApiResponse.Header(true,200),new ApiResponse.Body<>(getMemberResponse));
 
@@ -143,7 +143,7 @@ public class MemberController {
      * @author 오연수
      */
     @PutMapping("/bookstore/members")
-    public ApiResponse<UpdateMemberResponse> updateMember(@RequestHeader(name = "Member-Id") String memberId,
+    public ApiResponse<UpdateMemberResponse> updateMember(@RequestHeader(name = "Member-Id") Long memberId,
                                                           @Valid @RequestBody UpdateMemberRequest updateMemberRequest) {
 
             Member updatedMember = memberService.updateMember(memberId, updateMemberRequest);
@@ -162,7 +162,7 @@ public class MemberController {
      * @author 오연수
      */
     @DeleteMapping("/bookstore/members")
-    public ApiResponse<Void> deleteMember(@RequestHeader(name = "Member-Id") String memberId) {
+    public ApiResponse<Void> deleteMember(@RequestHeader(name = "Member-Id") Long memberId) {
             memberService.deleteMember(memberId);
 
             return new ApiResponse<>(new ApiResponse.Header(true, HttpStatus.NO_CONTENT.value()));

@@ -26,8 +26,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -134,8 +133,8 @@ public class MemberControllerTest {
         member.setId(1L);
 
         Mockito.when(memberService.readByEmailAndPassword(loginRequest.email(), loginRequest.password())).thenReturn(member);
-        Mockito.when(memberService.updateStatus(Mockito.anyString(), Mockito.eq(Status.Active))).thenReturn(member);
-        Mockito.when(memberService.updateLastLogin(Mockito.anyString(), Mockito.any(ZonedDateTime.class))).thenReturn(member);
+        Mockito.when(memberService.updateStatus(Mockito.anyLong(), Mockito.eq(Status.Active))).thenReturn(member);
+        Mockito.when(memberService.updateLastLogin(Mockito.anyLong(), Mockito.any(ZonedDateTime.class))).thenReturn(member);
         mockMvc.perform(post("/bookstore/members/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(loginRequest)))
@@ -175,7 +174,7 @@ public class MemberControllerTest {
                 .phone("12345678900")
                 .birthday(ZonedDateTime.parse("2000-01-01T00:00:00Z"))
                 .build();
-        Mockito.when(memberService.updateMember(anyString(), any(UpdateMemberRequest.class))).thenReturn(member);
+        Mockito.when(memberService.updateMember(anyLong(), any(UpdateMemberRequest.class))).thenReturn(member);
 
         mockMvc.perform(put("/bookstore/members")
                         .header("Member-Id", "1")
@@ -188,7 +187,7 @@ public class MemberControllerTest {
     @Test
     @DisplayName("멤버 삭제(탈퇴) 테스트")
     public void testMemberDelete() throws Exception {
-        Mockito.doNothing().when(memberService).deleteMember(anyString());
+        Mockito.doNothing().when(memberService).deleteMember(anyLong());
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/bookstore/members")
                         .header("Member-Id", "1"))

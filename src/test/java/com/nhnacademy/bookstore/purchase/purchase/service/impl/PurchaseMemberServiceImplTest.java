@@ -53,7 +53,7 @@ class PurchaseMemberServiceImplTest {
     }
     @AfterEach
     void tearDown(){
-        memberService.deleteMember(member1.getId().toString());
+        memberService.deleteMember(member1.getId());
     }
 
     @Test
