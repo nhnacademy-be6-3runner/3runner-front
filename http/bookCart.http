@@ -1,0 +1,27 @@
+###
+POST http://localhost:8081/bookstore/cart
+Content-Type: application/json
+Member-Id: 1
+
+{
+  "quantity": 5,
+  "bookId": 15
+}
+
+###
+PUT http://localhost:8081/bookstore/cart
+Content-Type: application/json
+Member-Id: 1
+
+{
+  "bookCartId": 27,
+  "quantity": 11,
+  "bookId": 2,
+  "cartId" : 20
+}
+
+###
+GET http://localhost:8081/bookstore/cart
+Member-Id: 1
+
+

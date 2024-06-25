@@ -5,6 +5,7 @@ import com.nhnacademy.bookstore.entity.cart.Cart;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,9 +13,9 @@ import lombok.Setter;
 import java.time.ZonedDateTime;
 import java.util.Set;
 
-@NoArgsConstructor
-@Getter@Setter
 @Entity
+@Getter@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class BookCart {
 
     @Id
@@ -31,15 +32,21 @@ public class BookCart {
 
 
     // 연결
-    @ManyToOne(optional = false)
+    @ManyToOne
     private Book book;
 
-    @ManyToOne(optional = false)
+    @ManyToOne
     private Cart cart;
 
     public BookCart(int quantity, ZonedDateTime createdAt, Book book, Cart cart) {
         this.quantity = quantity;
         this.createdAt = createdAt;
+        this.book = book;
+        this.cart = cart;
+    }
+
+    public BookCart(int quantity, Book book, Cart cart) {
+        this.quantity = quantity;
         this.book = book;
         this.cart = cart;
     }
