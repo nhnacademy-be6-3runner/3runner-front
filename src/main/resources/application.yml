@@ -11,6 +11,7 @@ spring:
       password: "*N2vya7H@muDTwdNMR!"
 
 
+
   jpa:
     open-in-view: false
     hibernate:
@@ -58,3 +59,9 @@ cloud:
     s3:
       endpoint: https://kr1-api-object-storage.nhncloudservice.com
       bucket: nhnacademy-be6-3runner
+
+
+springdoc:
+  swagger-ui:
+    url: /docs/openapi-3.0.json
+    path: /docs/swagger
