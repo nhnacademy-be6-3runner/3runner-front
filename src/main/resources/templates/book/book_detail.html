@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Detail</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background-color: #343a40;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header a {
+            color: #fff;
+            margin: 0 10px;
+            text-decoration: none;
+        }
+
+        .breadcrumb {
+            margin: 20px 0;
+        }
+
+        .breadcrumb a {
+            color: #007bff;
+            text-decoration: none;
+            margin-right: 5px;
+        }
+
+        .breadcrumb span {
+            color: #6c757d;
+        }
+
+        .product-detail {
+            display: flex;
+            flex-wrap: wrap;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-images, .product-info {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .product-images img {
+            width: 100%;
+            border: 1px solid #dee2e6;
+            padding: 10px;
+            background-color: #f8f9fa;
+        }
+
+        .product-info h1 {
+            font-size: 24px;
+            margin: 0 0 20px;
+        }
+
+        .product-info p {
+            color: #6c757d;
+            margin: 20px 0;
+        }
+
+        .product-info .price {
+            font-size: 24px;
+            color: #28a745;
+            margin: 20px 0;
+        }
+
+        .product-info .add-to-cart {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .product-info .add-to-cart:hover {
+            background-color: #0056b3;
+        }
+
+        .related-products {
+            margin: 40px 0;
+        }
+
+        .related-products h3 {
+            text-align: center;
+            margin: 0 0 20px;
+        }
+
+        .related-products .products {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .related-products .product {
+            width: 23%;
+            background-color: #fff;
+            padding: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            transition: box-shadow 0.3s;
+        }
+
+        .related-products .product img {
+            width: 100%;
+            border: 1px solid #dee2e6;
+            padding: 10px;
+            background-color: #f8f9fa;
+        }
+
+        .related-products .product h4 {
+            margin: 10px 0;
+        }
+
+        .related-products .product p {
+            color: #28a745;
+        }
+
+        .footer {
+            background-color: #343a40;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <nav>
+        <a href="#">Home</a>
+        <a href="#">Shop</a>
+        <a href="#">Features</a>
+        <a href="#">Blog</a>
+        <a href="#">About</a>
+        <a href="#">Contact</a>
+    </nav>
+</header>
+
+<div class="container">
+    <div class="breadcrumb">
+        <a href="#">Home</a>
+        <span>&gt;</span>
+        <a href="#">Men</a>
+        <span>&gt;</span>
+        <span>Lightweight Jacket</span>
+    </div>
+
+    <div class="product-detail">
+        <div class="product-images">
+            <img src="images/product-detail-01.jpg" alt="Product Image 1">
+            <img src="images/product-detail-02.jpg" alt="Product Image 2">
+            <img src="images/product-detail-03.jpg" alt="Product Image 3">
+        </div>
+        <div class="product-info">
+            <h1>Lightweight Jacket</h1>
+            <span class="price">$58.79</span>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas interdum risus nec urna mollis, vel
+                mollis odio vestibulum. Ut euismod, nisl vitae bibendum euismod, lacus orci vehicula arcu, nec facilisis
+                justo erat at libero.</p>
+            <div class="options">
+                <label for="size">Size</label>
+                <select id="size">
+                    <option>Choose an option</option>
+                    <option>Size S</option>
+                    <option>Size M</option>
+                    <option>Size L</option>
+                    <option>Size XL</option>
+                </select>
+                <label for="color">Color</label>
+                <select id="color">
+                    <option>Choose an option</option>
+                    <option>Red</option>
+                    <option>Blue</option>
+                    <option>White</option>
+                    <option>Grey</option>
+                </select>
+                <label for="quantity">Quantity</label>
+                <input type="number" id="quantity" name="quantity" value="1">
+            </div>
+            <a href="#" class="add-to-cart">Add to cart</a>
+        </div>
+    </div>
+
+    <div class="related-products">
+        <h3>Related Products</h3>
+        <div class="products">
+            <div class="product">
+                <img src="images/product-01.jpg" alt="Product 1">
+                <h4>Esprit Ruffle Shirt</h4>
+                <p>$16.64</p>
+            </div>
+            <div class="product">
+                <img src="images/product-02.jpg" alt="Product 2">
+                <h4>Herschel Supply</h4>
+                <p>$35.31</p>
+            </div>
+            <div class="product">
+                <img src="images/product-03.jpg" alt="Product 3">
+                <h4>Only Check Trouser</h4>
+                <p>$25.50</p>
+            </div>
+            <div class="product">
+                <img src="images/product-04.jpg" alt="Product 4">
+                <h4>Classic Trench Coat</h4>
+                <p>$75.00</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="footer">
+    <p>&copy; 2024 All rights reserved. Template by <a href="https://colorlib.com" target="_blank" style="color: #fff;">Colorlib</a>
+        distributed by <a href="https://themewagon.com" target="_blank" style="color: #fff;">ThemeWagon</a></p>
+</footer>
+
+</body>
+</html>
