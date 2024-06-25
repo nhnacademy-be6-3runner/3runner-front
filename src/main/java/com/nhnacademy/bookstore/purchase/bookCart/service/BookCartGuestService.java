@@ -17,4 +17,6 @@ public interface BookCartGuestService {
     Long updateBookCart(Long bookId, Long cartId, int quantity);
 
     List<ReadBookCartGuestResponse> readAllBookCart(Long cartId);
+
+    Long deleteBookCart(Long bookCartId, Long cartId);
 }

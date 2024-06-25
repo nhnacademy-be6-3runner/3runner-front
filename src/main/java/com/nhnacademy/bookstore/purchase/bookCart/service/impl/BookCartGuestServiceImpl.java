@@ -113,6 +113,19 @@ public class BookCartGuestServiceImpl implements BookCartGuestService {
         return bookCart.getId();
     }
 
+    @Override
+    public Long deleteBookCart(Long bookCartId, Long cartId) {
+        BookCart bookCart = bookCartRepository.findById(bookCartId)
+                .orElseThrow(() -> new BookCartDoesNotExistException("북카트 존재하지 않습니다."));
+
+        bookCartRepository.delete(bookCart);
+        bookCartRedisRepository.delete(cartId.toString(), bookCart.getId());
+
+        return bookCart.getId();
+    }
+
+
+
     /**
      * 도서장바구니 목록 읽기.
      *

@@ -1,6 +1,7 @@
 package com.nhnacademy.bookstore.purchase.bookCart.controller;
 
 import com.nhnacademy.bookstore.purchase.bookCart.dto.request.CreateBookCartGuestRequest;
+import com.nhnacademy.bookstore.purchase.bookCart.dto.request.DeleteBookCartGuestRequest;
 import com.nhnacademy.bookstore.purchase.bookCart.dto.request.UpdateBookCartGuestRequest;
 import com.nhnacademy.bookstore.purchase.bookCart.dto.response.ReadBookCartGuestResponse;
 import com.nhnacademy.bookstore.purchase.bookCart.exception.BookCartArgumentErrorException;
@@ -109,6 +110,20 @@ public class BookCartGuestController {
         return ApiResponse.success(null);
     }
 
+    @DeleteMapping("/carts")
+    public ApiResponse<Void> deleteCart(
+            @Valid @RequestBody DeleteBookCartGuestRequest deleteBookCartGuestRequest,
+            BindingResult bindingResult,
+            HttpServletRequest request
+    ) {
+        if (bindingResult.hasErrors()) {
+            throw new BookCartArgumentErrorException("폼 에러");
+        }
+        Long cartId = getCartIdFromCookie(request);
+        bookCartGuestService.deleteBookCart(deleteBookCartGuestRequest.bookCartId(), cartId);
+
+        return ApiResponse.deleteSuccess(null);
+    }
     /**
      * 쿠키 cartId 추출 메서드.
      *
