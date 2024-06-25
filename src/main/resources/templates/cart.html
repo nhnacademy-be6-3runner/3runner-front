@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shopping Cart</title>
-    <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
     <style>
         .menu-desktop {
             background-color: white;
@@ -54,28 +57,32 @@
 
 <main class="container my-5">
     <div class="cart-header d-flex justify-content-between align-items-center">
-        <h2>My Cart (3 items)</h2>
-        <button class="btn btn-danger">Empty Cart</button>
+        <h2>My Cart (<span th:text="${#lists.size(response)}"></span> items)</h2>
+<!--        <button class="btn btn-danger">Empty Cart</button>-->
     </div>
     <br>
     <div class="cart-items">
-        <div class="cart-item d-flex justify-content-between align-items-center">
+        <div th:each="item, iter: ${response}" class="cart-item d-flex justify-content-between align-items-center">
             <div class="cart-item-info d-flex">
-                <img src="https://via.placeholder.com/100" alt="Product Image" class="mr-3">
-                <div>
-                    <h4>Product 1</h4>
-                    <p>$10.00</p>
-                    <input type="number" class="form-control" value="1" style="width: 80px;">
+                <img th:src="${item.url()}" alt="Product Image" class="mr-3">
+                <div style="margin-left: 10px">
+                    <h4 th:text="${item.title()}">Product</h4>
+                    <p>₩<span th:text="${item.price()}"></span></p>
+                    <div class="d-flex">
+                        <button class="btn btn-outline-secondary" th:attr="onclick='updateQuantity(' + ${iter.index} + ', -1)'">-</button>
+                        <input type="number" class="form-control mx-2" th:value="${item.quantity}" th:id="'quantity-' + ${iter.index}" style="width: 80px;" readonly>
+                        <button class="btn btn-outline-secondary" th:attr="onclick='updateQuantity(' + ${iter.index} + ', 1)'">+</button>
+                    </div>
                 </div>
             </div>
             <div class="cart-item-actions">
                 <button class="btn btn-outline-danger">Remove</button>
             </div>
         </div>
-        <hr/>
+        <hr th:each="item : ${response}" />
     </div>
     <div class="cart-total d-flex justify-content-end">
-        <h4>Total: $80.00</h4>
+        <h4>Total: ₩<span id="total-price">0.00</span></h4>
     </div>
     <div class="cart-footer">
         <button class="btn btn-primary">Proceed to Checkout</button>
@@ -86,5 +93,108 @@
         &copy; 2024 3runner
     </div>
 </footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        calculateTotal();
+    });
+    function getCookie(name) {
+        let cookieArr = document.cookie.split(";");
+        for (let i = 0; i < cookieArr.length; i++) {
+            let cookiePair = cookieArr[i].split("=");
+            if (name === cookiePair[0].trim()) {
+                return decodeURIComponent(cookiePair[1]);
+            }
+        }
+        return null;
+    }
+    function updateQuantity(index, delta) {
+        var quantityInput = document.getElementById('quantity-'+index);
+        var newQuantity = parseInt(quantityInput.value) + delta;
+        if (newQuantity < 1) {
+            newQuantity = 1;
+        }
+        quantityInput.value = newQuantity;
+
+        var url = '/api/bookstore/carts/' + index + '/update';
+        var method = 'PUT';
+        var cookie = getCookie('your_cookie_name'); // 쿠키 이름을 적절히 수정하세요
+
+        if (!cookie) {
+            url = '/api/bookstore/carts/' + index + '/create';
+            method = 'POST';
+        }
+
+        // Update server-side quantity here
+        // For example, using an AJAX request:
+        // $.ajax({
+        //     url: '/api/bookstore/carts/' + index + '/update',
+        //     type: 'PUT',
+        //     contentType: 'application/json',
+        //     data: JSON.stringify({ quantity: newQuantity }),
+        //     success: function(response) {
+        //         // Optionally handle success
+        //         console.log(response);
+        //     },
+        //     error: function(xhr, status, error) {
+        //         // Optionally handle error
+        //         console.error(error);
+        //     }
+        // });
+
+        calculateTotal();
+    }
+
+    function calculateTotal() {
+        var total = 0.0;
+        var cartItems = document.querySelectorAll('.cart-item');
+        cartItems.forEach(function(item, index) {
+            var price = parseFloat(item.querySelector('p span').innerText);
+            var quantity = parseInt(item.querySelector('input').value);
+
+
+            total += price * quantity;
+        });
+
+        if (isNaN(total)) {
+            total = 0.0;
+        }
+
+        document.getElementById('total-price').innerText = total.toFixed(2);
+    }
+    function removeItem(index) {
+        // Implement item removal logic here
+        // $.ajax({
+        //     url: '/api/bookstore/carts/' + index,
+        //     type: 'DELETE',
+        //     success: function(response) {
+        //         // Optionally handle success
+        //         console.log(response);
+        //         location.reload();
+        //     },
+        //     error: function(xhr, status, error) {
+        //         // Optionally handle error
+        //         console.error(error);
+        //     }
+        // });
+    }
+
+    function emptyCart() {
+        // Implement empty cart logic here
+        // $.ajax({
+        //     url: '/api/bookstore/carts/empty',
+        //     type: 'POST',
+        //     success: function(response) {
+        //         // Optionally handle success
+        //         console.log(response);
+        //         location.reload();
+        //     },
+        //     error: function(xhr, status, error) {
+        //         // Optionally handle error
+        //         console.error(error);
+        //     }
+        // });
+    }
+</script>
 </body>
 </html>
