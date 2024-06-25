@@ -33,6 +33,10 @@ public class TagController {
     private TagService tagService;
 
 
+    /**
+     * @author 한민기
+     * @return 모든 태그 가져오기
+     */
     @GetMapping
     public ApiResponse<List<TagResponse>> getAllTags() {
         return ApiResponse.success(tagService.getAllTags());

@@ -1,6 +1,5 @@
 package com.nhnacademy.bookstore.category.repository;
 
-import com.nhnacademy.bookstore.book.category.dto.response.CategoryChildrenResponse;
 import com.nhnacademy.bookstore.book.category.dto.response.CategoryParentWithChildrenResponse;
 import com.nhnacademy.bookstore.book.category.dto.response.CategoryResponse;
 import com.nhnacademy.bookstore.book.category.repository.CategoryRepository;
@@ -8,8 +7,6 @@ import com.nhnacademy.bookstore.book.category.repository.impl.CategoryCustomRepo
 import com.nhnacademy.bookstore.entity.category.Category;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
-import java.util.List;
-import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,6 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 @Slf4j
 @DataJpaTest
 @Import(CategoryCustomRepositoryImpl.class)
@@ -26,41 +27,46 @@ public class CategoryRepositoryTest {
 
     @Autowired
     private CategoryRepository categoryRepository;
-    private List<Category> categoryList;
-    private Category category;
 
     @Autowired
     private EntityManager entityManager;
 
     private JPAQueryFactory queryFactory;
 
+    private List<Category> categoryList;
+
     @BeforeEach
     void setUp() {
         queryFactory = new JPAQueryFactory(entityManager);
 
-        Category parent1 = new Category();
-        parent1.setName("부모 카테고리1");
+        // 최상위 부모 카테고리 생성
+        Category grandParentCategory = new Category();
+        grandParentCategory.setName("최상위 부모 카테고리");
 
-        Category parent2 = new Category();
-        parent2.setName("부모 카테고리2");
+        // 2번째 계층 카테고리 생성
+        Category parentCategory1 = new Category();
+        parentCategory1.setName("부모 카테고리1");
+        parentCategory1.setParent(grandParentCategory);
 
-        Category children1 = new Category();
-        children1.setName("자식 카테고리1");
-        children1.setParent(parent1);
+        Category parentCategory2 = new Category();
+        parentCategory2.setName("부모 카테고리2");
+        parentCategory2.setParent(grandParentCategory);
 
-        Category children2 = new Category();
-        children2.setName("자식 카테고리2");
-        children2.setParent(parent1);
+        // 3번째 계층 카테고리 생성
+        Category childCategory1 = new Category();
+        childCategory1.setName("자식 카테고리1");
+        childCategory1.setParent(parentCategory1);
 
-        Category children3 = new Category();
-        children3.setName("자식 카테고리3");
-        children3.setParent(parent2);
+        Category childCategory2 = new Category();
+        childCategory2.setName("자식 카테고리2");
+        childCategory2.setParent(parentCategory2);
 
-        parent1.addChildren(children1);
-        parent1.addChildren(children2);
-        parent2.addChildren(children3);
+        // 계층 관계 설정
+        grandParentCategory.setChildren(new ArrayList<>(List.of(parentCategory1, parentCategory2)));
+        parentCategory1.setChildren(new ArrayList<>(List.of(childCategory1)));
+        parentCategory2.setChildren(new ArrayList<>(List.of(childCategory2)));
 
-        this.categoryList = List.of(parent1, parent2, children1, children2, children3);
+        this.categoryList = new ArrayList<>(List.of(grandParentCategory, parentCategory1, parentCategory2, childCategory1, childCategory2));
     }
 
     @DisplayName("카테고리 저장 테스트")
@@ -143,7 +149,7 @@ public class CategoryRepositoryTest {
         List<CategoryResponse> parentCategories = categoryRepository.findTopCategories();
         log.info("size = {}", parentCategories.size());
 
-        Assertions.assertEquals(2, parentCategories.size());
+        Assertions.assertEquals(1, parentCategories.size());
     }
 
     @DisplayName("계층 카테고리 조회 테스트")
@@ -152,25 +158,31 @@ public class CategoryRepositoryTest {
         categoryRepository.saveAll(categoryList);
         List<CategoryParentWithChildrenResponse> parentWithChildrenCategories = categoryRepository.findParentWithChildrenCategories();
 
-        Assertions.assertEquals(2, parentWithChildrenCategories.size());
+        Assertions.assertEquals(1, parentWithChildrenCategories.size());
 
-        for (CategoryParentWithChildrenResponse parentWithChildren : parentWithChildrenCategories) {
-            if (parentWithChildren.getName().equals("부모 카테고리1")) {
-                List<CategoryChildrenResponse> children1 = parentWithChildren.getChildrenList();
-                Assertions.assertEquals(2, children1.size());
-                for (CategoryChildrenResponse child : children1) {
-                    Assertions.assertTrue(
-                            child.getName().equals("자식 카테고리1") || child.getName().equals("자식 카테고리2"));
-                }
-            } else if (parentWithChildren.getName().equals("부모 카테고리2")) {
-                List<CategoryChildrenResponse> children2 = parentWithChildren.getChildrenList();
-                Assertions.assertEquals(1, children2.size());
-                for (CategoryChildrenResponse child : children2) {
-                    Assertions.assertEquals("자식 카테고리3", child.getName());
-                }
-            } else {
-                Assertions.fail("예상하지 못한 부모 카테고리 이름: " + parentWithChildren.getName());
-            }
-        }
+        CategoryParentWithChildrenResponse grandParentResponse = parentWithChildrenCategories.get(0);
+        Assertions.assertEquals("최상위 부모 카테고리", grandParentResponse.getName());
+        Assertions.assertNotNull(grandParentResponse.getChildrenList());
+        Assertions.assertEquals(2, grandParentResponse.getChildrenList().size());
+
+        CategoryParentWithChildrenResponse parentResponse1 = grandParentResponse.getChildrenList().get(0);
+        Assertions.assertEquals("부모 카테고리1", parentResponse1.getName());
+        Assertions.assertNotNull(parentResponse1.getChildrenList());
+        Assertions.assertEquals(1, parentResponse1.getChildrenList().size());
+
+        CategoryParentWithChildrenResponse parentResponse2 = grandParentResponse.getChildrenList().get(1);
+        Assertions.assertEquals("부모 카테고리2", parentResponse2.getName());
+        Assertions.assertNotNull(parentResponse2.getChildrenList());
+        Assertions.assertEquals(1, parentResponse2.getChildrenList().size());
+
+        CategoryParentWithChildrenResponse childResponse1 = parentResponse1.getChildrenList().get(0);
+        Assertions.assertEquals("자식 카테고리1", childResponse1.getName());
+        Assertions.assertNotNull(childResponse1.getChildrenList());
+        Assertions.assertTrue(childResponse1.getChildrenList().isEmpty());
+
+        CategoryParentWithChildrenResponse childResponse2 = parentResponse2.getChildrenList().get(0);
+        Assertions.assertEquals("자식 카테고리2", childResponse2.getName());
+        Assertions.assertNotNull(childResponse2.getChildrenList());
+        Assertions.assertTrue(childResponse2.getChildrenList().isEmpty());
     }
 }

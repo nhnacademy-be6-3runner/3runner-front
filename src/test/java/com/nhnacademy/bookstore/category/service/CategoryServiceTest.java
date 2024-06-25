@@ -2,30 +2,28 @@ package com.nhnacademy.bookstore.category.service;
 
 import com.nhnacademy.bookstore.book.category.dto.request.CreateCategoryRequest;
 import com.nhnacademy.bookstore.book.category.dto.request.UpdateCategoryRequest;
+import com.nhnacademy.bookstore.book.category.dto.response.CategoryParentWithChildrenResponse;
 import com.nhnacademy.bookstore.book.category.exception.CategoryNotFoundException;
 import com.nhnacademy.bookstore.book.category.exception.DuplicateCategoryNameException;
 import com.nhnacademy.bookstore.book.category.repository.CategoryRepository;
 import com.nhnacademy.bookstore.book.category.service.impl.CategoryServiceImpl;
 import com.nhnacademy.bookstore.entity.category.Category;
 import lombok.extern.slf4j.Slf4j;
-import static org.assertj.core.api.Assertions.assertThat;
-
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -38,13 +36,6 @@ class CategoryServiceTest {
 
     @InjectMocks
     private CategoryServiceImpl categoryService;
-
-    Category parent;
-
-    @BeforeEach
-    void setUp() {
-
-    }
 
     @DisplayName("상위 카테고리 생성 테스트")
     @Test
@@ -100,5 +91,63 @@ class CategoryServiceTest {
 
         assertThatThrownBy(() -> categoryService.deleteCategory(id))
                 .isInstanceOf(CategoryNotFoundException.class);
+    }
+
+    @DisplayName("부모 ID로 자식 카테고리 조회 테스트")
+    @Test
+    void testGetChildrenCategoriesByParentId() {
+        long parentId = 1L;
+
+        Category parentCategory = new Category();
+        parentCategory.setId(parentId);
+        parentCategory.setName("Parent Category");
+
+        Category childCategory1 = new Category();
+        childCategory1.setId(2L);
+        childCategory1.setName("Child Category 1");
+        childCategory1.setParent(parentCategory);
+
+        Category childCategory2 = new Category();
+        childCategory2.setId(3L);
+        childCategory2.setName("Child Category 2");
+        childCategory2.setParent(parentCategory);
+
+        Category grandChildCategory = new Category();
+        grandChildCategory.setId(4L);
+        grandChildCategory.setName("Grand Child Category");
+        grandChildCategory.setParent(childCategory1);
+
+        childCategory1.setChildren(Collections.singletonList(grandChildCategory));
+        parentCategory.setChildren(Arrays.asList(childCategory1, childCategory2));
+
+        when(categoryRepository.existsById(parentId)).thenReturn(true);
+        when(categoryRepository.findChildrenCategoriesByParentId(parentId)).thenReturn(
+                Arrays.asList(
+                        new CategoryParentWithChildrenResponse(childCategory1.getId(), childCategory1.getName(),
+                                Collections.singletonList(new CategoryParentWithChildrenResponse(grandChildCategory.getId(), grandChildCategory.getName(), Collections.emptyList()))),
+                        new CategoryParentWithChildrenResponse(childCategory2.getId(), childCategory2.getName(), Collections.emptyList())
+                )
+        );
+
+        List<CategoryParentWithChildrenResponse> result = categoryService.getChildrenCategoriesByParentId(parentId);
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
+
+        // 자식 카테고리 1 검증
+        CategoryParentWithChildrenResponse childResponse1 = result.get(0);
+        assertEquals("Child Category 1", childResponse1.getName());
+
+        // 자식 카테고리 1의 자식 (손자 카테고리) 검증
+        assertEquals(1, childResponse1.getChildrenList().size());
+        CategoryParentWithChildrenResponse grandChildResponse = childResponse1.getChildrenList().get(0);
+        assertEquals("Grand Child Category", grandChildResponse.getName());
+
+        // 자식 카테고리 2 검증
+        CategoryParentWithChildrenResponse childResponse2 = result.get(1);
+        assertEquals("Child Category 2", childResponse2.getName());
+
+        verify(categoryRepository, times(1)).existsById(parentId);
+        verify(categoryRepository, times(1)).findChildrenCategoriesByParentId(parentId);
     }
 }
