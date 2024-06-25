@@ -16,6 +16,7 @@ import com.nhnacademy.bookstore.entity.book.Book;
 import com.nhnacademy.bookstore.entity.bookCategory.BookCategory;
 import com.nhnacademy.bookstore.entity.category.Category;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -27,30 +28,29 @@ import java.util.stream.Collectors;
 
 /**
  * 도서-카테고리 service
+ *
  * @author 김은비
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class BookCategoryServiceImpl implements BookCategoryService {
+
     private final BookRepository bookRepository;
     private final CategoryRepository categoryRepository;
     private final BookCategoryRepository bookCategoryRepository;
 
     /**
      * 도서-카테고리 생성 메서드
+     *
      * @param dto 생성 내용
      */
     @Override
     @Transactional(propagation = Propagation.MANDATORY)
     public void createBookCategory(CreateBookCategoryRequest dto) {
-        Book book = bookRepository.findById(dto.bookId())
-                .orElseThrow(() -> new BookDoesNotExistException("존재하지 않는 책입니다."));
-
-        List<Category> categories = categoryRepository.findAllById(dto.categoryIds());
-        if (categories.size() != dto.categoryIds().size()) {
-            throw new CategoryNotFoundException("존재하지 않는 카테고리입니다.");
-        }
+        Book book = getBookById(dto.bookId());
+        List<Category> categories = getCategoriesByIds(dto.categoryIds());
 
         for (Category category : categories) {
             if (bookCategoryRepository.existsByBookAndCategory(book, category)) {
@@ -58,14 +58,17 @@ public class BookCategoryServiceImpl implements BookCategoryService {
             }
         }
 
-        List<BookCategory> bookCategories = categories.stream()
-                .map(category -> BookCategory.create(book, category))
-                .collect(Collectors.toList());
-        bookCategoryRepository.saveAll(bookCategories);
+        for (Category category : categories) {
+            BookCategory bookCategory = BookCategory.create(book, category);
+            book.addBookCategory(bookCategory);
+        }
+
+        bookRepository.save(book);
     }
 
     /**
      * 도서-카테고리 수정 메서드
+     *
      * @param dto 수정 내용
      */
     @Override
@@ -74,31 +77,46 @@ public class BookCategoryServiceImpl implements BookCategoryService {
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new BookDoesNotExistException("존재하지 않는 도서입니다."));
         List<Category> categories = categoryRepository.findAllById(dto.categoryIds());
+        log.info("Requested categories: {}", dto.categoryIds());
+        log.info("Found categories: {}", categories.stream().map(Category::getId).collect(Collectors.toList()));
         if (categories.size() != dto.categoryIds().size()) {
             throw new CategoryNotFoundException("존재하지 않는 카테고리입니다.");
         }
+
         // 기존의 모든 카테고리 삭제
-        bookCategoryRepository.deleteByBook(book);
-        List<BookCategory> newBookCategories = categories.stream()
-                .map(category -> BookCategory.create(book, category))
-                .collect(Collectors.toList());
-        bookCategoryRepository.saveAll(newBookCategories);
+        book.getBookCategoryList().clear();
+        log.info("book categories : {} ", book.getBookCategoryList().size());
+
+
+        for (Category category : categories) {
+            BookCategory bookCategory = new BookCategory();
+            bookCategory.setBook(book);
+            bookCategory.setCategory(category);
+            book.addBookCategory(bookCategory);
+            log.info("카테고리 추가: {} to book: {}", category.getId(), bookId);
+        }
+
+        bookRepository.save(book);
+        log.info("Updated book categories for bookId: {}", bookId);
+        log.info("categories : {}", book.getBookCategoryList().size());
     }
 
-    /**
-     * 도서-카테고리 삭제
-     * @param id 도서-카테고리 아이디
-     */
+
     @Override
     public void deletedBookCategory(Long id) {
-        if (!bookCategoryRepository.existsById(id)) {
-           throw new BookCategoryNotFoundException("도서에 등록되지 않은 카테고리입니다.");
-        }
+        BookCategory bookCategory = bookCategoryRepository.findById(id)
+                .orElseThrow(() -> new BookCategoryNotFoundException("도서에 등록되지 않은 카테고리입니다."));
+
+        Book book = bookCategory.getBook();
+        book.removeBookCategory(bookCategory);
+
         bookCategoryRepository.deleteById(id);
     }
 
+
     /**
      * 도서에 해당하는 카테고리 목록 불러오는 메서드
+     *
      * @param bookId 책 아이디
      * @return 책에 해당하는 카테고리 list
      */
@@ -109,16 +127,31 @@ public class BookCategoryServiceImpl implements BookCategoryService {
 
     /**
      * 카테고리에 해당하는 도서 목록 불러오는 메서드
+     *
      * @param categoryIds 카테고리 아이디 목록
-     * @param pageable 페이지
+     * @param pageable    페이지
      * @return 카테고리에 해당하는 도서 list
      */
     @Override
-    public Page<BookListResponse> readCategoriesWithBookList(List<Long> categoryIds, Pageable pageable) {
+    public Page<BookListResponse> readCategoriesWithBookList(List<Long> categoryIds,
+                                                             Pageable pageable) {
         List<Category> categories = categoryRepository.findAllById(categoryIds);
         if (categories.size() != categoryIds.size()) {
             throw new CategoryNotFoundException("존재하지 않는 카테고리가 있습니다.");
         }
         return bookCategoryRepository.categoriesWithBookList(categoryIds, pageable);
+    }
+
+    private Book getBookById(Long bookId) {
+        return bookRepository.findById(bookId)
+                .orElseThrow(() -> new BookDoesNotExistException("존재하지 않는 책입니다."));
+    }
+
+    private List<Category> getCategoriesByIds(List<Long> categoryIds) {
+        List<Category> categories = categoryRepository.findAllById(categoryIds);
+        if (categories.size() != categoryIds.size()) {
+            throw new CategoryNotFoundException("존재하지 않는 카테고리입니다.");
+        }
+        return categories;
     }
 }

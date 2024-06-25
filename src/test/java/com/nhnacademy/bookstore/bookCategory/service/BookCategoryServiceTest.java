@@ -6,14 +6,14 @@ import com.nhnacademy.bookstore.book.book.repository.BookRepository;
 import com.nhnacademy.bookstore.book.bookCartegory.dto.request.CreateBookCategoryRequest;
 import com.nhnacademy.bookstore.book.bookCartegory.dto.request.UpdateBookCategoryRequest;
 import com.nhnacademy.bookstore.book.bookCartegory.dto.response.BookCategoriesResponse;
-import com.nhnacademy.bookstore.book.bookCartegory.exception.BookCategoryAlreadyExistsException;
-import com.nhnacademy.bookstore.book.bookCartegory.exception.BookCategoryNotFoundException;
 import com.nhnacademy.bookstore.book.bookCartegory.repository.BookCategoryRepository;
 import com.nhnacademy.bookstore.book.bookCartegory.service.impl.BookCategoryServiceImpl;
 import com.nhnacademy.bookstore.book.category.exception.CategoryNotFoundException;
 import com.nhnacademy.bookstore.book.category.repository.CategoryRepository;
 import com.nhnacademy.bookstore.entity.book.Book;
+import com.nhnacademy.bookstore.entity.bookCategory.BookCategory;
 import com.nhnacademy.bookstore.entity.category.Category;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,6 +36,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
+@Slf4j
 @ExtendWith(MockitoExtension.class)
 class BookCategoryServiceTest {
 
@@ -49,7 +50,7 @@ class BookCategoryServiceTest {
     private BookCategoryRepository bookCategoryRepository;
 
     @InjectMocks
-    private BookCategoryServiceImpl bookCategoryService; // 구현체를 명시적으로 주입
+    private BookCategoryServiceImpl bookCategoryService;
 
     private Book book;
     private Category category;
@@ -57,10 +58,11 @@ class BookCategoryServiceTest {
 
     @BeforeEach
     void setUp() {
-        category = Category.builder()
-                .name("테스트 카테고리")
-                .build();
+        category = new Category();
+        category.setName("테스트 카테고리");
+
         categoryList = List.of(category);
+
         book = new Book(
                 "Test Title",
                 "Test Description",
@@ -77,6 +79,8 @@ class BookCategoryServiceTest {
                 null,
                 null
         );
+
+        book.getBookCategoryList().clear();
     }
 
     @DisplayName("도서-카테고리 생성 테스트")
@@ -90,48 +94,65 @@ class BookCategoryServiceTest {
 
         bookCategoryService.createBookCategory(dto);
 
-        verify(bookCategoryRepository, times(1)).saveAll(anyList());
+        verify(bookRepository, times(1)).save(book);
+        assertTrue(book.getBookCategoryList().stream()
+                .anyMatch(bc -> bc.getCategory().equals(category)));
     }
 
     @DisplayName("도서-카테고리 생성 예외 테스트 - 존재하지 않는 도서")
     @Test
     void createBookCategory_BookDoesNotExist() {
-        CreateBookCategoryRequest dto = new CreateBookCategoryRequest(book.getId(), categoryList.stream().map(Category::getId).collect(Collectors.toList()));
+        CreateBookCategoryRequest dto = new CreateBookCategoryRequest(book.getId(),
+                categoryList.stream().map(Category::getId).collect(Collectors.toList()));
 
         when(bookRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        assertThrows(BookDoesNotExistException.class, () -> bookCategoryService.createBookCategory(dto));
+        assertThrows(BookDoesNotExistException.class,
+                () -> bookCategoryService.createBookCategory(dto));
     }
 
     @DisplayName("도서-카테고리 생성 예외 테스트 - 존재하지 않는 카테고리")
     @Test
     void createBookCategory_CategoryNotFound() {
-        CreateBookCategoryRequest dto = new CreateBookCategoryRequest(book.getId(), categoryList.stream().map(Category::getId).collect(Collectors.toList()));
+        CreateBookCategoryRequest dto = new CreateBookCategoryRequest(book.getId(),
+                categoryList.stream().map(Category::getId).collect(Collectors.toList()));
 
         when(bookRepository.findById(anyLong())).thenReturn(Optional.of(book));
         when(categoryRepository.findAllById(anyList())).thenReturn(Collections.emptyList());
 
-        assertThrows(CategoryNotFoundException.class, () -> bookCategoryService.createBookCategory(dto));
+        assertThrows(CategoryNotFoundException.class,
+                () -> bookCategoryService.createBookCategory(dto));
     }
 
     @DisplayName("도서-카테고리 수정 테스트")
     @Test
     void updateBookCategory() {
-        UpdateBookCategoryRequest dto = new UpdateBookCategoryRequest(book.getId(), categoryList.stream().map(Category::getId).collect(Collectors.toList()));
+        UpdateBookCategoryRequest dto = new UpdateBookCategoryRequest(book.getId(),
+                categoryList.stream().map(Category::getId).collect(Collectors.toList()));
 
         when(bookRepository.findById(anyLong())).thenReturn(Optional.of(book));
         when(categoryRepository.findAllById(anyList())).thenReturn(categoryList);
 
         bookCategoryService.updateBookCategory(book.getId(), dto);
 
-        verify(bookCategoryRepository, times(1)).deleteByBook(any());
-        verify(bookCategoryRepository, times(1)).saveAll(anyList());
+        verify(bookRepository, times(1)).findById(anyLong());
+        verify(categoryRepository, times(1)).findAllById(anyList());
+        verify(bookRepository, times(1)).save(any(Book.class));
+
+        log.info(book.getBookCategoryList().toString());
+        assertEquals(1, book.getBookCategoryList().size());
+        assertEquals(category, book.getBookCategoryList().get(0).getCategory());
     }
 
     @DisplayName("도서-카테고리 삭제 테스트")
     @Test
     void deletedBookCategory() {
-        when(bookCategoryRepository.existsById(anyLong())).thenReturn(true);
+        BookCategory bookCategory = new BookCategory();
+        bookCategory.setBook(book);
+        bookCategory.setCategory(category);
+        book.addBookCategory(bookCategory);
+
+        when(bookCategoryRepository.findById(anyLong())).thenReturn(Optional.of(bookCategory));
 
         bookCategoryService.deletedBookCategory(1L);
 
@@ -141,11 +162,13 @@ class BookCategoryServiceTest {
     @DisplayName("도서에 해당하는 카테고리 목록 조회 테스트")
     @Test
     void readBookWithCategoryList() {
-        List<BookCategoriesResponse> expectedResponse = List.of(new BookCategoriesResponse(category.getName()));
+        List<BookCategoriesResponse> expectedResponse = List.of(
+                new BookCategoriesResponse(category.getName()));
 
         when(bookCategoryRepository.bookWithCategoryList(anyLong())).thenReturn(expectedResponse);
 
-        List<BookCategoriesResponse> actualResponse = bookCategoryService.readBookWithCategoryList(book.getId());
+        List<BookCategoriesResponse> actualResponse = bookCategoryService.readBookWithCategoryList(
+                book.getId());
 
         assertEquals(expectedResponse, actualResponse);
     }
@@ -154,13 +177,18 @@ class BookCategoryServiceTest {
     @Test
     void readCategoriesWithBookList() {
         Pageable pageable = PageRequest.of(0, 10);
-        List<BookListResponse> bookList = List.of(new BookListResponse(book.getTitle(), book.getPrice(), book.getSellingPrice(), book.getAuthor()));
+        List<BookListResponse> bookList = List.of(
+                new BookListResponse(book.getId(), book.getTitle(), book.getPrice(), book.getSellingPrice(),
+                        book.getAuthor(), null));
         Page<BookListResponse> expectedPage = new PageImpl<>(bookList, pageable, bookList.size());
 
         when(categoryRepository.findAllById(anyList())).thenReturn(categoryList);
-        when(bookCategoryRepository.categoriesWithBookList(anyList(), any(Pageable.class))).thenReturn(expectedPage);
+        when(bookCategoryRepository.categoriesWithBookList(anyList(),
+                any(Pageable.class))).thenReturn(
+                expectedPage);
 
-        Page<BookListResponse> actualPage = bookCategoryService.readCategoriesWithBookList(categoryList.stream().map(Category::getId).collect(Collectors.toList()), pageable);
+        Page<BookListResponse> actualPage = bookCategoryService.readCategoriesWithBookList(
+                categoryList.stream().map(Category::getId).collect(Collectors.toList()), pageable);
 
         assertEquals(expectedPage, actualPage);
     }
