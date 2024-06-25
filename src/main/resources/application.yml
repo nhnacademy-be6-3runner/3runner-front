@@ -2,7 +2,7 @@ spring:
   data:
     elasticsearch:
       repositories:
-        enabled: true 
+        enabled: true
       url: localhost:9200
   jpa:
     open-in-view: false
@@ -23,7 +23,7 @@ spring:
     password: tHos2g5st4@XH7mT
 
   profiles:
-    active: dev
+    active: prod
 
   lifecycle:
     timeout-per-shutdown-phase: 30s
