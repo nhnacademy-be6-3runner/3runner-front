@@ -49,12 +49,12 @@ public class Review {
     // 연결
 
     @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ReviewImage> reviewImageSet  = new ArrayList<>();
+    private List<ReviewImage> reviewImageList  = new ArrayList<>();
 
     @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> commentSet  = new ArrayList<>();
+    private List<Comment> commentList = new ArrayList<>();
 
     @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ReviewLike> reviewLikeSet  = new ArrayList<>();
+    private List<ReviewLike> reviewLikeList = new ArrayList<>();
 
 }

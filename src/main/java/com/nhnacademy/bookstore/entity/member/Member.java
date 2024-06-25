@@ -6,6 +6,7 @@ import com.nhnacademy.bookstore.entity.member.enums.Grade;
 import com.nhnacademy.bookstore.entity.member.enums.Status;
 import com.nhnacademy.bookstore.entity.memberAuth.MemberAuth;
 import com.nhnacademy.bookstore.entity.pointRecord.PointRecord;
+import com.nhnacademy.bookstore.entity.purchase.Purchase;
 import com.nhnacademy.bookstore.member.member.dto.request.CreateMemberRequest;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -18,10 +19,9 @@ import java.util.List;
 
 @Entity
 @AllArgsConstructor
-@Getter
 @NoArgsConstructor
+@Getter
 @Setter
-@Builder
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -66,13 +66,16 @@ public class Member {
 
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL,orphanRemoval = true)
-    private List<Address> addressSet = new ArrayList<>();
+    private List<Address> addressList = new ArrayList<>();
 
     @OneToMany(mappedBy = "member",cascade = CascadeType.ALL,orphanRemoval = true)
-    private List<MemberAuth> memberAuthSet = new ArrayList<>();
+    private List<MemberAuth> memberAuthList = new ArrayList<>();
 
     @OneToMany(mappedBy = "member",cascade = CascadeType.ALL,orphanRemoval = true)
-    private List<PointRecord> pointSet = new ArrayList<>();
+    private List<PointRecord> pointRecordList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member",cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<Purchase> purchaseList = new ArrayList<>();
 
     public Member(CreateMemberRequest request){
         this.setPassword(request.password());

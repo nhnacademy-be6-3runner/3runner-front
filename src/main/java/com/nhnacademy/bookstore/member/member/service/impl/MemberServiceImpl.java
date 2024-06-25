@@ -5,8 +5,6 @@ import com.nhnacademy.bookstore.entity.member.Member;
 import com.nhnacademy.bookstore.entity.member.enums.Grade;
 import com.nhnacademy.bookstore.entity.member.enums.Status;
 import com.nhnacademy.bookstore.member.member.dto.request.UpdateMemberRequest;
-import com.nhnacademy.bookstore.member.member.exception.AlreadyExistsEmailException;
-import com.nhnacademy.bookstore.member.member.exception.LoginFailException;
 import com.nhnacademy.bookstore.member.member.exception.MemberNotExistsException;
 import com.nhnacademy.bookstore.member.member.repository.MemberRepository;
 import com.nhnacademy.bookstore.member.member.service.MemberService;
@@ -15,20 +13,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.swing.text.html.Option;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
-import java.util.Optional;
 
 /**
  * The type Member service.
  *
  * @author 오연수, 유지아
  */
+@Transactional
 @RequiredArgsConstructor
 @Service
 public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
+    private final PurchaseRepository purchaseRepository;
 
     /**
      * Save member.
@@ -37,6 +34,7 @@ public class MemberServiceImpl implements MemberService {
      * @return the member -저장 후 member값을 그대로 반환한다.
      * @author 유지아 Save member. -멤버값을 받아와 저장한다.(이메일 중복하는걸로 확인하면 좋을듯)
      */
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Member save(Member member) {
         Optional<Member> findmember = memberRepository.findByEmail(member.getEmail());
         if(findmember.isPresent()){
@@ -52,6 +50,7 @@ public class MemberServiceImpl implements MemberService {
      * @return the member -member 반환
      * @author 유지아 Find by id member. -memberid를 받아 멤버자체를 가져온다.
      */
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Member readById(Long id) {
         Optional<Member> member = memberRepository.findById(id);
         if(member.isPresent()){
@@ -155,5 +154,29 @@ public class MemberServiceImpl implements MemberService {
         Member member = memberRepository.findById(id).orElseThrow(MemberNotExistsException::new);
         member.setLast_login_date(lastLogin);
         return memberRepository.save(member);
+    }
+    /**
+     * 주문 리스트 조회 멤버.
+     *
+     * @param memberId 맴버아이디
+     * @return 리스트
+     */
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public List<ReadPurchaseResponse> getPurchasesByMemberId(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(MemberNotExistsException::new);
+        return purchaseRepository.findByMember(member)
+                .stream()
+                .map(purchase -> ReadPurchaseResponse.builder()
+                                    .id(purchase.getId())
+                                    .status(purchase.getStatus())
+                                    .deliveryPrice(purchase.getDeliveryPrice())
+                                    .totalPrice(purchase.getTotalPrice())
+                                    .createdAt(purchase.getCreatedAt())
+                                    .road(purchase.getRoad())
+                                    .password(purchase.getPassword())
+                                    .memberType(purchase.getMemberType())
+                                    .build()
+                ).collect(Collectors.toList());
     }
 }

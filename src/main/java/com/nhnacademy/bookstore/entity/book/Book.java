@@ -15,8 +15,9 @@ import java.util.List;
 
 @Entity
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @Getter
+@Setter
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -75,20 +76,22 @@ public class Book {
 
     @Setter
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<BookCategory> bookCategorySet = new ArrayList<>();
+    private List<BookCategory> bookCategoryList = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<BookTag> bookTagSet = new ArrayList<>();
+    private List<BookTag> bookTagList = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<BookImage> bookImageSet = new ArrayList<>();
+    private List<BookImage> bookImageList = new ArrayList<>();
+
+
 
     @PrePersist
     protected void onCreate() {
         this.createdAt = ZonedDateTime.now();
     }
 
-    public Book(String title, String description, ZonedDateTime publishedDate, int price, int quantity, int sellingPrice, int viewCount, boolean packing, String author, String isbn, String publisher,  List<BookCategory> bookCategorySet, List<BookTag> bookTagSet, List<BookImage> bookImageSet) {
+    public Book(String title, String description, ZonedDateTime publishedDate, int price, int quantity, int sellingPrice, int viewCount, boolean packing, String author, String isbn, String publisher,  List<BookCategory> bookCategoryList, List<BookTag> bookTagList, List<BookImage> bookImageList) {
         this.title = title;
         this.description = description;
         this.publishedDate = publishedDate;
@@ -100,8 +103,8 @@ public class Book {
         this.author = author;
         this.isbn = isbn;
         this.publisher = publisher;
-        this.bookCategorySet = bookCategorySet;
-        this.bookTagSet = bookTagSet;
-        this.bookImageSet = bookImageSet;
+        this.bookCategoryList = bookCategoryList;
+        this.bookTagList = bookTagList;
+        this.bookImageList = bookImageList;
     }
 }

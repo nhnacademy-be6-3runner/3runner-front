@@ -6,18 +6,22 @@ import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@NoArgsConstructor
+@Getter@Setter
 @Entity
 public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-
     @OneToOne
     private Member member;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "cart", cascade = CascadeType.ALL)
-    private List<BookCart> bookCartSet = new ArrayList<>();
+    private List<BookCart> bookCartList = new ArrayList<>();
 
 }

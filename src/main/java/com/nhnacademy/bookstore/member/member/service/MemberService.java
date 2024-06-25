@@ -7,10 +7,6 @@ import com.nhnacademy.bookstore.entity.member.enums.Status;
 import com.nhnacademy.bookstore.member.member.dto.request.UpdateMemberRequest;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
-import java.util.Optional;
-
 @Service
 public interface MemberService {
     Member save(Member member);
@@ -27,4 +23,6 @@ public interface MemberService {
 
     Member updateGrade(String memberId, Grade grade);
     Member updateLastLogin(String memberId, ZonedDateTime lastLogin);
+
+    List<ReadPurchaseResponse> getPurchasesByMemberId(Long memberId);
 }

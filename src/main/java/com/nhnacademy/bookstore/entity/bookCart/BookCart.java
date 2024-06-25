@@ -5,11 +5,15 @@ import com.nhnacademy.bookstore.entity.cart.Cart;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.ZonedDateTime;
 import java.util.Set;
 
+@NoArgsConstructor
+@Getter@Setter
 @Entity
 public class BookCart {
 
@@ -27,14 +31,16 @@ public class BookCart {
 
 
     // 연결
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Book book;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Cart cart;
 
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = ZonedDateTime.now();
+    public BookCart(int quantity, ZonedDateTime createdAt, Book book, Cart cart) {
+        this.quantity = quantity;
+        this.createdAt = createdAt;
+        this.book = book;
+        this.cart = cart;
     }
 }
