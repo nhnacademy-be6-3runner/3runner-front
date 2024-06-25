@@ -1,5 +1,6 @@
 package com.nhnacademy.bookstore.purchase.purchaseBook.dto.request;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
 
@@ -11,5 +12,8 @@ import lombok.Builder;
  * @param purchaseId
  */
 @Builder
-public record ReadPurchaseIdRequest(Long purchaseId) {
+public record ReadPurchaseIdRequest(@NotNull Long purchaseId,
+									@NotNull int page,
+									@NotNull int size,
+									String sort) {
 }

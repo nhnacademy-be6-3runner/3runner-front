@@ -15,6 +15,10 @@ import com.nhnacademy.bookstore.purchase.purchaseBook.dto.response.ReadPurchaseB
 import com.nhnacademy.bookstore.purchase.purchaseBook.repository.PurchaseBookRepository;
 import com.nhnacademy.bookstore.purchase.purchaseBook.service.PurchaseBookService;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,12 +32,18 @@ import java.util.stream.Collectors;
  * @author 정주혁
  */
 @Transactional
-@RequiredArgsConstructor
 @Service
 public class PurchaseBookServiceImpl implements PurchaseBookService {
     private final PurchaseBookRepository purchaseBookRepository;
     private final PurchaseRepository purchaseRepository;
     private final BookRepository bookRepository;
+
+    @Autowired
+    public PurchaseBookServiceImpl(PurchaseBookRepository purchaseBookRepository,PurchaseRepository purchaseRepository,BookRepository bookRepository) {
+        this.purchaseBookRepository = purchaseBookRepository;
+        this.purchaseRepository = purchaseRepository;
+        this.bookRepository = bookRepository;
+    }
 
 
     /**
@@ -43,9 +53,9 @@ public class PurchaseBookServiceImpl implements PurchaseBookService {
      * @return 해당 주문의 책 리스트를 반환
      */
     @Override
-    public List<ReadPurchaseBookResponse> readBookByPurchaseResponses(ReadPurchaseIdRequest readPurchaseIdRequest){
-        List<PurchaseBook> purchaseBooks = purchaseBookRepository.findAllByPurchaseId(readPurchaseIdRequest.purchaseId());
-        return purchaseBooks.stream().map(purchaseBook->ReadPurchaseBookResponse.builder().
+    public Page<ReadPurchaseBookResponse> readBookByPurchaseResponses(ReadPurchaseIdRequest readPurchaseIdRequest, Pageable pageable){
+        Page<PurchaseBook> purchaseBooks = purchaseBookRepository.findAllByPurchaseId(readPurchaseIdRequest.purchaseId(),pageable);
+        return purchaseBooks.map(purchaseBook->ReadPurchaseBookResponse.builder().
                 readBookByPurchase(ReadBookByPurchase.builder()
                         .title(purchaseBook.getBook().getTitle())
                         .description(purchaseBook.getBook().getDescription())
@@ -59,7 +69,7 @@ public class PurchaseBookServiceImpl implements PurchaseBookService {
                         .build())
                 .quantity(purchaseBook.getQuantity())
                 .price(purchaseBook.getPrice())
-                .build()).collect(Collectors.toList());
+                .build());
     }
 
     /**

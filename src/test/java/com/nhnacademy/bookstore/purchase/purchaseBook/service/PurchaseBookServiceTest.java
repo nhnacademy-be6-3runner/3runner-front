@@ -22,6 +22,10 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -149,21 +153,23 @@ public class PurchaseBookServiceTest {
 
         PurchaseBook purchaseBook = new PurchaseBook(1L, bookMock,10,1000,purchase);
 
-        List<PurchaseBook> purchaseBooks = List.of(purchaseBook);
+        Page<PurchaseBook> purchaseBooks = new PageImpl<>(List.of(purchaseBook));
+
+        Pageable pageable = PageRequest.of(1,10);
 
         // Mock repository method
-        when(purchaseBookRepository.findAllByPurchaseId(readPurchaseIdRequest.purchaseId()))
+        when(purchaseBookRepository.findAllByPurchaseId(readPurchaseIdRequest.purchaseId(),pageable))
                 .thenReturn(purchaseBooks);
 
         // Call service method
-        List<ReadPurchaseBookResponse> responses = purchaseBookService.readBookByPurchaseResponses(readPurchaseIdRequest);
+        Page<ReadPurchaseBookResponse> responses = purchaseBookService.readBookByPurchaseResponses(readPurchaseIdRequest,pageable);
 
         // Verify
         assertNotNull(responses);
-        assertEquals(1, responses.size());
-        assertEquals(10, responses.getFirst().quantity());
-        assertEquals(1000, responses.getFirst().price());
+        assertEquals(1, responses.getSize());
+        assertEquals(10, responses.getContent().getFirst().quantity());
+        assertEquals(1000, responses.getContent().getFirst().price());
 
-        verify(purchaseBookRepository).findAllByPurchaseId(readPurchaseIdRequest.purchaseId());
+        verify(purchaseBookRepository).findAllByPurchaseId(readPurchaseIdRequest.purchaseId(),pageable);
     }
 }

@@ -8,6 +8,9 @@ import com.nhnacademy.bookstore.purchase.purchaseBook.dto.response.ReadPurchaseB
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 /**
  * 주문-책 interface
  *
@@ -17,6 +20,6 @@ public interface PurchaseBookService {
     void deletePurchaseBook(DeletePurchaseBookRequest purchaseBookRequest);
     Long createPurchaseBook(CreatePurchaseBookRequest createPurchaseBookRequest);
     Long updatePurchaseBook(UpdatePurchaseBookRequest updatePurchaseBookRequest);
-    List<ReadPurchaseBookResponse> readBookByPurchaseResponses(ReadPurchaseIdRequest readPurchaseIdRequest);
+    Page<ReadPurchaseBookResponse> readBookByPurchaseResponses(ReadPurchaseIdRequest readPurchaseIdRequest, Pageable pageable);
 
 }

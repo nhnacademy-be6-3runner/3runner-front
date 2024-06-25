@@ -6,6 +6,7 @@ import com.nhnacademy.bookstore.purchase.purchaseBook.dto.request.ReadPurchaseId
 import com.nhnacademy.bookstore.purchase.purchaseBook.dto.request.UpdatePurchaseBookRequest;
 import com.nhnacademy.bookstore.purchase.purchaseBook.dto.response.ReadPurchaseBookResponse;
 import com.nhnacademy.bookstore.purchase.purchaseBook.service.PurchaseBookService;
+import com.nhnacademy.bookstore.purchase.purchaseBook.service.impl.PurchaseBookServiceImpl;
 import com.nhnacademy.bookstore.util.ApiResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,8 +14,14 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.MapBindingResult;
 
@@ -29,10 +36,10 @@ import static org.mockito.Mockito.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class PurchaseBookControllerTest {
+class PurchaseBookControllerTest {
 
     @Mock
-    private PurchaseBookService purchaseBookService;
+    private PurchaseBookServiceImpl purchaseBookService;
 
     @InjectMocks
     private PurchaseBookController purchaseBookController;
@@ -46,25 +53,26 @@ public class PurchaseBookControllerTest {
     @Test
     void testReadPurchaseBook() {
         // Mock data
-        ReadPurchaseIdRequest readPurchaseIdRequest = ReadPurchaseIdRequest.builder().purchaseId(1L).build();
-        List<ReadPurchaseBookResponse> mockResponse = Collections.singletonList(
-                ReadPurchaseBookResponse.builder().quantity(1).price(100).build()
-        );
+        ReadPurchaseIdRequest readPurchaseIdRequest = ReadPurchaseIdRequest.builder().purchaseId(1L).page(1).size(10).sort("Title").build();
+        Page<ReadPurchaseBookResponse> mockResponse = new PageImpl<>(Collections.singletonList(
+            ReadPurchaseBookResponse.builder().quantity(1).price(100).build()
+        ));
+        Pageable pageable = PageRequest.of(1, 10);
 
         // Mock service method
-        when(purchaseBookService.readBookByPurchaseResponses(any(ReadPurchaseIdRequest.class))).thenReturn(mockResponse);
+        when(purchaseBookService.readBookByPurchaseResponses(readPurchaseIdRequest,pageable)).thenReturn(mockResponse);
 
         BindingResult bindingResult = new MapBindingResult(new HashMap<>(), "readPurchaseIdRequest");
 
         // Call controller method
-        ApiResponse<List<ReadPurchaseBookResponse>> responseEntity = purchaseBookController.readPurchaseBook(readPurchaseIdRequest, bindingResult);
+        ApiResponse<Page<ReadPurchaseBookResponse>> responseEntity = purchaseBookController.readPurchaseBook(readPurchaseIdRequest, bindingResult);
 
         // Verify
         assertEquals(200, responseEntity.getHeader().getResultCode());
         assertTrue(responseEntity.getHeader().isSuccessful());
         assertEquals(mockResponse, responseEntity.getBody().getData());
 
-        verify(purchaseBookService).readBookByPurchaseResponses(readPurchaseIdRequest);
+        verify(purchaseBookService).readBookByPurchaseResponses(readPurchaseIdRequest,pageable);
     }
 
     @DisplayName("주문-책 생성")

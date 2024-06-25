@@ -12,6 +12,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +25,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
-
+import static org.mockito.ArgumentMatchers.*;
 
 @DataJpaTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD) // 각 테스트 메서드 실행 후에 컨텍스트를 정리
@@ -97,9 +99,9 @@ public class PurchaseBookRepositoryTest {
     @DisplayName("주문id로 주문-책 조회 쿼리 테스트")
     @Test
     public void testFindAllByPurchaseId() {
-        List<PurchaseBook> purchaseBooks = purchaseBookRepository.findAllByPurchaseId(purchase.getId());
+        Page<PurchaseBook> purchaseBooks = purchaseBookRepository.findAllByPurchaseId(purchase.getId(),any(Pageable.class));
         assertNotNull(purchaseBooks);
-        assertEquals(1, purchaseBooks.size());
-        assertEquals(purchaseBook, purchaseBooks.get(0));
+        assertEquals(1, purchaseBooks.getSize());
+        assertEquals(purchaseBook, purchaseBooks.getContent().getFirst());
     }
 }
