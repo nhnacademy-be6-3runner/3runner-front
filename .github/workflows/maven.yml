@@ -31,18 +31,11 @@ jobs:
       - name: Build with Maven
         run: mvn clean -B package --file pom.xml
 
-#      - name: Run SonarQube
-#        run: mvn clean verify sonar:sonar -Dsonar.projectKey=${{secrets.SONAR_KEY}} -Dsonar.projectName=${{secrets.SONAR_NAME}} -Dsonar.host.url=${{secrets.SONAR_HOST}} -Dsonar.token=${{secrets.SONAR_TOKEN}}
+      - name: Run SonarQube
+        run: mvn clean verify sonar:sonar -Dsonar.projectKey=${{secrets.SONAR_KEY}} -Dsonar.projectName=${{secrets.SONAR_NAME}} -Dsonar.host.url=${{secrets.SONAR_HOST}} -Dsonar.token=${{secrets.SONAR_TOKEN}}
 
-      - name: Log in to Docker Hub
-        run: echo "${{ secrets.DOCKER_PASSWORD }}" | sudo docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-
-      - name: Build Docker image with Docker compose
-        run : sudo docker-compose build
-
-      - name: Push Docker image to Docker Hub
-        run: |
-          sudo docker-compose push
+      - name : Delete file in server
+        run : sudo rm -rf /home/nhnacademy/front
 
       - name: Copy files to server
         uses: appleboy/scp-action@master
@@ -54,23 +47,6 @@ jobs:
           source: "."
           target: "/home/nhnacademy/front"
 
-      - name: Stop existing containers on port 80 and 8080
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SSH_IP }}
-          username: ${{ secrets.SSH_ID }}
-          key: ${{ secrets.SSH_KEY }}
-          port: ${{ secrets.SSH_PORT }}
-          script: |
-            ports_to_check=("80" "8080")
-            for port in "${ports_to_check[@]}"; do
-              existing_container=$(sudo lsof -i:$port -t)
-              if [ ! -z "$existing_container" ]; then
-                sudo docker stop $existing_container
-                sudo docker rm $existing_container
-              fi
-            done
-
       - name: Deploy to server via SSH
         uses: appleboy/ssh-action@master
         with:
@@ -80,6 +56,20 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             cd /home/nhnacademy/front
-            sudo docker-compose pull
-            sudo docker-compose down || true
-            sudo docker-compose up -d
+            
+            sudo docker stop front1 || true
+            sudo docker rm front1 || true
+            sudo docker build -t front-image1 .
+            sudo docker run -d -p 3000:8080 --name front1 --net front_network front-image1
+            
+            sleep 90
+            
+            sudo docker stop front2 || true
+            sudo docker rm front2 || true
+            sudo docker build -t front-image2 .
+            sudo docker run -d -p 3001:8080 --name front2 --net front_network front-image2
+            
+            
+            sudo docker stop nginx || true
+            sudo docker rm nginx || true
+            sudo docker run --name nginx -d -p 80:80 -v ./nginx.conf:/etc/nginx/nginx.conf --net front_network nginx
