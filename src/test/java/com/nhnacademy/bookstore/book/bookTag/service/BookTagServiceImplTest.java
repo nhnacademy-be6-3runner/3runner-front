@@ -22,6 +22,7 @@ import org.springframework.data.domain.Pageable;
 
 import com.nhnacademy.bookstore.book.book.exception.BookDoesNotExistException;
 import com.nhnacademy.bookstore.book.book.repository.BookRepository;
+import com.nhnacademy.bookstore.book.bookTag.dto.request.CreateBookTagListRequest;
 import com.nhnacademy.bookstore.book.bookTag.dto.request.CreateBookTagRequest;
 import com.nhnacademy.bookstore.book.bookTag.dto.request.ReadBookIdRequest;
 import com.nhnacademy.bookstore.book.bookTag.dto.request.ReadTagRequest;
@@ -153,12 +154,10 @@ class BookTagServiceImplTest {
 
 	@Test
 	void createBookTagList_Success() {
-		CreateBookTagRequest bookTagRequest1 = CreateBookTagRequest.builder()
-			.bookId(1L).tagId(1L).build();
-		CreateBookTagRequest bookTagRequest2 = CreateBookTagRequest.builder()
-			.bookId(1L).tagId(2L).build();
-
-		List<CreateBookTagRequest> bookTagRequests = List.of(bookTagRequest1, bookTagRequest2);
+		CreateBookTagListRequest createBookTagListRequest = CreateBookTagListRequest.builder()
+			.bookId(1L)
+			.tagIdList(List.of(1L, 2L))
+			.build();
 
 		when(bookTagRepository.existsByBookIdAndTagId(1L, 1L)).thenReturn(false);
 		when(bookTagRepository.existsByBookIdAndTagId(1L, 2L)).thenReturn(false);
@@ -167,7 +166,7 @@ class BookTagServiceImplTest {
 		when(tagRepository.existsById(anyLong())).thenReturn(true);
 		when(bookTagRepository.save(any(BookTag.class))).thenReturn(new BookTag());
 
-		bookTagService.createBookTag(bookTagRequests);
+		bookTagService.createBookTag(createBookTagListRequest);
 
 		verify(bookTagRepository, times(1)).existsByBookIdAndTagId(1L, 1L);
 		verify(bookTagRepository, times(1)).existsByBookIdAndTagId(1L, 2L);
@@ -175,50 +174,44 @@ class BookTagServiceImplTest {
 
 	@Test
 	void createBookTagList_Fail_1() {
-		CreateBookTagRequest bookTagRequest1 = CreateBookTagRequest.builder()
-			.bookId(1L).tagId(1L).build();
-		CreateBookTagRequest bookTagRequest2 = CreateBookTagRequest.builder()
-			.bookId(1L).tagId(2L).build();
-
-		List<CreateBookTagRequest> bookTagRequests = List.of(bookTagRequest1, bookTagRequest2);
+		CreateBookTagListRequest createBookTagListRequest = CreateBookTagListRequest.builder()
+			.bookId(1L)
+			.tagIdList(List.of(1L, 2L))
+			.build();
 
 		when(bookTagRepository.existsByBookIdAndTagId(1L, 1L)).thenReturn(false);
 
 		when(bookRepository.existsById(anyLong())).thenReturn(false);
 
-		assertThrows(BookDoesNotExistException.class, () -> bookTagService.createBookTag(bookTagRequests));
+		assertThrows(BookDoesNotExistException.class, () -> bookTagService.createBookTag(createBookTagListRequest));
 	}
 
 	@Test
 	void createBookTagList_Fail_2() {
-		CreateBookTagRequest bookTagRequest1 = CreateBookTagRequest.builder()
-			.bookId(1L).tagId(1L).build();
-		CreateBookTagRequest bookTagRequest2 = CreateBookTagRequest.builder()
-			.bookId(1L).tagId(2L).build();
-
-		List<CreateBookTagRequest> bookTagRequests = List.of(bookTagRequest1, bookTagRequest2);
+		CreateBookTagListRequest createBookTagListRequest = CreateBookTagListRequest.builder()
+			.bookId(1L)
+			.tagIdList(List.of(1L, 2L))
+			.build();
 
 		when(bookTagRepository.existsByBookIdAndTagId(1L, 1L)).thenReturn(true);
 
 		when(bookRepository.existsById(anyLong())).thenReturn(true);
 
-		assertThrows(AlreadyExistsBookTagException.class, () -> bookTagService.createBookTag(bookTagRequests));
+		assertThrows(AlreadyExistsBookTagException.class, () -> bookTagService.createBookTag(createBookTagListRequest));
 	}
 
 	@Test
 	void createBookTagList_Fail_3() {
-		CreateBookTagRequest bookTagRequest1 = CreateBookTagRequest.builder()
-			.bookId(1L).tagId(1L).build();
-		CreateBookTagRequest bookTagRequest2 = CreateBookTagRequest.builder()
-			.bookId(1L).tagId(2L).build();
-
-		List<CreateBookTagRequest> bookTagRequests = List.of(bookTagRequest1, bookTagRequest2);
+		CreateBookTagListRequest createBookTagListRequest = CreateBookTagListRequest.builder()
+			.bookId(1L)
+			.tagIdList(List.of(1L, 2L))
+			.build();
 
 		when(bookTagRepository.existsByBookIdAndTagId(1L, 1L)).thenReturn(false);
 
 		when(bookRepository.existsById(anyLong())).thenReturn(true);
 		when(tagRepository.existsById(anyLong())).thenReturn(false);
 
-		assertThrows(NotExistsBookTagException.class, () -> bookTagService.createBookTag(bookTagRequests));
+		assertThrows(NotExistsBookTagException.class, () -> bookTagService.createBookTag(createBookTagListRequest));
 	}
 }

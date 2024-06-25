@@ -30,7 +30,7 @@ import lombok.RequiredArgsConstructor;
  * @author 김은비
  */
 @RestController
-@RequestMapping(("/bookstore/api/categories"))
+@RequestMapping(("/bookstore/categories"))
 @RequiredArgsConstructor
 public class CategoryController {
 	private final CategoryService categoryService;

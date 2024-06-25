@@ -16,7 +16,11 @@ import com.nhnacademy.bookstore.book.book.dto.request.CreateBookRequest;
 import com.nhnacademy.bookstore.book.book.dto.response.ReadBookResponse;
 import com.nhnacademy.bookstore.book.book.exception.CreateBookRequestFormException;
 import com.nhnacademy.bookstore.book.book.service.BookService;
+import com.nhnacademy.bookstore.book.bookCartegory.dto.request.CreateBookCategoryRequest;
+import com.nhnacademy.bookstore.book.bookCartegory.service.BookCategoryService;
 import com.nhnacademy.bookstore.book.bookImage.service.BookImageService;
+import com.nhnacademy.bookstore.book.bookTag.dto.request.CreateBookTagListRequest;
+import com.nhnacademy.bookstore.book.bookTag.service.BookTagService;
 import com.nhnacademy.bookstore.entity.bookImage.enums.BookImageType;
 import com.nhnacademy.bookstore.util.ApiResponse;
 
@@ -34,6 +38,8 @@ import lombok.RequiredArgsConstructor;
 public class BookController {
 	private final BookService bookService;
 	private final BookImageService bookImageService;
+	private final BookTagService bookTagService;
+	private final BookCategoryService bookCategoryService;
 
 	/**
 	 * 책 등록 요청 처리.
@@ -50,8 +56,10 @@ public class BookController {
 			throw new CreateBookRequestFormException(bindingResult.getFieldErrors().toString());
 		}
 		long bookId = bookService.createBook(createBookRequest);
-		//TODO 북 카테고리 서비스로 추가
-		//TODO 북 태그 서비스로 추가
+		bookCategoryService.createBookCategory(
+			CreateBookCategoryRequest.builder().bookId(bookId).categoryIds(createBookRequest.categoryIds()).build());
+		bookTagService.createBookTag(
+			CreateBookTagListRequest.builder().bookId(bookId).tagIdList(createBookRequest.categoryIds()).build());
 		bookImageService.createBookImage(createBookRequest.imageList(), bookId, BookImageType.DESCRIPTION);
 		if (!Objects.isNull(createBookRequest.imageName())) {
 			bookImageService.createBookImage(List.of(createBookRequest.imageName()), bookId, BookImageType.MAIN);

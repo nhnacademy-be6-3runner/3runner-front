@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import com.nhnacademy.bookstore.book.bookTag.dto.request.CreateBookTagListRequest;
 import com.nhnacademy.bookstore.book.bookTag.dto.request.CreateBookTagRequest;
 import com.nhnacademy.bookstore.book.bookTag.dto.request.ReadBookIdRequest;
 import com.nhnacademy.bookstore.book.bookTag.dto.request.ReadTagRequest;
@@ -23,6 +24,6 @@ public interface BookTagService {
 
 	public Long createBookTag(CreateBookTagRequest createBookTagRequest);
 
-	public void createBookTag(List<CreateBookTagRequest> createBookTagRequestList);
+	public void createBookTag(CreateBookTagListRequest createBookTagListRequest);
 
 }

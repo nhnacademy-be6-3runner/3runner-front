@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.nhnacademy.bookstore.book.book.exception.BookDoesNotExistException;
 import com.nhnacademy.bookstore.book.book.repository.BookRepository;
+import com.nhnacademy.bookstore.book.bookTag.dto.request.CreateBookTagListRequest;
 import com.nhnacademy.bookstore.book.bookTag.dto.request.CreateBookTagRequest;
 import com.nhnacademy.bookstore.book.bookTag.dto.request.ReadBookIdRequest;
 import com.nhnacademy.bookstore.book.bookTag.dto.request.ReadTagRequest;
@@ -100,20 +101,20 @@ public class BookTagServiceImpl implements BookTagService {
 	 * @param createBookTagRequestList 만들 book id 와 tag id	의 리스트 형식
 	 */
 	@Override
-	public void createBookTag(List<CreateBookTagRequest> createBookTagRequestList) {
-		if (!bookRepository.existsById(createBookTagRequestList.getFirst().bookId())) {
+	public void createBookTag(CreateBookTagListRequest createBookTagRequestList) {
+		if (!bookRepository.existsById(createBookTagRequestList.bookId())) {
 			throw new BookDoesNotExistException("책이 없습니다.");
 		}
-		for (CreateBookTagRequest bookTagRequest : createBookTagRequestList) {
-			if (bookTagRepository.existsByBookIdAndTagId(bookTagRequest.bookId(), bookTagRequest.tagId())) {
+		for (Long tagId : createBookTagRequestList.tagIdList()) {
+			if (bookTagRepository.existsByBookIdAndTagId(createBookTagRequestList.bookId(), tagId)) {
 				throw new AlreadyExistsBookTagException("이미 해당 책에 달린 태그가 존재합니다.");
 			}
-			if (!tagRepository.existsById(bookTagRequest.tagId())) {
+			if (!tagRepository.existsById(tagId)) {
 				throw new NotExistsBookTagException("태그가 없습니다.");
 			}
 
-			BookTag bookTag = new BookTag(bookRepository.findById(bookTagRequest.bookId()).orElse(null),
-				tagRepository.findById(bookTagRequest.tagId()).orElse(null));
+			BookTag bookTag = new BookTag(bookRepository.findById(createBookTagRequestList.bookId()).orElse(null),
+				tagRepository.findById(tagId).orElse(null));
 
 			bookTagRepository.save(bookTag);
 		}
