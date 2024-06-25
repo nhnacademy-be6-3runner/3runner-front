@@ -2,6 +2,7 @@ package com.nhnacademy.bookstore.purchase.purchaseBook.dto.request;
 
 import lombok.Builder;
 
+
 /**
  * 주문-책 삭제 requestDto
  *
@@ -11,3 +12,4 @@ import lombok.Builder;
 @Builder
 public record DeletePurchaseBookRequest(long purchaseBookId) {
 }
+
