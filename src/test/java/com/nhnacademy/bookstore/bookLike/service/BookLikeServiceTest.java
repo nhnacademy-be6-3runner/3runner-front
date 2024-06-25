@@ -136,8 +136,8 @@ public class BookLikeServiceTest {
     @Test
     public void testFindBookLikeByMemberId() {
         Pageable pageable = PageRequest.of(0, 10);
-        BookListResponse bookListResponse1 = new BookListResponse("책1", 1000, 900, "작가", "url1");
-        BookListResponse bookListResponse2 = new BookListResponse("책2", 1000, 900, "작가r", "url2");
+        BookListResponse bookListResponse1 = new BookListResponse(1, "책1", 1000, 900, "작가", "url1");
+        BookListResponse bookListResponse2 = new BookListResponse(2, "책2", 1000, 900, "작가r", "url2");
         Page<BookListResponse> expectedPage = new PageImpl<>(Arrays.asList(bookListResponse1, bookListResponse2));
         given(bookLikeRepository.findBookLikeByMemberId(1L, pageable)).willReturn(expectedPage);
 
@@ -160,8 +160,8 @@ public class BookLikeServiceTest {
     @Test
     public void testFindBooksOrderByLikes() {
         Pageable pageable = PageRequest.of(0, 10);
-        BookListResponse bookListResponse1 = new BookListResponse("책1", 1000, 900, "작가", "url1");
-        BookListResponse bookListResponse2 = new BookListResponse("책2", 1000, 900, "작가r", "url2");
+        BookListResponse bookListResponse1 = new BookListResponse(1, "책1", 1000, 900, "작가", "url1");
+        BookListResponse bookListResponse2 = new BookListResponse(2, "책2", 1000, 900, "작가r", "url2");
         Page<BookListResponse> expectedPage = new PageImpl<>(Arrays.asList(bookListResponse1, bookListResponse2));
         given(bookLikeRepository.findBooksOrderByLikes(pageable)).willReturn(expectedPage);
 
