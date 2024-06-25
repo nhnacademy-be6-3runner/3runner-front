@@ -13,6 +13,7 @@ import jakarta.validation.constraints.NotNull;
  */
 
 public record UpdateBookCartGuestRequest(
+        long cartId,
         long bookId,
         int quantity) {
 }

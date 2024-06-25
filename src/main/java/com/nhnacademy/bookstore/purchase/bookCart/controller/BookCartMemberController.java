@@ -46,11 +46,7 @@ public class BookCartMemberController {
 		return ApiResponse.createSuccess(bookCartMemberService.createBookCartMember(request));
 	}
 
-	@GetMapping
-	public ApiResponse<List<ReadAllBookCartMemberResponse>> readAllBookCartMember(
-		@RequestHeader(name = "Member-Id") Long userId) {
-		return ApiResponse.success(bookCartMemberService.readAllCartMember(ReadAllBookCartMemberRequest.builder().userId(userId).build()));
-	}
+
 
 	@PutMapping
 	public ApiResponse<Long> updateBookCartMember(@RequestBody @Valid UpdateBookCartMemberRequest request, BindingResult bindingResult) {

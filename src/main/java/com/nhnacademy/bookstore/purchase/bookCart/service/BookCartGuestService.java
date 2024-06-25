@@ -12,7 +12,7 @@ import java.util.List;
  */
 public interface BookCartGuestService {
 
-    Long createBookCart(Long bookId, Long cartId, int quantity);
+    Long createBookCart(Long bookId, int quantity);
 
     Long updateBookCart(Long bookId, Long cartId, int quantity);
 

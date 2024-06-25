@@ -1,4 +1,4 @@
-package com.nhnacademy.bookstore.book.booktag.service.Impl;
+package com.nhnacademy.bookstore.book.bookTag.service.Impl;
 
 import com.nhnacademy.bookstore.book.book.repository.BookRepository;
 import com.nhnacademy.bookstore.book.booktag.dto.request.CreateBookTagRequest;

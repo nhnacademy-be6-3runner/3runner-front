@@ -1,15 +1,13 @@
 package com.nhnacademy.bookstore.purchase.bookCart.controller;
 
-import com.nhnacademy.bookstore.purchase.bookCart.dto.request.CreateBookCartGuestRequest;
-import com.nhnacademy.bookstore.purchase.bookCart.dto.request.DeleteBookCartGuestRequest;
-import com.nhnacademy.bookstore.purchase.bookCart.dto.request.UpdateBookCartGuestRequest;
+import com.nhnacademy.bookstore.purchase.bookCart.dto.request.*;
+import com.nhnacademy.bookstore.purchase.bookCart.dto.response.ReadAllBookCartMemberResponse;
 import com.nhnacademy.bookstore.purchase.bookCart.dto.response.ReadBookCartGuestResponse;
 import com.nhnacademy.bookstore.purchase.bookCart.exception.BookCartArgumentErrorException;
 import com.nhnacademy.bookstore.purchase.bookCart.service.BookCartGuestService;
+import com.nhnacademy.bookstore.purchase.bookCart.service.BookCartMemberService;
 import com.nhnacademy.bookstore.util.ApiResponse;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Objects;
@@ -26,26 +24,30 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/bookstore")
+@RequestMapping("/bookstore/carts")
 public class BookCartGuestController {
     private final BookCartGuestService bookCartGuestService;
+    private final BookCartMemberService bookCartMemberService;
 
     /**
      * 카트 목록 반환 api.
      *
      * @author 김병우
-     * @param request 쿠키 요청
+     * @param cartId 쿠키 요청
      * @return 카트 목록
      */
-    @GetMapping("/carts")
-    public ApiResponse<List<ReadBookCartGuestResponse>> readCart(HttpServletRequest request) {
-        Long cartId = getCartIdFromCookie(request);
+    @GetMapping("/{cartId}")
+    public ApiResponse<List<ReadBookCartGuestResponse>> readCart(
+            @PathVariable("cartId") Long cartId
+    ) {
+        List<ReadBookCartGuestResponse> responses = bookCartGuestService.readAllBookCart(cartId);
+        return ApiResponse.success(responses);
+    }
 
-        if (Objects.isNull(cartId)) {
-            return ApiResponse.success(List.of());
-        }
-
-        return ApiResponse.success(bookCartGuestService.readAllBookCart(cartId));
+    @GetMapping()
+    public ApiResponse<List<ReadAllBookCartMemberResponse>> readAllBookCartMember(
+            @RequestHeader(name = "Member-Id") Long userId) {
+        return ApiResponse.success(bookCartMemberService.readAllCartMember(ReadAllBookCartMemberRequest.builder().userId(userId).build()));
     }
 
     /**
@@ -53,33 +55,21 @@ public class BookCartGuestController {
      *
      * @param createBookCartGuestRequest 카트 추가 폼
      * @param bindingResult 검증
-     * @param request 쿠키 요청
-     * @param response 쿠키 응답
      * @return api 응답
      */
-    @PostMapping("/carts")
-    public ApiResponse<Void> createCart(
+    @PostMapping()
+    public ApiResponse<Long> createCart(
             @Valid @RequestBody CreateBookCartGuestRequest createBookCartGuestRequest,
-            BindingResult bindingResult,
-            HttpServletRequest request,
-            HttpServletResponse response
+            @RequestHeader(value = "Member-Id", required = false)
+            BindingResult bindingResult
         ) {
         if (bindingResult.hasErrors()) {
             throw new BookCartArgumentErrorException("폼 에러");
         }
-        Long cartId = getCartIdFromCookie(request);
-
-        cartId = bookCartGuestService.createBookCart(createBookCartGuestRequest.bookId(),
-                cartId,
+        Long cartId = bookCartGuestService.createBookCart(createBookCartGuestRequest.bookId(),
                 createBookCartGuestRequest.quantity());
 
-        Cookie cartCookie = new Cookie("cartId", cartId.toString());
-        cartCookie.setSecure(true);
-        cartCookie.setPath("/");
-        cartCookie.setMaxAge(60 * 60 * 24 * 7);
-        response.addCookie(cartCookie);
-
-        return ApiResponse.createSuccess(null);
+        return ApiResponse.createSuccess(cartId);
     }
 
     /**
@@ -87,58 +77,38 @@ public class BookCartGuestController {
      *
      * @param updateBookCartGuestRequest 수정 요청 폼
      * @param bindingResult 검증
-     * @param request 쿠키 요청
      * @return api 응답
      */
-    @PutMapping("/carts")
-    public ApiResponse<Void> updateCart(
+    @PutMapping()
+    public ApiResponse<Long> updateCart(
             @Valid @RequestBody UpdateBookCartGuestRequest updateBookCartGuestRequest,
-            BindingResult bindingResult,
-            HttpServletRequest request) {
+            BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             throw new BookCartArgumentErrorException("폼 에러");
         }
-        Long cartId = getCartIdFromCookie(request);
-
         bookCartGuestService.updateBookCart(
             updateBookCartGuestRequest.bookId(),
-            cartId,
+            updateBookCartGuestRequest.cartId(),
             updateBookCartGuestRequest.quantity()
         );
 
-        return ApiResponse.success(null);
+        return ApiResponse.success(updateBookCartGuestRequest.cartId());
     }
 
-    @DeleteMapping("/carts")
-    public ApiResponse<Void> deleteCart(
+    @DeleteMapping()
+    public ApiResponse<Long> deleteCart(
             @Valid @RequestBody DeleteBookCartGuestRequest deleteBookCartGuestRequest,
-            BindingResult bindingResult,
-            HttpServletRequest request
+            BindingResult bindingResult
     ) {
         if (bindingResult.hasErrors()) {
             throw new BookCartArgumentErrorException("폼 에러");
         }
-        Long cartId = getCartIdFromCookie(request);
-        bookCartGuestService.deleteBookCart(deleteBookCartGuestRequest.bookCartId(), cartId);
 
-        return ApiResponse.deleteSuccess(null);
-    }
-    /**
-     * 쿠키 cartId 추출 메서드.
-     *
-     * @param request 쿠키 요청
-     * @return cartId, null 반환
-     */
-    private Long getCartIdFromCookie(HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
-        if (Objects.nonNull(cookies)) {
-            for (Cookie c : cookies) {
-                if (c.getName().equals("cartId")) {
-                    return Long.parseLong(c.getValue());
-                }
-            }
-        }
-        return null;
+        bookCartGuestService.deleteBookCart(
+                deleteBookCartGuestRequest.bookCartId(),
+                deleteBookCartGuestRequest.cartId());
+
+        return ApiResponse.deleteSuccess(deleteBookCartGuestRequest.cartId());
     }
 }

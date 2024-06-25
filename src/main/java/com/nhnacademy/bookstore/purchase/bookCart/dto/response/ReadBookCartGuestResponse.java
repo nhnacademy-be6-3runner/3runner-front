@@ -14,6 +14,7 @@ import lombok.*;
 @Builder
 public record ReadBookCartGuestResponse(
         Long bookCartId,
+        Long bookId,
         int price,
         String url,
         String title,
