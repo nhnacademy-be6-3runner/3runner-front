@@ -11,16 +11,10 @@ import java.time.Duration;
 
 @Configuration
 public class ElasticSearchConfig extends ReactiveElasticsearchConfiguration {
-    @Value("${spring.data.elasticsearch.url}")
-    String url;
-
-
-    // properties 값은 항상 변경될수있음 : bean 생성 따로 -> Value 값 생성해서
-
     @Override
     public ClientConfiguration clientConfiguration(){
         return ClientConfiguration.builder()
-                .connectedTo(url)
+                .connectedTo("115.94.72.198:9200")
                 .usingSsl()
                 .withConnectTimeout(Duration.ofSeconds(5))
                 .withSocketTimeout(Duration.ofSeconds(3))
