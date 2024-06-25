@@ -1,15 +1,12 @@
 package com.nhnacademy.bookstore.book.book.controller;
 
+import com.nhnacademy.bookstore.book.book.dto.request.CreateBookRequest;
 import com.nhnacademy.bookstore.book.book.dto.response.ReadBookResponse;
 import com.nhnacademy.bookstore.book.book.exception.CreateBookRequestFormException;
 import com.nhnacademy.bookstore.book.book.service.BookService;
-import com.nhnacademy.bookstore.entity.book.Book;
-import com.nhnacademy.bookstore.book.book.dto.request.CreateBookRequest;
 import com.nhnacademy.bookstore.util.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +25,7 @@ public class BookController {
      * 책 등록 요청 처리.
      *
      * @param createBookRequest request form
-     * @param bindingResult binding result
+     * @param bindingResult     binding result
      * @return ApiResponse<>
      */
     @PostMapping
@@ -55,5 +52,20 @@ public class BookController {
                 new ApiResponse.Body<ReadBookResponse>(book)
         );
     }
+
+    /**
+     * 메인화면에서 도서 리스트 보여주기
+     *
+     * @return
+     */
+//    @GetMapping
+//    public ApiResponse<BookListResponse> readBookList() {
+//
+//
+//        return new ApiResponse<BookListResponse>(
+//                new ApiResponse.Header(true, 200),
+//                new ApiResponse.Body<BookListResponse>()
+//        )
+//    }
 }
 
