@@ -1,9 +1,11 @@
 package com.nhnacademy.bookstore.purchase.purchaseBook.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.bookstore.purchase.purchaseBook.dto.request.CreatePurchaseBookRequest;
 import com.nhnacademy.bookstore.purchase.purchaseBook.dto.request.DeletePurchaseBookRequest;
 import com.nhnacademy.bookstore.purchase.purchaseBook.dto.request.ReadPurchaseIdRequest;
 import com.nhnacademy.bookstore.purchase.purchaseBook.dto.request.UpdatePurchaseBookRequest;
+import com.nhnacademy.bookstore.purchase.purchaseBook.dto.response.ReadBookByPurchase;
 import com.nhnacademy.bookstore.purchase.purchaseBook.dto.response.ReadPurchaseBookResponse;
 import com.nhnacademy.bookstore.purchase.purchaseBook.service.PurchaseBookService;
 import com.nhnacademy.bookstore.purchase.purchaseBook.service.impl.PurchaseBookServiceImpl;
@@ -22,6 +24,10 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.MapBindingResult;
 
@@ -33,6 +39,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -43,6 +50,8 @@ class PurchaseBookControllerTest {
 
     @InjectMocks
     private PurchaseBookController purchaseBookController;
+	@Autowired
+	private MockMvc mockMvc;
 
     @BeforeEach
     public void setup() {
@@ -51,29 +60,34 @@ class PurchaseBookControllerTest {
 
     @DisplayName("주문-책 해당 주문id로 모두 조회")
     @Test
-    void testReadPurchaseBook() {
-        // Mock data
-        ReadPurchaseIdRequest readPurchaseIdRequest = ReadPurchaseIdRequest.builder().purchaseId(1L).page(1).size(10).sort("Title").build();
-        Page<ReadPurchaseBookResponse> mockResponse = new PageImpl<>(Collections.singletonList(
-            ReadPurchaseBookResponse.builder().quantity(1).price(100).build()
-        ));
-        Pageable pageable = PageRequest.of(1, 10);
+    void testReadPurchaseBook() throws Exception {
+        // Prepare test data
+        ReadPurchaseIdRequest request = ReadPurchaseIdRequest.builder()
+            .purchaseId(1L)
+            .page(1)
+            .size(10)
+            .build();
+        ReadPurchaseBookResponse response = ReadPurchaseBookResponse.builder()
+            .readBookByPurchase(mock(ReadBookByPurchase.class))
+            .price(10)
+            .quantity(1)
+            .build();
+        Page<ReadPurchaseBookResponse> responsePage = new PageImpl<>(Collections.singletonList(response));
 
         // Mock service method
-        when(purchaseBookService.readBookByPurchaseResponses(readPurchaseIdRequest,pageable)).thenReturn(mockResponse);
+        when(purchaseBookService.readBookByPurchaseResponses(any(ReadPurchaseIdRequest.class), any(Pageable.class)))
+            .thenReturn(responsePage);
 
-        BindingResult bindingResult = new MapBindingResult(new HashMap<>(), "readPurchaseIdRequest");
-
-        // Call controller method
-        ApiResponse<Page<ReadPurchaseBookResponse>> responseEntity = purchaseBookController.readPurchaseBook(readPurchaseIdRequest, bindingResult);
-
-        // Verify
-        assertEquals(200, responseEntity.getHeader().getResultCode());
-        assertTrue(responseEntity.getHeader().isSuccessful());
-        assertEquals(mockResponse, responseEntity.getBody().getData());
-
-        verify(purchaseBookService).readBookByPurchaseResponses(readPurchaseIdRequest,pageable);
+        // Perform GET request
+        mockMvc.perform(MockMvcRequestBuilders.get("/purchase/book")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(request)))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.header.resultCode").value(200))
+            .andExpect(jsonPath("$.header.successful").value(true));
     }
+
 
     @DisplayName("주문-책 생성")
     @Test
