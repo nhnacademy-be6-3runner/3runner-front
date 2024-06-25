@@ -11,9 +11,8 @@ import java.util.List;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,6 +20,7 @@ public class Category {
 
     @NotNull
     @Size(min = 1, max = 30)
+    @Setter
     private String name;
 
     @ManyToOne

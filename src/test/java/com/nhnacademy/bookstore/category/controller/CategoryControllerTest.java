@@ -3,8 +3,8 @@ package com.nhnacademy.bookstore.category.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.bookstore.book.category.controller.CategoryController;
 import com.nhnacademy.bookstore.book.category.dto.request.CreateCategoryRequest;
+import com.nhnacademy.bookstore.book.category.dto.response.CategoryChildrenResponse;
 import com.nhnacademy.bookstore.book.category.dto.response.CategoryResponse;
-import com.nhnacademy.bookstore.book.category.dto.response.CategoryChildrenResponse; // 추가
 import com.nhnacademy.bookstore.book.category.service.CategoryService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,11 +16,12 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Collections;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(CategoryController.class)
 public class CategoryControllerTest {
@@ -41,7 +42,7 @@ public class CategoryControllerTest {
                 .name("새 카테고리")
                 .build();
 
-        mockMvc.perform(post("/categories")
+        mockMvc.perform(post("/bookstore/api/categories")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(createCategoryRequest)))
                 .andExpect(status().isCreated())
@@ -59,7 +60,7 @@ public class CategoryControllerTest {
 
         given(categoryService.getCategory(anyLong())).willReturn(categoryResponse);
 
-        mockMvc.perform(get("/categories/{categoryId}", 1L))
+        mockMvc.perform(get("/bookstore/api/categories/{categoryId}", 1L))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.header.successful").value(true))
                 .andExpect(jsonPath("$.header.resultCode").value(200))
@@ -75,9 +76,10 @@ public class CategoryControllerTest {
                 .name("카테고리")
                 .build();
 
-        given(categoryService.getCategories()).willReturn(Collections.singletonList(categoryResponse));
+        given(categoryService.getCategories()).willReturn(
+                Collections.singletonList(categoryResponse));
 
-        mockMvc.perform(get("/categories"))
+        mockMvc.perform(get("/bookstore/api/categories"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.header.successful").value(true))
                 .andExpect(jsonPath("$.header.resultCode").value(200))
@@ -93,9 +95,10 @@ public class CategoryControllerTest {
                 .name("부모 카테고리")
                 .build();
 
-        given(categoryService.getParentCategories()).willReturn(Collections.singletonList(categoryResponse));
+        given(categoryService.getParentCategories()).willReturn(
+                Collections.singletonList(categoryResponse));
 
-        mockMvc.perform(get("/categories/parents"))
+        mockMvc.perform(get("/bookstore/api/categories/parents"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.header.successful").value(true))
                 .andExpect(jsonPath("$.header.resultCode").value(200))
@@ -111,9 +114,10 @@ public class CategoryControllerTest {
                 .name("자식 카테고리")
                 .build();
 
-        given(categoryService.getChildrenCategoriesByParentId(anyLong())).willReturn(Collections.singletonList(childCategoryResponse));
+        given(categoryService.getChildrenCategoriesByParentId(anyLong())).willReturn(
+                Collections.singletonList(childCategoryResponse));
 
-        mockMvc.perform(get("/categories/{parentId}/children", 1L))
+        mockMvc.perform(get("/bookstore/api/categories/{parentId}/children", 1L))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.header.successful").value(true))
                 .andExpect(jsonPath("$.header.resultCode").value(200))

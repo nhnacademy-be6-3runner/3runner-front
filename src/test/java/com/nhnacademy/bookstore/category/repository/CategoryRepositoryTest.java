@@ -8,6 +8,8 @@ import com.nhnacademy.bookstore.book.category.repository.impl.CategoryCustomRepo
 import com.nhnacademy.bookstore.entity.category.Category;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
+import java.util.List;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,14 +19,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
-import java.util.List;
-import java.util.Optional;
-
-
 @Slf4j
 @DataJpaTest
 @Import(CategoryCustomRepositoryImpl.class)
 public class CategoryRepositoryTest {
+
     @Autowired
     private CategoryRepository categoryRepository;
     private List<Category> categoryList;
@@ -38,42 +37,42 @@ public class CategoryRepositoryTest {
     @BeforeEach
     void setUp() {
         queryFactory = new JPAQueryFactory(entityManager);
-        Category parent1 = Category.builder()
-                .name("부모 카데고리1")
-                .parent(null)
-                .build();
-        Category parent2 = Category.builder()
-                .name("부모 카테고리2")
-                .parent(null)
-                .build();
-        Category children1 = Category.builder()
-                .name("자식 카데고리1")
-                .parent(parent1)
-                .build();
-        Category children2 = Category.builder()
-                .name("자식 카데고리2")
-                .parent(parent1)
-                .build();
-        Category children3 = Category.builder()
-                .name("자식 카데고리3")
-                .parent(parent2)
-                .build();
+
+        Category parent1 = new Category();
+        parent1.setName("부모 카테고리1");
+
+        Category parent2 = new Category();
+        parent2.setName("부모 카테고리2");
+
+        Category children1 = new Category();
+        children1.setName("자식 카테고리1");
+        children1.setParent(parent1);
+
+        Category children2 = new Category();
+        children2.setName("자식 카테고리2");
+        children2.setParent(parent1);
+
+        Category children3 = new Category();
+        children3.setName("자식 카테고리3");
+        children3.setParent(parent2);
+
         parent1.addChildren(children1);
         parent1.addChildren(children2);
         parent2.addChildren(children3);
+
         this.categoryList = List.of(parent1, parent2, children1, children2, children3);
     }
 
     @DisplayName("카테고리 저장 테스트")
     @Test
     void saveParentCategoryTest() {
-        category = Category.builder()
-                .name("카테고리")
-                .build();
+        Category category = new Category();
+        category.setName("카테고리");
+
         categoryRepository.save(category);
         Optional<Category> savedCategory = categoryRepository.findById(category.getId());
 
-        savedCategory.get();
+        Assertions.assertTrue(savedCategory.isPresent());
         Assertions.assertEquals("카테고리", savedCategory.get().getName());
         Assertions.assertNull(savedCategory.get().getParent());
     }
@@ -81,14 +80,12 @@ public class CategoryRepositoryTest {
     @DisplayName("자식 카테고리 저장 테스트")
     @Test
     void saveChildCategoryTest() {
-        Category parent = Category.builder()
-                .name("부모 카테고리")
-                .parent(null)
-                .build();
-        Category child = Category.builder()
-                .name("자식 카테고리")
-                .parent(parent)
-                .build();
+        Category parent = new Category();
+        parent.setName("부모 카테고리");
+
+        Category child = new Category();
+        child.setName("자식 카테고리");
+        child.setParent(parent);
 
         categoryRepository.save(parent);
         categoryRepository.save(child);
@@ -114,11 +111,13 @@ public class CategoryRepositoryTest {
     @DisplayName("카테고리 이름 조회 테스트")
     @Test
     void findByCategoryNameTest() {
-        category = Category.builder()
-                .name("카테고리")
-                .build();
+        Category category = new Category();
+        category.setName("카테고리");
+
         categoryRepository.save(category);
         Optional<Category> result = categoryRepository.findByName("카테고리");
+
+        Assertions.assertTrue(result.isPresent());
         Assertions.assertEquals(category.getName(), result.get().getName());
     }
 
@@ -140,6 +139,7 @@ public class CategoryRepositoryTest {
         categoryRepository.saveAll(categoryList);
         log.info("size = {}", categoryList.size()); // size = 5
         log.info("{}", categoryList);
+
         List<CategoryResponse> parentCategories = categoryRepository.findTopCategories();
         log.info("size = {}", parentCategories.size());
 
@@ -155,17 +155,18 @@ public class CategoryRepositoryTest {
         Assertions.assertEquals(2, parentWithChildrenCategories.size());
 
         for (CategoryParentWithChildrenResponse parentWithChildren : parentWithChildrenCategories) {
-            if (parentWithChildren.getName().equals("부모 카데고리1")) {
+            if (parentWithChildren.getName().equals("부모 카테고리1")) {
                 List<CategoryChildrenResponse> children1 = parentWithChildren.getChildrenList();
                 Assertions.assertEquals(2, children1.size());
                 for (CategoryChildrenResponse child : children1) {
-                    Assertions.assertTrue(child.getName().equals("자식 카데고리1") || child.getName().equals("자식 카데고리2"));
+                    Assertions.assertTrue(
+                            child.getName().equals("자식 카테고리1") || child.getName().equals("자식 카테고리2"));
                 }
             } else if (parentWithChildren.getName().equals("부모 카테고리2")) {
                 List<CategoryChildrenResponse> children2 = parentWithChildren.getChildrenList();
                 Assertions.assertEquals(1, children2.size());
                 for (CategoryChildrenResponse child : children2) {
-                    Assertions.assertEquals("자식 카데고리3", child.getName());
+                    Assertions.assertEquals("자식 카테고리3", child.getName());
                 }
             } else {
                 Assertions.fail("예상하지 못한 부모 카테고리 이름: " + parentWithChildren.getName());

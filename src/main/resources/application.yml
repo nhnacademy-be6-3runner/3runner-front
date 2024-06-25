@@ -3,7 +3,14 @@ spring:
     elasticsearch:
       repositories:
         enabled: true
-      url: localhost:9200
+
+    redis:
+      host: 133.186.241.167
+      port: 6379
+      database: 8
+      password: "*N2vya7H@muDTwdNMR!"
+
+
   jpa:
     open-in-view: false
     hibernate:
@@ -29,7 +36,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   profiles:
-    active: prod
+    active: dev
   lifecycle:
     timeout-per-shutdown-phase: 30s
   application:

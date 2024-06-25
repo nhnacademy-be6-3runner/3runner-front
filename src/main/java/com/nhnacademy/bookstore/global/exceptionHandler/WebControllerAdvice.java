@@ -55,7 +55,8 @@ public class WebControllerAdvice {
             CreateBookRequestFormException.class,
             AlreadyBoundException.class,
             PurchaseFormArgumentErrorException.class,
-            PurchaseAlreadyExistException.class
+            PurchaseAlreadyExistException.class,
+            BookCartArgumentErrorException.class
     })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiResponse<ErrorResponseForm> badRequestHandler(Exception ex, Model model) {
@@ -78,6 +79,10 @@ public class WebControllerAdvice {
      * @author 정주혁
      */
     @ExceptionHandler({
+            PurchaseDoesNotExistException.class,
+            BookDoesNotExistException.class,
+            BookCartDoesNotExistException.class,
+            CartDoesNotExistException.class
             PurchaseDoesNotExistException.class,
             NotFindImageException.class
     })

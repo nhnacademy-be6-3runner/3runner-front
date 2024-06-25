@@ -51,6 +51,10 @@ class PurchaseMemberServiceImplTest {
 
         request = CreatePurchaseRequest.builder().deliveryPrice(100).totalPrice(1000).road("dfdfd").build();
     }
+    @AfterEach
+    void tearDown(){
+        memberService.deleteMember(member1.getId().toString());
+    }
 
     @Test
     void createPurchase() {
