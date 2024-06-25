@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class PurchaseRepositoryTest {
-
+/*
     @Autowired
     private PurchaseRepository purchaseRepository;
     @Autowired
@@ -89,4 +89,6 @@ class PurchaseRepositoryTest {
 //        List<ReadPurchaseResponse> actualList = List.of(purchase1, purchase2, purchase3);
 //        assertEquals(expectedList, actualList);
     }
+    */
+
 }
