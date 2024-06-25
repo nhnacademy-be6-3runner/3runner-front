@@ -3,6 +3,7 @@ package com.nhnacademy.bookstore.book.category.service.impl;
 import com.nhnacademy.bookstore.book.category.dto.request.CreateCategoryRequest;
 import com.nhnacademy.bookstore.book.category.dto.request.UpdateCategoryRequest;
 import com.nhnacademy.bookstore.book.category.dto.response.CategoryChildrenResponse;
+import com.nhnacademy.bookstore.book.category.dto.response.CategoryParentWithChildrenResponse;
 import com.nhnacademy.bookstore.book.category.dto.response.CategoryResponse;
 import com.nhnacademy.bookstore.book.category.exception.CategoryNotFoundException;
 import com.nhnacademy.bookstore.book.category.exception.DuplicateCategoryNameException;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author 김은비
@@ -97,6 +99,27 @@ public class CategoryServiceImpl implements CategoryService {
             throw new CategoryNotFoundException("존재하지 않는 카테고리입니다.");
         }
         return categoryRepository.findChildrenCategoriesByParentId(id);
+    }
+
+    @Override
+    public List<CategoryParentWithChildrenResponse> getCategoriesWithChildren() {
+        List<CategoryResponse> topCategories = getParentCategories();
+
+        return topCategories.stream()
+                .map(categoryResponse -> {
+                    Category category = categoryRepository.findById(categoryResponse.getId())
+                            .orElseThrow(() -> new CategoryNotFoundException("카테고리를 찾을 수 없습니다."));
+                    return convertToParentWithChildrenResponse(category);
+                })
+                .collect(Collectors.toList());
+    }
+
+    private CategoryParentWithChildrenResponse convertToParentWithChildrenResponse(Category parent) {
+        List<CategoryChildrenResponse> childrenList = parent.getChildren().stream()
+                .map(child -> new CategoryChildrenResponse(child.getId(), child.getName()))
+                .collect(Collectors.toList());
+
+        return new CategoryParentWithChildrenResponse(parent.getId(), parent.getName(), childrenList);
     }
 }
 

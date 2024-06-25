@@ -2,30 +2,29 @@ package com.nhnacademy.bookstore.category.service;
 
 import com.nhnacademy.bookstore.book.category.dto.request.CreateCategoryRequest;
 import com.nhnacademy.bookstore.book.category.dto.request.UpdateCategoryRequest;
+import com.nhnacademy.bookstore.book.category.dto.response.CategoryChildrenResponse;
+import com.nhnacademy.bookstore.book.category.dto.response.CategoryParentWithChildrenResponse;
+import com.nhnacademy.bookstore.book.category.dto.response.CategoryResponse;
 import com.nhnacademy.bookstore.book.category.exception.CategoryNotFoundException;
 import com.nhnacademy.bookstore.book.category.exception.DuplicateCategoryNameException;
 import com.nhnacademy.bookstore.book.category.repository.CategoryRepository;
 import com.nhnacademy.bookstore.book.category.service.impl.CategoryServiceImpl;
 import com.nhnacademy.bookstore.entity.category.Category;
 import lombok.extern.slf4j.Slf4j;
-import static org.assertj.core.api.Assertions.assertThat;
-
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -100,5 +99,51 @@ class CategoryServiceTest {
 
         assertThatThrownBy(() -> categoryService.deleteCategory(id))
                 .isInstanceOf(CategoryNotFoundException.class);
+    }
+
+    @Test
+    void testGetCategoriesWithChildren() {
+        Category parentCategory = new Category();
+        parentCategory.setId(1L);
+        parentCategory.setName("Parent Category");
+
+        Category childCategory = new Category();
+        childCategory.setId(2L);
+        childCategory.setName("Child Category");
+        childCategory.setParent(parentCategory);
+
+        parentCategory.setChildren(Collections.singletonList(childCategory));
+
+        when(categoryRepository.findTopCategories()).thenReturn(Collections.singletonList(new CategoryResponse(1L, "Parent Category")));
+        when(categoryRepository.findById(1L)).thenReturn(Optional.of(parentCategory));
+
+        List<CategoryParentWithChildrenResponse> result = categoryService.getCategoriesWithChildren();
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        CategoryParentWithChildrenResponse parentResponse = result.get(0);
+        assertEquals(1L, parentResponse.getId());
+        assertEquals("Parent Category", parentResponse.getName());
+        assertNotNull(parentResponse.getChildrenList());
+        assertEquals(1, parentResponse.getChildrenList().size());
+        CategoryChildrenResponse childResponse = parentResponse.getChildrenList().get(0);
+        assertEquals(2L, childResponse.getId());
+        assertEquals("Child Category", childResponse.getName());
+
+        verify(categoryRepository, times(1)).findTopCategories();
+        verify(categoryRepository, times(1)).findById(1L);
+    }
+
+    @Test
+    void testGetCategoriesWithChildren_CategoryNotFound() {
+
+        when(categoryRepository.findTopCategories()).thenReturn(Collections.singletonList(new CategoryResponse(1L, "Parent Category")));
+        when(categoryRepository.findById(1L)).thenReturn(Optional.empty());
+
+
+        assertThrows(CategoryNotFoundException.class, () -> categoryService.getCategoriesWithChildren());
+
+        verify(categoryRepository, times(1)).findTopCategories();
+        verify(categoryRepository, times(1)).findById(1L);
     }
 }
