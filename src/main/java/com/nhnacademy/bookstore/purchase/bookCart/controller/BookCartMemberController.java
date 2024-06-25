@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author 정주혁
  */
 @RestController
-@RequestMapping("/bookstore/cart")
+@RequestMapping("/bookstore/members/carts")
 @RequiredArgsConstructor
 public class BookCartMemberController {
 	private final BookCartMemberService bookCartMemberService;
@@ -54,7 +54,7 @@ public class BookCartMemberController {
 
 	@PutMapping
 	public ApiResponse<Long> updateBookCartMember(@RequestBody @Valid UpdateBookCartMemberRequest request, BindingResult bindingResult) {
-		ValidationUtils.validateBindingResult(bindingResult,new UpdateBookCartMemberRequestFormException());
+		ValidationUtils.validateBindingResult( bindingResult, new UpdateBookCartMemberRequestFormException());
 		return ApiResponse.success(bookCartMemberService.updateBookCartMember(request));
 	}
 
