@@ -57,7 +57,7 @@ public class BookController {
 			bookImageService.createBookImage(List.of(createBookRequest.imageName()), bookId, BookImageType.MAIN);
 		}
 
-		return new ApiResponse<Void>(new ApiResponse.Header(true, 201));
+		return new ApiResponse<>(new ApiResponse.Header(true, 201));
 	}
 
 	@GetMapping("/{bookId}")
