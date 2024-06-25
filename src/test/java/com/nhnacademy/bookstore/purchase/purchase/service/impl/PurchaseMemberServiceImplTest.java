@@ -58,7 +58,7 @@ class PurchaseMemberServiceImplTest {
 
     @Test
     void createPurchase() {
-        when(memberService.findById(1L)).thenReturn(member1);
+        when(memberService.readById(1L)).thenReturn(member1);
         when(purchaseRepository.existsPurchaseByOrderNumber(any(UUID.class))).thenReturn(false);
         when(purchaseRepository.save(any(Purchase.class))).thenReturn(purchase1);
 
@@ -70,7 +70,7 @@ class PurchaseMemberServiceImplTest {
 
     @Test
     void createPurchase_existsOrderNumber() {
-        when(memberService.findById(1L)).thenReturn(member1);
+        when(memberService.readById(1L)).thenReturn(member1);
         when(purchaseRepository.existsPurchaseByOrderNumber(any(UUID.class))).thenReturn(true);
 
         assertThrows(PurchaseAlreadyExistException.class,()->{
@@ -80,7 +80,7 @@ class PurchaseMemberServiceImplTest {
 
     @Test
     void updatePurchase() {
-        when(memberService.findById(1L)).thenReturn(member1);
+        when(memberService.readById(1L)).thenReturn(member1);
         when(purchaseRepository.findByMember(member1)).thenReturn(List.of(purchase1));
         when(purchaseRepository.findById(purchase1.getId())).thenReturn(Optional.of(purchase1));
         when(purchaseRepository.save(any(Purchase.class))).thenReturn(purchase1);
@@ -94,7 +94,7 @@ class PurchaseMemberServiceImplTest {
 
     @Test
     void updatePurchase_AuthorizationThenThrowException() {
-        when(memberService.findById(1L)).thenReturn(member1);
+        when(memberService.readById(1L)).thenReturn(member1);
         when(purchaseRepository.findByMember(member1)).thenReturn(List.of());
         when(purchaseRepository.findById(purchase1.getId())).thenReturn(Optional.of(purchase1));
 
@@ -105,7 +105,7 @@ class PurchaseMemberServiceImplTest {
 
     @Test
     void readPurchase() {
-        when(memberService.findById(1L)).thenReturn(member1);
+        when(memberService.readById(1L)).thenReturn(member1);
         when(purchaseRepository.findByMember(member1)).thenReturn(List.of(purchase1));
         when(purchaseRepository.findById(purchase1.getId())).thenReturn(Optional.of(purchase1));
 
@@ -118,7 +118,7 @@ class PurchaseMemberServiceImplTest {
 
     @Test
     void readPurchase_AuthorizationThenThrowException() {
-        when(memberService.findById(1L)).thenReturn(member1);
+        when(memberService.readById(1L)).thenReturn(member1);
         when(purchaseRepository.findByMember(member1)).thenReturn(List.of());
         when(purchaseRepository.findById(purchase1.getId())).thenReturn(Optional.of(purchase1));
 
@@ -129,7 +129,7 @@ class PurchaseMemberServiceImplTest {
 
     @Test
     void deletePurchase() {
-        when(memberService.findById(1L)).thenReturn(member1);
+        when(memberService.readById(1L)).thenReturn(member1);
         when(purchaseRepository.findByMember(member1)).thenReturn(List.of(purchase1));
         when(purchaseRepository.findById(purchase1.getId())).thenReturn(Optional.of(purchase1));
 
@@ -140,7 +140,7 @@ class PurchaseMemberServiceImplTest {
 
     @Test
     void deletePurchase_AuthorizationThenThrowException() {
-        when(memberService.findById(1L)).thenReturn(member1);
+        when(memberService.readById(1L)).thenReturn(member1);
         when(purchaseRepository.findByMember(member1)).thenReturn(List.of());
         when(purchaseRepository.findById(purchase1.getId())).thenReturn(Optional.of(purchase1));
 
