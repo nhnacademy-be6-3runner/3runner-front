@@ -20,6 +20,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.ZonedDateTime;
@@ -49,8 +50,9 @@ public class MemberController {
      */
     @PostMapping("/bookstore/members")
     public ApiResponse<Void> createMember(@RequestBody @Valid CreateMemberRequest request) {
-
-                Member member = new Member(request);
+                BCryptPasswordEncoder encoder= new BCryptPasswordEncoder();
+                CreateMemberRequest encodedRequest = new CreateMemberRequest(request.email(),encoder.encode(request.password()),request.name(),request.phone(),request.age(),request.birthday());
+                Member member = new Member(encodedRequest);
                 Auth auth = authService.getAuth("USER");
                 memberService.save(member);
                 PointRecord pointRecord = new PointRecord(null, 5000L, 5000L, ZonedDateTime.now(), "회원가입 5000포인트 적립.", member);
