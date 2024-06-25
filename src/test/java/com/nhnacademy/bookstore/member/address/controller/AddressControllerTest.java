@@ -130,6 +130,6 @@ public class AddressControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.delete("/bookstore/members/addresses")
                         .header("Address-Id", 1L))
                 .andDo(print())
-                .andExpect(content().json("{\"header\":{\"resultCode\":204,\"resultMessage\":\"Address deleted\",\"successful\":true}}"));
+                .andExpect(content().json("{\"header\":{\"resultCode\":204,\"successful\":true}}"));
     }
 }

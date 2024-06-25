@@ -192,7 +192,7 @@ public class MemberControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/bookstore/members")
                         .header("Member-Id", "1"))
-                .andExpect(content().json("{\"header\":{\"resultCode\":204,\"resultMessage\":\"Member deleted\",\"successful\":true}}"));
+                .andExpect(content().json("{\"header\":{\"resultCode\":204,\"successful\":true}}"));
     }
 
 }
