@@ -59,7 +59,7 @@ public class BookController {
 		bookCategoryService.createBookCategory(
 			CreateBookCategoryRequest.builder().bookId(bookId).categoryIds(createBookRequest.categoryIds()).build());
 		bookTagService.createBookTag(
-			CreateBookTagListRequest.builder().bookId(bookId).tagIdList(createBookRequest.categoryIds()).build());
+			CreateBookTagListRequest.builder().bookId(bookId).tagIdList(createBookRequest.tagIds()).build());
 		bookImageService.createBookImage(createBookRequest.imageList(), bookId, BookImageType.DESCRIPTION);
 		if (!Objects.isNull(createBookRequest.imageName())) {
 			bookImageService.createBookImage(List.of(createBookRequest.imageName()), bookId, BookImageType.MAIN);

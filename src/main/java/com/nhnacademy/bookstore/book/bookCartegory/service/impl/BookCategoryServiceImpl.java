@@ -158,6 +158,12 @@ public class BookCategoryServiceImpl implements BookCategoryService {
 		return categories;
 	}
 
+	/**
+	 * @author 한민기
+	 *
+	 * @param bookCategoriesResponseList
+	 * @return
+	 */
 	private List<BookCategoriesChildrenResponse> categoryChildrenMade(
 		List<BookCategoriesResponse> bookCategoriesResponseList) {
 
