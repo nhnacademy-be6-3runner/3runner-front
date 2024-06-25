@@ -1,13 +1,31 @@
 package com.nhnacademy.bookstore.global.exceptionHandler;
+import com.nhnacademy.bookstore.book.book.exception.BookDoesNotExistException;
 import com.nhnacademy.bookstore.book.book.exception.CreateBookRequestFormException;
+import com.nhnacademy.bookstore.member.address.exception.AddressFullException;
+import com.nhnacademy.bookstore.member.address.exception.AddressNotExistsException;
+import com.nhnacademy.bookstore.member.member.exception.AlreadyExistsEmailException;
+import com.nhnacademy.bookstore.member.member.exception.LoginFailException;
+import com.nhnacademy.bookstore.member.member.exception.MemberNotExistsException;
+import com.nhnacademy.bookstore.purchase.bookCart.exception.BookCartArgumentErrorException;
+import com.nhnacademy.bookstore.purchase.bookCart.exception.BookCartDoesNotExistException;
+import com.nhnacademy.bookstore.purchase.cart.exception.CartDoesNotExistException;
+import com.nhnacademy.bookstore.purchase.purchase.exception.PurchaseAlreadyExistException;
+import com.nhnacademy.bookstore.purchase.purchase.exception.PurchaseDoesNotExistException;
+import com.nhnacademy.bookstore.purchase.purchase.exception.PurchaseFormArgumentErrorException;
+import com.nhnacademy.bookstore.purchase.purchase.exception.PurchaseNoAuthorizationException;
 import com.nhnacademy.bookstore.util.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.rmi.AlreadyBoundException;
 import java.time.ZonedDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Error Handler Controller
@@ -48,7 +66,7 @@ public class WebControllerAdvice {
             MemberNotExistsException.class,
             AlreadyExistsEmailException.class,
             AddressNotExistsException.class,
-            LoginException.class,
+            LoginFailException.class,
             AddressFullException.class,
             AlreadyBoundException.class,
             PurchaseFormArgumentErrorException.class,
@@ -124,7 +142,7 @@ public class WebControllerAdvice {
             errors.put(fieldName, errorMessage);
         });
         return new ApiResponse<>(
-                new ApiResponse.Header(false,400,"bad request"),
+                new ApiResponse.Header(false,400),
                 new ApiResponse.Body<>(ErrorResponseForm.builder()
                         .title(errors.toString())
                         .status(HttpStatus.BAD_REQUEST.value())

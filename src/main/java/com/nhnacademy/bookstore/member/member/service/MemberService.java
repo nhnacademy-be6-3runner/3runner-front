@@ -1,10 +1,15 @@
 package com.nhnacademy.bookstore.member.member.service;
 
 
+import java.time.ZonedDateTime;
+import java.util.List;
+
 import com.nhnacademy.bookstore.entity.member.Member;
 import com.nhnacademy.bookstore.entity.member.enums.Grade;
 import com.nhnacademy.bookstore.entity.member.enums.Status;
 import com.nhnacademy.bookstore.member.member.dto.request.UpdateMemberRequest;
+import com.nhnacademy.bookstore.purchase.purchase.dto.response.ReadPurchaseResponse;
+
 import org.springframework.stereotype.Service;
 
 @Service

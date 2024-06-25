@@ -5,15 +5,25 @@ import com.nhnacademy.bookstore.entity.member.Member;
 import com.nhnacademy.bookstore.entity.member.enums.Grade;
 import com.nhnacademy.bookstore.entity.member.enums.Status;
 import com.nhnacademy.bookstore.member.member.dto.request.UpdateMemberRequest;
+import com.nhnacademy.bookstore.member.member.exception.AlreadyExistsEmailException;
+import com.nhnacademy.bookstore.member.member.exception.LoginFailException;
 import com.nhnacademy.bookstore.member.member.exception.MemberNotExistsException;
 import com.nhnacademy.bookstore.member.member.repository.MemberRepository;
 import com.nhnacademy.bookstore.member.member.service.MemberService;
+import com.nhnacademy.bookstore.purchase.purchase.dto.response.ReadPurchaseResponse;
+import com.nhnacademy.bookstore.purchase.purchase.repository.PurchaseRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * The type Member service.

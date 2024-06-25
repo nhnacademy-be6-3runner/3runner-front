@@ -3,25 +3,32 @@ package com.nhnacademy.bookstore.member.member.controller;
 
 import com.nhnacademy.bookstore.entity.auth.Auth;
 import com.nhnacademy.bookstore.entity.member.Member;
+import com.nhnacademy.bookstore.entity.member.enums.Status;
 import com.nhnacademy.bookstore.entity.pointRecord.PointRecord;
+import com.nhnacademy.bookstore.member.auth.dto.AuthResponse;
+import com.nhnacademy.bookstore.member.auth.service.impl.AuthServiceImpl;
 import com.nhnacademy.bookstore.member.member.dto.request.CreateMemberRequest;
+import com.nhnacademy.bookstore.member.member.dto.request.LoginRequest;
 import com.nhnacademy.bookstore.member.member.dto.request.UpdateMemberRequest;
 import com.nhnacademy.bookstore.member.member.dto.response.GetMemberResponse;
 import com.nhnacademy.bookstore.member.member.dto.response.UpdateMemberResponse;
 import com.nhnacademy.bookstore.member.auth.service.AuthService;
 import com.nhnacademy.bookstore.member.memberAuth.service.MemberAuthService;
+import com.nhnacademy.bookstore.member.memberAuth.service.impl.MemberAuthServiceImpl;
 import com.nhnacademy.bookstore.member.pointRecord.service.PointService;
 import com.nhnacademy.bookstore.member.member.service.impl.MemberServiceImpl;
+import com.nhnacademy.bookstore.member.pointRecord.service.impl.PointServiceImpl;
 import com.nhnacademy.bookstore.util.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.ZonedDateTime;
 import java.util.List;
-
+import java.util.stream.Collectors;
 
 /**
  * The type Member controller.
@@ -54,7 +61,7 @@ public class MemberController {
                 pointRecordService.save(pointRecord);
                 memberAuthService.saveAuth(member, auth);
 
-              return new ApiResponse<Void>(new ApiResponse.Header(true,201,"User Created"),new ApiResponse.Body<Void>(null));
+              return new ApiResponse<Void>(new ApiResponse.Header(true,201),new ApiResponse.Body<Void>(null));
     }
 
     /**
@@ -78,7 +85,7 @@ public class MemberController {
                     .email(member.getEmail())
                     .name(member.getName())
                     .password(member.getPassword()).build();
-            return new ApiResponse<GetMemberResponse>(new ApiResponse.Header(true,200,"Member Found"),new ApiResponse.Body<>(getMemberResponse));
+            return new ApiResponse<GetMemberResponse>(new ApiResponse.Header(true,200),new ApiResponse.Body<>(getMemberResponse));
 
     }
 
@@ -107,7 +114,7 @@ public class MemberController {
             memberService.updateStatus(member.getId().toString(), Status.Active);//응답이 만들어 졌다는거는 로그인성공이란 소리니까 멤버를 업데이트 해야할 것같다..
             memberService.updateLastLogin(member.getId().toString(),ZonedDateTime.now());
 
-            return new ApiResponse<GetMemberResponse>(new ApiResponse.Header(true,200,"Member(Login) Found"),new ApiResponse.Body<>(getMemberResponse));
+            return new ApiResponse<GetMemberResponse>(new ApiResponse.Header(true,200),new ApiResponse.Body<>(getMemberResponse));
 
     }
 
@@ -121,8 +128,9 @@ public class MemberController {
     @GetMapping("/bookstore/members/auths")
     public ApiResponse<List<AuthResponse>> readAuths(@RequestHeader("member-id")Long memberId){
 
-            return new ApiResponse<List<AuthResponse>>(new ApiResponse.Header(true,200,"Auths Found"),
-                    new ApiResponse.Body<>(memberAuthService.readAllAuths(memberId).stream().map(a->AuthResponse.builder().auth(a.getName()).build()).collect(Collectors.toList())));
+            return new ApiResponse<List<AuthResponse>>(new ApiResponse.Header(true,200),
+                    new ApiResponse.Body<>(memberAuthService.readAllAuths(memberId).stream().map(a->AuthResponse.builder().auth(a.getName()).build()).collect(
+                        Collectors.toList())));
 
     }
 
@@ -142,7 +150,7 @@ public class MemberController {
             UpdateMemberResponse updateMemberResponse = UpdateMemberResponse.builder()
                     .id(String.valueOf(updatedMember.getId()))
                     .name(updatedMember.getName()).build();
-            return new ApiResponse<>(new ApiResponse.Header(true,200,"Member Updated"),new ApiResponse.Body<>(updateMemberResponse));
+            return new ApiResponse<>(new ApiResponse.Header(true,200),new ApiResponse.Body<>(updateMemberResponse));
 
     }
 
@@ -156,7 +164,8 @@ public class MemberController {
     @DeleteMapping("/bookstore/members")
     public ApiResponse<Void> deleteMember(@RequestHeader(name = "Member-Id") String memberId) {
             memberService.deleteMember(memberId);
-            return new ApiResponse<>(new ApiResponse.Header(true, HttpStatus.NO_CONTENT.value(), "Member deleted"));
+
+            return new ApiResponse<>(new ApiResponse.Header(true, HttpStatus.NO_CONTENT.value()));
 
     }
 }

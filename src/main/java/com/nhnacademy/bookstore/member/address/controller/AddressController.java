@@ -1,21 +1,30 @@
 package com.nhnacademy.bookstore.member.address.controller;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.nhnacademy.bookstore.entity.address.Address;
 import com.nhnacademy.bookstore.entity.member.Member;
-import com.nhnacademy.bookstore.member.address.dto.request.AddressResponse;
+
 import com.nhnacademy.bookstore.member.address.dto.request.CreateAddressRequest;
 import com.nhnacademy.bookstore.member.address.dto.request.UpdateAddressRequest;
+import com.nhnacademy.bookstore.member.address.dto.response.AddressResponse;
 import com.nhnacademy.bookstore.member.address.dto.response.UpdateAddressResponse;
 import com.nhnacademy.bookstore.member.address.service.impl.AddressServiceImpl;
 import com.nhnacademy.bookstore.member.member.service.impl.MemberServiceImpl;
 import com.nhnacademy.bookstore.util.ApiResponse;
+
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.stream.Collectors;
-
 
 /**
  * The type Address controller.
@@ -25,8 +34,8 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 public class AddressController {
-    private final MemberService memberService;
-    private final AddressService addressServiceImpl;
+    private final MemberServiceImpl memberService;
+    private final AddressServiceImpl addressServiceImpl;
 
     /**
      * Create address response entity.
@@ -42,7 +51,7 @@ public class AddressController {
         Member member = memberService.readById(memberId);
         Address address = new Address(request, member);
         addressServiceImpl.save(address,member);
-        return new ApiResponse<List<AddressResponse>>(new ApiResponse.Header(true, 201, "Address Create"),
+        return new ApiResponse<List<AddressResponse>>(new ApiResponse.Header(true, 201),
                 new ApiResponse.Body<>(addressServiceImpl.readAll(member).stream().map(a -> AddressResponse.builder()
                         .name(a.getName()).country(a.getCountry()).city(a.getCity()).state(a.getState()).road(a.getRoad()).postalCode(a.getPostalCode())
                         .build()).collect(Collectors.toList())));
@@ -50,7 +59,7 @@ public class AddressController {
 
     }
 
-    }
+
     /**
      * Find all addresses response entity.
      * 멤버아이디에 따른 모든 주소를 가져온다.
@@ -64,7 +73,7 @@ public class AddressController {
 
         Member member = memberService.readById(memberId);
 
-        return new ApiResponse<List<AddressResponse>>(new ApiResponse.Header(true, 200, "Addresses found"),
+        return new ApiResponse<List<AddressResponse>>(new ApiResponse.Header(true, 200),
                 new ApiResponse.Body<>(addressServiceImpl.readAll(member).stream().map(a -> AddressResponse.builder()
                         .name(a.getName()).country(a.getCountry()).city(a.getCity()).state(a.getState()).road(a.getRoad()).postalCode(a.getPostalCode()).build()).collect(Collectors.toList())));
 
@@ -88,7 +97,7 @@ public class AddressController {
                 .id(addressId)
                 .name(address.getName())
                 .build();
-        return new ApiResponse<>(new ApiResponse.Header(true,200,"Address Update"),new ApiResponse.Body<>(updateAddressResponse));
+        return new ApiResponse<>(new ApiResponse.Header(true,200),new ApiResponse.Body<>(updateAddressResponse));
 
     }
 
@@ -104,6 +113,6 @@ public class AddressController {
     public ApiResponse<Void> deleteAddress(@RequestHeader(name = "Address-Id") Long addressId) {
 
         addressServiceImpl.deleteAddress(addressId);
-        return new ApiResponse<>(new ApiResponse.Header(true, HttpStatus.NO_CONTENT.value(), "Address deleted"));
+        return new ApiResponse<>(new ApiResponse.Header(true, HttpStatus.NO_CONTENT.value()));
     }
 }
