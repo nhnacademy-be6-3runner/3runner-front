@@ -1,14 +1,13 @@
 package com.nhnacademy.bookstore.book.category.repository;
 
-import com.nhnacademy.bookstore.book.category.dto.response.CategoryChildrenResponse;
 import com.nhnacademy.bookstore.book.category.dto.response.CategoryParentWithChildrenResponse;
 import com.nhnacademy.bookstore.book.category.dto.response.CategoryResponse;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * query dsl custom repository
+ *
  * @author 김은비
  */
 public interface CategoryCustomRepository {
@@ -22,5 +21,5 @@ public interface CategoryCustomRepository {
     List<CategoryParentWithChildrenResponse> findParentWithChildrenCategories();
 
     // 하위 카테고리 조회
-    List<CategoryChildrenResponse> findChildrenCategoriesByParentId(Long id);
+    List<CategoryParentWithChildrenResponse> findChildrenCategoriesByParentId(Long id);
 }

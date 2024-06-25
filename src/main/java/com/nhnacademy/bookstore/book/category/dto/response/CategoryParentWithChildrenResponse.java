@@ -15,7 +15,7 @@ public class CategoryParentWithChildrenResponse {
     private long id;
     private String name;
     @Setter
-    private List<CategoryChildrenResponse> childrenList;
+    private List<CategoryParentWithChildrenResponse> childrenList;
 
     public CategoryParentWithChildrenResponse(long id, String name) {
         this.id = id;
