@@ -63,7 +63,6 @@ public class BookCartGuestController {
             HttpServletRequest request,
             HttpServletResponse response
         ) {
-
         if (bindingResult.hasErrors()) {
             throw new BookCartArgumentErrorException("폼 에러");
         }
@@ -74,6 +73,7 @@ public class BookCartGuestController {
                 createBookCartGuestRequest.quantity());
 
         Cookie cartCookie = new Cookie("cartId", cartId.toString());
+        cartCookie.setSecure(true);
         cartCookie.setPath("/");
         cartCookie.setMaxAge(60 * 60 * 24 * 7);
         response.addCookie(cartCookie);

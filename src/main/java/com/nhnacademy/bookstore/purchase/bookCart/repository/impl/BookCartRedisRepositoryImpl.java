@@ -48,9 +48,10 @@ public class BookCartRedisRepositoryImpl implements BookCartRedisRepository {
     public Long update(String hashName, Long id, int quantity) {
         ReadBookCartGuestResponse response = (ReadBookCartGuestResponse)redisTemplate.opsForHash().get(hashName + ":", id.toString());
 
-        ReadBookCartGuestResponse updatedResponse = ReadBookCartGuestResponse.builder().bookCartId(response.getBookCartId())
-                .cartId(response.getCartId())
-                .bookId(response.getBookId())
+        ReadBookCartGuestResponse updatedResponse = ReadBookCartGuestResponse.builder()
+                .bookCartId(response.bookCartId())
+                .price(response.price())
+                .title(response.title())
                 .quantity(quantity)
                 .build();
 
@@ -120,7 +121,7 @@ public class BookCartRedisRepositoryImpl implements BookCartRedisRepository {
     public void loadData(List<ReadBookCartGuestResponse> bookCartGuestResponses, String hashName) {
         for (ReadBookCartGuestResponse o : bookCartGuestResponses) {
             if (Objects.nonNull(o)) {
-                redisTemplate.opsForHash().put(hashName + ":", o.getBookCartId().toString(), o);
+                redisTemplate.opsForHash().put(hashName + ":", o.bookCartId().toString(), o);
             }
         }
         redisTemplate.expire(hashName + ":", 1, TimeUnit.HOURS);

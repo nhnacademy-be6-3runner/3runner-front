@@ -70,8 +70,8 @@ public class BookCartGuestServiceImpl implements BookCartGuestService {
                 bookCart.getId(),
                 ReadBookCartGuestResponse.builder()
                         .bookCartId(bookCart.getId())
-                        .bookId(bookCart.getBook().getId())
-                        .cartId(bookCart.getCart().getId())
+                        .price(book.getPrice())
+                        .title(book.getTitle())
                         .quantity(bookCart.getQuantity())
                         .build()
         );
@@ -157,8 +157,8 @@ public class BookCartGuestServiceImpl implements BookCartGuestService {
                 .stream()
                 .map(bookCart -> ReadBookCartGuestResponse.builder()
                         .bookCartId(bookCart.getId())
-                        .bookId(bookCart.getBook().getId())
-                        .cartId(bookCart.getCart().getId())
+                        .price(bookCart.getBook().getPrice())
+                        .title(bookCart.getBook().getTitle())
                         .quantity(bookCart.getQuantity())
                         .build())
                 .toList()).orElseGet(List::of);
