@@ -3,7 +3,7 @@ package com.nhnacademy.bookstore.book.book.dto.response;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-import com.nhnacademy.bookstore.book.bookCartegory.dto.response.BookCategoriesResponse;
+import com.nhnacademy.bookstore.book.bookCartegory.dto.response.BookCategoriesChildrenResponse;
 import com.nhnacademy.bookstore.book.bookTag.dto.response.ReadTagByBookResponse;
 
 import lombok.Builder;
@@ -43,7 +43,7 @@ public record ReadBookResponse(
 	String isbn,
 	String publisher,
 	String imagePath,
-	List<BookCategoriesResponse> categoryList,
+	List<BookCategoriesChildrenResponse> categoryList,
 	List<ReadTagByBookResponse> tagList
 
 ) {
