@@ -8,12 +8,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import com.nhnacademy.bookstore.book.book.dto.response.BookListResponse;
-import com.nhnacademy.bookstore.book.bookCartegory.dto.response.BookCategoriesResponse;
 import com.nhnacademy.bookstore.book.bookCartegory.repository.BookCategoryCustomRepository;
 import com.nhnacademy.bookstore.entity.book.QBook;
 import com.nhnacademy.bookstore.entity.bookCategory.QBookCategory;
 import com.nhnacademy.bookstore.entity.bookImage.QBookImage;
 import com.nhnacademy.bookstore.entity.bookImage.enums.BookImageType;
+import com.nhnacademy.bookstore.entity.category.Category;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
@@ -75,10 +75,12 @@ public class BookCategoryCustomRepositoryImpl implements BookCategoryCustomRepos
 	 * @return 카테고리 list
 	 */
 	@Override
-	public List<BookCategoriesResponse> bookWithCategoryList(Long bookId) {
+	public List<Category> bookWithCategoryList(Long bookId) {
 		return jpaQueryFactory.select(
-				Projections.constructor(BookCategoriesResponse.class, qBookCategory.category.id,
-					qBookCategory.category.name, qBookCategory.category.parent))
+				Projections.constructor(Category.class,
+					qBookCategory.category.id,
+					qBookCategory.category.name,
+					qBookCategory.category.parent))
 			.from(qBookCategory)
 			.where(qBookCategory.book.id.eq(bookId))
 			.fetch();

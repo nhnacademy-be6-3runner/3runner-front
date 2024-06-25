@@ -28,7 +28,6 @@ import com.nhnacademy.bookstore.book.book.exception.BookDoesNotExistException;
 import com.nhnacademy.bookstore.book.book.repository.BookRepository;
 import com.nhnacademy.bookstore.book.bookCartegory.dto.request.CreateBookCategoryRequest;
 import com.nhnacademy.bookstore.book.bookCartegory.dto.request.UpdateBookCategoryRequest;
-import com.nhnacademy.bookstore.book.bookCartegory.dto.response.BookCategoriesChildrenResponse;
 import com.nhnacademy.bookstore.book.bookCartegory.dto.response.BookCategoriesResponse;
 import com.nhnacademy.bookstore.book.bookCartegory.repository.BookCategoryRepository;
 import com.nhnacademy.bookstore.book.bookCartegory.service.impl.BookCategoryServiceImpl;
