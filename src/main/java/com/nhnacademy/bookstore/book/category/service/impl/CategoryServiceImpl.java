@@ -2,7 +2,7 @@ package com.nhnacademy.bookstore.book.category.service.impl;
 
 import com.nhnacademy.bookstore.book.category.dto.request.CreateCategoryRequest;
 import com.nhnacademy.bookstore.book.category.dto.request.UpdateCategoryRequest;
-import com.nhnacademy.bookstore.book.category.dto.response.CategoryChildrenResponse;
+import com.nhnacademy.bookstore.book.category.dto.response.CategoryParentWithChildrenResponse;
 import com.nhnacademy.bookstore.book.category.dto.response.CategoryResponse;
 import com.nhnacademy.bookstore.book.category.exception.CategoryNotFoundException;
 import com.nhnacademy.bookstore.book.category.exception.DuplicateCategoryNameException;
@@ -62,8 +62,6 @@ public class CategoryServiceImpl implements CategoryService {
 
         category.setName(dto.getName());
         category.setParent(parent);
-
-        // category 객체는 이미 영속성 컨텍스트 내에 있으므로, save 호출 없이 자동으로 업데이트됨
     }
 
     @Override
@@ -92,11 +90,17 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<CategoryChildrenResponse> getChildrenCategoriesByParentId(long id) {
+    public List<CategoryParentWithChildrenResponse> getChildrenCategoriesByParentId(long id) {
         if (!categoryRepository.existsById(id)) {
             throw new CategoryNotFoundException("존재하지 않는 카테고리입니다.");
         }
         return categoryRepository.findChildrenCategoriesByParentId(id);
     }
-}
 
+    @Override
+    public List<CategoryParentWithChildrenResponse> getCategoriesWithChildren() {
+        return categoryRepository.findParentWithChildrenCategories();
+    }
+
+
+}
