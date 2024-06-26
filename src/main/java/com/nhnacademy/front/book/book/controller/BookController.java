@@ -51,10 +51,14 @@ public class BookController {
 
 	@GetMapping("/{bookId}")
 	public String bookDetailView(@PathVariable long bookId, Model model) {
-		// bookService.readBook(bookId);
 		UserReadBookResponse book = bookService.readBook(bookId);
 
 		model.addAttribute("book", book);
+
+		log.info("description : {}", book.description());
+		
+		model.addAttribute("rating", 4.9);
+		model.addAttribute("reviewCount", 10);
 
 		return "book/book_detail";
 	}

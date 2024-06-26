@@ -40,6 +40,8 @@
 
         .breadcrumb {
             margin: 20px 0;
+            display: flex;
+            align-items: center;
         }
 
         .breadcrumb a {
@@ -50,6 +52,10 @@
 
         .breadcrumb span {
             color: #6c757d;
+        }
+
+        .breadcrumb span.separator {
+            margin: 0 5px;
         }
 
         .product-detail {
@@ -104,6 +110,25 @@
             font-size: 24px;
             color: #28a745;
             font-weight: bold;
+        }
+
+        .product-info .options {
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .product-info .options label {
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .product-info .options input {
+            width: 60px;
+            padding: 5px;
+            text-align: center;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
         }
 
         .product-info .add-to-cart,
@@ -176,6 +201,73 @@
             padding: 20px;
             margin-top: 40px;
         }
+
+        .rating {
+            display: flex;
+            align-items: center;
+        }
+
+        .rating span {
+            font-size: 24px;
+            color: #ffc107;
+        }
+
+        .rating .reviews {
+            margin-left: 10px;
+            color: #6c757d;
+        }
+
+        /* Additional Info Section */
+        .additional-info {
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        .additional-info h2 {
+            font-size: 22px;
+            margin-bottom: 20px;
+        }
+
+        .additional-info .table {
+            width: 80%;
+            margin: 0 auto;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .additional-info .table th, .additional-info .table td {
+            padding: 10px;
+            border: 1px solid #dee2e6;
+            text-align: center;
+        }
+
+        .additional-info .table th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+
+        .description {
+            margin-top: 20px;
+            text-align: left;
+            width: 80%;
+            margin: 0 auto;
+        }
+
+        .description h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .description div {
+            line-height: 1.6;
+            color: #6c757d;
+        }
+
+        .description img {
+            max-width: 100%;
+            height: auto;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -219,12 +311,21 @@
 </header>
 
 <div class="container">
-    <div class="breadcrumb">
-        <a href="#">Home</a>
-        <span>&gt;</span>
-        <a href="#">Men</a>
-        <span>&gt;</span>
-        <span>Lightweight Jacket</span>
+
+    <div class="category-list">
+        <div th:each="category : ${book.categoryList()}">
+            <span th:if="${category.name != null}" th:text="${category.name}"></span>
+            <span th:if="${category.childrenList != null && !category.childrenList.isEmpty()}">
+                <span th:each="child : ${category.childrenList}">
+                    &gt; <a th:href="'/categories/' + ${child.id}" th:text="${child.name}"></a>
+                    <span th:if="${child.childrenList != null && !child.childrenList.isEmpty()}">
+                        <span th:each="subChild : ${child.childrenList}">
+                            &gt; <a th:href="'/categories/' + ${subChild.id}" th:text="${subChild.name}"></a>
+                        </span>
+                    </span>
+                </span>
+            </span>
+        </div>
     </div>
 
     <div class="product-detail">
@@ -232,8 +333,7 @@
             <table>
                 <tr>
                     <th>
-                        <img src="/api/images/book/download?fileName=63eb3cf4314511efbce80ba0a4d454d3.jpeg"
-                             alt="book main image">
+                        <img th:src="@{/api/images/book/download(fileName=${book.imagePath()})}" alt="book main image">
                     </th>
                 </tr>
             </table>
@@ -245,39 +345,61 @@
                 <span class="original-price"><span th:text="${book.price()}"></span></span>
                 <span class="selling-price"><span th:text="${book.sellingPrice()}"></span></span>
             </div>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas interdum risus nec urna mollis, vel
-                mollis odio vestibulum. Ut euismod, nisl vitae bibendum euismod, lacus orci vehicula arcu, nec facilisis
-                justo erat at libero.</p>
+            <div class="rating">
+                <span th:each="star : ${#numbers.sequence(1, rating)}">
+                    <i class="bi bi-star-fill"></i>
+                </span>
+                <span th:each="star : ${#numbers.sequence(rating + 1, 5)}">
+                    <i class="bi bi-star"></i>
+                </span>
+                <span class="reviews">
+                    (<span th:text="${reviewCount}"></span> reviews)
+                </span>
+            </div>
             <div class="options">
-                <label for="quantity">Quantity</label>
+                <label for="quantity">수량</label>
                 <input type="number" id="quantity" name="quantity" value="1">
             </div>
-            <a href="#" class="add-to-cart">Add to Cart</a>
-            <a href="#" class="buy-now">Buy Now</a>
+            <div class="action-buttons">
+                <a href="#" class="add-to-cart">장바구니 담기</a>
+                <a href="#" class="buy-now">바로 구매</a>
+            </div>
         </div>
     </div>
 
-    <!--    <div class="related-products">-->
-    <!--        <h3>Related Products</h3>-->
-    <!--        <div class="products">-->
-    <!--            <div class="product">-->
-    <!--                <img src="images/product-01.jpg" alt="Product 1">-->
-    <!--                <h4>Esprit Ruffle Shirt</h4>-->
-    <!--                <p>$16.64</p>-->
-    <!--            </div>-->
-    <!--            <div class="product">-->
-    <!--                <img src="images/product-04.jpg" alt="Product 4">-->
-    <!--                <h4>Classic Trench Coat</h4>-->
-    <!--                <p>$75.00</p>-->
-    <!--            </div>-->
-    <!--        </div>-->
-    <!--    </div>-->
+    <div class="additional-info">
+        <h2>책 정보</h2>
+        <table class="table">
+            <tr>
+                <th>작가</th>
+                <td th:text="${book.author()}"></td>
+            </tr>
+            <tr>
+                <th>출판일</th>
+                <td th:text="${book.publishedDate()}"></td>
+            </tr>
+            <tr>
+                <th>출판사</th>
+                <td th:text="${book.publisher()}"></td>
+            </tr>
+            <tr>
+                <th>ISBN</th>
+                <td th:text="${book.isbn()}"></td>
+            </tr>
+        </table>
+        <div class="description">
+            <h3>설명</h3>
+            <div th:utext="${book.description()}"></div>
+        </div>
+    </div>
+
 </div>
 
 <footer class="footer">
     <p>&copy; 2024 All rights reserved. Template by <a href="https://colorlib.com" target="_blank" style="color: #fff;">Colorlib</a>
         distributed by <a href="https://themewagon.com" target="_blank" style="color: #fff;">ThemeWagon</a></p>
 </footer>
-
+<!-- Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css">
 </body>
 </html>
