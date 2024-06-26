@@ -17,23 +17,14 @@ import com.nhnacademy.bookstore.member.member.exception.AlreadyExistsEmailExcept
 import com.nhnacademy.bookstore.member.member.exception.LoginFailException;
 import com.nhnacademy.bookstore.member.member.exception.MemberNotExistsException;
 import com.nhnacademy.bookstore.purchase.bookCart.exception.BookCartArgumentErrorException;
-import com.nhnacademy.bookstore.purchase.bookCart.exception.BookCartDoesNotExistException;
-import com.nhnacademy.bookstore.purchase.cart.exception.CartDoesNotExistException;
+
 import com.nhnacademy.bookstore.purchase.purchase.exception.PurchaseAlreadyExistException;
 import com.nhnacademy.bookstore.purchase.purchase.exception.PurchaseDoesNotExistException;
 import com.nhnacademy.bookstore.purchase.purchase.exception.PurchaseFormArgumentErrorException;
 import com.nhnacademy.bookstore.purchase.purchase.exception.PurchaseNoAuthorizationException;
 import com.nhnacademy.bookstore.util.ApiResponse;
-import org.springframework.http.HttpStatus;
-import org.springframework.ui.Model;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import java.nio.channels.AlreadyBoundException;
-import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -142,20 +133,6 @@ public class WebControllerAdvice {
 				.build())
 		);
 	}
-    @ExceptionHandler({
-            PurchaseNoAuthorizationException.class
-    })
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ApiResponse<ErrorResponseForm> unauthorizedHandler(Exception ex, Model model) {
-        return new ApiResponse<>(
-                new ApiResponse.Header(false, HttpStatus.METHOD_NOT_ALLOWED.value()),
-                new ApiResponse.Body<>(ErrorResponseForm.builder()
-                        .title(ex.getMessage())
-                        .status(HttpStatus.UNAUTHORIZED.value())
-                        .timestamp(ZonedDateTime.now().toString())
-                        .build())
-        );
-    }
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiResponse<ErrorResponseForm> handleValidationExceptions(MethodArgumentNotValidException ex, Model model) {
