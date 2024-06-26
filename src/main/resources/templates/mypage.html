@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>개인화 섹션</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f7f7;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        .section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+        .section-header {
+            display: flex;
+            align-items: center;
+        }
+        .section-header .icon {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+        .section-header h2 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+            margin: 0;
+        }
+        .section-body button {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            color: #666;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            border-radius: 20px;
+            margin-right: 10px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .section-body button:hover {
+            background-color: #f7f7f7;
+            border-color: #ccc;
+            color: #333;
+        }
+        .hidden {
+            display: none;
+        }
+        .order-delivery, .user-profile {
+            padding: 20px;
+            background-color: #f6f6f6;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="section">
+            <div class="section-header">
+                <img src="https://cdn-icons-png.flaticon.com/512/3524/3524472.png" alt="아이콘" class="icon">
+                <h2>개인화</h2>
+            </div>
+            <div class="section-body">
+                <button id="cartBtn">장바구니</button>
+                <button id="orderBtn">주문/배송</button>
+                <button id="profileBtn">내 정보 수정</button>
+                <button>보유쿠폰</button>
+            </div>
+        </div>
+
+        <div id="orderDelivery" class="order-delivery hidden">
+            <h2>주문/배송 페이지</h2>
+            <p>주문/배송 정보를 여기에 넣으세요.</p>
+        </div>
+
+        <div id="userProfile" class="user-profile hidden">
+            <h2>내 정보 수정 페이지</h2>
+            <p>내 정보 수정 내용을 여기에 넣으세요.</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const orderBtn = document.getElementById('orderBtn');
+            const profileBtn = document.getElementById('profileBtn');
+            const orderDelivery = document.getElementById('orderDelivery');
+            const userProfile = document.getElementById('userProfile');
+
+            orderBtn.addEventListener('click', function() {
+                orderDelivery.classList.remove('hidden');
+                userProfile.classList.add('hidden');
+            });
+
+            profileBtn.addEventListener('click', function() {
+                fetch('/memberdetail').then(response=> response.text()).then(html => {
+                    userProfile.innerHTML = html;
+                    userProfile.classList.remove('hidden');
+                    orderDelivery.classList.add('hidden');
+                }).catch(error=> console.error('Error loading the profile data:', error))
+            });
+            // 유저 수정페이지 나온다.
+        });
+    </script>
+</body>
+</html>

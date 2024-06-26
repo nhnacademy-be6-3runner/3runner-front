@@ -16,6 +16,7 @@ import com.nhnacademy.front.auth.dto.response.LoginResponse;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.constraints.Email;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -49,7 +50,7 @@ public class LoginController {
 	 */
 	@PostMapping("/login")
 	@ResponseBody
-	public LoginResponse login(@RequestParam String email, @RequestParam String password,
+	public LoginResponse login(@RequestParam @Email String email, @RequestParam String password,
 		HttpServletResponse response) {
 		ResponseEntity<LoginResponse> loginResponse = loginAdapter.login(new LoginRequest(email, password));
 

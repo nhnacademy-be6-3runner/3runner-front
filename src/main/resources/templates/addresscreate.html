@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Address</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .menu-desktop {
+            background-color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .form-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-top: 30px;
+        }
+        footer {
+            margin-top: 50px;
+            background-color: #fff;
+            border-top: 1px solid #dee2e6;
+        }
+        .footer-content {
+            padding: 20px 0;
+        }
+    </style>
+</head>
+<body>
+<!-- Header -->
+<header class="header-v4">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light menu-desktop">
+        <div class="container">
+            <!-- Logo -->
+            <a class="navbar-brand logo" href="#">
+                3runner
+            </a>
+            <!-- Toggler/collapsible Button -->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <!-- Navbar links -->
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="login.html">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="logout.html">Logout</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="mypage.html">My Page</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="register.html">Register</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="cart.html">Cart</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<main class="container">
+    <div class="form-container">
+        <h2 class="text-center">Register Address</h2>
+        <form id="addressForm">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" name="name" required minlength="1" maxlength="20">
+            </div>
+            <div class="form-group">
+                <label for="country">Country</label>
+                <input type="text" class="form-control" id="country" name="country" required minlength="1" maxlength="100">
+            </div>
+            <div class="form-group">
+                <label for="city">City</label>
+                <input type="text" class="form-control" id="city" name="city" required minlength="1" maxlength="100">
+            </div>
+            <div class="form-group">
+                <label for="state">State</label>
+                <input type="text" class="form-control" id="state" name="state" required minlength="1" maxlength="100">
+            </div>
+            <div class="form-group">
+                <label for="road">Road</label>
+                <input type="text" class="form-control" id="road" name="road" required minlength="1" maxlength="100">
+            </div>
+            <div class="form-group">
+                <label for="postalCode">Postal Code</label>
+                <input type="text" class="form-control" id="postalCode" name="postalCode" required minlength="1" maxlength="20">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</main>
+
+<footer class="bg-white text-dark p-3">
+    <div class="container text-center footer-content">
+        &copy; 2024 3runner
+    </div>
+</footer>
+
+<script src="vendor/jquery/jquery.min.js"></script>
+<script src="js/bootstrap.bundle.min.js"></script>
+<script>
+    document.getElementById('addressForm').addEventListener('submit', function(e) {
+        e.preventDefault(); // 폼 기본 제출 행동 방지
+
+        // 폼 데이터를 JSON 객체로 수집
+        const formData = {
+            name: document.getElementById('name').value,
+            country: document.getElementById('country').value,
+            city: document.getElementById('city').value,
+            state: document.getElementById('state').value,
+            road: document.getElementById('road').value,
+            postalCode: document.getElementById('postalCode').value
+        };
+
+        // fetch API 사용하여 JSON 데이터와 함께 POST 요청 보내기
+        fetch('/address/create', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json' // 요청의 본문이 JSON임을 명시
+            },
+            body: JSON.stringify(formData) // JSON 객체를 문자열로 변환
+        })
+            .then(response => response.text())
+            .then(html => document.body.innerHTML =html)
+            .catch(error => console.error('Error:', error));
+    });
+</script>
+</body>
+</html>

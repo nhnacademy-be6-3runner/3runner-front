@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+    <style>
+        .menu-desktop {
+            background-color: white;
+            padding: 15px 0;
+        }
+    </style>
+</head>
+<body>
+<!-- Header -->
+<header class="header-v4">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light menu-desktop">
+        <div class="container">
+            <!-- Logo -->
+            <a class="navbar-brand logo" href="#">
+                3runner
+            </a>
+            <!-- Toggler/collapsible Button -->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <!-- Navbar links -->
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="login.html">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="register.html">Register</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<main class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h2 class="mb-4">Register</h2>
+            <form id="registrationForm">
+                <div class="form-group">
+                    <label for="email">Email address</label>
+                    <input type="email" class="form-control" id="email" placeholder="Enter email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" id="password" placeholder="Password" required>
+                </div>
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control" id="name" placeholder="Full name" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone</label>
+                    <input type="tel" class="form-control" id="phone" placeholder="Phone number" required>
+                </div>
+                <div class="form-group">
+                    <label for="age">Age</label>
+                    <input type="number" class="form-control" id="age" placeholder="Age">
+                </div>
+                <div class="form-group">
+                    <label for="birthday">Birthday</label>
+                    <input type="date" class="form-control" id="birthday" placeholder="Date of Birth">
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+</main>
+
+<footer class="bg-white text-dark p-3">
+    <div class="container text-center">
+        &copy; 2024 3runner
+    </div>
+</footer>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('registrationForm');
+        form.addEventListener('submit', function(e) {
+            e.preventDefault(); // 기본 폼 제출 행동 방지
+
+            // 폼 데이터를 JSON 객체로 수집
+            const formData = {
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value,
+                name: document.getElementById('name').value,
+                phone: document.getElementById('phone').value,
+                age: document.getElementById('age').value,
+                birthday: document.getElementById('birthday').value
+            };
+
+            // fetch API 사용하여 JSON 데이터와 함께 POST 요청 보내기
+            fetch('/signin', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json' // 요청의 본문이 JSON임을 명시
+                },
+                body: JSON.stringify(formData) // JSON 객체를 문자열로 변환
+            })
+                .then(response => response.text()) // HTML로 응답을 받음
+                .then(html => {
+                    document.body.innerHTML = html;// 전체 body의 내용을 받은 HTML로 교체
+                })
+                .catch(error => console.error('Error:', error));
+        });
+    });
+</script>
+
+</body>
+</html>
