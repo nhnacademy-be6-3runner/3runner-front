@@ -85,7 +85,7 @@ public class BookServiceImpl implements BookService {
 		String[] split = description.split("fileName=");
 		if (split.length > 1) {
 			for (int i = 1; i < split.length; i++) {
-				imageList.add(split[i].substring(0, split[i].indexOf(")")));
+				imageList.add(split[i].substring(0, split[i].indexOf('"')));
 			}
 		}
 		log.info("imageList : {}", imageList);
