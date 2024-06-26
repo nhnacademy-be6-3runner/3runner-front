@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.nhnacademy.bookstore.entity.auth.Auth;
 import com.nhnacademy.bookstore.entity.member.Member;
+import com.nhnacademy.bookstore.entity.member.enums.Status;
 import com.nhnacademy.bookstore.entity.pointRecord.PointRecord;
 import com.nhnacademy.bookstore.member.auth.dto.AuthResponse;
 import com.nhnacademy.bookstore.member.auth.service.impl.AuthServiceImpl;
@@ -23,13 +24,24 @@ import com.nhnacademy.bookstore.member.member.dto.request.LoginRequest;
 import com.nhnacademy.bookstore.member.member.dto.request.UpdateMemberRequest;
 import com.nhnacademy.bookstore.member.member.dto.response.GetMemberResponse;
 import com.nhnacademy.bookstore.member.member.dto.response.UpdateMemberResponse;
-import com.nhnacademy.bookstore.member.member.service.impl.MemberServiceImpl;
+import com.nhnacademy.bookstore.member.auth.service.AuthService;
+import com.nhnacademy.bookstore.member.memberAuth.service.MemberAuthService;
 import com.nhnacademy.bookstore.member.memberAuth.service.impl.MemberAuthServiceImpl;
+import com.nhnacademy.bookstore.member.pointRecord.service.PointService;
+import com.nhnacademy.bookstore.member.member.service.impl.MemberServiceImpl;
 import com.nhnacademy.bookstore.member.pointRecord.service.impl.PointServiceImpl;
 import com.nhnacademy.bookstore.util.ApiResponse;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 /**
  * The type Member controller.
@@ -39,10 +51,11 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 public class MemberController {
-	private final MemberServiceImpl memberService;
-	private final PointServiceImpl pointRecordService;
-	private final AuthServiceImpl authService;
-	private final MemberAuthServiceImpl memberAuthService;
+    private final MemberServiceImpl memberService;
+    private final PointServiceImpl pointRecordService;
+    private final AuthServiceImpl authService;
+    private final MemberAuthServiceImpl memberAuthService;
+    private final PasswordEncoder passwordEncoder;
 
 	/**
 	 * Create member response entity.- 회원가입에 사용되는 함수이다.
@@ -125,6 +138,9 @@ public class MemberController {
 			return new ApiResponse<>(new ApiResponse.Header(false, 401, "Member Unauthorized"));
 		}
 	}
+            return new ApiResponse<GetMemberResponse>(new ApiResponse.Header(true,200),new ApiResponse.Body<>(getMemberResponse));
+
+    }
 
 	/**
 	 * Find auths list. -권한에 대한 리스트를 받아온다.

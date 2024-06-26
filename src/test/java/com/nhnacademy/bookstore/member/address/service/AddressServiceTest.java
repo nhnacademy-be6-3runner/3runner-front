@@ -37,7 +37,7 @@ public class AddressServiceTest {
     @DisplayName("주소 업데이트 테스트")
     void updateAddressTest() {
         // Given
-        String addressId = "1";
+        Long addressId = 1L;
         UpdateAddressRequest updateAddressRequest = UpdateAddressRequest.builder()
                 .name("Updated Name")
                 .country("Updated Country")
@@ -73,7 +73,7 @@ public class AddressServiceTest {
     @DisplayName("주소 업데이트 시 주소가 없는 경우")
     void updateAddress_NotExistsTest() {
         // Given
-        String addressId = "1";
+        Long addressId = 1L;
         UpdateAddressRequest updateAddressRequest = UpdateAddressRequest.builder()
                 .name("Updated Name")
                 .build();
@@ -92,7 +92,7 @@ public class AddressServiceTest {
     @DisplayName("주소 삭제 테스트")
     void deleteAddressTest() {
         // Given
-        String addressId = "1";
+        Long addressId = 1L;
 
         // When
         addressServiceImpl.deleteAddress(addressId);

@@ -1,12 +1,17 @@
 package com.nhnacademy.bookstore.util;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.http.HttpStatus;
+
+
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Getter
 @Setter
+
 public class ApiResponse<T>{
     private Header header;
 
@@ -28,7 +33,6 @@ public class ApiResponse<T>{
     public static class Header {
         private boolean isSuccessful;
         private int resultCode;
-        private String resultMessage;
     }
 
     @Setter
@@ -42,15 +46,51 @@ public class ApiResponse<T>{
     }
 
     public static <T> ApiResponse<T> success(T data) {
-        return new ApiResponse<T>(
-                new Header(true, 200, "SUCCESS"),
+        return new ApiResponse<>(
+                new Header(true, HttpStatus.OK.value()),
+                new Body<>(data)
+        );
+    }
+    public static <T> ApiResponse<T> createSuccess(T data) {
+        return new ApiResponse<>(
+                new Header(true, HttpStatus.CREATED.value()),
+                new Body<>(data)
+        );
+    }
+    public static <T> ApiResponse<T> deleteSuccess(T data) {
+        return new ApiResponse<>(
+                new Header(true, HttpStatus.NO_CONTENT.value()),
                 new Body<>(data)
         );
     }
 
-    public static <T> ApiResponse<T> fail(int errorCode, String errorMessage) {
+
+
+    public static <T> ApiResponse<T> fail(int errorCode, Body<T> body) {
         return new ApiResponse<>(
-                new Header(true, errorCode, errorMessage)
+                new Header(false, errorCode),body
         );
     }
+    public static <T> ApiResponse<T> notFoundFail(Body<T> body) {
+        return new ApiResponse<>(
+                new Header(false, HttpStatus.NOT_FOUND.value()),body
+        );
+    }
+    public static <T> ApiResponse<T> badRequestFail(Body<T> body) {
+        return new ApiResponse<>(
+                new Header(false, HttpStatus.BAD_REQUEST.value()),body
+        );
+    }
+    public static <T> ApiResponse<T> forbiddenFail(Body<T> body) {
+        return new ApiResponse<>(
+                new Header(false, HttpStatus.FORBIDDEN.value()),body
+        );
+    }
+    public static <T> ApiResponse<T> serverErrorFail(Body<T> body) {
+        return new ApiResponse<>(
+                new Header(false, HttpStatus.INTERNAL_SERVER_ERROR.value()),body
+        );
+    }
+
+
 }

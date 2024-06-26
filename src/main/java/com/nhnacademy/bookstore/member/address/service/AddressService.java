@@ -5,13 +5,14 @@ import com.nhnacademy.bookstore.entity.member.Member;
 import com.nhnacademy.bookstore.member.address.dto.request.UpdateAddressRequest;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface AddressService {
-    void save(Address address);
+    void save(Address address,Member member);
 
     List<Address> readAll(Member member);
 
-    Address updateAddress(String addressId, UpdateAddressRequest updateAddressRequest);
+    Address updateAddress(Long addressId, UpdateAddressRequest updateAddressRequest);
 
-    void deleteAddress(String addressId);
+    void deleteAddress(Long addressId);
 }
