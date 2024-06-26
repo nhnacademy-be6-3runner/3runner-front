@@ -3,3 +3,6 @@ server:
 spring:
   application:
     name: 3runner-front
+logging:
+  level:
+    com.nhnacademy.front.purchase.cart.controller.CartController: DEBUG

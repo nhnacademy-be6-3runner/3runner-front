@@ -1,5 +1,6 @@
 package com.nhnacademy.front.purchase.cart.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 
 /**
@@ -9,8 +10,11 @@ import lombok.Builder;
  * @param bookId 도서아이디
  * @param quantity 도서수량
  */
+
 @Builder
-public record CreateBookCartGuestRequest(
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public record CreateBookCartRequest(
         long bookId,
+        long userId,
         int quantity) {
     }
