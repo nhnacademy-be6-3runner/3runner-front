@@ -13,8 +13,8 @@ spring:
 
   jpa:
     open-in-view: false
-    hibernate:
-      ddl-auto: update
+    #    hibernate:
+    #      ddl-auto: update
     show-sql: true
 
     properties:

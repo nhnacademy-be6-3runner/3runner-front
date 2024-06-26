@@ -7,17 +7,23 @@ import com.nhnacademy.bookstore.entity.bookImage.QBookImage;
 import com.nhnacademy.bookstore.entity.bookImage.enums.BookImageType;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import lombok.RequiredArgsConstructor;
+import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@RequiredArgsConstructor
+@Repository
 public class BookCustomRepositoryImpl implements BookCustomRepository {
     private final JPAQueryFactory jpaQueryFactory;
-    private QBook qBook = QBook.book;
-    private QBookImage qBookImage = QBookImage.bookImage;
+    private final QBook qBook = QBook.book;
+    private final QBookImage qBookImage = QBookImage.bookImage;
+
+    public BookCustomRepositoryImpl(EntityManager entityManager) {
+        this.jpaQueryFactory = new JPAQueryFactory(entityManager);
+    }
 
     @Override
     public Page<BookListResponse> readBookList(Pageable pageable) {
@@ -35,6 +41,9 @@ public class BookCustomRepositoryImpl implements BookCustomRepository {
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
-        return null;
+        long total = jpaQueryFactory.select(qBook.count())
+                .from(qBook)
+                .fetchOne();
+        return new PageImpl<>(content, pageable, total);
     }
 }

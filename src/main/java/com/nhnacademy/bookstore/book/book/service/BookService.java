@@ -1,9 +1,10 @@
 package com.nhnacademy.bookstore.book.book.service;
 
 import com.nhnacademy.bookstore.book.book.dto.request.CreateBookRequest;
+import com.nhnacademy.bookstore.book.book.dto.response.BookListResponse;
 import com.nhnacademy.bookstore.book.book.dto.response.ReadBookResponse;
-import com.nhnacademy.bookstore.book.book.repository.BookRepository;
-import com.nhnacademy.bookstore.entity.book.Book;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 /**
  * 책 테이블 CRUD 서비스.
@@ -25,4 +26,6 @@ public interface BookService {
      * @return Book
      */
     public ReadBookResponse readBookById(Long bookId);
+
+    Page<BookListResponse> readAllBooks(Pageable pageable);
 }
