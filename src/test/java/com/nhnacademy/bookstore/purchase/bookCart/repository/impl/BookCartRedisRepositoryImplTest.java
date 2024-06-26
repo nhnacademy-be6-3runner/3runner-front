@@ -1,22 +1,17 @@
 package com.nhnacademy.bookstore.purchase.bookCart.repository.impl;
 
 import com.nhnacademy.bookstore.purchase.bookCart.dto.response.ReadBookCartGuestResponse;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 
-import java.time.ZonedDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -35,7 +30,7 @@ class BookCartRedisRepositoryImplTest {
         when(redisTemplate.opsForHash()).thenReturn(hashOperations);
         String hashName = "cart";
         Long id = 1L;
-        ReadBookCartGuestResponse response = new ReadBookCartGuestResponse(1L,  1, null,"test", 2);
+        ReadBookCartGuestResponse response = new ReadBookCartGuestResponse(1L,  1L,11, null,"test", 2);
 
         bookCartRedisRepository.create(hashName, id, response);
 
@@ -47,13 +42,13 @@ class BookCartRedisRepositoryImplTest {
         when(redisTemplate.opsForHash()).thenReturn(hashOperations);
         String hashName = "cart";
         Long id = 1L;
-        ReadBookCartGuestResponse existingResponse = new ReadBookCartGuestResponse(1L,  1, null,"test", 2);
+        ReadBookCartGuestResponse existingResponse = new ReadBookCartGuestResponse(1L,  1L,11, null,"test", 2);
 
         when(hashOperations.get(hashName+ ":", id.toString())).thenReturn(existingResponse);
 
         bookCartRedisRepository.update(hashName, id, 3);
 
-        ReadBookCartGuestResponse expectedResponse = new ReadBookCartGuestResponse(1L, 1, null,"test", 3);
+        ReadBookCartGuestResponse expectedResponse = new ReadBookCartGuestResponse(1L,  1L,11, null,"test", 3);
         verify(hashOperations, times(1)).put(hashName + ":", id.toString(), expectedResponse);
     }
 
@@ -72,8 +67,8 @@ class BookCartRedisRepositoryImplTest {
     void readAllHashName() {
         when(redisTemplate.opsForHash()).thenReturn(hashOperations);
         String hashName = "cart";
-        ReadBookCartGuestResponse response1 = new ReadBookCartGuestResponse(1L,  1, null, "test",2);
-        ReadBookCartGuestResponse response2 = new ReadBookCartGuestResponse(2L,  1, null, "test",3);
+        ReadBookCartGuestResponse response1 = new ReadBookCartGuestResponse(1L,  1L,11, null,"test", 2);
+        ReadBookCartGuestResponse response2 = new ReadBookCartGuestResponse(2L,  1L,11, null,"test", 2);
 
         when(hashOperations.values(hashName + ":")).thenReturn(List.of(response1, response2));
 
@@ -108,8 +103,8 @@ class BookCartRedisRepositoryImplTest {
     void loadData() {
         when(redisTemplate.opsForHash()).thenReturn(hashOperations);
         String hashName = "cart";
-        ReadBookCartGuestResponse response1 = new ReadBookCartGuestResponse(1L,  1, null, "test", 2);
-        ReadBookCartGuestResponse response2 = new ReadBookCartGuestResponse(2L,  1, null, "test", 3);
+        ReadBookCartGuestResponse response1 = new ReadBookCartGuestResponse(1L,  1L,11, null,"test", 2);
+        ReadBookCartGuestResponse response2 = new ReadBookCartGuestResponse(2L,  1L,11, null,"test", 2);
 
         bookCartRedisRepository.loadData(List.of(response1, response2), hashName);
 

@@ -1,11 +1,11 @@
-package com.nhnacademy.bookstore.book.booktag.service;
+package com.nhnacademy.bookstore.book.bookTag.service;
 
+import com.nhnacademy.bookstore.book.bookTag.service.Impl.BookTagServiceImpl;
 import com.nhnacademy.bookstore.book.booktag.dto.request.ReadBookIdRequest;
 import com.nhnacademy.bookstore.book.booktag.dto.request.ReadTagRequest;
 import com.nhnacademy.bookstore.book.booktag.dto.response.ReadBookByTagResponse;
 import com.nhnacademy.bookstore.book.booktag.dto.response.ReadTagByBookResponse;
 import com.nhnacademy.bookstore.book.booktag.repository.BookTagRepository;
-import com.nhnacademy.bookstore.book.booktag.service.Impl.BookTagServiceImpl;
 import com.nhnacademy.bookstore.entity.book.Book;
 import com.nhnacademy.bookstore.entity.tag.Tag;
 import org.junit.jupiter.api.BeforeEach;

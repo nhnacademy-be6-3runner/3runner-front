@@ -15,7 +15,7 @@ import java.util.Set;
 
 @Entity
 @Getter@Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class BookCart {
 
     @Id

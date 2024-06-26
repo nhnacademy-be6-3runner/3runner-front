@@ -56,23 +56,29 @@ public class BookCartGuestServiceImpl implements BookCartGuestService {
         cartRepository.save(cart);
         long cartId = cart.getId();
 
-        //hasDataToLoad(cart.getId());
+        hasDataToLoad(cart.getId());
 
         BookCart bookCart = new BookCart(quantity, ZonedDateTime.now(), book, cart);
 
         bookCartRepository.save(bookCart);
 
-//        bookCartRedisRepository.create(
-//                Long.toString(cartId),
-//                bookCart.getId(),
-//                ReadBookCartGuestResponse.builder()
-//                        .bookCartId(bookCart.getId())
-//                        .price(book.getPrice())
-//                        .url(book.getBookImageList().getFirst().getUrl())
-//                        .title(book.getTitle())
-//                        .quantity(bookCart.getQuantity())
-//                        .build()
-//        );
+
+        String url = "/img/no-image.png";
+        if (bookCart.getBook().getBookImageList()!=null && !bookCart.getBook().getBookImageList().isEmpty()) {
+            url = bookCart.getBook().getBookImageList().getFirst().getUrl();
+        }
+
+        bookCartRedisRepository.create(
+                Long.toString(cartId),
+                bookCart.getId(),
+                ReadBookCartGuestResponse.builder()
+                        .bookCartId(bookCart.getId())
+                        .price(book.getPrice())
+                        .url(url)
+                        .title(book.getTitle())
+                        .quantity(bookCart.getQuantity())
+                        .build()
+        );
 
         return cartId;
     }
@@ -95,12 +101,12 @@ public class BookCartGuestServiceImpl implements BookCartGuestService {
 
 
         Optional<BookCart> optionalBookCart = bookCartRepository.findByBookAndCart(book, cart);
-        if(optionalBookCart.isEmpty()){
+        if (optionalBookCart.isEmpty()) {
             bookCartRepository.save(new BookCart(quantity,book,cart));
             return cartId;
         }
 
-        //hasDataToLoad(cartId);
+        hasDataToLoad(cartId);
 
         BookCart bookCart = optionalBookCart.get();
 
@@ -109,10 +115,10 @@ public class BookCartGuestServiceImpl implements BookCartGuestService {
             bookCart.setQuantity(amount);
 
             bookCartRepository.save(bookCart);
-            //bookCartRedisRepository.update(cartId.toString(), bookCart.getId(), amount);
+            bookCartRedisRepository.update(cartId.toString(), bookCart.getId(), amount);
         } else {
             bookCartRepository.delete(bookCart);
-            //bookCartRedisRepository.delete(cartId.toString(), bookCart.getId());
+            bookCartRedisRepository.delete(cartId.toString(), bookCart.getId());
         }
 
         return cart.getId();
@@ -124,7 +130,7 @@ public class BookCartGuestServiceImpl implements BookCartGuestService {
                 .orElseThrow(() -> new BookCartDoesNotExistException("북카트 존재하지 않습니다."));
 
         bookCartRepository.delete(bookCart);
-        //bookCartRedisRepository.delete(cartId.toString(), bookCart.getId());
+        bookCartRedisRepository.delete(cartId.toString(), bookCart.getId());
 
         return cartId;
     }
@@ -139,13 +145,13 @@ public class BookCartGuestServiceImpl implements BookCartGuestService {
      */
     @Override
     public List<ReadBookCartGuestResponse> readAllBookCart(Long cartId) {
-//        List<ReadBookCartGuestResponse> bookCartGuestResponseList =  bookCartRedisRepository.readAllHashName(cartId.toString());
-//        if (!bookCartGuestResponseList.isEmpty()) {
-//            return  bookCartGuestResponseList;
-//        }
-//
-//        return  hasDataToLoad(cartId);
-        return readAllFromDb(cartId);
+        List<ReadBookCartGuestResponse> bookCartGuestResponseList =  bookCartRedisRepository.readAllHashName(cartId.toString());
+        if (!bookCartGuestResponseList.isEmpty()) {
+            return  bookCartGuestResponseList;
+        }
+
+        return  hasDataToLoad(cartId);
+        //return readAllFromDb(cartId);
     }
 
     /**
@@ -173,11 +179,16 @@ public class BookCartGuestServiceImpl implements BookCartGuestService {
         List<ReadBookCartGuestResponse> listDto = new ArrayList<>();
         log.info("{}", list);
         for (BookCart bookCart : list) {
+            String url = "/img/no-image.png";
+            if (bookCart.getBook().getBookImageList()!=null && !bookCart.getBook().getBookImageList().isEmpty()) {
+                url = bookCart.getBook().getBookImageList().getFirst().getUrl();
+            }
+
             listDto.add(ReadBookCartGuestResponse.builder()
                     .bookCartId(bookCart.getId())
                     .bookId(bookCart.getBook().getId())
                     .price(bookCart.getBook().getPrice())
-                    .url(bookCart.getBook().getBookImageList().getFirst().getUrl())
+                    .url(url)
                     .title(bookCart.getBook().getTitle())
                     .quantity(bookCart.getQuantity())
                     .build());

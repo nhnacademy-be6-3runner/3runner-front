@@ -50,6 +50,7 @@ public class BookCartRedisRepositoryImpl implements BookCartRedisRepository {
 
         ReadBookCartGuestResponse updatedResponse = ReadBookCartGuestResponse.builder()
                 .bookCartId(response.bookCartId())
+                .bookId(response.bookId())
                 .price(response.price())
                 .url(response.url())
                 .title(response.title())
