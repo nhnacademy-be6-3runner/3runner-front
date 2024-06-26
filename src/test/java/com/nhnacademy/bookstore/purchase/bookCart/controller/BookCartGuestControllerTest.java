@@ -1,7 +1,7 @@
 //package com.nhnacademy.bookstore.purchase.bookCart.controller;
 //
-//import com.nhnacademy.bookstore.purchase.bookCart.dto.request.CreateBookCartGuestRequest;
-//import com.nhnacademy.bookstore.purchase.bookCart.dto.request.UpdateBookCartGuestRequest;
+//import com.nhnacademy.bookstore.purchase.bookCart.dto.request.CreateBookCartRequest;
+//import com.nhnacademy.bookstore.purchase.bookCart.dto.request.UpdateBookCartRequest;
 //import com.nhnacademy.bookstore.purchase.bookCart.service.BookCartGuestService;
 //import jakarta.servlet.http.Cookie;
 //import org.junit.jupiter.api.Test;
@@ -21,7 +21,7 @@
 //import static org.mockito.Mockito.*;
 //
 //
-//@WebMvcTest(BookCartGuestController.class)
+//@WebMvcTest(BookCartController.class)
 //class BookCartGuestControllerTest {
 //    @Autowired
 //    private MockMvc mockMvc;
@@ -43,7 +43,7 @@
 //
 //    @Test
 //    void testAddCart() throws Exception {
-//        CreateBookCartGuestRequest request = new CreateBookCartGuestRequest(1L, 1);
+//        CreateBookCartRequest request = new CreateBookCartRequest(1L, 1);
 //        when(bookCartGuestService.createBookCart(anyLong(), anyLong(), anyInt())).thenReturn(1L);
 //
 //        mockMvc.perform(MockMvcRequestBuilders.post("/bookstore/carts")
@@ -59,7 +59,7 @@
 //
 //    @Test
 //    void testUpdateCart() throws Exception {
-//        UpdateBookCartGuestRequest request = new UpdateBookCartGuestRequest(1L, 1);
+//        UpdateBookCartRequest request = new UpdateBookCartRequest(1L, 1);
 //
 //        mockMvc.perform(MockMvcRequestBuilders.put("/bookstore/carts")
 //                        .contentType(MediaType.APPLICATION_JSON)

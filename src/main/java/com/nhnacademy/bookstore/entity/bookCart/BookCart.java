@@ -38,6 +38,11 @@ public class BookCart {
     @ManyToOne
     private Cart cart;
 
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = ZonedDateTime.now();
+    }
+
     public BookCart(int quantity, ZonedDateTime createdAt, Book book, Cart cart) {
         this.quantity = quantity;
         this.createdAt = createdAt;

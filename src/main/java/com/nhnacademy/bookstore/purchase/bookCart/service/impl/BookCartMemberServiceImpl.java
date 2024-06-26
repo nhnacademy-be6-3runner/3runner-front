@@ -1,6 +1,7 @@
 package com.nhnacademy.bookstore.purchase.bookCart.service.impl;
 
 import com.nhnacademy.bookstore.member.member.exception.MemberNotExistsException;
+import com.nhnacademy.bookstore.purchase.bookCart.dto.request.DeleteBookCartRequest;
 import com.nhnacademy.bookstore.purchase.bookCart.exception.NotExistsBookCartException;
 import com.nhnacademy.bookstore.purchase.bookCart.exception.NotExistsBookException;
 import com.nhnacademy.bookstore.purchase.bookCart.exception.NotExistsCartException;
@@ -8,8 +9,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,10 +16,9 @@ import com.nhnacademy.bookstore.book.book.repository.BookRepository;
 import com.nhnacademy.bookstore.entity.bookCart.BookCart;
 import com.nhnacademy.bookstore.entity.cart.Cart;
 import com.nhnacademy.bookstore.member.member.repository.MemberRepository;
-import com.nhnacademy.bookstore.purchase.bookCart.dto.request.CreateBookCartMemberRequest;
-import com.nhnacademy.bookstore.purchase.bookCart.dto.request.DeleteBookCartMemberRequest;
+import com.nhnacademy.bookstore.purchase.bookCart.dto.request.CreateBookCartRequest;
 import com.nhnacademy.bookstore.purchase.bookCart.dto.request.ReadAllBookCartMemberRequest;
-import com.nhnacademy.bookstore.purchase.bookCart.dto.request.UpdateBookCartMemberRequest;
+import com.nhnacademy.bookstore.purchase.bookCart.dto.request.UpdateBookCartRequest;
 import com.nhnacademy.bookstore.purchase.bookCart.dto.response.ReadAllBookCartMemberResponse;
 import com.nhnacademy.bookstore.purchase.bookCart.dto.response.ReadBookCartBook;
 import com.nhnacademy.bookstore.purchase.bookCart.repository.BookCartRepository;
@@ -66,7 +64,7 @@ public class BookCartMemberServiceImpl implements BookCartMemberService {
     }
 
     @Override
-    public Long createBookCartMember(CreateBookCartMemberRequest createBookCartRequest) {
+    public Long createBookCartMember(CreateBookCartRequest createBookCartRequest) {
         Cart cart = cartRepository.findByMemberId(createBookCartRequest.userId()).orElse(null);
 
         if (Objects.isNull(cart)) {
@@ -90,7 +88,7 @@ public class BookCartMemberServiceImpl implements BookCartMemberService {
     }
 
     @Override
-    public Long updateBookCartMember(UpdateBookCartMemberRequest updateBookCartRequest) {
+    public Long updateBookCartMember(UpdateBookCartRequest updateBookCartRequest) {
         BookCart bookCart = bookCartRepository.findBookCartByBookIdAndCartId(updateBookCartRequest.bookId(), updateBookCartRequest.cartId())
             .orElseThrow(NotExistsBookCartException::new);
         Cart cart = cartRepository.findById(updateBookCartRequest.cartId()).orElseThrow(NotExistsCartException::new);
@@ -110,7 +108,7 @@ public class BookCartMemberServiceImpl implements BookCartMemberService {
     }
 
     @Override
-    public Long deleteBookCartMember(DeleteBookCartMemberRequest deleteBookCartMemberRequest) {
+    public Long deleteBookCartMember(DeleteBookCartRequest deleteBookCartMemberRequest) {
         bookCartRepository.delete(
             bookCartRepository.findById(deleteBookCartMemberRequest.bookCartId()).orElseThrow(NotExistsBookCartException::new));
         return deleteBookCartMemberRequest.cartId();

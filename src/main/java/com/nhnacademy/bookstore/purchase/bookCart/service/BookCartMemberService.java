@@ -2,18 +2,16 @@ package com.nhnacademy.bookstore.purchase.bookCart.service;
 
 import java.util.List;
 
-import com.nhnacademy.bookstore.purchase.bookCart.dto.request.CreateBookCartMemberRequest;
-import com.nhnacademy.bookstore.purchase.bookCart.dto.request.DeleteBookCartMemberRequest;
+import com.nhnacademy.bookstore.purchase.bookCart.dto.request.CreateBookCartRequest;
+import com.nhnacademy.bookstore.purchase.bookCart.dto.request.DeleteBookCartRequest;
 import com.nhnacademy.bookstore.purchase.bookCart.dto.request.ReadAllBookCartMemberRequest;
-import com.nhnacademy.bookstore.purchase.bookCart.dto.request.UpdateBookCartMemberRequest;
+import com.nhnacademy.bookstore.purchase.bookCart.dto.request.UpdateBookCartRequest;
 import com.nhnacademy.bookstore.purchase.bookCart.dto.response.ReadAllBookCartMemberResponse;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 public interface BookCartMemberService {
 	List<ReadAllBookCartMemberResponse> readAllCartMember(ReadAllBookCartMemberRequest readAllCartMemberRequest);
-	Long createBookCartMember(CreateBookCartMemberRequest createBookCartRequest);
-	Long updateBookCartMember(UpdateBookCartMemberRequest updateBookCartRequest);
-	Long deleteBookCartMember(DeleteBookCartMemberRequest deleteBookCartMemberRequest);
+	Long createBookCartMember(CreateBookCartRequest createBookCartRequest);
+	Long updateBookCartMember(UpdateBookCartRequest updateBookCartRequest);
+	Long deleteBookCartMember(DeleteBookCartRequest deleteBookCartMemberRequest);
 
 }

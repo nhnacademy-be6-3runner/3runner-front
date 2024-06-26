@@ -1,10 +1,7 @@
 package com.nhnacademy.bookstore.purchase.bookCart.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
-import lombok.Value;
+import lombok.Builder;
 
 /**
  * 카트 생성 폼.
@@ -14,9 +11,10 @@ import lombok.Value;
  * @param quantity 도서수량
  */
 
+@Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public record CreateBookCartGuestRequest(
+public record CreateBookCartRequest(
         long bookId,
-        long cartId,
+        long userId,
         int quantity) {
     }

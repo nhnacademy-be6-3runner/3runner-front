@@ -7,7 +7,6 @@ import com.nhnacademy.bookstore.purchase.bookCart.exception.BookCartArgumentErro
 import com.nhnacademy.bookstore.purchase.bookCart.service.BookCartGuestService;
 import com.nhnacademy.bookstore.purchase.bookCart.service.BookCartMemberService;
 import com.nhnacademy.bookstore.util.ApiResponse;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Objects;
@@ -25,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/bookstore/carts")
-public class BookCartGuestController {
+public class BookCartController {
     private final BookCartGuestService bookCartGuestService;
     private final BookCartMemberService bookCartMemberService;
 
@@ -59,17 +58,28 @@ public class BookCartGuestController {
      */
     @PostMapping()
     public ApiResponse<Long> createCart(
-            @Valid @RequestBody CreateBookCartGuestRequest createBookCartGuestRequest,
-            @RequestHeader(value = "Member-Id", required = false)
-            BindingResult bindingResult
+            @Valid @RequestBody CreateBookCartRequest createBookCartGuestRequest,
+            BindingResult bindingResult,
+            @RequestHeader(value = "Member-Id", required = false) Long memberId
         ) {
         if (bindingResult.hasErrors()) {
             throw new BookCartArgumentErrorException("폼 에러");
         }
-        Long cartId = bookCartGuestService.createBookCart(createBookCartGuestRequest.bookId(),
-                createBookCartGuestRequest.quantity());
 
-        return ApiResponse.createSuccess(cartId);
+        if (Objects.isNull(memberId)) {
+            Long cartId = bookCartGuestService.createBookCart(createBookCartGuestRequest.bookId(),
+                    createBookCartGuestRequest.quantity());
+
+            return ApiResponse.createSuccess(cartId);
+
+        } else {
+            createBookCartGuestRequest = CreateBookCartRequest.builder()
+                    .bookId(createBookCartGuestRequest.bookId())
+                    .quantity(createBookCartGuestRequest.quantity())
+                    .userId(memberId)
+                    .build();
+            return ApiResponse.createSuccess(bookCartMemberService.createBookCartMember(createBookCartGuestRequest));
+        }
     }
 
     /**
@@ -81,34 +91,47 @@ public class BookCartGuestController {
      */
     @PutMapping()
     public ApiResponse<Long> updateCart(
-            @Valid @RequestBody UpdateBookCartGuestRequest updateBookCartGuestRequest,
-            BindingResult bindingResult) {
+            @Valid @RequestBody UpdateBookCartRequest updateBookCartGuestRequest,
+            BindingResult bindingResult,
+            @RequestHeader(value = "Member-Id", required = false) Long memberId
+    ) {
 
         if (bindingResult.hasErrors()) {
             throw new BookCartArgumentErrorException("폼 에러");
         }
-        bookCartGuestService.updateBookCart(
-            updateBookCartGuestRequest.bookId(),
-            updateBookCartGuestRequest.cartId(),
-            updateBookCartGuestRequest.quantity()
-        );
 
-        return ApiResponse.success(updateBookCartGuestRequest.cartId());
+        if (Objects.isNull(memberId)) {
+            bookCartGuestService.updateBookCart(
+                updateBookCartGuestRequest.bookId(),
+                updateBookCartGuestRequest.cartId(),
+                updateBookCartGuestRequest.quantity()
+            );
+            return ApiResponse.success(updateBookCartGuestRequest.cartId());
+        } else {
+            return ApiResponse.success(bookCartMemberService.updateBookCartMember(updateBookCartGuestRequest));
+        }
+
     }
 
     @DeleteMapping()
     public ApiResponse<Long> deleteCart(
-            @Valid @RequestBody DeleteBookCartGuestRequest deleteBookCartGuestRequest,
-            BindingResult bindingResult
+            @Valid @RequestBody DeleteBookCartRequest deleteBookCartGuestRequest,
+            BindingResult bindingResult,
+            @RequestHeader(value = "Member-Id", required = false) Long memberId
     ) {
         if (bindingResult.hasErrors()) {
             throw new BookCartArgumentErrorException("폼 에러");
         }
 
-        bookCartGuestService.deleteBookCart(
-                deleteBookCartGuestRequest.bookCartId(),
-                deleteBookCartGuestRequest.cartId());
+        if (Objects.isNull(memberId)) {
+            bookCartGuestService.deleteBookCart(
+                    deleteBookCartGuestRequest.bookCartId(),
+                    deleteBookCartGuestRequest.cartId());
 
-        return ApiResponse.deleteSuccess(deleteBookCartGuestRequest.cartId());
+            return ApiResponse.deleteSuccess(deleteBookCartGuestRequest.cartId());
+        } else {
+
+            return ApiResponse.deleteSuccess(bookCartMemberService.deleteBookCartMember(deleteBookCartGuestRequest));
+        }
     }
 }
