@@ -14,6 +14,6 @@ public interface BookCartMemberService {
 	List<ReadAllBookCartMemberResponse> readAllCartMember(ReadAllBookCartMemberRequest readAllCartMemberRequest);
 	Long createBookCartMember(CreateBookCartMemberRequest createBookCartRequest);
 	Long updateBookCartMember(UpdateBookCartMemberRequest updateBookCartRequest);
-	void deleteBookCartMember(DeleteBookCartMemberRequest deleteBookCartMemberRequest);
+	Long deleteBookCartMember(DeleteBookCartMemberRequest deleteBookCartMemberRequest);
 
 }

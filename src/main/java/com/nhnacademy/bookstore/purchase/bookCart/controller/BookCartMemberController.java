@@ -1,28 +1,26 @@
 package com.nhnacademy.bookstore.purchase.bookCart.controller;
 
-import com.nhnacademy.bookstore.purchase.bookCart.dto.request.CreateBookCartMemberRequest;
-import com.nhnacademy.bookstore.purchase.bookCart.dto.request.DeleteBookCartMemberRequest;
-import com.nhnacademy.bookstore.purchase.bookCart.dto.request.ReadAllBookCartMemberRequest;
-import com.nhnacademy.bookstore.purchase.bookCart.dto.request.UpdateBookCartMemberRequest;
-import com.nhnacademy.bookstore.purchase.bookCart.dto.response.ReadAllBookCartMemberResponse;
-import com.nhnacademy.bookstore.purchase.bookCart.exception.CreateBookCartMemberRequestFormException;
-import com.nhnacademy.bookstore.purchase.bookCart.exception.DeleteBookCartMemberRequestFormException;
-import com.nhnacademy.bookstore.purchase.bookCart.exception.UpdateBookCartMemberRequestFormException;
-import com.nhnacademy.bookstore.purchase.bookCart.service.BookCartMemberService;
-import com.nhnacademy.bookstore.util.ApiResponse;
-import com.nhnacademy.bookstore.util.ValidationUtils;
-import jakarta.validation.Valid;
-import java.util.List;
-import lombok.RequiredArgsConstructor;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.nhnacademy.bookstore.purchase.bookCart.dto.request.CreateBookCartMemberRequest;
+import com.nhnacademy.bookstore.purchase.bookCart.dto.request.DeleteBookCartMemberRequest;
+import com.nhnacademy.bookstore.purchase.bookCart.dto.request.UpdateBookCartMemberRequest;
+import com.nhnacademy.bookstore.purchase.bookCart.exception.CreateBookCartMemberRequestFormException;
+import com.nhnacademy.bookstore.purchase.bookCart.exception.DeleteBookCartMemberRequestFormException;
+import com.nhnacademy.bookstore.purchase.bookCart.exception.UpdateBookCartMemberRequestFormException;
+import com.nhnacademy.bookstore.purchase.bookCart.service.BookCartMemberService;
+import com.nhnacademy.bookstore.util.ApiResponse;
+import com.nhnacademy.bookstore.util.ValidationUtils;
+
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 회원 book-cart controller
@@ -50,18 +48,14 @@ public class BookCartMemberController {
 
 	@PutMapping
 	public ApiResponse<Long> updateBookCartMember(@RequestBody @Valid UpdateBookCartMemberRequest request, BindingResult bindingResult) {
-		ValidationUtils.validateBindingResult( bindingResult, new UpdateBookCartMemberRequestFormException());
+		ValidationUtils.validateBindingResult(bindingResult,new UpdateBookCartMemberRequestFormException());
 		return ApiResponse.success(bookCartMemberService.updateBookCartMember(request));
 	}
 
 	@DeleteMapping
-	public ApiResponse<Void> deleteBookCartMember(@RequestHeader(name = "Member-Id") Long userId) {
-		if(userId == null) {
-			throw new DeleteBookCartMemberRequestFormException();
-		}
+	public ApiResponse<Long> deleteBookCartMember(@RequestBody @Valid DeleteBookCartMemberRequest request, BindingResult bindingResult) {
+		ValidationUtils.validateBindingResult(bindingResult, new DeleteBookCartMemberRequestFormException());
 
-		bookCartMemberService.deleteBookCartMember(DeleteBookCartMemberRequest.builder().userId(userId).build());
-
-		return ApiResponse.deleteSuccess(null);
+		return ApiResponse.deleteSuccess(bookCartMemberService.deleteBookCartMember(request));
 	}
 }

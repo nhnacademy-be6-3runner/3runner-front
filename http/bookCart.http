@@ -1,27 +1,38 @@
 ###
-POST http://localhost:8081/bookstore/cart
+POST http://localhost:8081/bookstore/members/carts
 Content-Type: application/json
 Member-Id: 1
 
 {
-  "quantity": 5,
+  "quantity": 1,
   "bookId": 15
 }
 
 ###
-PUT http://localhost:8081/bookstore/cart
+PUT http://localhost:8081/bookstore/members/carts
 Content-Type: application/json
 Member-Id: 1
 
 {
-  "bookCartId": 27,
-  "quantity": 11,
-  "bookId": 2,
+
+  "quantity": 100,
+  "bookId": 15,
   "cartId" : 20
 }
 
 ###
-GET http://localhost:8081/bookstore/cart
+GET http://localhost:8081/bookstore/carts
 Member-Id: 1
+
+###
+DELETE http://localhost:8081/bookstore/members/carts
+Content-Type: application/json
+Member-Id: 1
+
+{
+  "bookCartId": 15,
+  "cartId" : 20
+}
+
 
 
