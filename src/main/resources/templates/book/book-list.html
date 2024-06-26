@@ -6,6 +6,24 @@
     <link rel="stylesheet" href="/css/index.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <title>Book Store</title>
+    <style>
+        /* Additional styling for the book-item */
+        .book-item {
+            max-width: 250px; /* Adjust the max-width as needed */
+            margin: 0 auto 20px; /* Center align and add bottom margin */
+        }
+        .card-body {
+            padding: 10px;
+            width: 100%;
+        }
+        .carousel-inner .carousel-item {
+            display: flex;
+            justify-content: center;
+        }
+        .carousel-control-prev, .carousel-control-next {
+            width: 5%;
+        }
+    </style>
 </head>
 <body>
 <header>
@@ -67,19 +85,57 @@
     </ul>
 </nav>
 
-<div class="highlighted-books">
-    <div class="highlighted-options">
-        <button class="highlighted-button" onclick="window.location.href='/bestsellers'">베스트셀러</button>
-        <button class="highlighted-button" onclick="window.location.href='/newarrivals'">신간</button>
-        <button class="highlighted-button" onclick="window.location.href='/trending'">지금 뜨는 책</button>
+
+<!-- Book List Carousel -->
+<div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+        <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
     </div>
-    <div class="highlighted-list">
-        <div class="book-item" th:each="book : ${highlightedBooks}">
-            <img th:src="@{${book.coverImage}}" alt="Book Cover">
-            <h3 th:text="${book.title}">Book Title</h3>
-            <p th:text="${book.author}">Author Name</p>
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-6 col-12 book-item2" th:each="book, bookStat : ${bookList.content}" th:if="${bookStat.index < 3}">
+                    <img class="card-img-top book-thumbnail2" th:src="@{'/api/images/book/download?fileName=' + ${book.thumbnail}}" alt="Book Thumbnail">
+                    <div class="card-body2">
+                        <h5 class="card-title" th:text="${book.title}"></h5>
+                        <p class="card-text" th:text="${book.author}"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-6 col-12 book-item2" th:each="book, bookStat : ${bookList.content}" th:if="${bookStat.index >= 3 && bookStat.index < 6}">
+                    <img class="card-img-top book-thumbnail2" th:src="@{'/api/images/book/download?fileName=' + ${book.thumbnail}}" alt="Book Thumbnail">
+                    <div class="card-body2">
+                        <h5 class="card-title" th:text="${book.title}"></h5>
+                        <p class="card-text" th:text="${book.author}"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-6 col-12 book-item2" th:each="book, bookStat : ${bookList.content}" th:if="${bookStat.index >= 6 && bookStat.index < 9}">
+                    <img class="card-img-top book-thumbnail2" th:src="@{'/api/images/book/download?fileName=' + ${book.thumbnail}}" alt="Book Thumbnail">
+                    <div class="card-body2">
+                        <h5 class="card-title" th:text="${book.title}"></h5>
+                        <p class="card-text" th:text="${book.author}"></p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden"></span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden"></span>
+    </button>
 </div>
 
 <div class="book-list">
@@ -93,15 +149,13 @@
         </select>
     </div>
     <div class="book-list-items row" id="book-list-items">
-        <div class="col-lg-4 col-md-6 col-sm-12 book-item" th:each="book : ${bookList.content}">
-            <div class="card">
-                <img class="card-img-top book-thumbnail" th:src="@{'/api/images/book/download?fileName=' + ${book.thumbnail}}" alt="Book Thumbnail">
-                <div class="card-body">
-                    <h5 class="card-title" th:text="${book.title}"></h5>
-                    <p class="card-text" th:text="'Author: ' + ${book.author}"></p>
-                    <p class="card-text" th:text="'Price: ' + ${book.price}"></p>
-                    <p class="card-text" th:text="'Selling Price: ' + ${book.sellingPrice}"></p>
-                </div>
+        <div class="col-lg-3 col-md-4 col-sm-6 col-12 book-item" th:each="book : ${bookList.content}">
+            <img class="card-img-top book-thumbnail" th:src="@{'/api/images/book/download?fileName=' + ${book.thumbnail}}" alt="Book Thumbnail">
+            <div class="card-body">
+                <h5 class="card-title" th:text="${book.title}"></h5>
+                <p class="card-text" th:text="${book.author}"></p>
+                <p class="card-text" th:text="'가격 ' + ${book.price}"></p>
+                <p class="card-text" th:text="'할인가 ' + ${book.sellingPrice}"></p>
             </div>
         </div>
     </div>
@@ -162,6 +216,27 @@
         currentPage++;
         window.location.href = `/books?page=${currentPage}&size=9`;
     }
+
+    // 캐러셀 슬라이더
+    var myCarousel = document.querySelector('#carouselExampleCaptions');
+    var carousel = new bootstrap.Carousel(myCarousel, {
+        interval: false
+    });
+
+    // 캐러셀 이벤트
+    myCarousel.addEventListener('slide.bs.carousel', function (event) {
+        console.log('Sliding from index: ' + event.from + ' to index: ' + event.to);
+        console.log('Direction: ' + event.direction);
+    });
+
+    myCarousel.addEventListener('slid.bs.carousel', function (event) {
+        console.log('Slide transition completed. Current index: ' + event.to);
+    });
 </script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
 </body>
 </html>

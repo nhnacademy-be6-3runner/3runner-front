@@ -1,15 +1,19 @@
 package com.nhnacademy.front.book.book.controller;
 
 import com.nhnacademy.front.book.book.dto.request.UserCreateBookRequest;
+import com.nhnacademy.front.book.book.dto.response.BookListResponse;
 import com.nhnacademy.front.book.book.service.BookService;
 import com.nhnacademy.front.book.image.service.ImageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -34,15 +38,11 @@ public class BookController {
         return "book/book_create";
     }
 
-    @GetMapping("/api/create")
-    public String apiCreateBook(){
-        return "book/api_book_create";
-    }
+    @GetMapping
+    public String readLimitBooks(Model model) {
+        Page<BookListResponse> bookList = bookService.readLimitBooks(10);
+        model.addAttribute("bookList", bookList);
 
-    @PostMapping("/api/create")
-    public String apiCreateBook(String isbnId, Model model){
-        bookService.saveApiBook(isbnId);
-        return "book/api_book_create";
+        return "book/book-list";
     }
-
 }

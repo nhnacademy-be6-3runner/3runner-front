@@ -1,14 +1,18 @@
 package com.nhnacademy.front.book.book.service.Impl;
 
-import com.nhnacademy.front.book.book.controller.feign.ApiBookClient;
 import com.nhnacademy.front.book.book.controller.feign.BookClient;
 import com.nhnacademy.front.book.book.dto.request.CreateBookRequest;
 import com.nhnacademy.front.book.book.dto.request.UserCreateBookRequest;
+import com.nhnacademy.front.book.book.dto.response.BookListResponse;
 import com.nhnacademy.front.book.book.service.BookService;
 
 
+import com.nhnacademy.front.util.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -25,7 +29,6 @@ import java.util.Objects;
 public class BookServiceImpl implements BookService {
 
     private final BookClient bookClient;
-    private final ApiBookClient apiBookClient;
 
 
     /**
@@ -61,10 +64,6 @@ public class BookServiceImpl implements BookService {
         bookClient.createBook(createBookRequest);
     }
 
-    @Override
-    public void saveApiBook(String isbn) {
-        apiBookClient.createApiBook(isbn);
-    }
 
     //TODO 아직 미구현
     /**
@@ -75,13 +74,6 @@ public class BookServiceImpl implements BookService {
      */
     private List<String> descriptionToImageList(String description) {
         List<String> imageList = new ArrayList<>();
-        String[] split = description.split("fileName=");
-        if(split.length > 1) {
-            for(int i = 1; i < split.length; i++) {
-                imageList.add(split[i].substring(0, split[i].indexOf(")") ));
-            }
-        }
-        log.info("imageList : {}", imageList);
         return imageList;
     }
 
@@ -93,9 +85,6 @@ public class BookServiceImpl implements BookService {
 
     private List<Long> stringIdToList(String StringId) {
         List<Long> idList = new ArrayList<>();
-        if(Objects.isNull(StringId)) {
-            return idList;
-        }
         String[]  idSplit = StringId.split(",");
 
         for (String idStr : idSplit) {
@@ -118,5 +107,18 @@ public class BookServiceImpl implements BookService {
         LocalDate localDateStr = LocalDate.parse(dateStr, formatter);
 
         return localDateStr.atStartOfDay(ZoneId.systemDefault());
+    }
+
+    // TODO 리스트 불러오기
+    @Override
+    public Page<BookListResponse> readLimitBooks(int limit) {
+        ApiResponse<Page<BookListResponse>> response = bookClient.readAllBooks(2, limit);
+
+        if (response.getHeader().isSuccessful() && response.getBody() != null) {
+            return response.getBody().getData();
+        } else {
+            // TODO 예외처리 만들기
+            throw new RuntimeException();
+        }
     }
 }
