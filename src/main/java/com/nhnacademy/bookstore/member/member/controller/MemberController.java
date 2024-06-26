@@ -24,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.ZonedDateTime;
@@ -42,6 +43,7 @@ public class MemberController {
     private final PointServiceImpl pointRecordService;
     private final AuthServiceImpl authService;
     private final MemberAuthServiceImpl memberAuthService;
+    private final PasswordEncoder passwordEncoder;
 
 
     /**
@@ -52,8 +54,7 @@ public class MemberController {
      */
     @PostMapping("/bookstore/members")
     public ApiResponse<Void> createMember(@RequestBody @Valid CreateMemberRequest request) {
-                BCryptPasswordEncoder encoder= new BCryptPasswordEncoder();
-                CreateMemberRequest encodedRequest = new CreateMemberRequest(request.email(),encoder.encode(request.password()),request.name(),request.phone(),request.age(),request.birthday());
+                CreateMemberRequest encodedRequest = new CreateMemberRequest(request.email(),passwordEncoder.encode(request.password()),request.name(),request.phone(),request.age(),request.birthday());
                 Member member = new Member(encodedRequest);
                 Auth auth = authService.getAuth("USER");
                 memberService.save(member);
@@ -99,7 +100,6 @@ public class MemberController {
     @PostMapping("/bookstore/members/login")
     public ApiResponse<GetMemberResponse> readByEmailAndPassword(
             @RequestBody @Valid LoginRequest loginRequest) {
-
             Member member = memberService.readByEmailAndPassword(loginRequest.email(), loginRequest.password());
             GetMemberResponse getMemberResponse = GetMemberResponse.builder()
                     .age(member.getAge())

@@ -15,6 +15,7 @@ import com.nhnacademy.bookstore.purchase.purchase.repository.PurchaseRepository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +37,7 @@ import java.util.stream.Collectors;
 public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
     private final PurchaseRepository purchaseRepository;
+    private final PasswordEncoder passwordEncoder;
 
     /**
      * Save member.
@@ -79,12 +81,13 @@ public class MemberServiceImpl implements MemberService {
      * @author 유지아 Find by email and password member. -이메일과 패스워드 값으로 조회한다.
      */
     public Member readByEmailAndPassword(String email, String password) {
-        Optional<Member> member = memberRepository.findByEmailAndPassword(email, password);
+        Optional<Member> member = memberRepository.findByEmail(email);
         if(member.isPresent()){
-            return member.get();
-        }else{
-            throw new LoginFailException();
+            if(passwordEncoder.matches(password, member.get().getPassword())){
+                return member.get();
+            }
         }
+        throw new LoginFailException();
     }
 
     /**
