@@ -10,7 +10,6 @@ import lombok.*;
 
 @Getter
 @Entity
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class BookImage {
@@ -29,7 +28,7 @@ public class BookImage {
     private BookImageType type;
 
 
-    @MapsId
+
     @ManyToOne(cascade = CascadeType.ALL)
     private Book book;
 

@@ -13,9 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nhnacademy.bookstore.book.bookCartegory.service.BookCategoryService;
 import com.nhnacademy.bookstore.book.category.dto.request.CreateCategoryRequest;
 import com.nhnacademy.bookstore.book.category.dto.request.UpdateCategoryRequest;
-import com.nhnacademy.bookstore.book.category.dto.response.CategoryChildrenResponse;
+import com.nhnacademy.bookstore.book.category.dto.response.CategoryParentWithChildrenResponse;
 import com.nhnacademy.bookstore.book.category.dto.response.CategoryResponse;
 import com.nhnacademy.bookstore.book.category.exception.CreateCategoryRequestException;
 import com.nhnacademy.bookstore.book.category.exception.UpdateCategoryRequestException;
@@ -24,20 +25,25 @@ import com.nhnacademy.bookstore.util.ApiResponse;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Category Controller
+ *
  * @author 김은비
  */
 @RestController
-@RequestMapping(("/bookstore/api/categories"))
+@RequestMapping(("/bookstore/categories"))
 @RequiredArgsConstructor
+@Slf4j
 public class CategoryController {
 	private final CategoryService categoryService;
+	private final BookCategoryService bookCategoryService;
 
 	/**
 	 * 카테고리 생성 컨트롤러
-	 * @param dto 생성할 내용
+	 *
+	 * @param dto           생성할 내용
 	 * @param bindingResult 데이터 바인딩 결과
 	 * @return 카테고리 생성 여부에 대한 api 응답
 	 * @throws CreateCategoryRequestException 카테고리 생성 요청에 오류가 있는 경우 발생
@@ -56,8 +62,9 @@ public class CategoryController {
 
 	/**
 	 * 카테고리 수정 컨트롤러
-	 * @param dto 업데이트할 내용
-	 * @param categoryId 수정할 카테고리 아이디
+	 *
+	 * @param dto           업데이트할 내용
+	 * @param categoryId    수정할 카테고리 아이디
 	 * @param bindingResult 데이터 바인딩 결과
 	 * @return 카테고리 수정 여부에 대한 api 응답
 	 * @throws UpdateCategoryRequestException 카테고리 수정 요청에 오류가 있는 경우 발생
@@ -75,6 +82,7 @@ public class CategoryController {
 
 	/**
 	 * 단일 카테고리 조회
+	 *
 	 * @param categoryId 조회할 카테고리 ID
 	 * @return 카테고리 정보
 	 */
@@ -85,29 +93,22 @@ public class CategoryController {
 
 	/**
 	 * 모든 카테고리 조회
+	 *
 	 * @return 모든 카테고리 list
 	 */
 	@GetMapping
-	public ApiResponse<List<CategoryResponse>> readAllCategories() {
+	public ApiResponse<List<CategoryParentWithChildrenResponse>> readAllCategories() {
+		log.info("Read all categories");
 		return ApiResponse.success(categoryService.getCategories());
 	}
 
 	/**
 	 * 상위 카테고리 조회
+	 *
 	 * @return 상위 카데고리 list
 	 */
 	@GetMapping("/parents")
 	public ApiResponse<List<CategoryResponse>> readAllParentCategories() {
 		return ApiResponse.success(categoryService.getParentCategories());
-	}
-
-	/**
-	 * 상위 카테고리 아이디로 하위 카테고리 리스트 조회
-	 * @param parentId 상위 카테고리 아이디
-	 * @return 하위 카테고리 list
-	 */
-	@GetMapping("/{parentId}/children")
-	public ApiResponse<List<CategoryChildrenResponse>> readAllChildCategoriesByParentId(@PathVariable Long parentId) {
-		return ApiResponse.success(categoryService.getChildrenCategoriesByParentId(parentId));
 	}
 }

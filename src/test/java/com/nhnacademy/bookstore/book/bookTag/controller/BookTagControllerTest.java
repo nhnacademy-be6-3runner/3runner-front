@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
@@ -29,7 +30,7 @@ import static org.mockito.Mockito.*;
 @AutoConfigureMockMvc
 class BookTagControllerTest {
 
-    @Mock
+    @MockBean
     private BookTagService bookTagService;
 
     @InjectMocks
