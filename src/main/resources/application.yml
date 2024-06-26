@@ -36,6 +36,7 @@ spring:
     password: tHos2g5st4@XH7mT
     driver-class-name: com.mysql.cj.jdbc.Driver
 
+
   profiles:
     active: prod
   lifecycle:
