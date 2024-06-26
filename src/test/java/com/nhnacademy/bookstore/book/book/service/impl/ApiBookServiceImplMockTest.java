@@ -191,7 +191,7 @@ class ApiBookServiceImplMockTest {
 			null
 		);
 
-		Category category1 = Category.builder().name("category1").build();
+		Category category1 = new Category("category1");
 		Optional<Category> categoryOptional = Optional.of(category1);
 		BookCategory bookCategory = BookCategory.create(book, categoryOptional.get());
 
@@ -242,7 +242,7 @@ class ApiBookServiceImplMockTest {
 			null
 		);
 
-		Category category1 = Category.builder().name("category1").build();
+		Category category1 = new Category("category1");
 		Optional<Category> categoryOptional = Optional.of(category1);
 		BookCategory bookCategory = BookCategory.create(book, categoryOptional.get());
 

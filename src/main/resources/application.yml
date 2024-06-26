@@ -37,7 +37,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   profiles:
-    active: dev
+    active: prod
   lifecycle:
     timeout-per-shutdown-phase: 30s
   application:
@@ -64,4 +64,4 @@ cloud:
 springdoc:
   swagger-ui:
     url: /docs/openapi-3.0.json
-    path: /docs/swagger
+    path: /bookstore/docs/swagger
