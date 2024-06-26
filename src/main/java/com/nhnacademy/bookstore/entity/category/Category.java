@@ -60,4 +60,8 @@ public class Category {
 		child.setParent(this);
 		this.children.add(child);
 	}
+
+	public Category(String name) {
+		this.name = name;
+	}
 }

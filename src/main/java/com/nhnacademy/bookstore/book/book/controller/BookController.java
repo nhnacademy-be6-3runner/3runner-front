@@ -30,6 +30,7 @@ import com.nhnacademy.bookstore.util.ApiResponse;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 책 요청 컨트롤러.
@@ -39,6 +40,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/bookstore/books")
+@Slf4j
 public class BookController {
 	private final BookService bookService;
 	private final BookImageService bookImageService;
