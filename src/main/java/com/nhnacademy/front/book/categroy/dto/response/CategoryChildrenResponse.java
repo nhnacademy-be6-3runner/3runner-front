@@ -10,7 +10,7 @@ import lombok.Builder;
 
 @Builder
 public record CategoryChildrenResponse(
-	long id, String name, List<CategoryChildrenResponse> children
+	long id, String name, List<CategoryChildrenResponse> childrenList
 ) {
 
 }

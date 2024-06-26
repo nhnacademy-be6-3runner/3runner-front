@@ -118,9 +118,18 @@
             background-color: #4cae4c;
         }
 
-        ul { list-style-type: none; }
-        .nested { display: none; }
-        .active { display: block; }
+        ul {
+            list-style-type: none;
+        }
+
+        .nested {
+            display: none;
+        }
+
+        .active {
+            display: block;
+        }
+
         .caret-down::after {
             content: "\25BC";
         }
@@ -263,6 +272,14 @@
             const categoryIds = Array.from(this.selectedCategories.keys()).join(',');
             this.hiddenCategoriesInput.value = categoryIds;
         }
+
+        addParentCategories(categoryMap, categoryId) {
+            const category = categoryMap.get(categoryId);
+            if (category && category.parentId) {
+                this.addCategory(category.parentId, category.parentName);
+                this.addParentCategories(categoryMap, category.parentId);
+            }
+        }
     }
 
     class TagManager {
@@ -345,7 +362,7 @@
         }
     });
 
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         const tagSearchInput = document.getElementById('tag-search');
         const tagSearchResults = document.getElementById('tag-search-results');
 
@@ -358,7 +375,7 @@
             })
             .catch(error => console.error('태그 로드 실패:', error));
 
-        tagSearchInput.addEventListener('input', function() {
+        tagSearchInput.addEventListener('input', function () {
             const query = tagSearchInput.value.toLowerCase();
             tagSearchResults.innerHTML = '';
             if (query) {
@@ -366,7 +383,7 @@
                 filteredTags.forEach(tag => {
                     const div = document.createElement('div');
                     div.textContent = tag.name;
-                    div.addEventListener('click', function() {
+                    div.addEventListener('click', function () {
                         tagManager.addTag(tag.id, tag.name);
                         tagSearchInput.value = '';
                         tagSearchResults.innerHTML = '';
@@ -376,32 +393,47 @@
             }
         });
 
+        const categoryMap = new Map();
+
         fetch('/api/categories')
             .then(response => response.json())
             .then(data => {
                 const categoryContainer = document.getElementById('category');
                 data.forEach(category => {
-                    createCategoryTree(category, categoryContainer);
+                    categoryMap.set(category.id, {
+                        ...category,
+                        parentId: null,
+                        parentName: null
+                    });
+                    createCategoryTree(category, categoryContainer, categoryMap, null, null);
                 });
             })
             .catch(error => console.error('카테고리 로드 실패:', error));
 
-        function createCategoryTree(category, parentElement) {
+        function createCategoryTree(category, parentElement, categoryMap, parentId, parentName) {
             const li = document.createElement('li');
             const span = document.createElement('span');
             span.textContent = category.name;
             span.classList.add('category-item');
             span.onclick = () => selectCategory(category.id, category.name);
 
-            if (category.children && category.children.length > 0) {
+            if (parentId !== null) {
+                categoryMap.set(category.id, {
+                    ...category,
+                    parentId: parentId,
+                    parentName: parentName
+                });
+            }
+
+            if (category.childrenList && category.childrenList.length > 0) {
                 span.onclick = () => {
                     li.querySelector('.nested').classList.toggle('active');
                     span.classList.toggle('caret-down');
                 };
                 const ul = document.createElement('ul');
                 ul.classList.add('nested');
-                category.children.forEach(child => {
-                    createCategoryTree(child, ul);
+                category.childrenList.forEach(child => {
+                    createCategoryTree(child, ul, categoryMap, category.id, category.name);
                 });
                 li.appendChild(span);
                 li.appendChild(ul);
@@ -414,10 +446,11 @@
 
         function selectCategory(id, name) {
             categoryManager.addCategory(id, name);
+            categoryManager.addParentCategories(categoryMap, id);
         }
     });
 
-    document.getElementById('editorForm').addEventListener('submit', function(event) {
+    document.getElementById('editorForm').addEventListener('submit', function (event) {
         document.getElementById('description').value = editor.getMarkdown();
     });
 </script>

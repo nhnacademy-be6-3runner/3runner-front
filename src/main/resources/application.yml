@@ -8,5 +8,5 @@ spring:
       max-request-size: 10MB
 
   profiles:
-    active: prod
+    active: dev
 

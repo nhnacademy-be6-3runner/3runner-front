@@ -1,4 +1,4 @@
-package com.nhnacademy.front.book.categroy.controller.exception;
+package com.nhnacademy.front.book.categroy.exception;
 
 public class NotFindCategoryException extends RuntimeException {
 	public NotFindCategoryException() {

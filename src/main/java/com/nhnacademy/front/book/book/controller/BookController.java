@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.nhnacademy.front.book.book.dto.request.UserCreateBookRequest;
+import com.nhnacademy.front.book.book.dto.response.UserReadBookResponse;
 import com.nhnacademy.front.book.book.service.BookService;
 import com.nhnacademy.front.book.image.service.ImageService;
 
@@ -49,7 +50,11 @@ public class BookController {
 	}
 
 	@GetMapping("/{bookId}")
-	public String bookDetailView(@PathVariable String bookId, Model model) {
+	public String bookDetailView(@PathVariable long bookId, Model model) {
+		// bookService.readBook(bookId);
+		UserReadBookResponse book = bookService.readBook(bookId);
+
+		model.addAttribute("book", book);
 
 		return "book/book_detail";
 	}
