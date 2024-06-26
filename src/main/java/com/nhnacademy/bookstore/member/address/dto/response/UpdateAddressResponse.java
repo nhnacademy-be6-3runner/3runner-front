@@ -9,6 +9,6 @@ import lombok.Builder;
  */
 @Builder
 public record UpdateAddressResponse (
-    String id,
+    Long id,
     String name
 ){}

@@ -1,4 +1,4 @@
-package com.nhnacademy.bookstore.member.address.dto.request;
+package com.nhnacademy.bookstore.member.address.dto.response;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
