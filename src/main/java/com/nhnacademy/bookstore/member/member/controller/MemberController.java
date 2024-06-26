@@ -5,13 +5,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.nhnacademy.bookstore.entity.auth.Auth;
 import com.nhnacademy.bookstore.entity.member.Member;
@@ -24,38 +24,21 @@ import com.nhnacademy.bookstore.member.member.dto.request.LoginRequest;
 import com.nhnacademy.bookstore.member.member.dto.request.UpdateMemberRequest;
 import com.nhnacademy.bookstore.member.member.dto.response.GetMemberResponse;
 import com.nhnacademy.bookstore.member.member.dto.response.UpdateMemberResponse;
-import com.nhnacademy.bookstore.member.auth.service.AuthService;
-import com.nhnacademy.bookstore.member.memberAuth.service.MemberAuthService;
-import com.nhnacademy.bookstore.member.memberAuth.service.impl.MemberAuthServiceImpl;
-import com.nhnacademy.bookstore.member.pointRecord.service.PointService;
 import com.nhnacademy.bookstore.member.member.service.impl.MemberServiceImpl;
+import com.nhnacademy.bookstore.member.memberAuth.service.impl.MemberAuthServiceImpl;
 import com.nhnacademy.bookstore.member.pointRecord.service.impl.PointServiceImpl;
 import com.nhnacademy.bookstore.util.ApiResponse;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
-import java.time.ZonedDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
-
-
-/**
- * The type Member controller.
- *
- * @author 오연수, 유지아
- */
-@RestController
 @RequiredArgsConstructor
 public class MemberController {
-    private final MemberServiceImpl memberService;
-    private final PointServiceImpl pointRecordService;
-    private final AuthServiceImpl authService;
-    private final MemberAuthServiceImpl memberAuthService;
-    private final PasswordEncoder passwordEncoder;
+	private final MemberServiceImpl memberService;
+	private final PointServiceImpl pointRecordService;
+	private final AuthServiceImpl authService;
+	private final MemberAuthServiceImpl memberAuthService;
+	private final PasswordEncoder passwordEncoder;
 
 	/**
 	 * Create member response entity.- 회원가입에 사용되는 함수이다.
@@ -63,22 +46,19 @@ public class MemberController {
 	 * @param request the request - creatememberrequest를 받아 member를 생성한다.
 	 * @author 유지아
 	 */
-	@PostMapping("/members")
+	@PostMapping("/bookstore/members")
 	public ApiResponse<Void> createMember(@RequestBody @Valid CreateMemberRequest request) {
-		try {
-			Member member = new Member(request);
-			Auth auth = authService.getAuth("USER");
+		CreateMemberRequest encodedRequest = new CreateMemberRequest(request.email(),
+			passwordEncoder.encode(request.password()), request.name(), request.phone(), request.age(),
+			request.birthday());
+		Member member = new Member(encodedRequest);
+		Auth auth = authService.getAuth("USER");
+		memberService.save(member);
+		PointRecord pointRecord = new PointRecord(null, 5000L, 5000L, ZonedDateTime.now(), "회원가입 5000포인트 적립.", member);
+		pointRecordService.save(pointRecord);
+		memberAuthService.saveAuth(member, auth);
 
-			PointRecord pointRecord = new PointRecord(null, 5000L, 5000L, ZonedDateTime.now(), "회원가입 5000포인트 적립.",
-				member);
-			pointRecordService.save(pointRecord);
-			memberAuthService.saveAuth(member, auth);
-			memberService.save(member);
-			return new ApiResponse<Void>(new ApiResponse.Header(true, 201, "User Created"),
-				new ApiResponse.Body<Void>(null));
-		} catch (RuntimeException e) {
-			return new ApiResponse<>(new ApiResponse.Header(false, 422, "Email Already Exists"));
-		}
+		return new ApiResponse<Void>(new ApiResponse.Header(true, 201), new ApiResponse.Body<Void>(null));
 	}
 
 	/**
@@ -88,25 +68,23 @@ public class MemberController {
 	 * @return the response entity -멤버 정보에 대한 응답을 담아서 apiresponse로 응답한다.
 	 * @author 유지아
 	 */
-	@GetMapping("/members")
-	public ApiResponse<GetMemberResponse> readById(@RequestHeader("member-id") Long memberId) {
-		try {
-			Member member = memberService.readById(memberId);
-			GetMemberResponse getMemberResponse = GetMemberResponse.builder()
-				.age(member.getAge())
-				.grade(member.getGrade())
-				.point(member.getPoint())
-				.phone(member.getPhone())
-				.created_at(member.getCreated_at())
-				.birthday(member.getBirthday())
-				.email(member.getEmail())
-				.name(member.getName())
-				.password(member.getPassword()).build();
-			return new ApiResponse<GetMemberResponse>(new ApiResponse.Header(true, 200, "Member Found"),
-				new ApiResponse.Body<>(getMemberResponse));
-		} catch (RuntimeException e) {
-			return new ApiResponse<>(new ApiResponse.Header(false, 404, "Member Not Found"));
-		}
+	@GetMapping("/bookstore/members")
+	public ApiResponse<GetMemberResponse> readById(@RequestHeader("Member-Id") Long memberId) {
+
+		Member member = memberService.readById(memberId);
+		GetMemberResponse getMemberResponse = GetMemberResponse.builder()
+			.age(member.getAge())
+			.grade(member.getGrade())
+			.point(member.getPoint())
+			.phone(member.getPhone())
+			.created_at(member.getCreated_at())
+			.birthday(member.getBirthday())
+			.email(member.getEmail())
+			.name(member.getName())
+			.password(member.getPassword()).build();
+		return new ApiResponse<GetMemberResponse>(new ApiResponse.Header(true, 200),
+			new ApiResponse.Body<>(getMemberResponse));
+
 	}
 
 	/**
@@ -116,31 +94,27 @@ public class MemberController {
 	 * @return the response entity -멤버 정보에 대한 응답을 담아서 apiresponse로 응답한다.
 	 * @author 유지아
 	 */
-	@PostMapping("/members/login")
+	@PostMapping("/bookstore/members/login")
 	public ApiResponse<GetMemberResponse> readByEmailAndPassword(
 		@RequestBody @Valid LoginRequest loginRequest) {
-		try {
-			Member member = memberService.readByEmailAndPassword(loginRequest.email(), loginRequest.password());
-			GetMemberResponse getMemberResponse = GetMemberResponse.builder()
-				.age(member.getAge())
-				.grade(member.getGrade())
-				.point(member.getPoint())
-				.phone(member.getPhone())
-				.created_at(member.getCreated_at())
-				.birthday(member.getBirthday())
-				.email(member.getEmail())
-				.name(member.getName())
-				.password(member.getPassword()).build();
+		Member member = memberService.readByEmailAndPassword(loginRequest.email(), loginRequest.password());
+		GetMemberResponse getMemberResponse = GetMemberResponse.builder()
+			.age(member.getAge())
+			.grade(member.getGrade())
+			.point(member.getPoint())
+			.phone(member.getPhone())
+			.created_at(member.getCreated_at())
+			.birthday(member.getBirthday())
+			.email(member.getEmail())
+			.name(member.getName())
+			.password(member.getPassword()).build();
+		memberService.updateStatus(member.getId(), Status.Active);//응답이 만들어 졌다는거는 로그인성공이란 소리니까 멤버를 업데이트 해야할 것같다..
+		memberService.updateLastLogin(member.getId(), ZonedDateTime.now());
 
-			return new ApiResponse<GetMemberResponse>(new ApiResponse.Header(true, 200, "Member(Login) Found"),
-				new ApiResponse.Body<>(getMemberResponse));
-		} catch (RuntimeException e) {
-			return new ApiResponse<>(new ApiResponse.Header(false, 401, "Member Unauthorized"));
-		}
+		return new ApiResponse<GetMemberResponse>(new ApiResponse.Header(true, 200),
+			new ApiResponse.Body<>(getMemberResponse));
+
 	}
-            return new ApiResponse<GetMemberResponse>(new ApiResponse.Header(true,200),new ApiResponse.Body<>(getMemberResponse));
-
-    }
 
 	/**
 	 * Find auths list. -권한에 대한 리스트를 받아온다.
@@ -149,17 +123,16 @@ public class MemberController {
 	 * @return the list -해당 유저에 대한 권한들을 응답에 담아 apiresponse로 응답한다.
 	 * @author 유지아
 	 */
-	@GetMapping("/members/auths")
-	public ApiResponse<List<AuthResponse>> readAuths(@RequestHeader("member-id") Long memberId) {
-		try {
-			return new ApiResponse<List<AuthResponse>>(new ApiResponse.Header(true, 200, "Auths Found"),
-				new ApiResponse.Body<>(memberAuthService.readAllAuths(memberId)
-					.stream()
-					.map(a -> AuthResponse.builder().auth(a.getName()).build())
-					.collect(Collectors.toList())));
-		} catch (RuntimeException e) {
-			return new ApiResponse<>(new ApiResponse.Header(false, 401, "Auths Not Found"));
-		}
+	@GetMapping("/bookstore/members/auths")
+	public ApiResponse<List<AuthResponse>> readAuths(@RequestHeader("Member-Id") Long memberId) {
+
+		return new ApiResponse<List<AuthResponse>>(new ApiResponse.Header(true, 200),
+			new ApiResponse.Body<>(memberAuthService.readAllAuths(memberId)
+				.stream()
+				.map(a -> AuthResponse.builder().auth(a.getName()).build())
+				.collect(
+					Collectors.toList())));
+
 	}
 
 	/**
@@ -170,18 +143,16 @@ public class MemberController {
 	 * @return the api response - updateMemberResponse
 	 * @author 오연수
 	 */
-	@PutMapping("/members")
+	@PutMapping("/bookstore/members")
 	public ApiResponse<UpdateMemberResponse> updateMember(@RequestHeader(name = "Member-Id") Long memberId,
 		@Valid @RequestBody UpdateMemberRequest updateMemberRequest) {
-		try {
-			Member updatedMember = memberService.updateMember(memberId, updateMemberRequest);
-			UpdateMemberResponse updateMemberResponse = UpdateMemberResponse.builder()
-				.id(String.valueOf(updatedMember.getId()))
-				.name(updatedMember.getName()).build();
-			return ApiResponse.success(updateMemberResponse);
-		} catch (RuntimeException e) {
-			return ApiResponse.fail(HttpStatus.BAD_REQUEST.value(), e.getMessage());
-		}
+
+		Member updatedMember = memberService.updateMember(memberId, updateMemberRequest);
+		UpdateMemberResponse updateMemberResponse = UpdateMemberResponse.builder()
+			.id(String.valueOf(updatedMember.getId()))
+			.name(updatedMember.getName()).build();
+		return new ApiResponse<>(new ApiResponse.Header(true, 200), new ApiResponse.Body<>(updateMemberResponse));
+
 	}
 
 	/**
@@ -191,14 +162,11 @@ public class MemberController {
 	 * @return the api response - Void
 	 * @author 오연수
 	 */
-	@DeleteMapping("/members")
+	@DeleteMapping("/bookstore/members")
 	public ApiResponse<Void> deleteMember(@RequestHeader(name = "Member-Id") Long memberId) {
-		try {
-			memberService.deleteMember(memberId);
-			return new ApiResponse<>(new ApiResponse.Header(true, HttpStatus.NO_CONTENT.value(), "Member deleted"));
-		} catch (RuntimeException e) {
-			return ApiResponse.fail(HttpStatus.BAD_REQUEST.value(), e.getMessage());
-		}
+		memberService.deleteMember(memberId);
+
+		return new ApiResponse<>(new ApiResponse.Header(true, HttpStatus.NO_CONTENT.value()));
+
 	}
 }
-
