@@ -8,5 +8,5 @@ import lombok.Builder;
  * @param categoryName
  */
 @Builder
-public record BookCategoriesResponse(String categoryName) {
+public record BookCategoriesResponse(long id, String categoryName, Long parentId) {
 }

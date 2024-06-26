@@ -3,8 +3,11 @@ package com.nhnacademy.bookstore.book.tag.controller;
 import com.nhnacademy.bookstore.book.tag.dto.request.CreateTagRequest;
 import com.nhnacademy.bookstore.book.tag.dto.request.DeleteTagRequest;
 import com.nhnacademy.bookstore.book.tag.dto.request.UpdateTagRequest;
+import com.nhnacademy.bookstore.book.tag.dto.response.TagResponse;
 import com.nhnacademy.bookstore.book.tag.service.TagService;
 import com.nhnacademy.bookstore.util.ApiResponse;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -35,6 +38,21 @@ public class TagControllerTest {
     @BeforeEach
     public void setup() {
         MockitoAnnotations.openMocks(this);
+    }
+
+    @Test
+    void testReadAll(){
+        List<TagResponse> tagResponseList = new ArrayList<>();
+        tagResponseList.add(TagResponse.builder().id(1L).name("Tag1").build());
+        tagResponseList.add(TagResponse.builder().id(2L).name("Tag2").build());
+        tagResponseList.add(new TagResponse(3L, "Tag3"));
+
+        when(tagService.getAllTags()).thenReturn(tagResponseList);
+
+        ApiResponse<List<TagResponse>> getTagResponseApiResponse = tagController.getAllTags();
+
+        assertEquals(200, getTagResponseApiResponse.getHeader().getResultCode());
+        assertEquals(3, getTagResponseApiResponse.getBody().getData().size());
     }
 
     @Test
