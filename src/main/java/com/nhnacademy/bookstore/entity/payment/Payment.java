@@ -14,6 +14,14 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    private String tossOrderId;
+
+    private int tossAmount;
+
+    private int tossAmountTasFree;
+
+    private String tossProductDesc;
+
     @NotNull
     private ZonedDateTime paidAt;
 
