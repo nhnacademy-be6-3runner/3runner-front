@@ -14,13 +14,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.nhnacademy.bookstore.book.book.dto.request.CreateBookRequest;
 import com.nhnacademy.bookstore.book.book.dto.response.ReadBookResponse;
+import com.nhnacademy.bookstore.book.book.dto.response.UserReadBookResponse;
 import com.nhnacademy.bookstore.book.book.exception.CreateBookRequestFormException;
 import com.nhnacademy.bookstore.book.book.service.BookService;
 import com.nhnacademy.bookstore.book.bookCartegory.dto.request.CreateBookCategoryRequest;
 import com.nhnacademy.bookstore.book.bookCartegory.service.BookCategoryService;
 import com.nhnacademy.bookstore.book.bookImage.service.BookImageService;
 import com.nhnacademy.bookstore.book.bookTag.dto.request.CreateBookTagListRequest;
+import com.nhnacademy.bookstore.book.bookTag.dto.request.ReadBookIdRequest;
+import com.nhnacademy.bookstore.book.bookTag.dto.response.ReadTagByBookResponse;
 import com.nhnacademy.bookstore.book.bookTag.service.BookTagService;
+import com.nhnacademy.bookstore.book.category.dto.response.CategoryParentWithChildrenResponse;
 import com.nhnacademy.bookstore.entity.bookImage.enums.BookImageType;
 import com.nhnacademy.bookstore.util.ApiResponse;
 
@@ -69,13 +73,31 @@ public class BookController {
 	}
 
 	@GetMapping("/{bookId}")
-	public ApiResponse<ReadBookResponse> readBook(@PathVariable("bookId") Long bookId) {
-		ReadBookResponse book = bookService.readBookById(bookId);
+	public ApiResponse<UserReadBookResponse> readBook(@PathVariable("bookId") Long bookId) {
+		ReadBookResponse detailBook = bookService.readBookById(bookId);
+		List<CategoryParentWithChildrenResponse> categoryList = bookCategoryService.readBookWithCategoryList(bookId);
+		List<ReadTagByBookResponse> tagList =
+			bookTagService.readTagByBookId(
+				ReadBookIdRequest.builder().bookId(bookId).build());
 
-		return new ApiResponse<ReadBookResponse>(
-			new ApiResponse.Header(true, 200),
-			new ApiResponse.Body<ReadBookResponse>(book)
-		);
+		UserReadBookResponse book = UserReadBookResponse.builder()
+			.id(detailBook.id())
+			.title(detailBook.title())
+			.description(detailBook.description())
+			.publishedDate(detailBook.publishedDate())
+			.price(detailBook.price())
+			.quantity(detailBook.quantity())
+			.sellingPrice(detailBook.sellingPrice())
+			.viewCount(detailBook.viewCount())
+			.packing(detailBook.packing())
+			.author(detailBook.author())
+			.isbn(detailBook.isbn())
+			.publisher(detailBook.publisher())
+			.imagePath(detailBook.imagePath())
+			.categoryList(categoryList)
+			.tagList(tagList)
+			.build();
+
+		return ApiResponse.success(book);
 	}
 }
-

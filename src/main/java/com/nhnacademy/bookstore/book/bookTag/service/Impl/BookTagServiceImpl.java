@@ -70,7 +70,7 @@ public class BookTagServiceImpl implements BookTagService {
 
 		List<Tag> tags = bookTagRepository.findAllTagIdByBookId(bookId.bookId());
 
-		return tags.stream().map(tag -> ReadTagByBookResponse.builder().name(tag.getName()).build())
+		return tags.stream().map(tag -> ReadTagByBookResponse.builder().id(tag.getId()).name(tag.getName()).build())
 			.collect(Collectors.toList());
 	}
 

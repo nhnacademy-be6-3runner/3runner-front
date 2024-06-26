@@ -64,4 +64,4 @@ cloud:
 springdoc:
   swagger-ui:
     url: /docs/openapi-3.0.json
-    path: /docs/swagger
+    path: /bookstore/docs/swagger

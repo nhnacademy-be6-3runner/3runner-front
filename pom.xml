@@ -263,7 +263,7 @@
                             </specifications>
                             <name>${project.artifactId}</name>
                             <version>${project.version}</version>
-                            <host>localhost:8081</host>
+                            <host>bookstore</host>
                             <schemes>
                                 <scheme>http</scheme>
                             </schemes>

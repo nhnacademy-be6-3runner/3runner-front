@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import com.nhnacademy.bookstore.book.book.dto.request.CreateBookRequest;
 import com.nhnacademy.bookstore.book.book.dto.response.ReadBookResponse;
 import com.nhnacademy.bookstore.book.book.exception.BookDoesNotExistException;
+import com.nhnacademy.bookstore.book.book.repository.BookCustomRepository;
 import com.nhnacademy.bookstore.book.book.repository.BookRepository;
 import com.nhnacademy.bookstore.book.book.service.BookService;
 import com.nhnacademy.bookstore.entity.book.Book;
@@ -20,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BookServiceImpl implements BookService {
 	private final BookRepository bookRepository;
+	private final BookCustomRepository bookCustomRepository;
 
 	/**
 	 * 책 등록 기능.
@@ -56,21 +58,11 @@ public class BookServiceImpl implements BookService {
 	 */
 	@Override
 	public ReadBookResponse readBookById(Long bookId) {
-		Book book = bookRepository.findById(bookId).orElseThrow(() -> new BookDoesNotExistException("책이 존재하지 않습니다"));
-		return ReadBookResponse.builder()
-			.id(book.getId())
-			.title(book.getTitle())
-			.description(book.getDescription())
-			.publishedDate(book.getPublishedDate())
-			.price(book.getPrice())
-			.quantity(book.getQuantity())
-			.sellingPrice(book.getSellingPrice())
-			.viewCount(book.getViewCount())
-			.packing(book.isPacking())
-			.author(book.getAuthor())
-			.isbn(book.getIsbn())
-			.publisher(book.getPublisher())
-			// .createdAt(book.getCreatedAt())
-			.build();
+		if (!bookRepository.existsById(bookId)) {
+			throw new BookDoesNotExistException("책이 존재하지 않습니다");
+		}
+		
+		return bookCustomRepository.readDetailBook(bookId);
+
 	}
 }
