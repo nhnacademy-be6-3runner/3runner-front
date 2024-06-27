@@ -35,7 +35,7 @@ public class LoginController {
 	 *
 	 * @return login form view
 	 */
-	@GetMapping("/login")
+	@GetMapping("/api/login")
 	public String loginForm() {
 		return "login-form";
 	}
@@ -48,7 +48,7 @@ public class LoginController {
 	 * @param response 헤더로 액세스 토큰 값을 가져오기 위한 응답
 	 * @return 로그인 응답 (일단 토큰 값) - 추후 main view 로 리다이렉트
 	 */
-	@PostMapping("/login")
+	@PostMapping("/api/login")
 	@ResponseBody
 	public LoginResponse login(@RequestParam @Email String email, @RequestParam String password,
 		HttpServletResponse response) {

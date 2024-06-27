@@ -2,6 +2,7 @@ package com.nhnacademy.front.member.member.dto.response;
 
 import java.time.ZonedDateTime;
 
+import com.nhnacademy.front.entity.member.enums.Grade;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;

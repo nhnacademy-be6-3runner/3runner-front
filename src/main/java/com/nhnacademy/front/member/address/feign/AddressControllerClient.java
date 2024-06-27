@@ -15,7 +15,9 @@ import com.nhnacademy.front.member.address.dto.request.CreateAddressRequest;
 import com.nhnacademy.front.member.address.dto.request.UpdateAddressRequest;
 import com.nhnacademy.front.member.address.dto.response.AddressResponse;
 import com.nhnacademy.front.member.address.dto.response.UpdateAddressResponse;
+import com.nhnacademy.front.util.ApiResponse;
 
+import jakarta.validation.Valid;
 
 @FeignClient(name = "addressControllerClient",url = "http://localhost:8080")
 public interface AddressControllerClient {
