@@ -1,6 +1,8 @@
 package com.nhnacademy.bookstore.book.book.service.impl;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.nhnacademy.bookstore.book.book.dto.request.CreateBookRequest;
 import com.nhnacademy.bookstore.book.book.dto.response.ReadBookResponse;
@@ -28,6 +30,8 @@ public class BookServiceImpl implements BookService {
 	 */
 	// Dto -> save book
 	@Override
+	@Transactional(propagation = Propagation.MANDATORY)
+
 	public Long createBook(CreateBookRequest createBookRequest) {
 		Book book = new Book(
 			createBookRequest.title(),
@@ -49,28 +53,17 @@ public class BookServiceImpl implements BookService {
 		return book.getId();
 	}
 
-	/**
+	/**xxx
 	 * 책 조회 기능.
 	 *
 	 * @param bookId book entity id
 	 */
 	@Override
 	public ReadBookResponse readBookById(Long bookId) {
-		Book book = bookRepository.findById(bookId).orElseThrow(() -> new BookDoesNotExistException("책이 존재하지 않습니다"));
-		return ReadBookResponse.builder()
-			.id(book.getId())
-			.title(book.getTitle())
-			.description(book.getDescription())
-			.publishedDate(book.getPublishedDate())
-			.price(book.getPrice())
-			.quantity(book.getQuantity())
-			.sellingPrice(book.getSellingPrice())
-			.viewCount(book.getViewCount())
-			.packing(book.isPacking())
-			.author(book.getAuthor())
-			.isbn(book.getIsbn())
-			.publisher(book.getPublisher())
-			// .createdAt(book.getCreatedAt())
-			.build();
+		if (!bookRepository.existsById(bookId)) {
+			throw new BookDoesNotExistException("책이 존재하지 않습니다");
+		}
+
+		return bookRepository.readDetailBook(bookId);
 	}
 }

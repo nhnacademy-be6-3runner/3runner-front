@@ -66,6 +66,7 @@
             <artifactId>mysql-connector-j</artifactId>
             <scope>runtime</scope>
         </dependency>
+
         <dependency>
             <groupId>com.querydsl</groupId>
             <artifactId>querydsl-jpa</artifactId>
@@ -130,7 +131,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
-            <version>2.17.0</version>
+            <version>2.17.1</version>
         </dependency>
 
         <!-- spring rest docs 생성을 위한 디펜던시 -->
@@ -263,7 +264,7 @@
                             </specifications>
                             <name>${project.artifactId}</name>
                             <version>${project.version}</version>
-                            <host>localhost:8081</host>
+                            <host>bookstore</host>
                             <schemes>
                                 <scheme>http</scheme>
                             </schemes>

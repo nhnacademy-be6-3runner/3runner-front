@@ -4,18 +4,21 @@ package com.nhnacademy.bookstore.member.member.service.impl;
 import com.nhnacademy.bookstore.entity.member.Member;
 import com.nhnacademy.bookstore.entity.member.enums.Grade;
 import com.nhnacademy.bookstore.entity.member.enums.Status;
-import com.nhnacademy.bookstore.entity.purchase.Purchase;
 import com.nhnacademy.bookstore.member.member.dto.request.UpdateMemberRequest;
+import com.nhnacademy.bookstore.member.member.exception.AlreadyExistsEmailException;
+import com.nhnacademy.bookstore.member.member.exception.LoginFailException;
 import com.nhnacademy.bookstore.member.member.exception.MemberNotExistsException;
 import com.nhnacademy.bookstore.member.member.repository.MemberRepository;
 import com.nhnacademy.bookstore.member.member.service.MemberService;
 import com.nhnacademy.bookstore.purchase.purchase.dto.response.ReadPurchaseResponse;
 import com.nhnacademy.bookstore.purchase.purchase.repository.PurchaseRepository;
+
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +26,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -36,6 +40,7 @@ import java.util.stream.Collectors;
 public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
     private final PurchaseRepository purchaseRepository;
+    private final PasswordEncoder passwordEncoder;
 
     /**
      * Save member.
@@ -46,7 +51,10 @@ public class MemberServiceImpl implements MemberService {
      */
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Member save(Member member) {
-        //이메일 중복 확인안해도 되려나,,
+        Optional<Member> findmember = memberRepository.findByEmail(member.getEmail());
+        if(findmember.isPresent()){
+            throw new AlreadyExistsEmailException();
+        }
         return memberRepository.save(member);
     }
 
@@ -58,11 +66,12 @@ public class MemberServiceImpl implements MemberService {
      * @author 유지아 Find by id member. -memberid를 받아 멤버자체를 가져온다.
      */
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public Member findById(Long id) {
-        if(memberRepository.findById(id).isPresent()){
-            return memberRepository.findById(id).get();
+    public Member readById(Long id) {
+        Optional<Member> member = memberRepository.findById(id);
+        if(member.isPresent()){
+            return member.get();
         }else{
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Member not found");
+            throw new MemberNotExistsException();
         }
     }
 
@@ -74,12 +83,14 @@ public class MemberServiceImpl implements MemberService {
      * @return the member -해당하는 member를 반환한다.
      * @author 유지아 Find by email and password member. -이메일과 패스워드 값으로 조회한다.
      */
-    public Member findByEmailAndPassword(String email, String password) {
-        if(memberRepository.findByEmailAndPassword(email,password) !=null){
-            return memberRepository.findByEmailAndPassword(email,password);
-        }else{
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Member not found");
+    public Member readByEmailAndPassword(String email, String password) {
+        Optional<Member> member = memberRepository.findByEmail(email);
+        if(member.isPresent()){
+            if(passwordEncoder.matches(password, member.get().getPassword())){
+                return member.get();
+            }
         }
+        throw new LoginFailException();
     }
 
     /**
@@ -90,9 +101,8 @@ public class MemberServiceImpl implements MemberService {
      * @return the member
      * @author 오연수
      */
-    public Member updateMember(String memberId, UpdateMemberRequest updateMemberRequest) {
-        Long id = Long.parseLong(memberId);
-        Member member = memberRepository.findById(id).orElseThrow(MemberNotExistsException::new);
+    public Member updateMember(Long memberId, UpdateMemberRequest updateMemberRequest) {
+        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotExistsException::new);
 
         member.setPassword(updateMemberRequest.password());
         member.setName(updateMemberRequest.name());
@@ -111,9 +121,8 @@ public class MemberServiceImpl implements MemberService {
      * @param memberId the member id
      * @author 오연수
      */
-    public void deleteMember(String memberId) {
-        Long id = Long.parseLong(memberId);
-        Member member = memberRepository.findById(id).orElseThrow(MemberNotExistsException::new);
+    public void deleteMember(Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotExistsException::new);
 
         member.setStatus(Status.Withdrawn);
         member.setDeleted_at(ZonedDateTime.now());
@@ -129,9 +138,8 @@ public class MemberServiceImpl implements MemberService {
      * @return the member
      * @author 오연수
      */
-    public Member updateStatus(String memberId, Status status) {
-        Long id = Long.parseLong(memberId);
-        Member member = memberRepository.findById(id).orElseThrow(MemberNotExistsException::new);
+    public Member updateStatus(Long memberId, Status status) {
+        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotExistsException::new);
         member.setStatus(status);
         member.setModified_at(ZonedDateTime.now());
         return memberRepository.save(member);
@@ -145,14 +153,19 @@ public class MemberServiceImpl implements MemberService {
      * @return the member
      * @author 오연수
      */
-    public Member updateGrade(String memberId, Grade grade) {
-        Long id = Long.parseLong(memberId);
-        Member member = memberRepository.findById(id).orElseThrow(MemberNotExistsException::new);
+    public Member updateGrade(Long memberId, Grade grade) {
+        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotExistsException::new);
         member.setGrade(grade);
         member.setModified_at(ZonedDateTime.now());
         return memberRepository.save(member);
     }
 
+    @Override
+    public Member updateLastLogin(Long memberId, ZonedDateTime lastLogin) {
+        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotExistsException::new);
+        member.setLast_login_date(lastLogin);
+        return memberRepository.save(member);
+    }
     /**
      * 주문 리스트 조회 멤버.
      *

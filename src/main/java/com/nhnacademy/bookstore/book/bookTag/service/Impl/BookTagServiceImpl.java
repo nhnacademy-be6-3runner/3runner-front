@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.nhnacademy.bookstore.book.book.exception.BookDoesNotExistException;
@@ -70,7 +71,7 @@ public class BookTagServiceImpl implements BookTagService {
 
 		List<Tag> tags = bookTagRepository.findAllTagIdByBookId(bookId.bookId());
 
-		return tags.stream().map(tag -> ReadTagByBookResponse.builder().name(tag.getName()).build())
+		return tags.stream().map(tag -> ReadTagByBookResponse.builder().id(tag.getId()).name(tag.getName()).build())
 			.collect(Collectors.toList());
 	}
 
@@ -101,6 +102,7 @@ public class BookTagServiceImpl implements BookTagService {
 	 * @param createBookTagRequestList 만들 book id 와 tag id	의 리스트 형식
 	 */
 	@Override
+	@Transactional(propagation = Propagation.MANDATORY)
 	public void createBookTag(CreateBookTagListRequest createBookTagRequestList) {
 		if (!bookRepository.existsById(createBookTagRequestList.bookId())) {
 			throw new BookDoesNotExistException("책이 없습니다.");

@@ -18,7 +18,6 @@ import com.nhnacademy.bookstore.purchase.purchase.exception.PurchaseDoesNotExist
 import com.nhnacademy.bookstore.purchase.purchase.exception.PurchaseNoAuthorizationException;
 import com.nhnacademy.bookstore.purchase.purchase.repository.PurchaseRepository;
 import com.nhnacademy.bookstore.purchase.purchase.service.PurchaseMemberService;
-
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -33,29 +32,29 @@ public class PurchaseMemberServiceImpl implements PurchaseMemberService {
 	private final PurchaseRepository purchaseRepository;
 	private final MemberService memberService;
 
-	/**
-	 * 주문 생성.
-	 *
-	 * @param createPurchaseRequest 주문 생성 폼
-	 * @param memberId 회원 아이디
-	 * @return purchaseId
-	 */
-	@Override
-	public Long createPurchase(CreatePurchaseRequest createPurchaseRequest, Long memberId) {
-		Purchase purchase = new Purchase(
-			UUID.randomUUID(),
-			PurchaseStatus.PROCESSING,
-			createPurchaseRequest.deliveryPrice(),
-			createPurchaseRequest.totalPrice(),
-			ZonedDateTime.now(),
-			createPurchaseRequest.road(),
-			null,
-			MemberType.MEMBER,
-			memberService.findById(memberId),
-            null, //TODO : Point 구현 후 연결 필요
-			null,
-			null
-		);
+    /**
+     * 주문 생성.
+     *
+     * @param createPurchaseRequest 주문 생성 폼
+     * @param memberId 회원 아이디
+     * @return purchaseId
+     */
+    @Override
+    public Long createPurchase(CreatePurchaseRequest createPurchaseRequest, Long memberId) {
+        Purchase purchase = new Purchase(
+                UUID.randomUUID(),
+                PurchaseStatus.PROCESSING,
+                createPurchaseRequest.deliveryPrice(),
+                createPurchaseRequest.totalPrice(),
+                ZonedDateTime.now(),
+                createPurchaseRequest.road(),
+                null,
+                MemberType.MEMBER,
+                memberService.readById(memberId),
+                null, //TODO : Point 구현 후 연결 필요
+                null,
+                null
+        );
 
 		if (Boolean.TRUE.equals(purchaseRepository.existsPurchaseByOrderNumber(purchase.getOrderNumber()))) {
 			throw new PurchaseAlreadyExistException("주문 번호가 중복되었습니다.");

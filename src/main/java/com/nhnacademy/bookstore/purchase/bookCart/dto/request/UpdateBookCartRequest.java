@@ -1,8 +1,7 @@
 package com.nhnacademy.bookstore.purchase.bookCart.dto.request;
 
 
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 
 /**
  * 카트 추가,삭제 폼.
@@ -11,8 +10,9 @@ import jakarta.validation.constraints.NotNull;
  * @param bookId 도서아이디
  * @param quantity 도서수량
  */
-
-public record UpdateBookCartGuestRequest(
+@Builder
+public record UpdateBookCartRequest(
+        long cartId,
         long bookId,
         int quantity) {
 }
