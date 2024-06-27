@@ -43,7 +43,7 @@ public class CustomInterceptor implements HandlerInterceptor {
 	@Override
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
 		ModelAndView modelAndView) throws Exception {
-		TokenHolder.reset();
+		TokenHolder.resetAccessToken();
 		log.info("Interceptor, Access token 토큰 홀더 리셋");
 	}
 }

@@ -1,6 +1,7 @@
 package com.nhnacademy.front.auth.controller;
 
-import java.util.Objects;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.nhnacademy.front.auth.dto.request.LoginRequest;
 import com.nhnacademy.front.auth.dto.response.LoginResponse;
 import com.nhnacademy.front.auth.service.LoginService;
+import com.nhnacademy.front.threadlocal.TokenHolder;
 import com.nhnacademy.front.util.ApiResponse;
 
 import jakarta.servlet.http.Cookie;
@@ -52,15 +54,18 @@ public class LoginController {
 	public ApiResponse<LoginResponse> login(@RequestParam String email, @RequestParam String password,
 		HttpServletResponse response) {
 		LoginResponse loginResponse = loginService.getLoginResponse(new LoginRequest(email, password));
-		// ApiResponse<LoginResponse> loginResponse = loginAdapter.login(new LoginRequest(email, password));
 
-		String accessToken = response.getHeader("Authorization");
+		try {
+			String encodedAccess = URLEncoder.encode(TokenHolder.getAccessToken(), "UTF-8");
+			String encodedRefresh = URLEncoder.encode(TokenHolder.getRefreshToken(), "UTF-8");
 
-		if (Objects.nonNull(accessToken)) {
-			log.warn("Access token {}", accessToken);
-			String[] tokens = accessToken.split(" ");
-			Cookie cookie = new Cookie("Access", tokens[1].replace("Bearer ", ""));
-			response.addCookie(cookie);
+			response.addHeader("Authorization", TokenHolder.getAccessToken());
+			response.addHeader("Refresh", TokenHolder.getRefreshToken());
+
+			response.addCookie(new Cookie("Access", encodedAccess));
+			response.addCookie(new Cookie("Refresh", encodedRefresh));
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
 		}
 
 		return ApiResponse.success(loginResponse);

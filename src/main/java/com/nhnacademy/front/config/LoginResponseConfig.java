@@ -52,7 +52,7 @@ public class LoginResponseConfig {
 			for (String cookie : cookies) {
 				if (cookie.startsWith("Refresh=")) {
 					log.warn("Refresh cookies: {}", cookie);
-
+					TokenHolder.setRefreshToken(cookie.substring("Refresh=".length()));
 				}
 			}
 
