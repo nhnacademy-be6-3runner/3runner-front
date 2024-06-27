@@ -13,13 +13,20 @@ import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class TotalImage {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
+	@Getter
 	@NotBlank
 	@Column(unique = true)
 	@Size(min = 40)
@@ -30,4 +37,8 @@ public class TotalImage {
 
 	@OneToOne(cascade = CascadeType.ALL)
 	private ReviewImage reviewImage;
+
+	public TotalImage( String url) {
+		this.url = url;
+	}
 }

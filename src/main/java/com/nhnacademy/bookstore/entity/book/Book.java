@@ -51,23 +51,23 @@ public class Book {
 
     @NotNull
     @Min(0)
-    @Column(columnDefinition = "INT UNSIGNED")
+    // @Column(columnDefinition = "INT UNSIGNED")
     private int price;
 
     @NotNull
     @Min(0)
-    @Column(columnDefinition = "INT UNSIGNED")
+    // @Column(columnDefinition = "INT UNSIGNED")
     private int quantity;
 
     @NotNull
     @Min(0)
-    @Column(columnDefinition = "INT UNSIGNED")
+    // @Column(columnDefinition = "INT UNSIGNED")
 
     private int sellingPrice;
 
     @NotNull
     @Min(0)
-    @Column(columnDefinition = "int UNSIGNED default 0")
+    // @Column(columnDefinition = "int UNSIGNED default 0")
     private int viewCount;
 
     //    @Column(nullable = false, columnDefinition = "bit(1) default 1")

@@ -65,7 +65,7 @@ public class BookCartGuestServiceImpl implements BookCartGuestService {
 
         String url = "/img/no-image.png";
         if (bookCart.getBook().getBookImageList()!=null && !bookCart.getBook().getBookImageList().isEmpty()) {
-            url = bookCart.getBook().getBookImageList().getFirst().getUrl();
+            url = bookCart.getBook().getBookImageList().getFirst().getTotalImage().getUrl();
         }
 
         bookCartRedisRepository.create(
@@ -181,7 +181,7 @@ public class BookCartGuestServiceImpl implements BookCartGuestService {
         for (BookCart bookCart : list) {
             String url = "/img/no-image.png";
             if (bookCart.getBook().getBookImageList()!=null && !bookCart.getBook().getBookImageList().isEmpty()) {
-                url = bookCart.getBook().getBookImageList().getFirst().getUrl();
+                url = bookCart.getBook().getBookImageList().getFirst().getTotalImage().getUrl();
             }
 
             listDto.add(ReadBookCartGuestResponse.builder()

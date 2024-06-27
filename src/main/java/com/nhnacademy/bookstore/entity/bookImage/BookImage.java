@@ -30,11 +30,6 @@ public class BookImage {
 	private long id;
 
 	@NotNull
-	@Size(min = 1, max = 50)
-	@Column(unique = true)
-	private String url;
-
-	@NotNull
 	private BookImageType type;
 
 	@ManyToOne(cascade = CascadeType.ALL)
@@ -43,9 +38,10 @@ public class BookImage {
 	@OneToOne(cascade = CascadeType.ALL)
 	private TotalImage totalImage;
 
-	public BookImage(String url, BookImageType type, Book book) {
-		this.url = url;
+	public BookImage(BookImageType type, Book book, TotalImage totalImage) {
 		this.type = type;
 		this.book = book;
+		this.totalImage = totalImage;
 	}
+
 }

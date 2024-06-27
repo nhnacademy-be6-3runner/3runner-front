@@ -12,6 +12,7 @@ import com.nhnacademy.bookstore.book.book.repository.BookCustomRepository;
 import com.nhnacademy.bookstore.entity.book.QBook;
 import com.nhnacademy.bookstore.entity.bookImage.QBookImage;
 import com.nhnacademy.bookstore.entity.bookImage.enums.BookImageType;
+import com.nhnacademy.bookstore.entity.totalImage.QTotalImage;
 import com.nhnacademy.bookstore.purchase.purchaseBook.exception.NotExistsBook;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -23,6 +24,7 @@ public class BookCustomRepositoryImpl implements BookCustomRepository {
 	private final JPAQueryFactory jpaQueryFactory;
 	private final QBook qBook = QBook.book;
 	private final QBookImage qBookImage = QBookImage.bookImage;
+	private final QTotalImage qTotalImage = QTotalImage.totalImage;
 
 	public BookCustomRepositoryImpl(EntityManager entityManager) {
 		this.jpaQueryFactory = new JPAQueryFactory(entityManager);
@@ -37,9 +39,10 @@ public class BookCustomRepositoryImpl implements BookCustomRepository {
 					qBook.price,
 					qBook.sellingPrice,
 					qBook.author,
-					qBookImage.url))
+					qTotalImage.url))
 			.from(qBook)
 			.leftJoin(qBookImage)
+			.join(qTotalImage)
 			.on(qBookImage.book.id.eq(qBook.id).and(qBookImage.type.eq(BookImageType.MAIN)))
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize())
@@ -62,9 +65,10 @@ public class BookCustomRepositoryImpl implements BookCustomRepository {
 				qBook.author,
 				qBook.isbn,
 				qBook.publisher,
-				qBookImage.url))
+				qTotalImage.url))
 			.from(qBook)
 			.leftJoin(qBookImage)
+			.join(qTotalImage)
 			.on(qBookImage.book.id.eq(qBook.id).and(qBookImage.type.eq(BookImageType.MAIN)))
 			.where(qBook.id.eq(bookId))
 			.limit(1)

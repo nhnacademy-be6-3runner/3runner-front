@@ -32,6 +32,7 @@ import com.nhnacademy.bookstore.entity.bookCategory.BookCategory;
 import com.nhnacademy.bookstore.entity.bookImage.BookImage;
 import com.nhnacademy.bookstore.entity.bookImage.enums.BookImageType;
 import com.nhnacademy.bookstore.entity.category.Category;
+import com.nhnacademy.bookstore.entity.totalImage.TotalImage;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -195,7 +196,8 @@ class ApiBookServiceImplMockTest {
 		Optional<Category> categoryOptional = Optional.of(category1);
 		BookCategory bookCategory = BookCategory.create(book, categoryOptional.get());
 
-		BookImage bookImage = new BookImage("image.png", BookImageType.MAIN, book);
+		TotalImage totalImage = new TotalImage("image.png");
+		BookImage bookImage = new BookImage(BookImageType.MAIN, book, totalImage);
 
 		when(apiBookRepository.getBookResponse(any())).thenReturn(bookResponse);
 		when(bookRepository.save(any())).thenReturn(book);
@@ -246,7 +248,8 @@ class ApiBookServiceImplMockTest {
 		Optional<Category> categoryOptional = Optional.of(category1);
 		BookCategory bookCategory = BookCategory.create(book, categoryOptional.get());
 
-		BookImage bookImage = new BookImage("image.png", BookImageType.MAIN, book);
+		TotalImage totalImage = new TotalImage("image.png");
+		BookImage bookImage = new BookImage(BookImageType.MAIN, book, totalImage);
 
 		when(apiBookRepository.getBookResponse(any())).thenReturn(bookResponse);
 		when(bookRepository.save(any())).thenReturn(book);

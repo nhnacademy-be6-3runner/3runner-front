@@ -8,6 +8,8 @@ import com.nhnacademy.bookstore.book.image.exception.NotFindImageException;
 import com.nhnacademy.bookstore.entity.book.Book;
 import com.nhnacademy.bookstore.entity.bookImage.BookImage;
 import com.nhnacademy.bookstore.entity.bookImage.enums.BookImageType;
+import com.nhnacademy.bookstore.entity.totalImage.TotalImage;
+
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -54,10 +56,12 @@ public class BookImageServiceImpl implements BookImageService {
         }
         for(CreateBookImageRequest bookImageRequest : bookImageRequestList) {
 
-            BookImage bookImageEntity = new BookImage(bookImageRequest.bookId(),
-                    bookImageRequest.url(),
+            TotalImage totalImage = new TotalImage(bookImageRequest.url());
+            BookImage bookImageEntity = new BookImage(
                     bookImageRequest.type(),
-                    book.get());
+                    book.get(),
+                    totalImage
+                );
 
             bookImageRepository.save(bookImageEntity);
         }
@@ -73,10 +77,13 @@ public class BookImageServiceImpl implements BookImageService {
         if(book.isEmpty()){
             throw new NotFindImageException();
         }
-        BookImage bookImageEntity = new BookImage(bookImageRequest.bookId(),
-                bookImageRequest.url(),
-                bookImageRequest.type(),
-                book.get());
+        TotalImage totalImage = new TotalImage(bookImageRequest.url());
+        BookImage bookImageEntity = new BookImage(
+            bookImageRequest.type(),
+            book.get(),
+            totalImage
+        );
+
         bookImageRepository.save(bookImageEntity);
     }
 }
