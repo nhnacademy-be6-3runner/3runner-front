@@ -10,7 +10,6 @@ import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.cloud.openfeign.support.SpringDecoder;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 import com.nhnacademy.front.threadlocal.TokenHolder;
 
@@ -20,7 +19,6 @@ import feign.codec.DecodeException;
 import feign.codec.Decoder;
 import lombok.extern.slf4j.Slf4j;
 
-@Configuration
 @Slf4j
 public class LoginResponseConfig {
 	@Bean
