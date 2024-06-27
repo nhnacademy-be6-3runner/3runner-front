@@ -1,6 +1,8 @@
 package com.nhnacademy.bookstore.entity.reviewImage;
 
 import com.nhnacademy.bookstore.entity.review.Review;
+import com.nhnacademy.bookstore.entity.totalImage.TotalImage;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -15,8 +17,6 @@ public class ReviewImage {
     @ManyToOne(cascade = CascadeType.ALL)
     private Review review;
 
-    @NotNull
-    @Size(min = 1, max = 50)
-    @Column(unique = true)
-    private String url;
+    @OneToOne(cascade = CascadeType.ALL)
+    private TotalImage totalImage;
 }
