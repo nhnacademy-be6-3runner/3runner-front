@@ -1,128 +1,155 @@
 package com.nhnacademy.bookstore.purchase.purchase.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nhnacademy.bookstore.entity.purchase.enums.MemberType;
-import com.nhnacademy.bookstore.entity.purchase.enums.PurchaseStatus;
-import com.nhnacademy.bookstore.member.member.service.impl.MemberServiceImpl;
+import com.nhnacademy.bookstore.book.bookTag.dto.request.ReadBookIdRequest;
+import com.nhnacademy.bookstore.book.bookTag.dto.response.ReadTagByBookResponse;
+import com.nhnacademy.bookstore.member.member.service.MemberService;
 import com.nhnacademy.bookstore.purchase.purchase.dto.request.CreatePurchaseRequest;
 import com.nhnacademy.bookstore.purchase.purchase.dto.request.UpdatePurchaseMemberRequest;
 import com.nhnacademy.bookstore.purchase.purchase.dto.response.ReadPurchaseResponse;
-import com.nhnacademy.bookstore.purchase.purchase.service.impl.PurchaseMemberServiceImpl;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import com.nhnacademy.bookstore.purchase.purchase.service.PurchaseMemberService;
+import com.nhnacademy.bookstore.util.ApiResponse;
+
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.validation.BindingResult;
 
 import java.time.ZonedDateTime;
-import java.util.List;
+import java.util.Collections;
+import java.util.UUID;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(PurchaseMemberController.class)
-class PurchaseMemberControllerTest {
-    @Autowired
+@ExtendWith(MockitoExtension.class)
+public class PurchaseMemberControllerTest {
+
+    @Mock
+    private PurchaseMemberService purchaseMemberService;
+
+    @Mock
+    private MemberService memberService;
+
+    @InjectMocks
+    private PurchaseMemberController purchaseMemberController;
+
     private MockMvc mockMvc;
 
-    @MockBean
-    private PurchaseMemberServiceImpl purchaseService;
-
-    @MockBean
-    private MemberServiceImpl memberService;
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    CreatePurchaseRequest createPurchaseRequest;
-    UpdatePurchaseMemberRequest updatePurchaseRequest;
-    ReadPurchaseResponse readPurchaseResponse;
-
-    @BeforeEach
-    void setUp() {
-        createPurchaseRequest = CreatePurchaseRequest.builder().deliveryPrice(100).totalPrice(10).road("orad").build();
-        updatePurchaseRequest = UpdatePurchaseMemberRequest.builder().purchaseStatus(PurchaseStatus.SHIPPED).build();
-        readPurchaseResponse = ReadPurchaseResponse.builder().
-                id(1L).
-                status(PurchaseStatus.SHIPPED).
-                deliveryPrice(11).
-                totalPrice(1).
-                createdAt(ZonedDateTime.now()).
-                road("road").
-                password("pass").
-                memberType(MemberType.MEMBER).
-                build();
-    }
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
-    void readPurchase() throws Exception {
-        when(purchaseService.readPurchase(anyLong(),anyLong())).thenReturn(readPurchaseResponse);
+    public void testReadPurchase() throws Exception {
+        ReadPurchaseResponse mockResponse = ReadPurchaseResponse.builder()
+            .id(1L)
+            .orderNumber(UUID.randomUUID())
+            .status(null)
+            .deliveryPrice(100)
+            .totalPrice(5000)
+            .createdAt(ZonedDateTime.now())
+            .road("Test Road")
+            .password("test")
+            .memberType(null)
+            .build();
 
-        ResultActions result = mockMvc.perform(get("/members/purchases/1")
-                .header("Member-Id",1L)
-                .contentType(MediaType.APPLICATION_JSON));
+        when(purchaseMemberService.readPurchase(anyLong(), anyLong())).thenReturn(mockResponse);
 
-        result.andExpect(status().isOk())
-                .andExpect(jsonPath("$.body.data.id").value(readPurchaseResponse.id()))
-                .andExpect(jsonPath("$.body.data.status").value(readPurchaseResponse.status().toString()))
-                .andExpect(jsonPath("$.body.data.deliveryPrice").value(readPurchaseResponse.deliveryPrice()))
-                .andExpect(jsonPath("$.body.data.totalPrice").value(readPurchaseResponse.totalPrice()))
-                .andExpect(jsonPath("$.body.data.road").value(readPurchaseResponse.road()));
-    }
+        mockMvc = MockMvcBuilders.standaloneSetup(purchaseMemberController).build();
 
-    @Test
-    void readPurchases() throws Exception {
-        when(memberService.getPurchasesByMemberId(anyLong())).thenReturn(java.util.List.of(readPurchaseResponse));
-
-        ResultActions result = mockMvc.perform(get("/members/purchases")
-                .header("Member-Id",1L)
-                .contentType(MediaType.APPLICATION_JSON));
-
-        result.andExpect(status().isOk());
-    }
-
-
-    @Test
-    void createPurchase() throws Exception{
-        when(purchaseService.createPurchase(any(CreatePurchaseRequest.class), anyLong())).thenReturn(1L);
-
-        ResultActions result = mockMvc.perform(post("/members/purchases")
+        mockMvc.perform(get("/members/purchases/{purchaseId}", 1L)
                 .header("Member-Id", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(createPurchaseRequest)));
+                .content(new ObjectMapper().writeValueAsString(1L)))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.header.resultCode").value(200))
+            .andExpect(jsonPath("$.header.successful").value(true))
+            .andExpect(jsonPath("$.body.data.deliveryPrice").value(100))
+            .andExpect(jsonPath("$.body.data.id").value(1));
 
-        result.andExpect(status().isCreated());
     }
 
     @Test
-    void updatePurchaseStatus() throws Exception{
-        when(purchaseService.updatePurchase(any(UpdatePurchaseMemberRequest.class), anyLong(), anyLong())).thenReturn(1L);
+    public void testReadPurchases() throws Exception {
+        ReadPurchaseResponse mockResponse = ReadPurchaseResponse.builder()
+            .id(1L)
+            .orderNumber(UUID.randomUUID())
+            .status(null)
+            .deliveryPrice(100)
+            .totalPrice(5000)
+            .createdAt(ZonedDateTime.now())
+            .road("Test Road")
+            .password("test")
+            .memberType(null)
+            .build();
 
-        ResultActions result = mockMvc.perform(put("/members/purchases/1")
+        Page<ReadPurchaseResponse> mockPage = new PageImpl<>(Collections.singletonList(mockResponse));
+        Pageable pageable = PageRequest.of(0, 10);
+
+        // Mocking the service method behavior
+        when(memberService.getPurchasesByMemberId(anyLong(), any(Pageable.class))).thenReturn(mockPage);
+
+        ApiResponse<Page<ReadPurchaseResponse>> response = purchaseMemberController.readPurchases(1L, 1, 10, null);
+
+        // Mocking the request
+        assertEquals(HttpStatus.OK, HttpStatus.valueOf(response.getHeader().getResultCode()));
+        assertEquals(1, response.getBody().getData().getSize());
+        assertEquals(mockResponse.orderNumber().toString(), response.getBody().getData().iterator().next().orderNumber().toString());
+    }
+
+    @Test
+    public void testCreatePurchase() throws Exception {
+        CreatePurchaseRequest request = CreatePurchaseRequest.builder()
+            .deliveryPrice(100)
+            .totalPrice(5000)
+            .road("Test Road")
+            .password("test")
+            .build();
+
+        mockMvc = MockMvcBuilders.standaloneSetup(purchaseMemberController).build();
+
+        mockMvc.perform(post("/members/purchases")
                 .header("Member-Id", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(updatePurchaseRequest)));
-
-        result.andExpect(status().isOk());
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.header.successful").value(true));
     }
 
     @Test
-    void deletePurchases() throws Exception{
-        doNothing().when(purchaseService).deletePurchase(anyLong(), anyLong());
+    public void testUpdatePurchaseStatus() throws Exception {
+        UpdatePurchaseMemberRequest request = UpdatePurchaseMemberRequest.builder()
+            .purchaseStatus(null)
+            .build();
 
-        ResultActions result = mockMvc.perform(delete("/members/purchases/1")
+        mockMvc = MockMvcBuilders.standaloneSetup(purchaseMemberController).build();
+
+        mockMvc.perform(put("/members/purchases/{purchaseId}", 1L)
                 .header("Member-Id", 1L)
-                .contentType(MediaType.APPLICATION_JSON));
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.header.successful").value(true));
+    }
 
-        result.andExpect(status().isNoContent());
+    @Test
+    public void testDeletePurchases() throws Exception {
+        mockMvc = MockMvcBuilders.standaloneSetup(purchaseMemberController).build();
+
+        mockMvc.perform(delete("/members/purchases/{purchaseId}", 1L)
+                .header("Member-Id", 1L))
+            .andExpect(status().isNoContent());
     }
 }

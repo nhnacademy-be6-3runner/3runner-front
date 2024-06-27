@@ -7,6 +7,9 @@ import com.nhnacademy.bookstore.entity.member.enums.Status;
 import com.nhnacademy.bookstore.entity.purchase.Purchase;
 import com.nhnacademy.bookstore.member.member.dto.request.UpdateMemberRequest;
 import com.nhnacademy.bookstore.purchase.purchase.dto.response.ReadPurchaseResponse;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,5 +30,5 @@ public interface MemberService {
 
     Member updateGrade(String memberId, Grade grade);
 
-    List<ReadPurchaseResponse> getPurchasesByMemberId(Long memberId);
+    Page<ReadPurchaseResponse> getPurchasesByMemberId(Long memberId, Pageable pageable);
 }

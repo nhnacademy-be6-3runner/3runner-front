@@ -12,6 +12,9 @@ import com.nhnacademy.bookstore.member.member.service.MemberService;
 import com.nhnacademy.bookstore.purchase.purchase.dto.response.ReadPurchaseResponse;
 import com.nhnacademy.bookstore.purchase.purchase.repository.PurchaseRepository;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -157,13 +160,14 @@ public class MemberServiceImpl implements MemberService {
      * @return 리스트
      */
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public List<ReadPurchaseResponse> getPurchasesByMemberId(Long memberId) {
+    public Page<ReadPurchaseResponse> getPurchasesByMemberId(Long memberId, Pageable pageable) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(MemberNotExistsException::new);
-        return purchaseRepository.findByMember(member)
-                .stream()
+        return purchaseRepository.findByMember(member,pageable)
+
                 .map(purchase -> ReadPurchaseResponse.builder()
                                     .id(purchase.getId())
+                    .orderNumber(purchase.getOrderNumber())
                                     .status(purchase.getStatus())
                                     .deliveryPrice(purchase.getDeliveryPrice())
                                     .totalPrice(purchase.getTotalPrice())
@@ -172,6 +176,6 @@ public class MemberServiceImpl implements MemberService {
                                     .password(purchase.getPassword())
                                     .memberType(purchase.getMemberType())
                                     .build()
-                ).collect(Collectors.toList());
+                );
     }
 }

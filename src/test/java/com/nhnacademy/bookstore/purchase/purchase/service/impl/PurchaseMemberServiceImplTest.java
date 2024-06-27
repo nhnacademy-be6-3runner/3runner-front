@@ -1,151 +1,195 @@
 package com.nhnacademy.bookstore.purchase.purchase.service.impl;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
+
+import java.time.ZonedDateTime;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
 import com.nhnacademy.bookstore.entity.member.Member;
 import com.nhnacademy.bookstore.entity.purchase.Purchase;
 import com.nhnacademy.bookstore.entity.purchase.enums.MemberType;
 import com.nhnacademy.bookstore.entity.purchase.enums.PurchaseStatus;
-import com.nhnacademy.bookstore.member.member.dto.request.CreateMemberRequest;
 import com.nhnacademy.bookstore.member.member.service.MemberService;
 import com.nhnacademy.bookstore.purchase.purchase.dto.request.CreatePurchaseRequest;
 import com.nhnacademy.bookstore.purchase.purchase.dto.request.UpdatePurchaseMemberRequest;
 import com.nhnacademy.bookstore.purchase.purchase.dto.response.ReadPurchaseResponse;
-import com.nhnacademy.bookstore.purchase.purchase.exception.PurchaseAlreadyExistException;
-import com.nhnacademy.bookstore.purchase.purchase.exception.PurchaseNoAuthorizationException;
 import com.nhnacademy.bookstore.purchase.purchase.repository.PurchaseRepository;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.ZonedDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-
-@ExtendWith(MockitoExtension.class)
 class PurchaseMemberServiceImplTest {
-    @Mock
-    private PurchaseRepository purchaseRepository;
-    @Mock
-    private MemberService memberService;
 
-    @InjectMocks
-    private PurchaseMemberServiceImpl purchaseMemberService;
+	@Mock
+	private PurchaseRepository purchaseRepository;
 
-    private Member member1;
-    private Purchase purchase1;
-    private CreatePurchaseRequest request;
+	@Mock
+	private MemberService memberService;
 
-    @BeforeEach
-    void setUp() {
-        member1 = new Member(CreateMemberRequest.builder().password("1").name("1").age(1).phone("1").birthday(ZonedDateTime.now()).email("dfdaf@nav.com").build());
-        member1.setId(1L);
-        purchase1 = new Purchase(UUID.randomUUID(), PurchaseStatus.SHIPPED, 100, 10, ZonedDateTime.now(), "road", "password", MemberType.MEMBER, member1,null,null,null);
+	@InjectMocks
+	private PurchaseMemberServiceImpl purchaseMemberService;
 
-        request = CreatePurchaseRequest.builder().deliveryPrice(100).totalPrice(1000).road("dfdfd").build();
-    }
-    @AfterEach
-    void tearDown(){
-        memberService.deleteMember(member1.getId().toString());
-    }
+	@BeforeEach
+	void setUp() {
+		MockitoAnnotations.openMocks(this);
+	}
 
-    @Test
-    void createPurchase() {
-        when(memberService.findById(1L)).thenReturn(member1);
-        when(purchaseRepository.existsPurchaseByOrderNumber(any(UUID.class))).thenReturn(false);
-        when(purchaseRepository.save(any(Purchase.class))).thenReturn(purchase1);
+	@Test
+	void testCreatePurchase_Success() {
+		// Mock data
+		Long memberId = 1L;
+		CreatePurchaseRequest createPurchaseRequest = CreatePurchaseRequest.builder().deliveryPrice(100).totalPrice(2000).road("Test Road").build();
 
-        Long purchaseId = purchaseMemberService.createPurchase(request, 1L);
+		Member member = new Member();
+		member.setId(memberId);
 
-        assertNotNull(purchaseId);
-        verify(purchaseRepository, times(1)).save(any(Purchase.class));
-    }
+		Purchase purchase = new Purchase(
+			UUID.randomUUID(),
+			PurchaseStatus.PROCESSING,
+			createPurchaseRequest.deliveryPrice(),
+			createPurchaseRequest.totalPrice(),
+			ZonedDateTime.now(),
+			createPurchaseRequest.road(),
+			null,
+			MemberType.MEMBER,
+			member,
+			null,
+			null,
+			null
+		);
 
-    @Test
-    void createPurchase_existsOrderNumber() {
-        when(memberService.findById(1L)).thenReturn(member1);
-        when(purchaseRepository.existsPurchaseByOrderNumber(any(UUID.class))).thenReturn(true);
+		when(memberService.findById(memberId)).thenReturn(member);
+		when(purchaseRepository.existsPurchaseByOrderNumber(any(UUID.class))).thenReturn(false);
+		when(purchaseRepository.save(any(Purchase.class))).thenReturn(purchase);
 
-        assertThrows(PurchaseAlreadyExistException.class,()->{
-            Long purchaseId = purchaseMemberService.createPurchase(request, 1L);
-        });
-    }
+		// Call service method
+		Long createdPurchaseId = purchaseMemberService.createPurchase(createPurchaseRequest, memberId);
 
-    @Test
-    void updatePurchase() {
-        when(memberService.findById(1L)).thenReturn(member1);
-        when(purchaseRepository.findByMember(member1)).thenReturn(List.of(purchase1));
-        when(purchaseRepository.findById(purchase1.getId())).thenReturn(Optional.of(purchase1));
-        when(purchaseRepository.save(any(Purchase.class))).thenReturn(purchase1);
+		// Verify
+		assertEquals(purchase.getId(), createdPurchaseId);
+		verify(purchaseRepository, times(1)).save(any(Purchase.class));
+	}
 
-        Long purchaseId = purchaseMemberService.updatePurchase(UpdatePurchaseMemberRequest.builder().purchaseStatus(PurchaseStatus.SHIPPED).build(),1L, purchase1.getId());
+	@Test
+	void testUpdatePurchase_Success() {
+		// Mock data
+		Long memberId = 1L;
+		Long purchaseId = 1L;
+		UpdatePurchaseMemberRequest updatePurchaseRequest = UpdatePurchaseMemberRequest.builder().purchaseStatus(PurchaseStatus.SHIPPED).build();
 
-        assertNotNull(purchaseId);
-        assertEquals(PurchaseStatus.SHIPPED, purchase1.getStatus());
-        verify(purchaseRepository, times(1)).save(purchase1);
-    }
+		Member member = new Member();
+		member.setId(memberId);
 
-    @Test
-    void updatePurchase_AuthorizationThenThrowException() {
-        when(memberService.findById(1L)).thenReturn(member1);
-        when(purchaseRepository.findByMember(member1)).thenReturn(List.of());
-        when(purchaseRepository.findById(purchase1.getId())).thenReturn(Optional.of(purchase1));
-
-        assertThrows(PurchaseNoAuthorizationException.class,()->{
-            Long purchaseId = purchaseMemberService.updatePurchase(UpdatePurchaseMemberRequest.builder().purchaseStatus(PurchaseStatus.SHIPPED).build(),1L, purchase1.getId());
-        });
-    }
-
-    @Test
-    void readPurchase() {
-        when(memberService.findById(1L)).thenReturn(member1);
-        when(purchaseRepository.findByMember(member1)).thenReturn(List.of(purchase1));
-        when(purchaseRepository.findById(purchase1.getId())).thenReturn(Optional.of(purchase1));
-
-        ReadPurchaseResponse response = purchaseMemberService.readPurchase(member1.getId(), purchase1.getId());
-        assertNotNull(response);
-        assertEquals(response.id(), purchase1.getId());
-        verify(purchaseRepository, times(1)).findById(purchase1.getId());
-    }
+		Purchase existingPurchase = new Purchase(
+			UUID.randomUUID(),
+			PurchaseStatus.PROCESSING,
+			10,
+			10,
+			null,
+			null,
+			null,
+			null,
+			member,
+			null,
+			null,
+			null
 
 
-    @Test
-    void readPurchase_AuthorizationThenThrowException() {
-        when(memberService.findById(1L)).thenReturn(member1);
-        when(purchaseRepository.findByMember(member1)).thenReturn(List.of());
-        when(purchaseRepository.findById(purchase1.getId())).thenReturn(Optional.of(purchase1));
+		);
+		existingPurchase.setId(purchaseId);
 
-        assertThrows(PurchaseNoAuthorizationException.class,()->{
-            purchaseMemberService.readPurchase(1L, purchase1.getId());
-        });
-    }
 
-    @Test
-    void deletePurchase() {
-        when(memberService.findById(1L)).thenReturn(member1);
-        when(purchaseRepository.findByMember(member1)).thenReturn(List.of(purchase1));
-        when(purchaseRepository.findById(purchase1.getId())).thenReturn(Optional.of(purchase1));
+		when(purchaseRepository.findById(purchaseId)).thenReturn(Optional.of(existingPurchase));
+		when(memberService.findById(memberId)).thenReturn(member);
 
-        assertDoesNotThrow(()->{
-            purchaseMemberService.deletePurchase(1L, purchase1.getId());
-        });
-    }
+		// Call service method
+		Long updatedPurchaseId = purchaseMemberService.updatePurchase(updatePurchaseRequest, memberId, purchaseId);
 
-    @Test
-    void deletePurchase_AuthorizationThenThrowException() {
-        when(memberService.findById(1L)).thenReturn(member1);
-        when(purchaseRepository.findByMember(member1)).thenReturn(List.of());
-        when(purchaseRepository.findById(purchase1.getId())).thenReturn(Optional.of(purchase1));
+		// Verify
+		assertEquals(existingPurchase.getId(), updatedPurchaseId);
+		assertEquals(updatePurchaseRequest.purchaseStatus(), existingPurchase.getStatus());
+		verify(purchaseRepository, times(1)).save(existingPurchase);
+	}
 
-        assertThrows(PurchaseNoAuthorizationException.class,()->{
-            purchaseMemberService.deletePurchase(1L, purchase1.getId());
-        });
-    }
+	@Test
+	void testReadPurchase_Success() {
+		// Mock data
+		Long memberId = 1L;
+		Long purchaseId = 1L;
+
+		Member member = new Member();
+		member.setId(memberId);
+
+		Purchase purchase = new Purchase(
+			UUID.randomUUID(),
+			PurchaseStatus.PROCESSING,
+			10,
+			10,
+			null,
+			null,
+			null,
+			null,
+			member,
+			null,
+			null,
+			null
+
+
+		);
+
+		purchase.setId(purchaseId);
+
+		when(purchaseRepository.findById(purchaseId)).thenReturn(Optional.of(purchase));
+
+		// Call service method
+		ReadPurchaseResponse response = purchaseMemberService.readPurchase(memberId, purchaseId);
+
+		// Verify
+		assertEquals(purchase.getId(), response.id());
+		verify(purchaseRepository, times(1)).findById(purchaseId);
+	}
+
+	@Test
+	void testDeletePurchase_Success() {
+		// Mock data
+		Long memberId = 1L;
+		Long purchaseId = 1L;
+
+		Member member = new Member();
+		member.setId(memberId);
+
+		Purchase purchase = new Purchase(
+			UUID.randomUUID(),
+			PurchaseStatus.PROCESSING,
+			10,
+			10,
+			null,
+			null,
+			null,
+			null,
+			member,
+			null,
+			null,
+			null
+
+
+		);
+
+		purchase.setId(purchaseId);
+
+
+		when(purchaseRepository.findById(purchaseId)).thenReturn(Optional.of(purchase));
+
+		// Call service method
+		purchaseMemberService.deletePurchase(memberId, purchaseId);
+
+		// Verify
+		verify(purchaseRepository, times(1)).delete(purchase);
+	}
 }

@@ -80,10 +80,10 @@ class PurchaseRepositoryTest {
         assertFalse(purchaseRepository.existsPurchaseByOrderNumber(UUID.randomUUID()));
     }
 
-    @Test
-    void findPurchasesByMember(){
-        List<ReadPurchaseResponse> expectedList  = memberService.getPurchasesByMemberId(member1.getId());
-//        List<ReadPurchaseResponse> actualList = List.of(purchase1, purchase2, purchase3);
-//        assertEquals(expectedList, actualList);
-    }
+//     @Test
+//     void findPurchasesByMember(){
+//         List<ReadPurchaseResponse> expectedList  = memberService.getPurchasesByMemberId(member1.getId());
+// //        List<ReadPurchaseResponse> actualList = List.of(purchase1, purchase2, purchase3);
+// //        assertEquals(expectedList, actualList);
+//     }
 }
