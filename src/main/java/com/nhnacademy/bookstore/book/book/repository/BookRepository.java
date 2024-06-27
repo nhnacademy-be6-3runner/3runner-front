@@ -9,6 +9,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @author 김병우
  */
 public interface BookRepository extends JpaRepository<Book, Long>, BookCustomRepository {
-
-
 }
