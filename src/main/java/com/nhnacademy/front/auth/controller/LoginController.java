@@ -3,16 +3,16 @@ package com.nhnacademy.front.auth.controller;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.nhnacademy.front.auth.adapter.LoginAdapter;
 import com.nhnacademy.front.auth.dto.request.LoginRequest;
 import com.nhnacademy.front.auth.dto.response.LoginResponse;
+import com.nhnacademy.front.auth.service.LoginService;
+import com.nhnacademy.front.util.ApiResponse;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -27,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 public class LoginController {
 	@Autowired
-	LoginAdapter loginAdapter;
+	LoginService loginService;
 
 	/**
 	 * 로그인 폼 페이지를 반환한다.
@@ -49,11 +49,12 @@ public class LoginController {
 	 */
 	@PostMapping("/login")
 	@ResponseBody
-	public LoginResponse login(@RequestParam String email, @RequestParam String password,
+	public ApiResponse<LoginResponse> login(@RequestParam String email, @RequestParam String password,
 		HttpServletResponse response) {
-		ResponseEntity<LoginResponse> loginResponse = loginAdapter.login(new LoginRequest(email, password));
+		LoginResponse loginResponse = loginService.getLoginResponse(new LoginRequest(email, password));
+		// ApiResponse<LoginResponse> loginResponse = loginAdapter.login(new LoginRequest(email, password));
 
-		String accessToken = loginResponse.getHeaders().getFirst("Authorization");
+		String accessToken = response.getHeader("Authorization");
 
 		if (Objects.nonNull(accessToken)) {
 			log.warn("Access token {}", accessToken);
@@ -62,7 +63,7 @@ public class LoginController {
 			response.addCookie(cookie);
 		}
 
-		return loginResponse.getBody();
+		return ApiResponse.success(loginResponse);
 	}
 
 }

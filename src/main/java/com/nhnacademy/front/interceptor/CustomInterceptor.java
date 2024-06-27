@@ -36,6 +36,7 @@ public class CustomInterceptor implements HandlerInterceptor {
 		}
 
 		// TODO Cookie 없으면, 에러 발생시킬 건지
+		log.warn("Interceptor, Access Token 확인 {}", TokenHolder.getAccessToken());
 		return HandlerInterceptor.super.preHandle(request, response, handler);
 	}
 
