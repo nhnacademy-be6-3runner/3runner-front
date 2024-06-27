@@ -7,14 +7,11 @@ import com.nhnacademy.bookstore.entity.member.QMember;
 import com.nhnacademy.bookstore.entity.purchase.QPurchase;
 import com.nhnacademy.bookstore.entity.purchaseBook.QPurchaseBook;
 import com.nhnacademy.bookstore.entity.review.QReview;
-import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 @Repository
 public class ReviewCustomRepositoryImpl implements ReviewCustomRepository {
@@ -42,15 +39,15 @@ public class ReviewCustomRepositoryImpl implements ReviewCustomRepository {
 
     @Override
     public ReviewDetailResponse getReviewDetail(long reviewId) {
-        List<ReviewDetailResponse> reviewDetailResponseList = jpaQueryFactory
-                .select(Projections.constructor(ReviewDetailResponse.class,
-                        qReview.id,
-                        qReview.title,
-                        qReview.content,
-                        qReview.rating,
-                        qMember.email))
-                .from(qReview)
-                .join();
+//        List<ReviewDetailResponse> reviewDetailResponseList = jpaQueryFactory
+//                .select(Projections.constructor(ReviewDetailResponse.class,
+//                        qReview.id,
+//                        qReview.title,
+//                        qReview.content,
+//                        qReview.rating,
+//                        qMember.email))
+//                .from(qReview)
+//                .join();
         return null;
     }
 
