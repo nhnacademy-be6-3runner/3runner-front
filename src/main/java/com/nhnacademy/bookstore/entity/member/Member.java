@@ -47,7 +47,7 @@ public class Member {
 	@Size(min = 1, max = 255)
 	private String name;
 
-	@Column(columnDefinition = "TINYINT UNSIGNED")
+	@Column
 	private int age;
 
 	@NotNull
