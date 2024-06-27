@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class BookCustomRepositoryImpl implements BookCustomRepository {
@@ -43,9 +44,11 @@ public class BookCustomRepositoryImpl implements BookCustomRepository {
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
-        long total = jpaQueryFactory.select(qBook.count())
-                .from(qBook)
-                .fetchOne();
+        long total = Optional.ofNullable(
+                jpaQueryFactory.select(qBook.count())
+                        .from(qBook)
+                        .fetchOne()
+        ).orElse(0L);
         return new PageImpl<>(content, pageable, total);
     }
 
