@@ -7,8 +7,9 @@ spring:
     redis:
       host: 133.186.241.167
       port: 6379
-      database: 8
+      database: 11
       password: "*N2vya7H@muDTwdNMR!"
+
 
 
   jpa:
@@ -35,8 +36,9 @@ spring:
     password: tHos2g5st4@XH7mT
     driver-class-name: com.mysql.cj.jdbc.Driver
 
+
   profiles:
-    active: dev
+    active: prod
   lifecycle:
     timeout-per-shutdown-phase: 30s
   application:
@@ -58,3 +60,9 @@ cloud:
     s3:
       endpoint: https://kr1-api-object-storage.nhncloudservice.com
       bucket: nhnacademy-be6-3runner
+
+
+springdoc:
+  swagger-ui:
+    url: /docs/openapi-3.0.json
+    path: /bookstore/docs/swagger

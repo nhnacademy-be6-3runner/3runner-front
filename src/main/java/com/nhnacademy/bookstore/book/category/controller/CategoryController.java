@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nhnacademy.bookstore.book.bookCartegory.service.BookCategoryService;
 import com.nhnacademy.bookstore.book.category.dto.request.CreateCategoryRequest;
 import com.nhnacademy.bookstore.book.category.dto.request.UpdateCategoryRequest;
 import com.nhnacademy.bookstore.book.category.dto.response.CategoryParentWithChildrenResponse;
@@ -37,6 +38,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CategoryController {
 	private final CategoryService categoryService;
+	private final BookCategoryService bookCategoryService;
 
 	/**
 	 * 카테고리 생성 컨트롤러
@@ -97,7 +99,7 @@ public class CategoryController {
 	@GetMapping
 	public ApiResponse<List<CategoryParentWithChildrenResponse>> readAllCategories() {
 		log.info("Read all categories");
-		return ApiResponse.success(categoryService.getCategoriesWithChildren());
+		return ApiResponse.success(categoryService.getCategories());
 	}
 
 	/**

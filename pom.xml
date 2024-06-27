@@ -66,6 +66,7 @@
             <artifactId>mysql-connector-j</artifactId>
             <scope>runtime</scope>
         </dependency>
+
         <dependency>
             <groupId>com.querydsl</groupId>
             <artifactId>querydsl-jpa</artifactId>
@@ -130,8 +131,36 @@
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
-            <version>2.17.0</version> <!-- 적절한 버전을 사용하세요 -->
+            <version>2.17.1</version>
         </dependency>
+
+        <!-- spring rest docs 생성을 위한 디펜던시 -->
+        <dependency>
+            <groupId>org.springframework.restdocs</groupId>
+            <artifactId>spring-restdocs-mockmvc</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- restdocs spec(openapi spec) 문서를 생성하기 위한 디펜던시 -->
+        <dependency>
+            <groupId>com.epages</groupId>
+            <artifactId>restdocs-api-spec</artifactId>
+            <version>0.18.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.epages</groupId>
+            <artifactId>restdocs-api-spec-mockmvc</artifactId>
+            <version>0.18.2</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- restdocs spec(openapi spec) 문서를 생성하기 위한 디펜던시 -->
+
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>2.1.0</version>
+        </dependency>
+
     </dependencies>
     <dependencyManagement>
         <dependencies>
@@ -180,6 +209,76 @@
                     </excludes>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>org.asciidoctor</groupId>
+                <artifactId>asciidoctor-maven-plugin</artifactId>
+                <version>2.2.1</version>
+                <executions>
+                    <execution>
+                        <id>generate-docs</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>process-asciidoc</goal>
+                        </goals>
+                        <configuration>
+                            <backend>html</backend>
+                            <doctype>book</doctype>
+                            <sourceDirectory>${project.basedir}/src/docs/asciidoc</sourceDirectory>
+                            <sourceDocumentName>index.adoc</sourceDocumentName>
+                            <outputDirectory>${project.build.directory}/classes/static/docs</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.springframework.restdocs</groupId>
+                        <artifactId>spring-restdocs-asciidoctor</artifactId>
+                        <version>${spring-restdocs.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <!-- restdocs-spec 문서 생성을 위한 플러그인 정의 -->
+            <plugin>
+                <groupId>io.github.berkleytechnologyservices</groupId>
+                <artifactId>restdocs-spec-maven-plugin</artifactId>
+                <version>0.22</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <specifications>
+                                <specification>
+                                    <type>OPENAPI_V2</type>
+                                </specification>
+                                <specification>
+                                    <type>OPENAPI_V3</type>
+                                    <format>JSON</format>
+                                </specification>
+                                <specification>
+                                    <type>POSTMAN_COLLECTION</type>
+                                    <filename>postman-collection</filename>
+                                </specification>
+                            </specifications>
+                            <name>${project.artifactId}</name>
+                            <version>${project.version}</version>
+                            <host>bookstore</host>
+                            <schemes>
+                                <scheme>http</scheme>
+                            </schemes>
+                            <snippetsDirectory>
+                                ${project.build.directory}/generated-snippets
+                            </snippetsDirectory>
+                            <outputDirectory>
+                                ${project.build.directory}/classes/static/docs
+                            </outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
 </project>

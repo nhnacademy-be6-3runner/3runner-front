@@ -10,7 +10,6 @@ import lombok.Builder;
  */
 @Builder
 public record CreateAddressRequest(
-        @NotNull Long memberId,
         @NotNull @Size(min = 1, max = 20) String name,
         @NotNull @Size(min = 1, max = 100) String country,
         @NotNull @Size(min = 1, max = 100) String city,

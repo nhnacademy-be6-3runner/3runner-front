@@ -1,31 +1,33 @@
 package com.nhnacademy.bookstore.member.member.service;
 
 
+import java.time.ZonedDateTime;
+import java.util.List;
+
 import com.nhnacademy.bookstore.entity.member.Member;
 import com.nhnacademy.bookstore.entity.member.enums.Grade;
 import com.nhnacademy.bookstore.entity.member.enums.Status;
-import com.nhnacademy.bookstore.entity.purchase.Purchase;
 import com.nhnacademy.bookstore.member.member.dto.request.UpdateMemberRequest;
 import com.nhnacademy.bookstore.purchase.purchase.dto.response.ReadPurchaseResponse;
-import org.springframework.stereotype.Service;
 
-import java.util.List;
+import org.springframework.stereotype.Service;
 
 @Service
 public interface MemberService {
     Member save(Member member);
 
-    Member findById(Long id);
+    Member readById(Long id);
 
-    Member findByEmailAndPassword(String email, String password);
+    Member readByEmailAndPassword(String email, String password);
 
-    Member updateMember(String memberId, UpdateMemberRequest updateMemberRequest);
+    Member updateMember(Long memberId, UpdateMemberRequest updateMemberRequest);
 
-    void deleteMember(String memberId);
+    void deleteMember(Long memberId);
 
-    Member updateStatus(String memberId, Status status);
+    Member updateStatus(Long memberId, Status status);
 
-    Member updateGrade(String memberId, Grade grade);
+    Member updateGrade(Long memberId, Grade grade);
+    Member updateLastLogin(Long memberId, ZonedDateTime lastLogin);
 
     List<ReadPurchaseResponse> getPurchasesByMemberId(Long memberId);
 }

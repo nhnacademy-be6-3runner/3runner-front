@@ -17,12 +17,11 @@ import com.nhnacademy.bookstore.book.book.exception.BookDoesNotExistException;
 import com.nhnacademy.bookstore.book.book.repository.BookRepository;
 import com.nhnacademy.bookstore.book.bookCartegory.dto.request.CreateBookCategoryRequest;
 import com.nhnacademy.bookstore.book.bookCartegory.dto.request.UpdateBookCategoryRequest;
-import com.nhnacademy.bookstore.book.bookCartegory.dto.response.BookCategoriesChildrenResponse;
-import com.nhnacademy.bookstore.book.bookCartegory.dto.response.BookCategoriesResponse;
 import com.nhnacademy.bookstore.book.bookCartegory.exception.BookCategoryAlreadyExistsException;
 import com.nhnacademy.bookstore.book.bookCartegory.exception.BookCategoryNotFoundException;
 import com.nhnacademy.bookstore.book.bookCartegory.repository.BookCategoryRepository;
 import com.nhnacademy.bookstore.book.bookCartegory.service.BookCategoryService;
+import com.nhnacademy.bookstore.book.category.dto.response.CategoryParentWithChildrenResponse;
 import com.nhnacademy.bookstore.book.category.exception.CategoryNotFoundException;
 import com.nhnacademy.bookstore.book.category.repository.CategoryRepository;
 import com.nhnacademy.bookstore.entity.book.Book;
@@ -124,7 +123,7 @@ public class BookCategoryServiceImpl implements BookCategoryService {
 	 * @return 책에 해당하는 카테고리 list
 	 */
 	@Override
-	public List<BookCategoriesChildrenResponse> readBookWithCategoryList(Long bookId) {
+	public List<CategoryParentWithChildrenResponse> readBookWithCategoryList(Long bookId) {
 		return categoryChildrenMade(bookCategoryRepository.bookWithCategoryList(bookId));
 	}
 
@@ -158,28 +157,40 @@ public class BookCategoryServiceImpl implements BookCategoryService {
 		return categories;
 	}
 
-	private List<BookCategoriesChildrenResponse> categoryChildrenMade(
-		List<BookCategoriesResponse> bookCategoriesResponseList) {
+	public List<CategoryParentWithChildrenResponse> allCategoryList() {
+		List<Category> categoryList = categoryRepository.findAll();
 
-		Map<Long, BookCategoriesChildrenResponse> categoryMap = new HashMap<>();
+		return categoryChildrenMade(categoryList);
+	}
 
-		List<BookCategoriesChildrenResponse> rootList = new ArrayList<>();
+	/**
+	 * @author 한민기
+	 *
+	 * @param categoryList
+	 * @return
+	 */
+	private List<CategoryParentWithChildrenResponse> categoryChildrenMade(
+		List<Category> categoryList) {
 
-		for (BookCategoriesResponse bookCategoriesResponse : bookCategoriesResponseList) {
-			categoryMap.put(bookCategoriesResponse.id(), BookCategoriesChildrenResponse.builder()
-				.id(bookCategoriesResponse.id())
-				.name(bookCategoriesResponse.categoryName())
-				.children(new ArrayList<>())
+		Map<Long, CategoryParentWithChildrenResponse> categoryMap = new HashMap<>();
+
+		List<CategoryParentWithChildrenResponse> rootList = new ArrayList<>();
+
+		for (Category category : categoryList) {
+			categoryMap.put(category.getId(), CategoryParentWithChildrenResponse.builder()
+				.id(category.getId())
+				.name(category.getName())
+				.childrenList(new ArrayList<>())
 				.build());
 		}
 
-		for (BookCategoriesResponse bookCategoriesResponse : bookCategoriesResponseList) {
-			BookCategoriesChildrenResponse date = categoryMap.get(bookCategoriesResponse.id());
-			if (bookCategoriesResponse.parentId() == null) {
+		for (Category category : categoryList) {
+			CategoryParentWithChildrenResponse date = categoryMap.get(category.getId());
+			if (category.getParent() == null) {
 				rootList.add(date);
 			} else {
-				BookCategoriesChildrenResponse parent = categoryMap.get(bookCategoriesResponse.parentId());
-				parent.children().add(date);
+				CategoryParentWithChildrenResponse parent = categoryMap.get(category.getParent().getId());
+				parent.getChildrenList().add(date);
 			}
 		}
 		return rootList;

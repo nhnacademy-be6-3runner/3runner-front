@@ -17,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,7 +44,6 @@ public class BookController {
      * @param bindingResult     binding result
      * @return ApiResponse<>
      */
-    @Transactional
     @PostMapping
     public ApiResponse<Void> createBook(@Valid @RequestBody CreateBookRequest createBookRequest,
                                         BindingResult bindingResult) {
@@ -56,7 +54,7 @@ public class BookController {
         bookCategoryService.createBookCategory(
                 CreateBookCategoryRequest.builder().bookId(bookId).categoryIds(createBookRequest.categoryIds()).build());
         bookTagService.createBookTag(
-                CreateBookTagListRequest.builder().bookId(bookId).tagIdList(createBookRequest.categoryIds()).build());
+                CreateBookTagListRequest.builder().bookId(bookId).tagIdList(createBookRequest.tagIds()).build());
         bookImageService.createBookImage(createBookRequest.imageList(), bookId, BookImageType.DESCRIPTION);
         if (!Objects.isNull(createBookRequest.imageName())) {
             bookImageService.createBookImage(List.of(createBookRequest.imageName()), bookId, BookImageType.MAIN);
@@ -74,7 +72,7 @@ public class BookController {
                 new ApiResponse.Body<ReadBookResponse>(book)
         );
     }
-    
+
     @GetMapping
     public ApiResponse<Page<BookListResponse>> readAllBooks(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);

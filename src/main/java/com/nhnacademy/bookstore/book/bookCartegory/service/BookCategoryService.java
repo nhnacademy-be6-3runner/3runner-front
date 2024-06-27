@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable;
 import com.nhnacademy.bookstore.book.book.dto.response.BookListResponse;
 import com.nhnacademy.bookstore.book.bookCartegory.dto.request.CreateBookCategoryRequest;
 import com.nhnacademy.bookstore.book.bookCartegory.dto.request.UpdateBookCategoryRequest;
-import com.nhnacademy.bookstore.book.bookCartegory.dto.response.BookCategoriesChildrenResponse;
+import com.nhnacademy.bookstore.book.category.dto.response.CategoryParentWithChildrenResponse;
 
 public interface BookCategoryService {
 	void createBookCategory(CreateBookCategoryRequest dto);
@@ -17,7 +17,10 @@ public interface BookCategoryService {
 
 	void deletedBookCategory(Long id);
 
-	List<BookCategoriesChildrenResponse> readBookWithCategoryList(Long bookId);
+	List<CategoryParentWithChildrenResponse> readBookWithCategoryList(Long bookId);
 
 	Page<BookListResponse> readCategoriesWithBookList(List<Long> categoryList, Pageable pageable);
+
+	List<CategoryParentWithChildrenResponse> allCategoryList();
 }
+

@@ -50,7 +50,7 @@ public class PurchaseMemberServiceImpl implements PurchaseMemberService {
                 createPurchaseRequest.road(),
                 null,
                 MemberType.MEMBER,
-                memberService.findById(memberId),
+                memberService.readById(memberId),
                 null, //TODO : Point 구현 후 연결 필요
                 null,
                 null
@@ -74,7 +74,7 @@ public class PurchaseMemberServiceImpl implements PurchaseMemberService {
      */
     @Override
     public Long updatePurchase(UpdatePurchaseMemberRequest updatePurchaseRequest, Long memberId, Long purchaseId) {
-        List<Purchase> purchaseList = purchaseRepository.findByMember(memberService.findById(memberId));
+        List<Purchase> purchaseList = purchaseRepository.findByMember(memberService.readById(memberId));
         Purchase purchase = purchaseRepository.findById(purchaseId).orElseThrow(()-> new PurchaseDoesNotExistException(""));
 
         if (!purchaseList.contains(purchase)) {
@@ -98,7 +98,7 @@ public class PurchaseMemberServiceImpl implements PurchaseMemberService {
      */
     @Override
     public ReadPurchaseResponse readPurchase(Long MemberId, Long purchaseId) {
-        List<Purchase> purchaseList = purchaseRepository.findByMember(memberService.findById(MemberId));
+        List<Purchase> purchaseList = purchaseRepository.findByMember(memberService.readById(MemberId));
         Purchase purchase = purchaseRepository.findById(purchaseId).orElseThrow(()-> new PurchaseDoesNotExistException(""));
 
         if (!purchaseList.contains(purchase)) {
@@ -125,7 +125,7 @@ public class PurchaseMemberServiceImpl implements PurchaseMemberService {
      */
     @Override
     public void deletePurchase(Long MemberId, Long purchaseId) {
-        List<Purchase> purchaseList = purchaseRepository.findByMember(memberService.findById(MemberId));
+        List<Purchase> purchaseList = purchaseRepository.findByMember(memberService.readById(MemberId));
         Purchase purchase = purchaseRepository.findById(purchaseId).orElseThrow(()-> new PurchaseDoesNotExistException(""));
 
         if (!purchaseList.contains(purchase)) {
