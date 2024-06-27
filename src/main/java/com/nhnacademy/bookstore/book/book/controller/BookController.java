@@ -54,7 +54,6 @@ public class BookController {
 	 * @param bindingResult binding result
 	 * @return ApiResponse<>
 	 */
-	@Transactional
 	@PostMapping
 	public ApiResponse<Void> createBook(@Valid @RequestBody CreateBookRequest createBookRequest,
 		BindingResult bindingResult) {

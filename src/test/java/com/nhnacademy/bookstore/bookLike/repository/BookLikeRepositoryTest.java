@@ -91,7 +91,7 @@ public class BookLikeRepositoryTest {
                 0,
                 true,
                 "작가r",
-                "123456789",
+                "1234567891",
                 "출판사",
                 null,
                 null,

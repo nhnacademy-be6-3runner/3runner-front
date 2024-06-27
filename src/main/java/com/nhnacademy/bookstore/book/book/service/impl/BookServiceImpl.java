@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import com.nhnacademy.bookstore.book.book.dto.request.CreateBookRequest;
 import com.nhnacademy.bookstore.book.book.dto.response.ReadBookResponse;
 import com.nhnacademy.bookstore.book.book.exception.BookDoesNotExistException;
-import com.nhnacademy.bookstore.book.book.repository.BookCustomRepository;
 import com.nhnacademy.bookstore.book.book.repository.BookRepository;
 import com.nhnacademy.bookstore.book.book.service.BookService;
 import com.nhnacademy.bookstore.entity.book.Book;
@@ -21,7 +20,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BookServiceImpl implements BookService {
 	private final BookRepository bookRepository;
-	private final BookCustomRepository bookCustomRepository;
 
 	/**
 	 * 책 등록 기능.
@@ -51,7 +49,7 @@ public class BookServiceImpl implements BookService {
 		return book.getId();
 	}
 
-	/**
+	/**xxx
 	 * 책 조회 기능.
 	 *
 	 * @param bookId book entity id
@@ -61,8 +59,7 @@ public class BookServiceImpl implements BookService {
 		if (!bookRepository.existsById(bookId)) {
 			throw new BookDoesNotExistException("책이 존재하지 않습니다");
 		}
-		
-		return bookCustomRepository.readDetailBook(bookId);
 
+		return bookRepository.readDetailBook(bookId);
 	}
 }
