@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Detail</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background-color: #343a40;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header a {
+            color: #fff;
+            margin: 0 10px;
+            text-decoration: none;
+        }
+
+        .breadcrumb {
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .breadcrumb a {
+            color: #007bff;
+            text-decoration: none;
+            margin-right: 5px;
+        }
+
+        .breadcrumb span {
+            color: #6c757d;
+        }
+
+        .breadcrumb span.separator {
+            margin: 0 5px;
+        }
+
+        .product-detail {
+            display: flex;
+            flex-wrap: wrap;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-images, .product-info {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .product-images th {
+            padding: 0;
+            border: none;
+        }
+
+        .product-images img {
+            width: 100%;
+            height: 300px; /* 원하는 높이로 설정 */
+            object-fit: cover; /* 이미지를 잘라서 비율 유지 */
+            border: 1px solid #dee2e6;
+            padding: 10px;
+            background-color: #f8f9fa;
+        }
+
+        .product-info h1 {
+            font-size: 24px;
+            margin: 0 0 20px;
+        }
+
+        .product-info p {
+            color: #6c757d;
+            margin: 20px 0;
+        }
+
+        .product-info .price-container {
+            margin: 20px 0;
+        }
+
+        .product-info .original-price {
+            font-size: 18px;
+            color: #6c757d;
+            text-decoration: line-through;
+            margin-right: 10px;
+        }
+
+        .product-info .selling-price {
+            font-size: 24px;
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .product-info .options {
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .product-info .options label {
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .product-info .options input {
+            width: 60px;
+            padding: 5px;
+            text-align: center;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+        }
+
+        .product-info .add-to-cart,
+        .product-info .buy-now {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-right: 10px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .product-info .buy-now {
+            background-color: #28a745;
+        }
+
+        .product-info .add-to-cart:hover {
+            background-color: #0056b3;
+        }
+
+        .product-info .buy-now:hover {
+            background-color: #218838;
+        }
+
+        .related-products {
+            margin: 40px 0;
+        }
+
+        .related-products h3 {
+            text-align: center;
+            margin: 0 0 20px;
+        }
+
+        .related-products .products {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .related-products .product {
+            width: 23%;
+            background-color: #fff;
+            padding: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            transition: box-shadow 0.3s;
+        }
+
+        .related-products .product img {
+            width: 100%;
+            border: 1px solid #dee2e6;
+            padding: 10px;
+            background-color: #f8f9fa;
+        }
+
+        .related-products .product h4 {
+            margin: 10px 0;
+        }
+
+        .related-products .product p {
+            color: #28a745;
+        }
+
+        .footer {
+            background-color: #343a40;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+        }
+
+        .rating span {
+            font-size: 24px;
+            color: #ffc107;
+        }
+
+        .rating .reviews {
+            margin-left: 10px;
+            color: #6c757d;
+        }
+
+        /* Additional Info Section */
+        .additional-info {
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        .additional-info h2 {
+            font-size: 22px;
+            margin-bottom: 20px;
+        }
+
+        .additional-info .table {
+            width: 80%;
+            margin: 0 auto;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .additional-info .table th, .additional-info .table td {
+            padding: 10px;
+            border: 1px solid #dee2e6;
+            text-align: center;
+        }
+
+        .additional-info .table th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+
+        .description {
+            margin-top: 20px;
+            text-align: left;
+            width: 80%;
+            margin: 0 auto;
+        }
+
+        .description h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .description div {
+            line-height: 1.6;
+            color: #6c757d;
+        }
+
+        .description img {
+            max-width: 100%;
+            height: auto;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<header class="header-v4">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light menu-desktop">
+        <div class="container">
+            <!-- Logo -->
+            <a class="navbar-brand logo" href="#">
+                3runner
+            </a>
+
+            <!-- Toggler/collapsibe Button -->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Navbar links -->
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="login.html">login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="logout.html">logout</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="mypage.html">my page</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="register.html">register</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="cart.html">cart</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<div class="container">
+
+    <div class="category-list">
+        <div th:each="category : ${book.categoryList()}">
+            <span th:if="${category.name != null}" th:text="${category.name}"></span>
+            <span th:if="${category.childrenList != null && !category.childrenList.isEmpty()}">
+                <span th:each="child : ${category.childrenList}">
+                    &gt; <a th:href="'/categories/' + ${child.id}" th:text="${child.name}"></a>
+                    <span th:if="${child.childrenList != null && !child.childrenList.isEmpty()}">
+                        <span th:each="subChild : ${child.childrenList}">
+                            &gt; <a th:href="'/categories/' + ${subChild.id}" th:text="${subChild.name}"></a>
+                        </span>
+                    </span>
+                </span>
+            </span>
+        </div>
+    </div>
+
+    <div class="product-detail">
+        <div class="product-images">
+            <table>
+                <tr>
+                    <th>
+                        <img th:src="@{/api/images/book/download(fileName=${book.imagePath()})}" alt="book main image">
+                    </th>
+                </tr>
+            </table>
+        </div>
+
+        <div class="product-info">
+            <h1><span th:text="${book.title()}"></span></h1>
+            <div class="price-container">
+                <span class="original-price"><span th:text="${book.price()}"></span></span>
+                <span class="selling-price"><span th:text="${book.sellingPrice()}"></span></span>
+            </div>
+            <div class="rating">
+                <span th:each="star : ${#numbers.sequence(1, rating)}">
+                    <i class="bi bi-star-fill"></i>
+                </span>
+                <span th:each="star : ${#numbers.sequence(rating + 1, 5)}">
+                    <i class="bi bi-star"></i>
+                </span>
+                <span class="reviews">
+                    (<span th:text="${reviewCount}"></span> reviews)
+                </span>
+            </div>
+            <div class="options">
+                <label for="quantity">수량</label>
+                <input type="number" id="quantity" name="quantity" value="1">
+            </div>
+            <div class="action-buttons">
+                <a href="#" class="add-to-cart">장바구니 담기</a>
+                <a href="#" class="buy-now">바로 구매</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="additional-info">
+        <h2>책 정보</h2>
+        <table class="table">
+            <tr>
+                <th>작가</th>
+                <td th:text="${book.author()}"></td>
+            </tr>
+            <tr>
+                <th>출판일</th>
+                <td th:text="${book.publishedDate()}"></td>
+            </tr>
+            <tr>
+                <th>출판사</th>
+                <td th:text="${book.publisher()}"></td>
+            </tr>
+            <tr>
+                <th>ISBN</th>
+                <td th:text="${book.isbn()}"></td>
+            </tr>
+        </table>
+        <div class="description">
+            <div th:utext="${book.description()}"></div>
+        </div>
+    </div>
+
+</div>
+
+<footer class="footer">
+    <p>&copy; 2024 All rights reserved. Template by <a href="https://colorlib.com" target="_blank" style="color: #fff;">Colorlib</a>
+        distributed by <a href="https://themewagon.com" target="_blank" style="color: #fff;">ThemeWagon</a></p>
+</footer>
+<!-- Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css">
+</body>
+</html>
