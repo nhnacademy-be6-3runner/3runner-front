@@ -4,6 +4,21 @@ server:
 spring:
   application:
     name: 3runner-front
+  security:
+    oauth2:
+      client:
+        registration:
+          payco:
+            client-id: 3RDUR8qJyORVrsI2PdkInS1
+            client-secret: yoA1FPvf5ievEnC7LkzJDp1x
+            redirect-uri: http://localhost:8080/auth/oauth2/callback/payco
+            authorization-grant-type: authorization_code
+            scope: idNo, email, mobile, name
+        provider:
+          payco:
+            authorization-uri: https://id.payco.com/oauth2.0/authorize
+            token-uri: https://id.payco.com/oauth2.0/token
+            user-info-uri: https://apis-payco.krp.toastoven.net/payco/friends/find_member_v2.json
   servlet:
     multipart:
       enabled: true
