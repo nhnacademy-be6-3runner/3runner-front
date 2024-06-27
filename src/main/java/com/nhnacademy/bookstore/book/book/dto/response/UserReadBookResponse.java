@@ -1,13 +1,17 @@
 package com.nhnacademy.bookstore.book.book.dto.response;
 
 import java.time.ZonedDateTime;
+import java.util.List;
+
+import com.nhnacademy.bookstore.book.bookTag.dto.response.ReadTagByBookResponse;
+import com.nhnacademy.bookstore.book.category.dto.response.CategoryParentWithChildrenResponse;
 
 import lombok.Builder;
 
 /**
  * book response form validate.
  *
- * @author 김병우
+ * @author 한민기
  * @param title                제목
  * @param description        설명
  * @param publishedDate        출판일
@@ -20,9 +24,11 @@ import lombok.Builder;
  * @param isbn                isbn13
  * @param publisher            출판사
  * @param imagePath            메인 이미지의 파일 위치
+ * @param categoryList        카테고리 리스트
+ * @param tagList            태그 리스트
  */
 @Builder
-public record ReadBookResponse(
+public record UserReadBookResponse(
 
 	long id,
 	String title,
@@ -36,7 +42,9 @@ public record ReadBookResponse(
 	String author,
 	String isbn,
 	String publisher,
-	String imagePath
+	String imagePath,
+	List<CategoryParentWithChildrenResponse> categoryList,
+	List<ReadTagByBookResponse> tagList
 
 ) {
 }

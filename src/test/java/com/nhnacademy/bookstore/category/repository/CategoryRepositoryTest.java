@@ -1,5 +1,6 @@
 package com.nhnacademy.bookstore.category.repository;
 
+import com.nhnacademy.bookstore.book.category.dto.response.CategoryParentWithChildrenResponse;
 import com.nhnacademy.bookstore.book.category.dto.response.CategoryResponse;
 import com.nhnacademy.bookstore.book.category.repository.CategoryRepository;
 import com.nhnacademy.bookstore.book.category.repository.impl.CategoryCustomRepositoryImpl;
@@ -65,7 +66,8 @@ public class CategoryRepositoryTest {
         parentCategory1.setChildren(new ArrayList<>(List.of(childCategory1)));
         parentCategory2.setChildren(new ArrayList<>(List.of(childCategory2)));
 
-        this.categoryList = new ArrayList<>(List.of(grandParentCategory, parentCategory1, parentCategory2, childCategory1, childCategory2));
+        this.categoryList = new ArrayList<>(
+                List.of(grandParentCategory, parentCategory1, parentCategory2, childCategory1, childCategory2));
     }
 
     @DisplayName("카테고리 저장 테스트")
@@ -149,5 +151,39 @@ public class CategoryRepositoryTest {
         log.info("size = {}", parentCategories.size());
 
         Assertions.assertEquals(1, parentCategories.size());
+    }
+
+    @DisplayName("계층 카테고리 조회 테스트")
+    @Test
+    void findParentWithChildrenCategoriesTest() {
+        categoryRepository.saveAll(categoryList);
+        List<CategoryParentWithChildrenResponse> parentWithChildrenCategories = categoryRepository.findParentWithChildrenCategories();
+
+        Assertions.assertEquals(1, parentWithChildrenCategories.size());
+
+        CategoryParentWithChildrenResponse grandParentResponse = parentWithChildrenCategories.get(0);
+        Assertions.assertEquals("최상위 부모 카테고리", grandParentResponse.getName());
+        Assertions.assertNotNull(grandParentResponse.getChildrenList());
+        Assertions.assertEquals(2, grandParentResponse.getChildrenList().size());
+
+        CategoryParentWithChildrenResponse parentResponse1 = grandParentResponse.getChildrenList().get(0);
+        Assertions.assertEquals("부모 카테고리1", parentResponse1.getName());
+        Assertions.assertNotNull(parentResponse1.getChildrenList());
+        Assertions.assertEquals(1, parentResponse1.getChildrenList().size());
+
+        CategoryParentWithChildrenResponse parentResponse2 = grandParentResponse.getChildrenList().get(1);
+        Assertions.assertEquals("부모 카테고리2", parentResponse2.getName());
+        Assertions.assertNotNull(parentResponse2.getChildrenList());
+        Assertions.assertEquals(1, parentResponse2.getChildrenList().size());
+
+        CategoryParentWithChildrenResponse childResponse1 = parentResponse1.getChildrenList().get(0);
+        Assertions.assertEquals("자식 카테고리1", childResponse1.getName());
+        Assertions.assertNotNull(childResponse1.getChildrenList());
+        Assertions.assertTrue(childResponse1.getChildrenList().isEmpty());
+
+        CategoryParentWithChildrenResponse childResponse2 = parentResponse2.getChildrenList().get(0);
+        Assertions.assertEquals("자식 카테고리2", childResponse2.getName());
+        Assertions.assertNotNull(childResponse2.getChildrenList());
+        Assertions.assertTrue(childResponse2.getChildrenList().isEmpty());
     }
 }
