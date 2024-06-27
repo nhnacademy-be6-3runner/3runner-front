@@ -21,6 +21,7 @@ import com.nhnacademy.bookstore.book.bookCartegory.exception.BookCategoryAlready
 import com.nhnacademy.bookstore.book.bookCartegory.exception.BookCategoryNotFoundException;
 import com.nhnacademy.bookstore.book.bookCartegory.repository.BookCategoryRepository;
 import com.nhnacademy.bookstore.book.bookCartegory.service.BookCategoryService;
+import com.nhnacademy.bookstore.book.category.dto.response.BookDetailCategoryResponse;
 import com.nhnacademy.bookstore.book.category.dto.response.CategoryParentWithChildrenResponse;
 import com.nhnacademy.bookstore.book.category.exception.CategoryNotFoundException;
 import com.nhnacademy.bookstore.book.category.repository.CategoryRepository;
@@ -160,7 +161,7 @@ public class BookCategoryServiceImpl implements BookCategoryService {
 	public List<CategoryParentWithChildrenResponse> allCategoryList() {
 		List<Category> categoryList = categoryRepository.findAll();
 
-		return categoryChildrenMade(categoryList);
+		return categoryChildrenMadeCategory(categoryList);
 	}
 
 	/**
@@ -170,6 +171,40 @@ public class BookCategoryServiceImpl implements BookCategoryService {
 	 * @return
 	 */
 	private List<CategoryParentWithChildrenResponse> categoryChildrenMade(
+		List<BookDetailCategoryResponse> categoryList) {
+
+		Map<Long, CategoryParentWithChildrenResponse> categoryMap = new HashMap<>();
+
+		List<CategoryParentWithChildrenResponse> rootList = new ArrayList<>();
+
+		for (BookDetailCategoryResponse category : categoryList) {
+			categoryMap.put(category.id(), CategoryParentWithChildrenResponse.builder()
+				.id(category.id())
+				.name(category.name())
+				.childrenList(new ArrayList<>())
+				.build());
+		}
+
+		for (BookDetailCategoryResponse category : categoryList) {
+			CategoryParentWithChildrenResponse date = categoryMap.get(category.id());
+			if (category.parentId() == null) {
+				rootList.add(date);
+			} else {
+				CategoryParentWithChildrenResponse parent = categoryMap.get(category.parentId());
+				parent.getChildrenList().add(date);
+			}
+		}
+		return rootList;
+
+	}
+
+	/**
+	 * @author 한민기
+	 *
+	 * @param categoryList
+	 * @return
+	 */
+	private List<CategoryParentWithChildrenResponse> categoryChildrenMadeCategory(
 		List<Category> categoryList) {
 
 		Map<Long, CategoryParentWithChildrenResponse> categoryMap = new HashMap<>();

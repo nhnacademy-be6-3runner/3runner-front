@@ -1,7 +1,6 @@
 package com.nhnacademy.bookstore.book.book.controller;
 
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.*;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
@@ -23,6 +22,7 @@ import com.nhnacademy.bookstore.book.book.dto.response.ReadBookResponse;
 import com.nhnacademy.bookstore.book.book.service.BookService;
 import com.nhnacademy.bookstore.book.bookCartegory.service.BookCategoryService;
 import com.nhnacademy.bookstore.book.bookImage.service.BookImageService;
+import com.nhnacademy.bookstore.book.bookTag.dto.request.ReadBookIdRequest;
 import com.nhnacademy.bookstore.book.bookTag.dto.response.ReadTagByBookResponse;
 import com.nhnacademy.bookstore.book.bookTag.service.BookTagService;
 import com.nhnacademy.bookstore.book.category.dto.response.CategoryParentWithChildrenResponse;
@@ -70,11 +70,14 @@ class BookControllerTest extends BaseDocumentTest {
 			.isbn("1234567890123")
 			.publisher("Test Publisher")
 			.imagePath("Test Image Path")
-			.categoryList(List.of(categoryParentWithChildrenResponse2))
-			.tagList(List.of(ReadTagByBookResponse.builder().name("Test tag").build()))
+
 			.build();
 
 		given(bookService.readBookById(anyLong())).willReturn(readBookResponse);
+		given(bookCategoryService.readBookWithCategoryList(anyLong())).willReturn(
+			List.of(categoryParentWithChildrenResponse2));
+		given(bookTagService.readTagByBookId(any(ReadBookIdRequest.class))).willReturn(
+			List.of(ReadTagByBookResponse.builder().id(1L).name("Test tag").build()));
 
 		this.mockMvc.perform(RestDocumentationRequestBuilders.get("/bookstore/books/{bookId}", 1L)
 				.accept(MediaType.APPLICATION_JSON)
@@ -104,12 +107,18 @@ class BookControllerTest extends BaseDocumentTest {
 					fieldWithPath("body.data.categoryList").type(JsonFieldType.ARRAY).description("카테고리 리스트"),
 					fieldWithPath("body.data.categoryList[].id").type(JsonFieldType.NUMBER).description("카테고리 아이디"),
 					fieldWithPath("body.data.categoryList[].name").type(JsonFieldType.STRING).description("카테고리 이름"),
-					fieldWithPath("body.data.categoryList[].childrenList").type(JsonFieldType.ARRAY).description("하위 카테고리 리스트"),
-					fieldWithPath("body.data.categoryList[].childrenList[].id").type(JsonFieldType.NUMBER).description("하위 카테고리 아이디"),
-					fieldWithPath("body.data.categoryList[].childrenList[].name").type(JsonFieldType.STRING).description("하위 카테고리 이름"),
-					fieldWithPath("body.data.categoryList[].childrenList[].childrenList").type(JsonFieldType.NULL).description("더 하위 카테고리 리스트"),
+					fieldWithPath("body.data.categoryList[].childrenList").type(JsonFieldType.ARRAY)
+						.description("하위 카테고리 리스트"),
+					fieldWithPath("body.data.categoryList[].childrenList[].id").type(JsonFieldType.NUMBER)
+						.description("하위 카테고리 아이디"),
+					fieldWithPath("body.data.categoryList[].childrenList[].name").type(JsonFieldType.STRING)
+						.description("하위 카테고리 이름"),
+					fieldWithPath("body.data.categoryList[].childrenList[].childrenList").type(JsonFieldType.NULL)
+						.description("더 하위 카테고리 리스트"),
 					fieldWithPath("body.data.tagList").type(JsonFieldType.ARRAY).description("태그 리스트"),
+					fieldWithPath("body.data.tagList[].id").type(JsonFieldType.NUMBER).description("태그 아이디"),
 					fieldWithPath("body.data.tagList[].name").type(JsonFieldType.STRING).description("태그 이름")
+
 				)
 			));
 	}
