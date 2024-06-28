@@ -14,8 +14,6 @@ spring:
 
   jpa:
     open-in-view: false
-    hibernate:
-      ddl-auto: update
     show-sql: true
 
     properties:
@@ -38,7 +36,7 @@ spring:
 
 
   profiles:
-    active: prod
+    active: dev
   lifecycle:
     timeout-per-shutdown-phase: 30s
   application:
