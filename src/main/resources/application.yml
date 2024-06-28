@@ -43,7 +43,7 @@ spring:
     name: 3runner-bookstore
 server:
   shutdown: graceful
-  port: 8081
+  
 logging:
   level:
     org.hibernate.orm.jdbc.bind: trace
