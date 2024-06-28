@@ -1,3 +1,0 @@
-feign:
-  client:
-    url: gateway:8080

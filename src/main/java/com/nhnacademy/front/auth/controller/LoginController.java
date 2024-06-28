@@ -78,18 +78,10 @@ public class LoginController {
 		return "index";//성공하면 기본페이지 실패하면 음...로그인페이지 다시?
 	}
 	//로그인할때 꼭 @이메일 되어잇는 인자 받아야한다.
-	@GetMapping("/payco/login")
-	public void paycoLoginMember(HttpServletResponse response) {
 
-		String url = "https://id.payco.com/oauth2.0/authorize?response_type=code&client_id=3RDUR8qJyORVrsI2PdkInS1&redirect_uri=http://localhost:8080/auth/oauth2/callback/payco&scope=REQUESTED_SCOPES";
-		try {
-			response.sendRedirect(url);
-		}catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	@GetMapping("/oauth2/callback")
+	@GetMapping("/oauth2/callback/payco")
 	public String paycoCallback(@RequestParam String code) {
+		//코드까지는 들어온다.
 		authAdapter.handleOAuth2Redirect(code);
 		return "index";//메인페이지 반환한다.
 	}

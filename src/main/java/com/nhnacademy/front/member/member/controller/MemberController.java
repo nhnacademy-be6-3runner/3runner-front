@@ -32,22 +32,22 @@ import lombok.RequiredArgsConstructor;
 public class MemberController {
 	private final MemberControllerClient memberControllerClient;
 	private final AddressControllerClient addressControllerClient;
-	@GetMapping("/api/signin")
+	@GetMapping("/signin")
 	public String createSigninPage() {
 		return "signin";
 	}//등록페이지
-	@PostMapping("/api/signin")
+	@PostMapping("/signin")
 	public String signin(@Valid @RequestBody CreateMemberRequest createMemberRequest) {
 		memberControllerClient.createMembers(createMemberRequest);
 		return "index";
 	}//등록 요청보낸후 메인페이지 반환
 
-	@GetMapping("/api/mypage")
+	@GetMapping("/mypage")
 	public String myPage() {
 		return "mypage";
 	}
 
-	@GetMapping("/api/memberdetail")
+	@GetMapping("/memberdetail")
 	public String myPage(@RequestHeader("member-id") Long memberId, Model model) {
 			ApiResponse<GetMemberResponse> memberdetails = memberControllerClient.readById(memberId);
 			//ApiResponse<List<AddressResponse>> addresses = addressControllerClient.readAllAddresses(memberId);
@@ -55,12 +55,12 @@ public class MemberController {
 			//model.addAttribute("addresses", addresses.getBody().getData());
 		return "memberdetail";
 	}
-	@DeleteMapping("/api/member/delete")
+	@DeleteMapping("/member/delete")
 	public String deleteMember(@RequestParam Long id) {
 		memberControllerClient.deleteMember(id);
 		return "mypage";
 	}//삭제 후 마이페이지 반환
-	@PutMapping("/api/member/update")
+	@PutMapping("/member/update")
 	public String updateMember(@RequestHeader(name = "memberid")Long memberId,@Valid @RequestBody UpdateMemberRequest updateMemberRequest) {
 		memberControllerClient.updateMembers(memberId,updateMemberRequest);
 		return "mypage";
