@@ -44,7 +44,7 @@ public class BookLikeRepositoryTest {
 	@BeforeEach
 	public void setUp() {
 		Member member1 = new Member(CreateMemberRequest.builder()
-			.password("1")
+			.password("111111")
 			.name("1")
 			.age(1)
 			.phone("1")
@@ -54,7 +54,7 @@ public class BookLikeRepositoryTest {
 		entityManager.persist(member1);
 
 		member2 = new Member(CreateMemberRequest.builder()
-			.password("1")
+			.password("111111")
 			.name("1")
 			.age(1)
 			.phone("1")
