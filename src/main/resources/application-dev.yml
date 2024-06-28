@@ -4,3 +4,6 @@ feign:
 
 server:
   port: 3001
+
+back:
+  url: http://localhost:8081

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@FeignClient(name = "purchaseMemberControllerClient", url = "http://localhost:8080")
+@FeignClient(name = "purchaseMemberControllerClient", url = "http://133.186.143.40")
 public interface PurchaseMemberControllerClient {
     @GetMapping("/members/purchases/{purchaseId}")
     ApiResponse<ReadPurchaseResponse> readPurchase (@RequestHeader("Member-Id") Long memberId, @PathVariable(value = "purchaseId", required = false) Long purchaseId);

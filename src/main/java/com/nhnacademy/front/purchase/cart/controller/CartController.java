@@ -8,7 +8,6 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.bouncycastle.math.raw.Mod;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +16,11 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * 장바구니 UI 컨트롤러.
+ *
+ * @author 김병우
+ */
 @Slf4j
 @Controller
 @RequiredArgsConstructor
@@ -24,13 +28,30 @@ import java.util.Objects;
 public class CartController {
     private final BookCartControllerClient bookCartGuestControllerClient;
 
-    @GetMapping()
+
+    /**
+     * 장바구니 테스트 담기.
+     *
+     * @param cartId 카트 아이디
+     * @param model 모델
+     * @return test-main 뷰
+     */
+    @GetMapping("/test-add-cart")
     public String testMain(
             @CookieValue(value = "cartId", required = false) Long cartId,
             Model model){
         model.addAttribute("cartId", cartId);
         return "test-main";
     }
+
+    /**
+     * 장바구니 UI
+     *
+     * @param cartId 카트 아이디
+     * @param memberId 맴버 아이디
+     * @param model 모델
+     * @return cart view
+     */
     @GetMapping("/carts")
     public String cartView(
             @CookieValue(value = "cartId", required = false) Long cartId,
@@ -38,15 +59,28 @@ public class CartController {
             Model model){
 
         log.info("{}",cartId);
-        List<ReadBookCartGuestResponse> list = bookCartGuestControllerClient.readCart(cartId).getBody().getData();
+        List<ReadBookCartGuestResponse> items = bookCartGuestControllerClient.readCart(cartId).getBody().getData();
 
-        model.addAttribute("response", list);
+        log.info("{}", items);
+        model.addAttribute("response", items);
         model.addAttribute("cartId", cartId.toString());
 
-        return "cart";
+        return "purchase/cart";
     }
+
+    /**
+     * 장바구니 넣기.
+     *
+     * @param cartId 카트아이디
+     * @param memberId 맴버아이디
+     * @param quantity 수량
+     * @param bookId 북아이디
+     * @param response httpresponse
+     * @param model 모델
+     * @throws IOException
+     */
     @PostMapping("/carts")
-    public String cart(
+    public void cart(
             @CookieValue(value = "cartId", required = false) Long cartId,
             @RequestHeader(value = "Member-Id", required = false) Long memberId,
             @RequestParam(value = "quantity") Integer quantity,
@@ -83,7 +117,5 @@ public class CartController {
 
             response.sendRedirect("/api/carts");
         }
-
-        return "cart";
     }
 }

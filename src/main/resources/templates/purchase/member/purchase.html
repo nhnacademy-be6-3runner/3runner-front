@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <script src="https://js.tosspayments.com/v1/payment-widget"></script>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .menu-desktop {
+            background-color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .checkout-header {
+            margin: 20px 0;
+        }
+        .cart-item {
+            background-color: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+        }
+        .cart-item img {
+            border-radius: 5px;
+        }
+        footer {
+            margin-top: 50px;
+            background-color: #fff;
+            border-top: 1px solid #dee2e6;
+        }
+        .footer-content {
+            padding: 20px 0;
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<!-- Header -->
+<header class="header-v4">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light menu-desktop">
+        <div class="container">
+            <!-- Logo -->
+            <a class="navbar-brand logo" href="#">
+                3runner
+            </a>
+
+            <!-- Toggler/collapsibe Button -->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Navbar links -->
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="login.html">login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="logout.html">logout</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="mypage.html">my page</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="register.html">register</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="cart.html">cart</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<main class="container my-5">
+    <div class="checkout-header text-center">
+        <h2>주문하기</h2>
+    </div>
+    <div class="cart-items">
+        <div class="cart-item d-flex justify-content-between align-items-center">
+            <div class="cart-item-info d-flex">
+                <img src="https://via.placeholder.com/100" alt="Product Image" class="mr-3">
+                <div>
+                    <h4>Product 1</h4>
+                    <p>$10.00</p>
+                    <p>1</p>
+                </div>
+            </div>
+            <div class="cart-item-actions">
+                <p>$20.00</p>
+            </div>
+        </div>
+    </div>
+    <div class="cart-items">
+        <div class="cart-item d-flex justify-content-between align-items-center">
+            <div class="cart-item-info d-flex">
+                <div>
+                    <h4>총 가격</h4>
+                </div>
+            </div>
+            <div class="cart-item-actions">
+                <p>$20.00</p>
+            </div>
+        </div>
+    </div>
+
+    <form>
+
+        <div th:each="item : ${response}" class="cart-item d-flex justify-content-between align-items-center">
+            <div class="cart-item-info d-flex">
+                <img th:src="${item.url()}" alt="Product Image" class="mr-3">
+                <div style="margin-left: 10px">
+                    <h4 th:text="${item.title()}">Product</h4>
+                    <p>₩<span th:text="${item.price()}"></span></p>
+                    <div class="d-flex">
+                        <input type="hidden" th:id="'bookId-' + ${iter.index}" th:value="${item.bookId()}">
+                        <input type="hidden" th:id="'bookCartId-' + ${iter.index}" th:value="${item.bookCartId()}">
+                        <button class="btn btn-outline-secondary" th:attr="onclick='updateQuantity(' + ${iter.index} + ', -1)'">-</button>
+                        <input type="number" class="form-control mx-2 quantity-input" th:value="${item.quantity}" th:id="'quantity-' + ${iter.index}" style="width: 80px;" readonly>
+                        <button class="btn btn-outline-secondary" th:attr="onclick='updateQuantity(' + ${iter.index} + ', 1)'">+</button>
+                    </div>
+                </div>
+            </div>
+            <div class="cart-item-actions">
+                <button class="btn btn-outline-danger" th:attr="onclick='deleteItem(' + ${item.bookCartId()} + ','+${cartId}+')'">Remove</button>
+            </div>
+        </div>
+        <div class="form-group">
+            <input type="hidden" class="form-control" id="fullName" placeholder="Enter your full name">
+        </div>
+        <div class="form-group">
+            <input type="hidden" class="form-control" id="email" placeholder="Enter your email">
+        </div>
+        <br/>
+        <div class="form-group">
+
+            <div class="col">
+                <label for="countyOfficeName">주소</label>
+                <input type="text" id="countyOfficeName" class="form-control" disabled>
+            </div>
+
+            <div class="col" style="display: none;">
+                <label for="countyOfficeId">소속 동사무소 ID</label>
+                <input type="text" id="countyOfficeId"  class="form-control">
+            </div>
+
+            <div class="col-md-4">
+                <button id="newwin" class="w-80 btn btn-success" type="button">주소찾기
+                </button>
+            </div>
+        </div>
+    </form>
+
+
+    <!-- 배송비 적용 멘트 -->
+
+
+    <!-- 결제 UI, 이용약관 UI 영역 -->
+    <div id="payment-method"></div>
+    <div id="agreement"></div>
+    <!-- 결제하기 버튼 -->
+    <button id="payment-button">결제하기</button>
+</main>
+<footer class="bg-white text-dark p-3">
+    <div class="container text-center footer-content">
+        &copy; 2024 3runner
+    </div>
+</footer>
+<!--주소매핑-->
+<script type="text/javascript">
+    window.onload = function(){
+        document.getElementById("newwin").onclick = function(){
+            window.open("https://business.juso.go.kr/addrlink/addrLinkUrl.do?confmKey=devU01TX0FVVEgyMDI0MDYyNzEwMTkxOTExNDg2OTc=&returnUrl=http://localhost:3000/api/purchases/guests/addresses","","width=700px,height=500px,top=200px,left=200px;");
+        }
+    };
+    function setCountyOffice(name){
+        document.getElementById('countyOfficeName').value = name;
+    }
+</script>
+<!--토스결제창-->
+<script>
+    const coupon = document.getElementById("coupon-box");
+    const button = document.getElementById("payment-button");
+    const amount = 50000;
+
+    // 구매자의 고유 아이디를 불러와서 customerKey로 설정하세요.
+    // 이메일・전화번호와 같이 유추가 가능한 값은 안전하지 않습니다.
+    const widgetClientKey = "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm";
+
+    //customerkey는 구매자와 1대1로 연결되는 값 -> memberId,
+    const customerKey = "yM-oaX0FM2fjv8Gjs7xDb";
+    const paymentWidget = PaymentWidget(widgetClientKey, customerKey); // 회원 결제
+    //const paymentWidget = PaymentWidget(widgetClientKey, PaymentWidget.ANONYMOUS) // 비회원 결제
+
+    const paymentMethodWidget = paymentWidget.renderPaymentMethods(
+        "#payment-method",
+        { value: amount },
+        { variantKey: "DEFAULT" }
+    );
+
+    paymentWidget.renderAgreement(
+        "#agreement",
+        { variantKey: "AGREEMENT" }
+    );
+
+    coupon.addEventListener("change", function () {
+        if (coupon.checked) {
+            paymentMethodWidget.updateAmount(amount + 3000);
+        } else {
+            paymentMethodWidget.updateAmount(amount);
+        }
+    });
+
+    button.addEventListener("click", function () {
+        // 결제를 요청하기 전에 orderId, amount를 서버에 저장하세요.
+        // 결제 과정에서 악의적으로 결제 금액이 바뀌는 것을 확인하는 용도입니다.
+        paymentWidget.requestPayment({
+            orderId: "1W_pCfO4rzG9szJEcThKe21efsdfafadsffasdfsaeqwerqwersfa",
+            orderName: "토스 티셔츠 외 2건",
+            successUrl: window.location.origin + "/api/payments/success",
+            failUrl: window.location.origin + "/api/payments/fail",
+            customerEmail: "customer123@gmail.com",
+            customerName: "김토스",
+            customerMobilePhone: "01012341234",
+        });
+    });
+</script>
+</body>
+</html>

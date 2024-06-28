@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript">
+
+        function sendCountyOffice(name){
+            window.opener.setCountyOffice(name);
+            window.close();
+        }
+
+    </script>
+</head>
+<body>
+    <button class="btn btn-outline-secondary" th:attr="onclick='sendCountyOffice(\''+ ${roadFullAddr}+'\')'">주소확정</button>
+    <span th:text="${roadFullAddr}"></span>
+</body>
+</html>

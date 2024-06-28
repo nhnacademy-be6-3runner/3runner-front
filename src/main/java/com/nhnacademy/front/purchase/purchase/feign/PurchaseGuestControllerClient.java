@@ -11,7 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-@FeignClient(name = "purchaseGuestControllerClient", url = "http://localhost:8080")
+@FeignClient(name = "purchaseGuestControllerClient", url = "http://133.186.143.40")
 public interface PurchaseGuestControllerClient {
     @GetMapping("/bookstore/guests/purchases")
     ApiResponse<ReadPurchaseResponse> readPurchase (@Valid @RequestBody ReadDeletePurchaseGuestRequest readPurchaseRequest, BindingResult bindingResult);
