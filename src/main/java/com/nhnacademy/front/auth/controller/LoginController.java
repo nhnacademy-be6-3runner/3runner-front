@@ -32,12 +32,19 @@ public class LoginController {
 	LoginService loginService;
 
 	/**
-	 * 로그인 폼 페이지를 반환한다.
+	 * login 상태를 체크한 후, 로그인 폼 페이지를 반환한다.
+	 * login 되어 있으면 / 로 redirect 한다.
 	 *
 	 * @return login form view
 	 */
 	@GetMapping("/login")
 	public String loginForm() {
+		boolean loginStatus = loginService.checkLoginStatus();
+		log.warn("login status: {}", loginStatus);
+
+		if (loginStatus) {
+			return "redirect:/";
+		}
 		return "login-form";
 	}
 

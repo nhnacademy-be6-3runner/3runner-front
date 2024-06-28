@@ -6,4 +6,6 @@ import com.nhnacademy.front.auth.dto.response.LoginResponse;
 public interface LoginService {
 
 	LoginResponse getLoginResponse(LoginRequest loginRequest);
+
+	boolean checkLoginStatus();
 }
