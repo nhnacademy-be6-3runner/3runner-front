@@ -138,7 +138,12 @@ public class BookCartGuestServiceImpl implements BookCartGuestService {
         return cartId;
     }
 
-    //TODO : TEST, JAVADOC.
+    /**
+     * 북카트 전체 삭제.
+     *
+     * @param cartId 카트아이디
+     * @return 카트아이디
+     */
     @Override
     public Long deleteAllBookCart(Long cartId) {
         Cart cart = cartRepository.findById(cartId)
