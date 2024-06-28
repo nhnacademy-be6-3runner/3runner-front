@@ -65,7 +65,8 @@
     <div class="cart-items">
         <div th:each="item, iter: ${response}" class="cart-item d-flex justify-content-between align-items-center">
             <div class="cart-item-info d-flex">
-                <img th:src="${item.url()}" alt="Product Image" class="mr-3">
+                <img th:src="|/static/${item.url()}|"
+                     src="/static/img/no-image.png" alt="Product Image" class="mr-3" style="width: 150px">
                 <div style="margin-left: 10px">
                     <h4 th:text="${item.title()}">Product</h4>
                     <p>₩<span th:text="${item.price()}"></span></p>
@@ -88,8 +89,8 @@
         <h4>Total: ₩<span id="total-price">0.00</span></h4>
     </div>
     <div class="cart-footer">
-        <form action="/api/carts" method="post">
-            <input type="hidden" th:id="cartId" th:value="${cartId}">
+        <form action="/api/purchases" method="post">
+            <input type="hidden" name="cartId" id="cartId" th:value="${cartId}">
             <button class="btn btn-primary">Proceed to Checkout</button>
         </form>
     </div>
