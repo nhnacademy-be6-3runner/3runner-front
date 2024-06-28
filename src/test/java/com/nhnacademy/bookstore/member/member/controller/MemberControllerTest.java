@@ -100,7 +100,7 @@ public class MemberControllerTest {
 		member.setBirthday(ZonedDateTime.now());
 		member.setEmail("abc@naver.com");
 		member.setName("abc");
-		member.setPassword("password");
+		member.setPassword("111111111111111111111111111111111111111111111111111111111111");
 
 		GetMemberResponse getMemberResponse = GetMemberResponse.builder()
 			.age(member.getAge())
@@ -115,7 +115,7 @@ public class MemberControllerTest {
 
 		Mockito.when(memberService.readById(memberId)).thenReturn(member);
 
-		mockMvc.perform(get("/members")
+		mockMvc.perform(get("/bookstore/members")
 				.header("member-id", memberId))
 			//.andDo(print())
 			.andExpect(status().isOk());

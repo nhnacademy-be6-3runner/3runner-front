@@ -2,11 +2,15 @@ package com.nhnacademy.bookstore.member.member.service.impl;
 
 
 import com.nhnacademy.bookstore.entity.member.Member;
+import com.nhnacademy.bookstore.entity.member.enums.AuthProvider;
 import com.nhnacademy.bookstore.entity.member.enums.Grade;
 import com.nhnacademy.bookstore.entity.member.enums.Status;
+import com.nhnacademy.bookstore.member.member.dto.request.CreateMemberRequest;
 import com.nhnacademy.bookstore.member.member.dto.request.UpdateMemberRequest;
+import com.nhnacademy.bookstore.member.member.dto.request.UserProfile;
 import com.nhnacademy.bookstore.member.member.exception.AlreadyExistsEmailException;
 import com.nhnacademy.bookstore.member.member.exception.LoginFailException;
+import com.nhnacademy.bookstore.member.member.exception.LoginOauthEmailException;
 import com.nhnacademy.bookstore.member.member.exception.MemberNotExistsException;
 import com.nhnacademy.bookstore.member.member.repository.MemberRepository;
 import com.nhnacademy.bookstore.member.member.service.MemberService;
@@ -53,7 +57,7 @@ public class MemberServiceImpl implements MemberService {
             member.setName(userProfile.getName());
             member.setPhone(userProfile.getMobile());
             member.setPoint(5000L);
-            member.setCreated_at(ZonedDateTime.now());
+            member.setCreatedAt(ZonedDateTime.now());
             memberRepository.save(member);
             //없는경우 새로 가져온다.
         }
@@ -107,8 +111,8 @@ public class MemberServiceImpl implements MemberService {
         Optional<Member> member = memberRepository.findByEmail(email);
 
         if(member.isPresent()){
-            if(member.get().getLogin() != Member.Login.Original){
-                throw new
+            if(member.get().getAuthProvider() != AuthProvider.General){
+                throw new LoginOauthEmailException(member.get().getAuthProvider());
             }
             if(passwordEncoder.matches(password, member.get().getPassword())){
                 return member.get();
