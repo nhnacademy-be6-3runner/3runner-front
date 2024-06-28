@@ -10,3 +10,5 @@ spring:
   profiles:
     active: prod
 
+  jwt:
+    secret: aaaasqwlkljlfasdfqwerafcxvzpojijoijopjewndllllllsserrrrrrwqexc

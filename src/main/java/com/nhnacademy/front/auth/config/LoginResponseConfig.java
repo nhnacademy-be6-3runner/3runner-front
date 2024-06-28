@@ -1,4 +1,4 @@
-package com.nhnacademy.front.config;
+package com.nhnacademy.front.auth.config;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
