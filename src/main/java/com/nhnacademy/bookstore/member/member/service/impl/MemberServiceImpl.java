@@ -77,7 +77,6 @@ public class MemberServiceImpl implements MemberService {
         if(findmember.isPresent()){
             throw new AlreadyExistsEmailException();
         }
-
         return memberRepository.save(member);
     }
 
