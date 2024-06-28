@@ -83,7 +83,7 @@
 <body>
 <div class="login-container">
     <h2>Login</h2>
-    <form th:action="@{/login}" method="post">
+    <form th:action="@{/api/login}" method="post">
         <div class="form-group">
             <label for="email">Username:</label>
             <input type="text" id="email" name="email" required>
@@ -98,7 +98,7 @@
         </form>
 
     <div class="payco-login-container">
-        <a href="https://id.payco.com/oauth2.0/authorize?response_type=code&client_id=3RDUR8qJyORVrsI2PdkInS1&redirect_uri=http://localhost:8080/auth/oauth2/callback/payco&scope=REQUESTED_SCOPES" class="button-link" role="button">
+        <a href="/api/payco/login" class="button-link" role="button">
             Payco Login
         </a>
     </div>

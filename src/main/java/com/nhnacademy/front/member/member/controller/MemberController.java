@@ -1,7 +1,9 @@
 package com.nhnacademy.front.member.member.controller;
 
+import java.io.IOException;
 import java.util.List;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,6 +23,7 @@ import com.nhnacademy.front.member.member.dto.response.GetMemberResponse;
 import com.nhnacademy.front.member.member.feign.MemberControllerClient;
 import com.nhnacademy.util.ApiResponse;
 
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -62,11 +65,5 @@ public class MemberController {
 		memberControllerClient.updateMembers(memberId,updateMemberRequest);
 		return "mypage";
 	}
-	@PutMapping("/api/auth/login")
-	public String loginMember(@Valid @RequestBody LoginRequest loginRequest) {
-		memberControllerClient.loginMember(loginRequest);
-		return "index";//성공하면 기본페이지 실패하면 음...로그인페이지 다시?
-	}
-	//로그인할때 꼭 @이메일 되어잇는 인자 받아야한다.
 }
 
