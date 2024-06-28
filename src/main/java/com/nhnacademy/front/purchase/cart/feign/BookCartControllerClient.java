@@ -8,16 +8,13 @@ import com.nhnacademy.front.purchase.cart.dto.response.ReadBookCartGuestResponse
 import com.nhnacademy.global.config.FeignConfiguration;
 import com.nhnacademy.util.ApiResponse;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Objects;
 
 
-@FeignClient(name = "bookCartControllerClient", url = "http://localhost:8081", configuration = FeignConfiguration.class)
+@FeignClient(name = "bookCartControllerClient", url = "http://133.186.143.40" , configuration = FeignConfiguration.class)
 public interface BookCartControllerClient {
         @GetMapping("/bookstore/carts/{cartId}")
         ApiResponse<List<ReadBookCartGuestResponse>> readCart(@PathVariable("cartId") Long cartId);
