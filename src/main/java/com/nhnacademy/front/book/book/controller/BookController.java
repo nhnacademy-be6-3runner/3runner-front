@@ -66,7 +66,7 @@ public class BookController {
 	 * @return 도서 리스트
 	 */
 	@GetMapping("/all")
-	public String readAllBooks(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "9") int size, Model model) {
+	public String readAllBooks(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size, Model model) {
 		Page<BookListResponse> bookList = bookService.readAllBooks(page, size);
 		model.addAttribute("bookList", bookList);
 

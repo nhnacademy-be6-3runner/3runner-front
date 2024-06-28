@@ -149,7 +149,7 @@
         </select>
     </div>
     <div class="book-list-items row" id="book-list-items">
-        <div class="col-lg-3 col-md-4 col-sm-6 col-12 book-item" th:each="book : ${bookList.content}">
+        <div class="col-lg-4 col-md-4 col-sm-4 book-item" th:each="book : ${bookList.content}">
             <img class="card-img-top book-thumbnail" th:src="@{'/api/images/book/download?fileName=' + ${book.thumbnail}}" alt="Book Thumbnail">
             <div class="card-body">
                 <h5 class="card-title" th:text="${book.title}"></h5>
@@ -214,7 +214,7 @@
 
     function loadMoreBooks() {
         currentPage++;
-        window.location.href = `/book/all?page=${currentPage}&size=9`;
+        window.location.href = `/book/all?page=0&size=9`;
     }
 
     // 캐러셀 슬라이더
