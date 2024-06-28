@@ -44,21 +44,14 @@ import java.util.stream.Collectors;
  */
 @Transactional
 @Service
+@RequiredArgsConstructor
 public class PurchaseBookServiceImpl implements PurchaseBookService {
 	private final PurchaseBookRepository purchaseBookRepository;
 	private final PurchaseRepository purchaseRepository;
 	private final BookRepository bookRepository;
 	private final PurchaseBookCustomRepository purchaseBookCustomRepository;
 
-	@Autowired
-	public PurchaseBookServiceImpl(PurchaseBookRepository purchaseBookRepository, PurchaseRepository purchaseRepository,
-		BookRepository bookRepository, BookCategoryService bookCategoryService,
-		PurchaseBookCustomRepository purchaseBookCustomRepository) {
-		this.purchaseBookRepository = purchaseBookRepository;
-		this.purchaseRepository = purchaseRepository;
-		this.bookRepository = bookRepository;
-		this.purchaseBookCustomRepository = purchaseBookCustomRepository;
-	}
+
 
 	/**
 	 * 주문으로 해당 주문의 책들을 조회
@@ -114,8 +107,8 @@ public class PurchaseBookServiceImpl implements PurchaseBookService {
 	 * @param purchaseBookRequest 삭제할 주문-책id requestDto
 	 */
 	@Override
-	public void deletePurchaseBook(DeletePurchaseBookRequest purchaseBookRequest) {
-		purchaseBookRepository.deleteById(purchaseBookRequest.purchaseBookId());
+	public void deletePurchaseBook(long purchaseBookId) {
+		purchaseBookRepository.deleteById(purchaseBookId);
 	}
 
 }

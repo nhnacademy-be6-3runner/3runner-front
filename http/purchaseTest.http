@@ -1,5 +1,5 @@
 ###
-GET http://localhost:8081/members/purchases
+GET http://localhost:8081/members/purchases/1?page=&size=5
 Member-Id: 1
 
 ###
@@ -12,5 +12,23 @@ Member-Id: 1
   "deliveryPrice" : 1,
   "totalPrice": 100000,
   "road": "광주",
-  "password": "1234"
+  "password": "1234",
+  "orderId" : "123456789"
 }
+
+###
+
+POST http://localhost:8081/bookstore/purchases/books
+Content-Type: application/json
+Member-Id: 1
+
+{
+  "bookId": 11,
+  "quantity": 5,
+  "price":  100,
+  "purchaseId": 2
+}
+
+###
+GET http://localhost:8081/bookstore/purchases/books/1?page=0&size=5
+Member-Id: 1

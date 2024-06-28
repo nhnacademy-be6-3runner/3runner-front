@@ -27,7 +27,7 @@ import lombok.RequiredArgsConstructor;
  */
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 public class PurchaseMemberServiceImpl implements PurchaseMemberService {
 	private final PurchaseRepository purchaseRepository;
 	private final MemberService memberService;
