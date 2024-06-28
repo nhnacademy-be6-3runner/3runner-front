@@ -65,7 +65,6 @@ public class BookServiceImpl implements BookService {
 	@Override
 	public ReadBookResponse readBookById(Long bookId) {
 		ReadBookResponse book = bookRepository.readDetailBook(bookId);
-
 		if (Objects.isNull(book)) {
 			throw new BookDoesNotExistException("요청하신 책이 존재하지 않습니다.");
 		}
