@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 
-@FeignClient(name = "bookCartControllerClient", url = "http://${feign.client.url}:8080" , configuration = FeignConfiguration.class)
+@FeignClient(name = "bookCartControllerClient", url = "http://${feign.client.url}" , configuration = FeignConfiguration.class)
 public interface BookCartControllerClient {
         @GetMapping("/bookstore/carts/{cartId}")
         ApiResponse<List<ReadBookCartGuestResponse>> readCart(@PathVariable("cartId") Long cartId);
