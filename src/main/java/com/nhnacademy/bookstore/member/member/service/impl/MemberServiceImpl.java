@@ -1,5 +1,14 @@
 package com.nhnacademy.bookstore.member.member.service.impl;
 
+import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.nhnacademy.bookstore.entity.member.Member;
 import com.nhnacademy.bookstore.entity.member.enums.AuthProvider;
@@ -18,17 +27,6 @@ import com.nhnacademy.bookstore.purchase.purchase.dto.response.ReadPurchaseRespo
 import com.nhnacademy.bookstore.purchase.purchase.repository.PurchaseRepository;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
-
-import java.time.ZonedDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * The type Member service.
@@ -43,44 +41,46 @@ public class MemberServiceImpl implements MemberService {
 	private final PurchaseRepository purchaseRepository;
 	private final PasswordEncoder passwordEncoder;
 
-    @Override
-    public Member saveOrGetPaycoMember(UserProfile userProfile) {
-        Optional<Member> optionalMember = memberRepository.findByEmail(userProfile.getIdNo());
-        if(optionalMember.isPresent()){
-            return optionalMember.get();//존재하는경우, 그냥 멤버를 가져온다.
-        }else{
-            Member member = new Member();
-            member.setEmail(userProfile.getEmail());
-            member.setPassword(passwordEncoder.encode(userProfile.getIdNo()));
-            member.setGrade(Grade.General);
-            member.setStatus(Status.Active);
-            member.setName(userProfile.getName());
-            member.setPhone(userProfile.getMobile());
-            member.setPoint(5000L);
-            member.setCreatedAt(ZonedDateTime.now());
-            memberRepository.save(member);
-            //없는경우 새로 가져온다.
-        }
-        return null;
-    }
+	@Override
+	public Member saveOrGetPaycoMember(UserProfile userProfile) {
+		Optional<Member> optionalMember = memberRepository.findByEmail(userProfile.getIdNo());
+		if (optionalMember.isPresent()) {
+			return optionalMember.get();//존재하는경우, 그냥 멤버를 가져온다.
+		} else {
+			Member member = new Member();
+			member.setEmail(userProfile.getEmail());
+			member.setPassword(passwordEncoder.encode(userProfile.getIdNo()));
+			member.setGrade(Grade.General);
+			member.setStatus(Status.Active);
+			member.setName(userProfile.getName());
+			member.setPhone(userProfile.getMobile());
+			member.setPoint(5000L);
+			member.setCreatedAt(ZonedDateTime.now());
+			memberRepository.save(member);
+			//없는경우 새로 가져온다.
+		}
+		return null;
+	}
 
-    /**
-     * Save member.
-     *
-     * @param member the member -Member값을 받아온다.
-     * @return the member -저장 후 member값을 그대로 반환한다.
-     * @author 유지아 Save member. -멤버값을 받아와 저장한다.(이메일 중복하는걸로 확인하면 좋을듯)
-     */
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public Member save(CreateMemberRequest request) {
-        CreateMemberRequest encodedRequest = new CreateMemberRequest(request.email(),passwordEncoder.encode(request.password()),request.name(),request.phone(),request.age(),request.birthday());
-        Member member = new Member(encodedRequest);
-        Optional<Member> findmember = memberRepository.findByEmail(member.getEmail());
-        if(findmember.isPresent()){
-            throw new AlreadyExistsEmailException();
-        }
-        return memberRepository.save(member);
-    }
+	/**
+	 * Save member.
+	 *
+	 * @param member the member -Member값을 받아온다.
+	 * @return the member -저장 후 member값을 그대로 반환한다.
+	 * @author 유지아 Save member. -멤버값을 받아와 저장한다.(이메일 중복하는걸로 확인하면 좋을듯)
+	 */
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	public Member save(CreateMemberRequest request) {
+		CreateMemberRequest encodedRequest = new CreateMemberRequest(request.email(),
+			passwordEncoder.encode(request.password()), request.name(), request.phone(), request.age(),
+			request.birthday());
+		Member member = new Member(encodedRequest);
+		Optional<Member> findmember = memberRepository.findByEmail(member.getEmail());
+		if (findmember.isPresent()) {
+			throw new AlreadyExistsEmailException();
+		}
+		return memberRepository.save(member);
+	}
 
 	/**
 	 * Find by id member.
@@ -99,27 +99,27 @@ public class MemberServiceImpl implements MemberService {
 		}
 	}
 
-    /**
-     * Find by email and password member.
-     *
-     * @param email    the email -string 이메일 값을 받는다.
-     * @param password the password -string 비밀번호 값을 받는다.
-     * @return the member -해당하는 member를 반환한다.
-     * @author 유지아 Find by email and password member. -이메일과 패스워드 값으로 조회한다.
-     */
-    public Member readByEmailAndPassword(String email, String password) {
-        Optional<Member> member = memberRepository.findByEmail(email);
+	/**
+	 * Find by email and password member.
+	 *
+	 * @param email    the email -string 이메일 값을 받는다.
+	 * @param password the password -string 비밀번호 값을 받는다.
+	 * @return the member -해당하는 member를 반환한다.
+	 * @author 유지아 Find by email and password member. -이메일과 패스워드 값으로 조회한다.
+	 */
+	public Member readByEmailAndPassword(String email, String password) {
+		Optional<Member> member = memberRepository.findByEmail(email);
 
-        if(member.isPresent()){
-            if(member.get().getAuthProvider() != AuthProvider.General){
-                throw new LoginOauthEmailException(member.get().getAuthProvider());
-            }
-            if(passwordEncoder.matches(password, member.get().getPassword())){
-                return member.get();
-            }
-        }
-        throw new LoginFailException();
-    }
+		if (member.isPresent()) {
+			if (member.get().getAuthProvider() != AuthProvider.GENERAL) {
+				throw new LoginOauthEmailException(member.get().getAuthProvider());
+			}
+			if (passwordEncoder.matches(password, member.get().getPassword())) {
+				return member.get();
+			}
+		}
+		throw new LoginFailException();
+	}
 
 	/**
 	 * 멤버 업데이트

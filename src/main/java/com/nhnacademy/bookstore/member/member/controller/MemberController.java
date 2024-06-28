@@ -1,5 +1,18 @@
 package com.nhnacademy.bookstore.member.member.controller;
 
+import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.nhnacademy.bookstore.entity.auth.Auth;
 import com.nhnacademy.bookstore.entity.member.Member;
@@ -12,24 +25,13 @@ import com.nhnacademy.bookstore.member.member.dto.request.LoginRequest;
 import com.nhnacademy.bookstore.member.member.dto.request.UpdateMemberRequest;
 import com.nhnacademy.bookstore.member.member.dto.response.GetMemberResponse;
 import com.nhnacademy.bookstore.member.member.dto.response.UpdateMemberResponse;
-import com.nhnacademy.bookstore.member.auth.service.AuthService;
-import com.nhnacademy.bookstore.member.memberAuth.service.MemberAuthService;
-import com.nhnacademy.bookstore.member.memberAuth.service.impl.MemberAuthServiceImpl;
-import com.nhnacademy.bookstore.member.pointRecord.service.PointService;
 import com.nhnacademy.bookstore.member.member.service.impl.MemberServiceImpl;
+import com.nhnacademy.bookstore.member.memberAuth.service.impl.MemberAuthServiceImpl;
 import com.nhnacademy.bookstore.member.pointRecord.service.impl.PointServiceImpl;
 import com.nhnacademy.bookstore.util.ApiResponse;
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.*;
-
-import java.time.ZonedDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * The type Member controller.
@@ -45,21 +47,20 @@ public class MemberController {
 	private final MemberAuthServiceImpl memberAuthService;
 	private final PasswordEncoder passwordEncoder;
 
+	/**
+	 * Create member response entity.- 회원가입에 사용되는 함수이다.
+	 *
+	 * @param request the request - creatememberrequest를 받아 member를 생성한다.
+	 * @author 유지아
+	 */
+	@PostMapping("/bookstore/members")
+	public ApiResponse<Void> createMember(@RequestBody @Valid CreateMemberRequest request) {
 
-    /**
-     * Create member response entity.- 회원가입에 사용되는 함수이다.
-     *
-     * @param request the request - creatememberrequest를 받아 member를 생성한다.
-     * @author 유지아
-     */
-    @PostMapping("/bookstore/members")
-    public ApiResponse<Void> createMember(@RequestBody @Valid CreateMemberRequest request) {
-
-                Auth auth = authService.getAuth("USER");
-                Member member = memberService.save(request);
-                PointRecord pointRecord = new PointRecord(null, 5000L, 5000L, ZonedDateTime.now(), "회원가입 5000포인트 적립.", member);
-                pointRecordService.save(pointRecord);
-                memberAuthService.saveAuth(member, auth);
+		Auth auth = authService.getAuth("USER");
+		Member member = memberService.save(request);
+		PointRecord pointRecord = new PointRecord(null, 5000L, 5000L, ZonedDateTime.now(), "회원가입 5000포인트 적립.", member);
+		pointRecordService.save(pointRecord);
+		memberAuthService.saveAuth(member, auth);
 
 		return new ApiResponse<Void>(new ApiResponse.Header(true, 201), new ApiResponse.Body<Void>(null));
 	}
@@ -80,7 +81,7 @@ public class MemberController {
 			.grade(member.getGrade())
 			.point(member.getPoint())
 			.phone(member.getPhone())
-			.created_at(member.getCreatedAt())
+			.createdAt(member.getCreatedAt())
 			.birthday(member.getBirthday())
 			.email(member.getEmail())
 			.name(member.getName())
@@ -106,7 +107,7 @@ public class MemberController {
 			.grade(member.getGrade())
 			.point(member.getPoint())
 			.phone(member.getPhone())
-			.created_at(member.getCreatedAt())
+			.createdAt(member.getCreatedAt())
 			.birthday(member.getBirthday())
 			.email(member.getEmail())
 			.name(member.getName())
@@ -117,7 +118,7 @@ public class MemberController {
 		return new ApiResponse<GetMemberResponse>(new ApiResponse.Header(true, 200),
 			new ApiResponse.Body<>(getMemberResponse));
 
-    }
+	}
 
 	/**
 	 * Find auths list. -권한에 대한 리스트를 받아온다.
@@ -136,7 +137,7 @@ public class MemberController {
 				.collect(
 					Collectors.toList())));
 
-    }
+	}
 
 	/**
 	 * 멤버 업데이트
@@ -171,6 +172,6 @@ public class MemberController {
 
 		return new ApiResponse<>(new ApiResponse.Header(true, HttpStatus.NO_CONTENT.value()));
 
-    }
+	}
 }
 
