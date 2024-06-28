@@ -9,10 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 
 import java.util.List;
@@ -48,6 +45,11 @@ public class BookController {
 		return "book/book_create";
 	}
 
+	/**
+	 * 메인 페이지에서 도서 조회하는 메서드입니다.
+	 * @param model 데이터를 전달하기 위한 모델 객체
+	 * @return 도서 리스트 화면
+	 */
     @GetMapping
     public String readLimitBooks(Model model) {
         Page<BookListResponse> bookList = bookService.readLimitBooks(10);
@@ -55,6 +57,21 @@ public class BookController {
 
         return "book/book-list";
     }
+
+	/**
+	 * 도서 페이지 조회 메서드입니다.
+	 * @param page 페이지
+	 * @param size 사이즈
+	 * @param model 데이터를 전달하기 위한 모델 객체
+	 * @return 도서 리스트
+	 */
+	@GetMapping("/all")
+	public String readAllBooks(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "9") int size, Model model) {
+		Page<BookListResponse> bookList = bookService.readAllBooks(page, size);
+		model.addAttribute("bookList", bookList);
+
+		return "book/list/book-page-list";
+	}
 
 	@GetMapping("/api/create")
 	public String apiCreateBook() {
@@ -74,7 +91,7 @@ public class BookController {
 		model.addAttribute("book", book);
 
 		log.info("description : {}", book.description());
-		
+
 		model.addAttribute("rating", 4.9);
 		model.addAttribute("reviewCount", 10);
 

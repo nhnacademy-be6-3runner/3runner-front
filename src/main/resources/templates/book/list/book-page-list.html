@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Book List</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/index.css">
+    <style>
+        .book-thumbnail {
+            height: 200px;
+            object-fit: cover;
+        }
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+        }
+        .card-text {
+            font-size: 1rem;
+        }
+        .load-more-btn {
+            font-size: 1rem;
+            padding: 10px 20px;
+        }
+        .card {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1 class="my-4 text-center">Book List</h1>
+    <div class="book-list-items row" id="book-list-items" th:fragment="book-list">
+        <div class="col-lg-4 col-md-6 col-sm-12 book-item" th:each="book : ${bookList.content}">
+            <div class="card">
+                <img class="card-img-top book-thumbnail" th:src="@{'/api/images/book/download?fileName=' + ${book.thumbnail}}" alt="Book Thumbnail">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${book.title}"></h5>
+                    <p class="card-text" th:text="'Author: ' + ${book.author}"></p>
+                    <p class="card-text" th:text="'Price: ' + ${book.price}"></p>
+                    <p class="card-text" th:text="'Selling Price: ' + ${book.sellingPrice}"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="text-center mt-4">
+        <nav>
+            <ul class="pagination justify-content-center">
+                <li class="page-item" th:classappend="${bookList.hasPrevious()} ? '' : 'disabled'">
+                    <a class="page-link" href="#" th:onclick="'loadBooks(' + (${bookList.number} - 1) + ', ' + ${bookList.size} + '); return false;'">Previous</a>
+                </li>
+                <li class="page-item" th:each="i : ${#numbers.sequence(0, bookList.totalPages - 1)}" th:classappend="${i} == ${bookList.number} ? 'active'">
+                    <a class="page-link" href="#" th:onclick="'loadBooks(' + ${i} + ', ' + ${bookList.size} + '); return false;'" th:text="${i + 1}">1</a>
+                </li>
+                <li class="page-item" th:classappend="${bookList.hasNext()} ? '' : 'disabled'">
+                    <a class="page-link" href="#" th:onclick="'loadBooks(' + (${bookList.number} + 1) + ', ' + ${bookList.size} + '); return false;'">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<script>
+    function loadBooks(page, size) {
+        window.location.href = `/book/all?page=${page}&size=${size}`;
+    }
+</script>
+</body>
+</html>

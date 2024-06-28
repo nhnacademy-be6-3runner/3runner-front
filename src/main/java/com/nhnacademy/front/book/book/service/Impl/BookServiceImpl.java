@@ -6,6 +6,7 @@ import com.nhnacademy.front.book.book.dto.request.CreateBookRequest;
 import com.nhnacademy.front.book.book.dto.request.UserCreateBookRequest;
 import com.nhnacademy.front.book.book.dto.response.BookListResponse;
 import com.nhnacademy.front.book.book.dto.response.UserReadBookResponse;
+import com.nhnacademy.front.book.book.exception.InvalidApiResponseException;
 import com.nhnacademy.front.book.book.exception.NotFindBookException;
 import com.nhnacademy.front.book.book.service.BookService;
 import com.nhnacademy.front.util.ApiResponse;
@@ -129,7 +130,7 @@ public class BookServiceImpl implements BookService {
 
 	/**
 	 *
-	 * 메인 페이지에 도서 리스트 불러오기
+	 * 메인 페이지에 도서 리스트를 불러오는 메서드입니다.
 	 * @param limit 제한 갯수
 	 * @return 도서 리스트
 	 */
@@ -140,7 +141,24 @@ public class BookServiceImpl implements BookService {
         if (response.getHeader().isSuccessful() && response.getBody() != null) {
             return response.getBody().getData();
         } else {
-            throw new RuntimeException();
+            throw new InvalidApiResponseException("메인페이지 도서 리스트 조회 exception");
         }
     }
+
+	/**
+	 * 도서 페이지 조회 메서드입니다.
+	 * @param page 페이지
+	 * @param size 사이즈
+	 * @return 도서 리스트
+	 */
+	@Override
+	public Page<BookListResponse> readAllBooks(int page, int size) {
+		ApiResponse<Page<BookListResponse>> response = bookClient.readAllBooks(page, size);
+
+		if (response.getHeader().isSuccessful() && response.getBody() != null) {
+			return response.getBody().getData();
+		} else {
+			throw new InvalidApiResponseException("도서 페이지 조회 exception");
+		}
+	}
 }

@@ -14,8 +14,16 @@ public interface BookClient {
 	@PostMapping
 	ApiResponse<Void> createBook(@RequestBody CreateBookRequest createBookRequest);
 
-    @GetMapping
+	/**
+	 * 도서 페이지 조회 메서드입니다.
+	 * @param page 페이지
+	 * @param size 사이즈
+	 * @return 도서 리스트
+	 * @author 김은비
+	 */
+	@GetMapping
     ApiResponse<Page<BookListResponse>> readAllBooks(@RequestParam("page") int page, @RequestParam("size") int size);
+
 	@GetMapping("/{bookId}")
 	ApiResponse<UserReadBookResponse> getDetailBookById(@PathVariable("bookId") Long bookId);
 }

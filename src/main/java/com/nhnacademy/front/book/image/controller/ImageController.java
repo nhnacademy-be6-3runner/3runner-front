@@ -1,5 +1,8 @@
 package com.nhnacademy.front.book.image.controller;
 
+import jakarta.annotation.Resource;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,6 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.nhnacademy.front.book.image.service.ImageService;
 
 import lombok.RequiredArgsConstructor;
+
+import java.io.IOException;
 
 /**
  * @author 한민기
@@ -41,7 +46,18 @@ public class ImageController {
 	 * @return 불러온 이미지
 	 */
 	@GetMapping("/{type}/download")
-	public ResponseEntity<byte[]> downloadImage(@RequestParam("fileName") String fileName, @PathVariable String type) {
-		return imageService.download(fileName, type);
+	public ResponseEntity<byte[]> downloadImage(@RequestParam("fileName") String fileName, @PathVariable String type) throws IOException {
+		try {
+			return imageService.download(fileName, type);
+		}
+		/**
+		 * 디폴트 이미지 설정했습니다.
+		 */
+		catch (Exception e) {
+			ClassPathResource defaultImg = new ClassPathResource("default-book.png");
+			return ResponseEntity.ok()
+					.contentType(MediaType.IMAGE_PNG)
+					.body(defaultImg.getContentAsByteArray());
+		}
 	}
 }
