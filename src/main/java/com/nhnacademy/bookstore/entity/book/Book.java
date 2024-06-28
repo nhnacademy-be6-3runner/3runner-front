@@ -11,9 +11,11 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -27,10 +29,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
+@Table(name = "book", indexes = {
+    @Index(name = "idx_published_date", columnList = "published_date"),
+    @Index(name = "idx_price", columnList = "price"),
+    @Index(name = "idx_view_count", columnList = "view_count")
+})
 public class Book {
 
     @Id
@@ -51,26 +57,21 @@ public class Book {
 
     @NotNull
     @Min(0)
-    // @Column(columnDefinition = "INT UNSIGNED")
     private int price;
 
     @NotNull
     @Min(0)
-    // @Column(columnDefinition = "INT UNSIGNED")
     private int quantity;
 
     @NotNull
     @Min(0)
-    // @Column(columnDefinition = "INT UNSIGNED")
-
     private int sellingPrice;
 
     @NotNull
     @Min(0)
-    // @Column(columnDefinition = "int UNSIGNED default 0")
+    @Column(columnDefinition = "int default 0")
     private int viewCount;
 
-    //    @Column(nullable = false, columnDefinition = "bit(1) default 1")
     @NotNull
     private boolean packing;
 

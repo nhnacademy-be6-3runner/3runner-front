@@ -73,7 +73,7 @@ public class ApiBookServiceImpl implements ApiBookService {
 		ApiCreateBookResponse bookResponse = apiBookRepository.getBookResponse(isbnId);
 
 		Book book = new Book(
-			bookResponse.title().substring(bookResponse.title().indexOf("-") + 1),
+			bookResponse.title().substring(bookResponse.title().indexOf("-") + 2),
 			bookResponse.item().getFirst().description(),
 			stringToZonedDateTime(bookResponse.pubDate()),
 			bookResponse.item().getFirst().priceSales(),
