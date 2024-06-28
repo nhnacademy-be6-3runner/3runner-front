@@ -3,28 +3,33 @@ package com.nhnacademy.bookstore.entity.reviewImage;
 import com.nhnacademy.bookstore.entity.review.Review;
 import com.nhnacademy.bookstore.entity.totalImage.TotalImage;
 
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ReviewImage {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private long id;
 
-    @NotNull
-    @ManyToOne(cascade = CascadeType.ALL)
-    private Review review;
+	@NotNull
+	@ManyToOne(cascade = CascadeType.ALL)
+	private Review review;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    private TotalImage totalImage;
+	@OneToOne(cascade = CascadeType.ALL)
+	private TotalImage totalImage;
 
-    public ReviewImage(Review review, TotalImage totalImage ) {
-        this.review = review;
-        this.totalImage = totalImage;
-    }
+	public ReviewImage(Review review, TotalImage totalImage) {
+		this.review = review;
+		this.totalImage = totalImage;
+	}
 }

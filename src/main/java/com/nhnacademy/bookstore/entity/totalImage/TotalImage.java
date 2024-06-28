@@ -10,11 +10,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -28,16 +26,16 @@ public class TotalImage {
 	@Getter
 	@NotBlank
 	@Column(unique = true)
-	@Size(min = 40)
+	@Size(max = 40)
 	private String url;
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(mappedBy = "totalImage", cascade = CascadeType.ALL)
 	private BookImage bookImage;
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(mappedBy = "totalImage", cascade = CascadeType.ALL)
 	private ReviewImage reviewImage;
 
-	public TotalImage( String url) {
+	public TotalImage(String url) {
 		this.url = url;
 	}
 }
