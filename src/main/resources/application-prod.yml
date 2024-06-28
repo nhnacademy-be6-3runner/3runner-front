@@ -1,6 +1,3 @@
 feign:
   client:
     url: gateway:8080
-
-back:
-  url: http://133.186.143.40
