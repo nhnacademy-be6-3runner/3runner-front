@@ -10,6 +10,7 @@ import com.nhnacademy.bookstore.member.auth.service.impl.AuthServiceImpl;
 import com.nhnacademy.bookstore.member.member.dto.request.CreateMemberRequest;
 import com.nhnacademy.bookstore.member.member.dto.request.LoginRequest;
 import com.nhnacademy.bookstore.member.member.dto.request.UpdateMemberRequest;
+import com.nhnacademy.bookstore.member.member.dto.request.UserProfile;
 import com.nhnacademy.bookstore.member.member.dto.response.GetMemberResponse;
 import com.nhnacademy.bookstore.member.member.dto.response.UpdateMemberResponse;
 import com.nhnacademy.bookstore.member.auth.service.AuthService;
@@ -19,6 +20,7 @@ import com.nhnacademy.bookstore.member.pointRecord.service.PointService;
 import com.nhnacademy.bookstore.member.member.service.impl.MemberServiceImpl;
 import com.nhnacademy.bookstore.member.pointRecord.service.impl.PointServiceImpl;
 import com.nhnacademy.bookstore.util.ApiResponse;
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -43,7 +45,7 @@ public class MemberController {
     private final PointServiceImpl pointRecordService;
     private final AuthServiceImpl authService;
     private final MemberAuthServiceImpl memberAuthService;
-    private final PasswordEncoder passwordEncoder;
+
 
 
     /**
@@ -54,10 +56,9 @@ public class MemberController {
      */
     @PostMapping("/bookstore/members")
     public ApiResponse<Void> createMember(@RequestBody @Valid CreateMemberRequest request) {
-                CreateMemberRequest encodedRequest = new CreateMemberRequest(request.email(),passwordEncoder.encode(request.password()),request.name(),request.phone(),request.age(),request.birthday());
-                Member member = new Member(encodedRequest);
+
                 Auth auth = authService.getAuth("USER");
-                memberService.save(member);
+                Member member = memberService.save(request);
                 PointRecord pointRecord = new PointRecord(null, 5000L, 5000L, ZonedDateTime.now(), "회원가입 5000포인트 적립.", member);
                 pointRecordService.save(pointRecord);
                 memberAuthService.saveAuth(member, auth);
@@ -168,5 +169,13 @@ public class MemberController {
             return new ApiResponse<>(new ApiResponse.Header(true, HttpStatus.NO_CONTENT.value()));
 
     }
+    @PostMapping("/bookstore/members/payco")
+    public ApiResponse<MemberAuthResponse> paycoMember(@RequestBody UserProfile userProfile){
+        Member member = memberService.saveOrGetPaycoMember(userProfile);
+        //MemberAuthResponse 제작한다.
+        //반환한다.
+
+    }
+    //만약 이미 존재하면 가져오고 존재하지 않으면 저장하고 가져온다.
 }
 

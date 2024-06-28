@@ -4,7 +4,9 @@ package com.nhnacademy.bookstore.member.member.service.impl;
 import com.nhnacademy.bookstore.entity.member.Member;
 import com.nhnacademy.bookstore.entity.member.enums.Grade;
 import com.nhnacademy.bookstore.entity.member.enums.Status;
+import com.nhnacademy.bookstore.member.member.dto.request.CreateMemberRequest;
 import com.nhnacademy.bookstore.member.member.dto.request.UpdateMemberRequest;
+import com.nhnacademy.bookstore.member.member.dto.request.UserProfile;
 import com.nhnacademy.bookstore.member.member.exception.AlreadyExistsEmailException;
 import com.nhnacademy.bookstore.member.member.exception.LoginFailException;
 import com.nhnacademy.bookstore.member.member.exception.MemberNotExistsException;
@@ -39,6 +41,27 @@ public class MemberServiceImpl implements MemberService {
     private final PurchaseRepository purchaseRepository;
     private final PasswordEncoder passwordEncoder;
 
+    @Override
+    public Member saveOrGetPaycoMember(UserProfile userProfile) {
+        Optional<Member> optionalMember = memberRepository.findByEmail(userProfile.getIdNo());
+        if(optionalMember.isPresent()){
+            return optionalMember.get();//존재하는경우, 그냥 멤버를 가져온다.
+        }else{
+            Member member = new Member();
+            member.setEmail(userProfile.getEmail());
+            member.setPassword(passwordEncoder.encode(userProfile.getIdNo()));
+            member.setGrade(Grade.General);
+            member.setStatus(Status.Active);
+            member.setName(userProfile.getName());
+            member.setPhone(userProfile.getMobile());
+            member.setPoint(5000L);
+            member.setCreated_at(ZonedDateTime.now());
+            memberRepository.save(member);
+            //없는경우 새로 가져온다.
+        }
+        return null;
+    }
+
     /**
      * Save member.
      *
@@ -47,11 +70,14 @@ public class MemberServiceImpl implements MemberService {
      * @author 유지아 Save member. -멤버값을 받아와 저장한다.(이메일 중복하는걸로 확인하면 좋을듯)
      */
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public Member save(Member member) {
+    public Member save(CreateMemberRequest request) {
+        CreateMemberRequest encodedRequest = new CreateMemberRequest(request.email(),passwordEncoder.encode(request.password()),request.name(),request.phone(),request.age(),request.birthday());
+        Member member = new Member(encodedRequest);
         Optional<Member> findmember = memberRepository.findByEmail(member.getEmail());
         if(findmember.isPresent()){
             throw new AlreadyExistsEmailException();
         }
+
         return memberRepository.save(member);
     }
 
@@ -82,7 +108,11 @@ public class MemberServiceImpl implements MemberService {
      */
     public Member readByEmailAndPassword(String email, String password) {
         Optional<Member> member = memberRepository.findByEmail(email);
+
         if(member.isPresent()){
+            if(member.get().getLogin() != Member.Login.Original){
+                throw new
+            }
             if(passwordEncoder.matches(password, member.get().getPassword())){
                 return member.get();
             }
