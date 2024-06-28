@@ -14,7 +14,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 @Getter
-@Table(name = "book", indexes = {
+@Table(name = "book_category", indexes = {
     @Index(name = "idx_book_id", columnList = "book_id"),
     @Index(name = "idx_category_id", columnList = "category_id")
 })
