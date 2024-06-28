@@ -15,18 +15,13 @@ import java.util.List;
  *  @author 정주혁
  *
  * @param title
- * @param description
  * @param price
  * @param sellingPrice
  * @param packing
  * @param publisher
- * @param categoryList
- * @param tagList
  */
 @Builder
-public record ReadBookByPurchase(String title, String description, int price,
+public record ReadBookByPurchase(String title, int price,
 										 String author,
-                                         int sellingPrice, boolean packing, String publisher,
-								 List<CategoryParentWithChildrenResponse> categoryList,
-								 List<ReadTagByBookResponse> tagList) {
+                                         int sellingPrice, boolean packing, String publisher, String bookImage) {
 }

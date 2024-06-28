@@ -12,6 +12,7 @@ import com.nhnacademy.bookstore.purchase.purchaseBook.dto.request.DeletePurchase
 import com.nhnacademy.bookstore.purchase.purchaseBook.dto.request.ReadPurchaseIdRequest;
 import com.nhnacademy.bookstore.purchase.purchaseBook.dto.request.UpdatePurchaseBookRequest;
 import com.nhnacademy.bookstore.purchase.purchaseBook.dto.response.ReadPurchaseBookResponse;
+import com.nhnacademy.bookstore.purchase.purchaseBook.repository.PurchaseBookCustomRepository;
 import com.nhnacademy.bookstore.purchase.purchaseBook.repository.PurchaseBookRepository;
 import com.nhnacademy.bookstore.purchase.purchaseBook.service.PurchaseBookService;
 import com.nhnacademy.bookstore.purchase.purchaseBook.service.impl.PurchaseBookServiceImpl;
@@ -51,6 +52,9 @@ public class PurchaseBookServiceTest {
     @Mock
     private BookRepository bookRepository;
 
+    @Mock
+    private PurchaseBookCustomRepository purchaseBookCustomRepository;
+
 
     private PurchaseBookService purchaseBookService;
 
@@ -63,7 +67,8 @@ public class PurchaseBookServiceTest {
             purchaseBookRepository,
             purchaseRepository,
             bookRepository,
-            bookCategoryService
+            bookCategoryService,
+            purchaseBookCustomRepository
 
         );
     }
@@ -178,6 +183,6 @@ public class PurchaseBookServiceTest {
         assertEquals(10, responses.getContent().getFirst().quantity());
         assertEquals(1000, responses.getContent().getFirst().price());
 
-        verify(purchaseBookRepository).findAllByPurchaseId(readPurchaseIdRequest.purchaseId());
+        verify(purchaseBookRepository).findAllByPurchaseId(readPurchaseIdRequest.purchaseId(),pageable);
     }
 }

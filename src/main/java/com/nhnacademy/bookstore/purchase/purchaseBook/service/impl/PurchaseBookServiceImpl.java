@@ -20,6 +20,7 @@ import com.nhnacademy.bookstore.purchase.purchaseBook.dto.request.ReadPurchaseId
 import com.nhnacademy.bookstore.purchase.purchaseBook.dto.request.UpdatePurchaseBookRequest;
 import com.nhnacademy.bookstore.purchase.purchaseBook.dto.response.ReadBookByPurchase;
 import com.nhnacademy.bookstore.purchase.purchaseBook.dto.response.ReadPurchaseBookResponse;
+import com.nhnacademy.bookstore.purchase.purchaseBook.repository.PurchaseBookCustomRepository;
 import com.nhnacademy.bookstore.purchase.purchaseBook.repository.PurchaseBookRepository;
 import com.nhnacademy.bookstore.purchase.purchaseBook.service.PurchaseBookService;
 
@@ -47,15 +48,16 @@ public class PurchaseBookServiceImpl implements PurchaseBookService {
 	private final PurchaseBookRepository purchaseBookRepository;
 	private final PurchaseRepository purchaseRepository;
 	private final BookRepository bookRepository;
-	private final BookCategoryService bookCategoryService;
+	private final PurchaseBookCustomRepository purchaseBookCustomRepository;
 
 	@Autowired
 	public PurchaseBookServiceImpl(PurchaseBookRepository purchaseBookRepository, PurchaseRepository purchaseRepository,
-		BookRepository bookRepository, BookCategoryService bookCategoryService) {
+		BookRepository bookRepository, BookCategoryService bookCategoryService,
+		PurchaseBookCustomRepository purchaseBookCustomRepository) {
 		this.purchaseBookRepository = purchaseBookRepository;
 		this.purchaseRepository = purchaseRepository;
 		this.bookRepository = bookRepository;
-		this.bookCategoryService = bookCategoryService;
+		this.purchaseBookCustomRepository = purchaseBookCustomRepository;
 	}
 
 	/**
@@ -65,53 +67,9 @@ public class PurchaseBookServiceImpl implements PurchaseBookService {
 	 * @return 해당 주문의 책 리스트를 반환
 	 */
 	@Override
-	public Page<ReadPurchaseBookResponse> readBookByPurchaseResponses(long purchaseId,Pageable pageable) {
-		Page<PurchaseBook> purchaseBooks = purchaseBookRepository.findAllByPurchaseId(
-			purchaseId,pageable);
-		List<ReadPurchaseBookResponse> purchaseBookResponses = new ArrayList<>();
-		for(PurchaseBook purchaseBook : purchaseBooks) {
-			ReadPurchaseBookResponse p = ReadPurchaseBookResponse.builder()
-				.readBookByPurchase(ReadBookByPurchase.builder()
-					.title(purchaseBook.getBook().getTitle())
-					.author(purchaseBook.getBook().getAuthor())
-					.description(purchaseBook.getBook().getDescription())
-					.categoryList(bookCategoryService.readBookWithCategoryList(purchaseBook.getBook().getId()))
-					.sellingPrice(purchaseBook.getBook().getSellingPrice())
-					.packing(purchaseBook.getBook().isPacking())
-					.tagList(purchaseBook.getBook().getBookTagList().stream().map(
-						bookTag -> ReadTagByBookResponse.builder().name(bookTag.getTag().getName()).build()
-					).toList())
-					.publisher(purchaseBook.getBook().getPublisher())
-					.price(purchaseBook.getBook().getPrice())
-					.build())
-				.id(purchaseBook.getId())
-				.quantity(purchaseBook.getQuantity())
-				.price(purchaseBook.getPrice())
-				.build();
-			purchaseBookResponses.add(p);
-		}
-		return new PageImpl<>(purchaseBookResponses);
+	public Page<ReadPurchaseBookResponse> readBookByPurchaseResponses(long purchaseId, Pageable pageable) {
 
-
-
-		// return purchaseBooks.map(purchaseBook  -> ReadPurchaseBookResponse.builder()
-		// 	.readBookByPurchase(ReadBookByPurchase.builder()
-		// 		.title(purchaseBook.getBook().getTitle())
-		// 		.author(purchaseBook.getBook().getAuthor())
-		// 		.description(purchaseBook.getBook().getDescription())
-		// 		.categoryList(bookCategoryService.readBookWithCategoryList(purchaseBook.getBook().getId()))
-		// 		.sellingPrice(purchaseBook.getBook().getSellingPrice())
-		// 		.packing(purchaseBook.getBook().isPacking())
-		// 		.tagList(purchaseBook.getBook().getBookTagList().stream().map(
-		// 			bookTag -> ReadTagByBookResponse.builder().name(bookTag.getTag().getName()).build()
-		// 		).toList())
-		// 		.publisher(purchaseBook.getBook().getPublisher())
-		// 		.price(purchaseBook.getBook().getPrice())
-		// 		.build())
-		// 	.id(purchaseBook.getId())
-		// 	.quantity(purchaseBook.getQuantity())
-		// 	.price(purchaseBook.getPrice())
-		// 	.build());
+		return  purchaseBookCustomRepository.readBookPurchaseResponses(purchaseId, pageable);
 	}
 
 	/**
