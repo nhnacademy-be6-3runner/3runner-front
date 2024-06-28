@@ -53,7 +53,7 @@ public class BookCartMemberServiceImpl implements BookCartMemberService {
         for(BookCart bookCart : allBookCarts){
             String url = "/img/no-image.png";
             if (bookCart.getBook().getBookImageList()!=null && !bookCart.getBook().getBookImageList().isEmpty()) {
-                url = bookCart.getBook().getBookImageList().getFirst().getUrl();
+                url = bookCart.getBook().getBookImageList().getFirst().getTotalImage().getUrl();
             }
             responses.add(ReadAllBookCartMemberResponse.builder()
                     .quantity(bookCart.getQuantity())

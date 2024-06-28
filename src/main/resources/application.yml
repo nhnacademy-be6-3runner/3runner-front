@@ -1,5 +1,6 @@
 spring:
   data:
+
     elasticsearch:
       repositories:
         enabled: true
@@ -9,8 +10,6 @@ spring:
       port: 6379
       database: 11
       password: "*N2vya7H@muDTwdNMR!"
-
-
 
   jpa:
     open-in-view: false
@@ -22,6 +21,8 @@ spring:
         use_sql_comments: true
         highlight_sql: true
         auto_quote_keyword: true
+  #    hibernate:
+  #      ddl-auto: update
 
   servlet:
     multipart:
@@ -43,7 +44,7 @@ spring:
     name: 3runner-bookstore
 server:
   shutdown: graceful
-  port: 8081
+
 logging:
   level:
     org.hibernate.orm.jdbc.bind: trace
