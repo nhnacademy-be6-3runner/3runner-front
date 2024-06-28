@@ -6,8 +6,11 @@ import com.nhnacademy.bookstore.entity.totalImage.TotalImage;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ReviewImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,4 +22,9 @@ public class ReviewImage {
 
     @OneToOne(cascade = CascadeType.ALL)
     private TotalImage totalImage;
+
+    public ReviewImage(Review review, TotalImage totalImage ) {
+        this.review = review;
+        this.totalImage = totalImage;
+    }
 }

@@ -107,7 +107,7 @@ public class MemberServiceImpl implements MemberService {
         member.setEmail(updateMemberRequest.email());
         member.setPhone(updateMemberRequest.phone());
         member.setBirthday(updateMemberRequest.birthday());
-        member.setModified_at(ZonedDateTime.now());
+        member.setModifiedAt(ZonedDateTime.now());
 
         return memberRepository.save(member);
     }
@@ -122,7 +122,7 @@ public class MemberServiceImpl implements MemberService {
         Member member = memberRepository.findById(memberId).orElseThrow(MemberNotExistsException::new);
 
         member.setStatus(Status.Withdrawn);
-        member.setDeleted_at(ZonedDateTime.now());
+        member.setDeletedAt(ZonedDateTime.now());
 
         memberRepository.save(member);
     }
@@ -138,7 +138,7 @@ public class MemberServiceImpl implements MemberService {
     public Member updateStatus(Long memberId, Status status) {
         Member member = memberRepository.findById(memberId).orElseThrow(MemberNotExistsException::new);
         member.setStatus(status);
-        member.setModified_at(ZonedDateTime.now());
+        member.setModifiedAt(ZonedDateTime.now());
         return memberRepository.save(member);
     }
 
@@ -153,14 +153,14 @@ public class MemberServiceImpl implements MemberService {
     public Member updateGrade(Long memberId, Grade grade) {
         Member member = memberRepository.findById(memberId).orElseThrow(MemberNotExistsException::new);
         member.setGrade(grade);
-        member.setModified_at(ZonedDateTime.now());
+        member.setModifiedAt(ZonedDateTime.now());
         return memberRepository.save(member);
     }
 
     @Override
     public Member updateLastLogin(Long memberId, ZonedDateTime lastLogin) {
         Member member = memberRepository.findById(memberId).orElseThrow(MemberNotExistsException::new);
-        member.setLast_login_date(lastLogin);
+        member.setLastLoginDate(lastLogin);
         return memberRepository.save(member);
     }
     /**

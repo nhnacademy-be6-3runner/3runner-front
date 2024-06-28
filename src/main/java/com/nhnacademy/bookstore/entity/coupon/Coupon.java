@@ -22,7 +22,7 @@ public class Coupon {
 
 
     @NotNull
-    private CouponStatus coupon_status;
+    private CouponStatus couponStatus;
 
     @NotNull
     private ZonedDateTime issuedAt;

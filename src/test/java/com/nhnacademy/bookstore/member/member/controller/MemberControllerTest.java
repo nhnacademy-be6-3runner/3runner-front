@@ -93,7 +93,7 @@ public class MemberControllerTest {
         member.setGrade(Grade.General);
         member.setPoint(100L);
         member.setPhone("01000000000");
-        member.setCreated_at(ZonedDateTime.now());
+        member.setCreatedAt(ZonedDateTime.now());
         member.setBirthday(ZonedDateTime.now());
         member.setEmail("abc@naver.com");
         member.setName("abc");
@@ -104,7 +104,7 @@ public class MemberControllerTest {
                 .grade(member.getGrade())
                 .point(member.getPoint())
                 .phone(member.getPhone())
-                .created_at(member.getCreated_at())
+                .created_at(member.getCreatedAt())
                 .birthday(member.getBirthday())
                 .email(member.getEmail())
                 .name(member.getName())

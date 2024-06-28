@@ -16,6 +16,8 @@ import com.nhnacademy.bookstore.entity.bookCategory.BookCategory;
 import com.nhnacademy.bookstore.entity.bookImage.BookImage;
 import com.nhnacademy.bookstore.entity.bookImage.enums.BookImageType;
 import com.nhnacademy.bookstore.entity.category.Category;
+import com.nhnacademy.bookstore.entity.totalImage.TotalImage;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,7 +100,8 @@ public class ApiBookServiceImpl implements ApiBookService {
 
         String fileName = imageService.createImage(downloadImageAsMultipartFile(bookResponse.item().getFirst().cover()),
                 "book");
-        BookImage bookImage = new BookImage(fileName, BookImageType.MAIN, book);
+        TotalImage totalImage = new TotalImage(fileName);
+        BookImage bookImage = new BookImage(BookImageType.MAIN, book, totalImage);
         bookImageRepository.save(bookImage);
 
     }
