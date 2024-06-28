@@ -9,12 +9,14 @@ import org.springframework.stereotype.Repository;
 
 import com.nhnacademy.bookstore.book.book.dto.response.BookListResponse;
 import com.nhnacademy.bookstore.book.bookCartegory.repository.BookCategoryCustomRepository;
+import com.nhnacademy.bookstore.book.category.dto.response.BookDetailCategoryResponse;
 import com.nhnacademy.bookstore.entity.book.QBook;
 import com.nhnacademy.bookstore.entity.bookCategory.QBookCategory;
 import com.nhnacademy.bookstore.entity.bookImage.QBookImage;
 import com.nhnacademy.bookstore.entity.bookImage.enums.BookImageType;
-import com.nhnacademy.bookstore.entity.category.Category;
+import com.nhnacademy.bookstore.entity.category.QCategory;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import jakarta.persistence.EntityManager;
@@ -29,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 @Repository
 public class BookCategoryCustomRepositoryImpl implements BookCategoryCustomRepository {
 	private final JPAQueryFactory jpaQueryFactory;
+	private final QCategory qCategory = QCategory.category;
 	private final QBookCategory qBookCategory = QBookCategory.bookCategory;
 	private final QBookImage qBookImage = QBookImage.bookImage;
 	private final QBook qBook = QBook.book;
@@ -75,13 +78,19 @@ public class BookCategoryCustomRepositoryImpl implements BookCategoryCustomRepos
 	 * @return 카테고리 list
 	 */
 	@Override
-	public List<Category> bookWithCategoryList(Long bookId) {
+	public List<BookDetailCategoryResponse> bookWithCategoryList(Long bookId) {
+		QCategory qCategoryParent = new QCategory("qCategoryParent");
+
 		return jpaQueryFactory.select(
-				Projections.constructor(Category.class,
+				Projections.constructor(BookDetailCategoryResponse.class,
 					qBookCategory.category.id,
 					qBookCategory.category.name,
-					qBookCategory.category.parent))
+					new CaseBuilder()
+						.when(qBookCategory.category.parent.isNotNull())
+						.then(qBookCategory.category.parent.id)
+						.otherwise((Long)null)))
 			.from(qBookCategory)
+			.leftJoin(qBookCategory.category.parent, qCategoryParent)
 			.where(qBookCategory.book.id.eq(bookId))
 			.fetch();
 	}

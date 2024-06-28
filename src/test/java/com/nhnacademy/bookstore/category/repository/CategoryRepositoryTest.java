@@ -66,7 +66,8 @@ public class CategoryRepositoryTest {
         parentCategory1.setChildren(new ArrayList<>(List.of(childCategory1)));
         parentCategory2.setChildren(new ArrayList<>(List.of(childCategory2)));
 
-        this.categoryList = new ArrayList<>(List.of(grandParentCategory, parentCategory1, parentCategory2, childCategory1, childCategory2));
+        this.categoryList = new ArrayList<>(
+                List.of(grandParentCategory, parentCategory1, parentCategory2, childCategory1, childCategory2));
     }
 
     @DisplayName("카테고리 저장 테스트")
