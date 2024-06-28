@@ -48,7 +48,6 @@ public class Member {
 	@Size(min = 1, max = 255)
 	private String name;
 
-	@Column
 	private int age;
 
 	@NotNull

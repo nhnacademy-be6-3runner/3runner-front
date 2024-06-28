@@ -65,7 +65,7 @@ public class MemberServiceImpl implements MemberService {
 	/**
 	 * Save member.
 	 *
-	 * @param member the member -Member값을 받아온다.
+	 * @param request the member -Member값을 받아온다.
 	 * @return the member -저장 후 member값을 그대로 반환한다.
 	 * @author 유지아 Save member. -멤버값을 받아와 저장한다.(이메일 중복하는걸로 확인하면 좋을듯)
 	 */

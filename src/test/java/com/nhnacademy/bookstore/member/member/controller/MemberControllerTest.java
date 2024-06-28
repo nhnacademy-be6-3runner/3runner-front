@@ -107,7 +107,7 @@ public class MemberControllerTest {
 			.grade(member.getGrade())
 			.point(member.getPoint())
 			.phone(member.getPhone())
-			.created_at(member.getCreatedAt())
+			.createdAt(member.getCreatedAt())
 			.birthday(member.getBirthday())
 			.email(member.getEmail())
 			.name(member.getName())
