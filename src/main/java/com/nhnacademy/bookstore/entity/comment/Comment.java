@@ -6,6 +6,7 @@ import com.nhnacademy.bookstore.entity.review.Review;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Setter;
 
 import java.time.ZonedDateTime;
 
@@ -29,6 +30,7 @@ public class Comment {
 
     @ManyToOne
     @NotNull
+    @Setter
     private Review review;
 
     @OneToOne

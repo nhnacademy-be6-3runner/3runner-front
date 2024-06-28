@@ -7,6 +7,9 @@ import java.time.ZonedDateTime;
 
 @Builder
 public record ReviewDetailResponse(
+        long bookId,
+        String bookName,
+        String bookImg,
         long reviewId,
         String title,
         String content,

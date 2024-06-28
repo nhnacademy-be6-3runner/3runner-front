@@ -45,7 +45,11 @@ public class ReviewCustomRepositoryImpl implements ReviewCustomRepository {
 //                        qReview.title,
 //                        qReview.content,
 //                        qReview.rating,
-//                        qMember.email))
+//                        qMember.email,
+//                        qReview.createdAt,
+//                        qReview.updated,
+//                        qReview.updatedAt
+//                ))
 //                .from(qReview)
 //                .join();
         return null;

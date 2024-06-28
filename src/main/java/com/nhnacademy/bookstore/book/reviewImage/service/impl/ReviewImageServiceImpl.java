@@ -8,7 +8,6 @@ import com.nhnacademy.bookstore.book.reviewImage.service.ReviewImageService;
 import com.nhnacademy.bookstore.entity.review.Review;
 import com.nhnacademy.bookstore.entity.reviewImage.ReviewImage;
 import com.nhnacademy.bookstore.entity.totalImage.TotalImage;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -19,6 +18,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * 리뷰 이미지 추가 서비스 구현체입니다.
+ *
+ * @author 김은비, 한민기
+ */
 @Service
 @RequiredArgsConstructor
 public class ReviewImageServiceImpl implements ReviewImageService {
@@ -26,7 +30,11 @@ public class ReviewImageServiceImpl implements ReviewImageService {
     private final ReviewImageRepository reviewImageRepository;
     private final ReviewRepository reviewRepository;
 
-    @Transactional(propagation = Propagation.MANDATORY)
+    /**
+     * 리뷰 이미지 추가 요청을 list 로 받아와서 추가하는 메서드입니다.
+     *
+     * @param createReviewImageRequestList 추가할 이미지 리스트
+     */
     @Override
     public void createReviewImage(List<CreateReviewImageRequest> createReviewImageRequestList) {
         if (Objects.isNull(createReviewImageRequestList) || createReviewImageRequestList.isEmpty()) {
@@ -45,6 +53,12 @@ public class ReviewImageServiceImpl implements ReviewImageService {
         }
     }
 
+    /**
+     * 리뷰 이미지 리스트를 데이터베이스에 저장하는 메서드입니다.
+     *
+     * @param imageList 이미지 리스트
+     * @param reviewId  리뷰 아이디
+     */
     @Transactional(propagation = Propagation.MANDATORY)
     @Override
     public void createReviewImage(List<String> imageList, long reviewId) {
@@ -55,6 +69,11 @@ public class ReviewImageServiceImpl implements ReviewImageService {
         createReviewImage(createReviewImageRequestList);
     }
 
+    /**
+     * 리뷰 이미지 다대다 연결을 위한 한수입니다.
+     *
+     * @param createReviewImageRequest 추가할 이미지
+     */
     @Override
     public void createReviewImage(CreateReviewImageRequest createReviewImageRequest) {
         Optional<Review> review = reviewRepository.findById(createReviewImageRequest.reviewId());
@@ -63,7 +82,7 @@ public class ReviewImageServiceImpl implements ReviewImageService {
         }
         TotalImage totalImage = new TotalImage(createReviewImageRequest.url());
         ReviewImage reviewImage = new ReviewImage(
-            review.get(), totalImage);
+                review.get(), totalImage);
         reviewImageRepository.save(reviewImage);
     }
 }

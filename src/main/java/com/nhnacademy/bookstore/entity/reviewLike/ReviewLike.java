@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.ZonedDateTime;
 
@@ -24,5 +25,6 @@ public class ReviewLike {
     private Member member;
 
     @ManyToOne
+    @Setter
     private Review review;
 }
