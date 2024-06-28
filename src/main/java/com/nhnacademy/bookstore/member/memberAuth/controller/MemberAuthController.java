@@ -13,6 +13,7 @@ import com.nhnacademy.bookstore.member.member.service.MemberService;
 import com.nhnacademy.bookstore.member.memberAuth.dto.request.MemberAuthRequest;
 import com.nhnacademy.bookstore.member.memberAuth.dto.response.MemberAuthResponse;
 import com.nhnacademy.bookstore.member.memberAuth.service.MemberAuthService;
+import com.nhnacademy.bookstore.util.ApiResponse;
 
 /**
  * 멤버 권한 정보를 관리하는 컨트롤러
@@ -36,7 +37,7 @@ public class MemberAuthController {
 	 * @return 이메일, 패스워드, 권한 리스트, 멤버 아이디
 	 */
 	@PostMapping("/bookstore/login")
-	public MemberAuthResponse getMemberAuth(@RequestBody MemberAuthRequest memberAuthRequest) {
+	public ApiResponse<MemberAuthResponse> getMemberAuth(@RequestBody MemberAuthRequest memberAuthRequest) {
 		String email = memberAuthRequest.email();
 
 		Member member = memberService.readByEmail(memberAuthRequest.email());
@@ -44,7 +45,9 @@ public class MemberAuthController {
 			List<Auth> authList = memberAuthService.readAllAuths(member.getId());
 			List<String> authStrList = authList.stream().map(Auth::getName).toList();
 
-			return new MemberAuthResponse(email, member.getPassword(), authStrList, member.getId());
+			return ApiResponse.success(
+				new MemberAuthResponse(email, member.getPassword(), authStrList, member.getId()));
+			// return new MemberAuthResponse(email, member.getPassword(), authStrList, member.getId());
 		}
 		return null;
 	}

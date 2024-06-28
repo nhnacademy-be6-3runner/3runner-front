@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,6 +35,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
+@Controller
 public class MemberController {
 	private final MemberServiceImpl memberService;
 	private final PointServiceImpl pointRecordService;
@@ -46,6 +49,7 @@ public class MemberController {
 	 * @param request the request - creatememberrequest를 받아 member를 생성한다.
 	 * @author 유지아
 	 */
+	@Transactional
 	@PostMapping("/bookstore/members")
 	public ApiResponse<Void> createMember(@RequestBody @Valid CreateMemberRequest request) {
 		CreateMemberRequest encodedRequest = new CreateMemberRequest(request.email(),
@@ -68,6 +72,7 @@ public class MemberController {
 	 * @return the response entity -멤버 정보에 대한 응답을 담아서 apiresponse로 응답한다.
 	 * @author 유지아
 	 */
+	@Transactional
 	@GetMapping("/bookstore/members")
 	public ApiResponse<GetMemberResponse> readById(@RequestHeader("Member-Id") Long memberId) {
 
@@ -94,6 +99,7 @@ public class MemberController {
 	 * @return the response entity -멤버 정보에 대한 응답을 담아서 apiresponse로 응답한다.
 	 * @author 유지아
 	 */
+	@Transactional
 	@PostMapping("/bookstore/members/login")
 	public ApiResponse<GetMemberResponse> readByEmailAndPassword(
 		@RequestBody @Valid LoginRequest loginRequest) {
@@ -123,6 +129,7 @@ public class MemberController {
 	 * @return the list -해당 유저에 대한 권한들을 응답에 담아 apiresponse로 응답한다.
 	 * @author 유지아
 	 */
+	@Transactional
 	@GetMapping("/bookstore/members/auths")
 	public ApiResponse<List<AuthResponse>> readAuths(@RequestHeader("Member-Id") Long memberId) {
 
@@ -143,6 +150,7 @@ public class MemberController {
 	 * @return the api response - updateMemberResponse
 	 * @author 오연수
 	 */
+	@Transactional
 	@PutMapping("/bookstore/members")
 	public ApiResponse<UpdateMemberResponse> updateMember(@RequestHeader(name = "Member-Id") Long memberId,
 		@Valid @RequestBody UpdateMemberRequest updateMemberRequest) {
@@ -162,6 +170,7 @@ public class MemberController {
 	 * @return the api response - Void
 	 * @author 오연수
 	 */
+	@Transactional
 	@DeleteMapping("/bookstore/members")
 	public ApiResponse<Void> deleteMember(@RequestHeader(name = "Member-Id") Long memberId) {
 		memberService.deleteMember(memberId);
