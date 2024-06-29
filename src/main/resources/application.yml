@@ -12,3 +12,8 @@ spring:
 
   jwt:
     secret: aaaasqwlkljlfasdfqwerafcxvzpojijoijopjewndllllllsserrrrrrwqexc
+
+  client:
+    config:
+      default:
+        errorDecoder: com.nhnacademy.front.config.CustomErrorDecoder;
