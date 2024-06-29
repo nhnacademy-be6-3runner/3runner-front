@@ -49,8 +49,14 @@ public class LoginResponseConfig {
 			Collection<String> cookies = headers.getOrDefault("Set-Cookie", Collections.emptyList());
 			for (String cookie : cookies) {
 				if (cookie.startsWith("Refresh=")) {
-					log.warn("Refresh cookies: {}", cookie);
-					TokenHolder.setRefreshToken(cookie.substring("Refresh=".length()));
+					String[] parts = cookie.split(";");
+					for (String part : parts) {
+						if (part.startsWith("Refresh=")) {
+							part = part.trim();
+							TokenHolder.setRefreshToken(part.substring("Refresh=".length()));
+							log.warn("Refresh token: {}", part);
+						}
+					}
 				}
 			}
 

@@ -9,6 +9,7 @@ import javax.crypto.spec.SecretKeySpec;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 
 /**
@@ -32,13 +33,17 @@ public class JWTUtil {
 	 * @param token access token
 	 * @return 유효성
 	 */
-	public Boolean isExpired(String token) {
-		return Jwts.parser()
-			.verifyWith(secretKey)
-			.build()
-			.parseSignedClaims(token)
-			.getPayload()
-			.getExpiration()
-			.before(new Date());
+	public Boolean isExpired(String token) throws ExpiredJwtException {
+		try {
+			Date expiration = Jwts.parser()
+				.verifyWith(secretKey)
+				.build()
+				.parseSignedClaims(token)
+				.getPayload()
+				.getExpiration();
+			return expiration.before(new Date());
+		} catch (ExpiredJwtException e) {
+			return true;
+		}
 	}
 }

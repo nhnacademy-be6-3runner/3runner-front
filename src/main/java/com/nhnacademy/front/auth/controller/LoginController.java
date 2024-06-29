@@ -1,8 +1,5 @@
 package com.nhnacademy.front.auth.controller;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -62,18 +59,15 @@ public class LoginController {
 		HttpServletResponse response) {
 		LoginResponse loginResponse = loginService.getLoginResponse(new LoginRequest(email, password));
 
-		try {
-			String encodedAccess = URLEncoder.encode(TokenHolder.getAccessToken(), "UTF-8");
-			String encodedRefresh = URLEncoder.encode(TokenHolder.getRefreshToken(), "UTF-8");
+		// String encodedAccess = URLEncoder.encode(TokenHolder.getAccessToken(), "UTF-8");
+		// String encodedRefresh = URLEncoder.encode(TokenHolder.getRefreshToken(), "UTF-8");
 
-			response.addHeader("Authorization", TokenHolder.getAccessToken());
-			response.addHeader("Refresh", TokenHolder.getRefreshToken());
+		// response.addHeader("Authorization", TokenHolder.getAccessToken());
+		// response.addHeader("Refresh", TokenHolder.getRefreshToken());
 
-			response.addCookie(new Cookie("Access", encodedAccess));
-			response.addCookie(new Cookie("Refresh", encodedRefresh));
-		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException(e);
-		}
+		// 쿠키로 저장
+		response.addCookie(new Cookie("Access", TokenHolder.getAccessToken()));
+		response.addCookie(new Cookie("Refresh", TokenHolder.getRefreshToken()));
 
 		return ApiResponse.success(loginResponse);
 	}
