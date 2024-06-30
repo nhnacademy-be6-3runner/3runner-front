@@ -14,6 +14,7 @@ import com.nhnacademy.front.threadlocal.TokenHolder;
 import com.nhnacademy.front.util.ApiResponse;
 
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 
@@ -59,17 +60,32 @@ public class LoginController {
 		HttpServletResponse response) {
 		LoginResponse loginResponse = loginService.getLoginResponse(new LoginRequest(email, password));
 
-		// String encodedAccess = URLEncoder.encode(TokenHolder.getAccessToken(), "UTF-8");
-		// String encodedRefresh = URLEncoder.encode(TokenHolder.getRefreshToken(), "UTF-8");
-
-		// response.addHeader("Authorization", TokenHolder.getAccessToken());
-		// response.addHeader("Refresh", TokenHolder.getRefreshToken());
-
 		// 쿠키로 저장
 		response.addCookie(new Cookie("Access", TokenHolder.getAccessToken()));
 		response.addCookie(new Cookie("Refresh", TokenHolder.getRefreshToken()));
 
 		return ApiResponse.success(loginResponse);
+	}
+
+	@GetMapping("/logout")
+	@ResponseBody
+	public ApiResponse<Void> logout(HttpServletRequest request, HttpServletResponse response) {
+
+		loginService.logout();
+
+		// Cookie 삭제
+		for (Cookie cookie : request.getCookies()) {
+			if (cookie.getName().equals("Access")) {
+				cookie.setMaxAge(0);
+				response.addCookie(cookie);
+			}
+			if (cookie.getName().equals("Refresh")) {
+				cookie.setMaxAge(0);
+				response.addCookie(cookie);
+			}
+		}
+
+		return ApiResponse.success(null);
 	}
 
 }
