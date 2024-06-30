@@ -35,6 +35,11 @@ spring:
     password: tHos2g5st4@XH7mT
     driver-class-name: com.mysql.cj.jdbc.Driver
 
+  rabbitmq:
+    host: 133.186.241.167
+    port: 5672
+    username: admin
+    password: nhnacademy123!
 
   profiles:
     active: prod
