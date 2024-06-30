@@ -14,7 +14,7 @@ public record ReadPurchaseResponse(long id,
                                    int deliveryPrice,
                                    int totalPrice,
                                    ZonedDateTime createdAt,
-                                   String road,
+                                   String road , 			// 주소
                                    String password,
                                    MemberType memberType) {
 
