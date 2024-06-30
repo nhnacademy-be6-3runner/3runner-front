@@ -1,10 +1,8 @@
 spring:
   data:
-
     elasticsearch:
       repositories:
         enabled: true
-
     redis:
       host: 133.186.241.167
       port: 6379
@@ -37,11 +35,18 @@ spring:
 
 
   profiles:
-    active: prod
+    active: dev
   lifecycle:
     timeout-per-shutdown-phase: 30s
   application:
     name: 3runner-bookstore
+
+  elasticsearch:
+    uris: 115.94.72.198:9200
+    username: elastic
+    password: nhnacademy123!
+
+
 server:
   shutdown: graceful
 
@@ -65,3 +70,8 @@ springdoc:
   swagger-ui:
     url: /docs/openapi-3.0.json
     path: /bookstore/docs/swagger
+
+elasticsearch:
+  url: 115.94.72.198:9200
+
+  key: WVZvVlo1QUJxeC1mdVBfZkZPOHM6SjNHd1hRX2RUWmFCbnY4dmtIcTRDUQ==
