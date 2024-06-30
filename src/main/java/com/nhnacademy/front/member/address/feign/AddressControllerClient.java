@@ -5,29 +5,29 @@ import java.util.List;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 
 
 import com.nhnacademy.front.member.address.dto.request.CreateAddressRequest;
 import com.nhnacademy.front.member.address.dto.request.UpdateAddressRequest;
 import com.nhnacademy.front.member.address.dto.response.AddressResponse;
 import com.nhnacademy.front.member.address.dto.response.UpdateAddressResponse;
-import com.nhnacademy.front.util.ApiResponse;
+import com.nhnacademy.util.ApiResponse;
 
 import jakarta.validation.Valid;
 
 @FeignClient(name = "addressControllerClient",url = "http://localhost:8080")
 public interface AddressControllerClient {
 	@PostMapping("/bookstore/members/addresses")
-	ApiResponse<List<AddressResponse>> createAddress(@Valid @RequestBody CreateAddressRequest request, @RequestHeader("member-id") Long memberId);
+	ApiResponse<List<AddressResponse>> createAddress(@Valid @RequestBody CreateAddressRequest request);
 	@GetMapping("/bookstore/members/addresses")
-	ApiResponse<List<AddressResponse>> readAllAddresses(@RequestHeader("member-id") Long memberId);
-	@PutMapping("/bookstore/members/addresses")
-	ApiResponse<UpdateAddressResponse> updateAddress(@Valid @RequestBody UpdateAddressRequest request, @RequestHeader("member-id") Long memberId);
-	@DeleteMapping("/bookstore/members/addresses")
-	ApiResponse<Void> deleteAddress(@RequestHeader("member-id") Long memberId);
+	ApiResponse<List<AddressResponse>> readAllAddresses();
+	@PutMapping("/bookstore/members/addresses/{addressId}")
+	ApiResponse<UpdateAddressResponse> updateAddress(@Valid @RequestBody UpdateAddressRequest request,@PathVariable(name = "addressId") Long addressId);
+	@DeleteMapping("/bookstore/members/addresses/{addressId}")
+	ApiResponse<Void> deleteAddress(@PathVariable(name = "addressId") Long addressId);
 }
 

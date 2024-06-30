@@ -7,15 +7,22 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.nhnacademy.front.auth.adapter.AuthAdapter;
 import com.nhnacademy.front.auth.adapter.LoginAdapter;
 import com.nhnacademy.front.auth.dto.request.LoginRequest;
 import com.nhnacademy.front.auth.dto.response.LoginResponse;
+import com.nhnacademy.front.auth.service.LoginService;
+import com.nhnacademy.front.threadlocal.TokenHolder;
+import com.nhnacademy.util.ApiResponse;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -77,17 +84,22 @@ public class LoginController {
 		return ApiResponse.success(loginResponse);
 	}
 
-	@PutMapping("/auth/login")
-	public String loginMember(@Valid @RequestBody com.nhnacademy.front.member.address.dto.request.LoginRequest loginRequest) {
-		authAdapter.loginMember(loginRequest);
-		return "index";//성공하면 기본페이지 실패하면 음...로그인페이지 다시?
-	}
+	// @PutMapping("/auth/login")
+	// public String loginMember(@Valid @RequestBody com.nhnacademy.front.member.address.dto.request.LoginRequest loginRequest) {
+	// 	authAdapter.loginMember(loginRequest);
+	// 	return "index";//성공하면 기본페이지 실패하면 음...로그인페이지 다시?
+	// }
 	//로그인할때 꼭 @이메일 되어잇는 인자 받아야한다.
 
 	@GetMapping("/oauth2/callback/payco")
-	public String paycoCallback(@RequestParam String code) {
+	public String paycoCallback(@RequestParam String code, HttpServletResponse response) {
 		//코드까지는 들어온다.
 		authAdapter.handleOAuth2Redirect(code);
+		response.addCookie(new Cookie("Access", TokenHolder.getAccessToken()));
+		response.addCookie(new Cookie("Refresh", TokenHolder.getRefreshToken()));
+
+
+
 		return "index";//메인페이지 반환한다.
 	}
 }
