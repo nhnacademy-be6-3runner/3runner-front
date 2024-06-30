@@ -10,6 +10,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -65,6 +66,10 @@ public class Purchase {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchase", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PurchaseCoupon> purchaseCouponList = new ArrayList<>();
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
+    }
 
     public Purchase(UUID orderNumber, PurchaseStatus status, int deliveryPrice, int totalPrice, ZonedDateTime createdAt, String road, String password, MemberType memberType, Member member, PointRecord pointRecord, List<PurchaseBook> purchaseBookList, List<PurchaseCoupon> purchaseCouponList) {
         this.orderNumber = orderNumber;

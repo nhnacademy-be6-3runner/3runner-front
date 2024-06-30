@@ -17,9 +17,12 @@ import org.springframework.data.domain.Pageable;
  * @author 정주혁
  */
 public interface PurchaseBookService {
-    void deletePurchaseBook(DeletePurchaseBookRequest purchaseBookRequest);
+    void deletePurchaseBook(long purchaseBookId);
+
     Long createPurchaseBook(CreatePurchaseBookRequest createPurchaseBookRequest);
+
     Long updatePurchaseBook(UpdatePurchaseBookRequest updatePurchaseBookRequest);
-    Page<ReadPurchaseBookResponse> readBookByPurchaseResponses(ReadPurchaseIdRequest readPurchaseIdRequest, Pageable pageable);
+
+    Page<ReadPurchaseBookResponse> readBookByPurchaseResponses(long purchaseId, Pageable pageable);
 
 }

@@ -24,6 +24,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -62,30 +63,25 @@ class PurchaseBookControllerTest {
     @Test
     void testReadPurchaseBook() throws Exception {
         // Prepare test data
-        ReadPurchaseIdRequest request = ReadPurchaseIdRequest.builder()
-            .purchaseId(1L)
-            .page(1)
-            .size(10)
-            .build();
         ReadPurchaseBookResponse response = ReadPurchaseBookResponse.builder()
             .readBookByPurchase(mock(ReadBookByPurchase.class))
             .price(10)
             .quantity(1)
             .build();
-        Page<ReadPurchaseBookResponse> responsePage = new PageImpl<>(Collections.singletonList(response));
+        Page<ReadPurchaseBookResponse> responseList = new PageImpl<>(Collections.singletonList(response));
 
         // Mock service method
-        when(purchaseBookService.readBookByPurchaseResponses(any(ReadPurchaseIdRequest.class), any(Pageable.class)))
-            .thenReturn(responsePage);
+        when(purchaseBookService.readBookByPurchaseResponses(1L, PageRequest.of(0, 5)))
+            .thenReturn(responseList);
+
+        ApiResponse<Page<ReadPurchaseBookResponse>> apiResponse = purchaseBookController.readPurchaseBook(1L, 0, 5, null);
 
         // Perform GET request
-        mockMvc.perform(MockMvcRequestBuilders.get("/bookstore/purchase/book")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(request)))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.header.resultCode").value(200))
-            .andExpect(jsonPath("$.header.successful").value(true));
+        assertEquals(HttpStatus.OK, HttpStatus.valueOf(apiResponse.getHeader().getResultCode()));
+        assertEquals(1, apiResponse.getBody().getData().getSize());
+        assertEquals(10, apiResponse.getBody().getData().getContent().getFirst().price());
+        assertEquals(1, apiResponse.getBody().getData().getContent().getFirst().quantity());
+
     }
 
 

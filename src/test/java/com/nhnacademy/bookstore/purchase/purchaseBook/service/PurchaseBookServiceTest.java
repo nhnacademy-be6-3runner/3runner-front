@@ -2,6 +2,7 @@ package com.nhnacademy.bookstore.purchase.purchaseBook.service;
 
 
 import com.nhnacademy.bookstore.book.book.repository.BookRepository;
+import com.nhnacademy.bookstore.book.bookCartegory.service.BookCategoryService;
 import com.nhnacademy.bookstore.entity.book.Book;
 import com.nhnacademy.bookstore.entity.purchase.Purchase;
 import com.nhnacademy.bookstore.entity.purchaseBook.PurchaseBook;
@@ -11,6 +12,7 @@ import com.nhnacademy.bookstore.purchase.purchaseBook.dto.request.DeletePurchase
 import com.nhnacademy.bookstore.purchase.purchaseBook.dto.request.ReadPurchaseIdRequest;
 import com.nhnacademy.bookstore.purchase.purchaseBook.dto.request.UpdatePurchaseBookRequest;
 import com.nhnacademy.bookstore.purchase.purchaseBook.dto.response.ReadPurchaseBookResponse;
+import com.nhnacademy.bookstore.purchase.purchaseBook.repository.PurchaseBookCustomRepository;
 import com.nhnacademy.bookstore.purchase.purchaseBook.repository.PurchaseBookRepository;
 import com.nhnacademy.bookstore.purchase.purchaseBook.service.PurchaseBookService;
 import com.nhnacademy.bookstore.purchase.purchaseBook.service.impl.PurchaseBookServiceImpl;
@@ -28,6 +30,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.time.ZonedDateTime;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,16 +52,24 @@ public class PurchaseBookServiceTest {
     @Mock
     private BookRepository bookRepository;
 
+    @Mock
+    private PurchaseBookCustomRepository purchaseBookCustomRepository;
+
 
     private PurchaseBookService purchaseBookService;
+
+    private BookCategoryService bookCategoryService;
 
     @BeforeEach
     public void setup() {
         MockitoAnnotations.openMocks(this);
         purchaseBookService = new PurchaseBookServiceImpl(
-                purchaseBookRepository,
-                purchaseRepository,
-                bookRepository
+            purchaseBookRepository,
+            purchaseRepository,
+            bookRepository,
+            bookCategoryService,
+            purchaseBookCustomRepository
+
         );
     }
 
@@ -153,16 +165,17 @@ public class PurchaseBookServiceTest {
 
         PurchaseBook purchaseBook = new PurchaseBook(1L, bookMock,10,1000,purchase);
 
-        Page<PurchaseBook> purchaseBooks = new PageImpl<>(List.of(purchaseBook));
+        Pageable pageable = PageRequest.of(0, 10);
 
-        Pageable pageable = PageRequest.of(1,10);
+        Page<PurchaseBook> purchaseBooks = new PageImpl<>(Collections.singletonList(purchaseBook));
+
 
         // Mock repository method
         when(purchaseBookRepository.findAllByPurchaseId(readPurchaseIdRequest.purchaseId(),pageable))
                 .thenReturn(purchaseBooks);
 
         // Call service method
-        Page<ReadPurchaseBookResponse> responses = purchaseBookService.readBookByPurchaseResponses(readPurchaseIdRequest,pageable);
+        Page<ReadPurchaseBookResponse> responses = purchaseBookService.readBookByPurchaseResponses(readPurchaseIdRequest.purchaseId(),pageable);
 
         // Verify
         assertNotNull(responses);

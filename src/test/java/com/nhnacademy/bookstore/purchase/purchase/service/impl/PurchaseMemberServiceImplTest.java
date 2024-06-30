@@ -1,5 +1,22 @@
 package com.nhnacademy.bookstore.purchase.purchase.service.impl;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
+
+import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
 import com.nhnacademy.bookstore.entity.member.Member;
 import com.nhnacademy.bookstore.entity.purchase.Purchase;
 import com.nhnacademy.bookstore.entity.purchase.enums.MemberType;
@@ -12,22 +29,6 @@ import com.nhnacademy.bookstore.purchase.purchase.dto.response.ReadPurchaseRespo
 import com.nhnacademy.bookstore.purchase.purchase.exception.PurchaseAlreadyExistException;
 import com.nhnacademy.bookstore.purchase.purchase.exception.PurchaseNoAuthorizationException;
 import com.nhnacademy.bookstore.purchase.purchase.repository.PurchaseRepository;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.time.ZonedDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class PurchaseMemberServiceImplTest {
@@ -140,7 +141,7 @@ class PurchaseMemberServiceImplTest {
 
     @Test
     void deletePurchase_AuthorizationThenThrowException() {
-        when(memberService.readById(1L)).thenReturn(member1);
+        when(memberService.findById(1L)).thenReturn(member1);
         when(purchaseRepository.findByMember(member1)).thenReturn(List.of());
         when(purchaseRepository.findById(purchase1.getId())).thenReturn(Optional.of(purchase1));
 

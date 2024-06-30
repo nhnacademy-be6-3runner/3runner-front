@@ -26,11 +26,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class PurchaseRepositoryTest {
-/*
     @Autowired
     private PurchaseRepository purchaseRepository;
     @Autowired
-    private MemberServiceImpl memberService;
+    private MemberService memberService;
 
     private Member member1;
     private Member member2;
@@ -38,7 +37,6 @@ class PurchaseRepositoryTest {
     private Purchase purchase2;
     private Purchase purchase3;
     private Purchase purchase4;
-
 
     @BeforeEach
     void setUp() {
@@ -64,11 +62,10 @@ class PurchaseRepositoryTest {
 
     }
 
-
     @AfterEach
     void tearDown() {
-        memberService.deleteMember(member1.getId());
-        memberService.deleteMember(member2.getId());
+        memberService.deleteMember(member1.getId().toString());
+        memberService.deleteMember(member2.getId().toString());
         purchaseRepository.delete(purchase1);
         purchaseRepository.delete(purchase2);
         purchaseRepository.delete(purchase3);
@@ -77,18 +74,16 @@ class PurchaseRepositoryTest {
 
     @Test
     void existsPurchaseByOrderNumber(){
-        // assertTrue(purchaseRepository.existsPurchaseByOrderNumber(purchase1.getOrderNumber()));
-        // assertTrue(purchaseRepository.existsPurchaseByOrderNumber(purchase2.getOrderNumber()));
-        // assertTrue(purchaseRepository.existsPurchaseByOrderNumber(purchase3.getOrderNumber()));
-        // assertFalse(purchaseRepository.existsPurchaseByOrderNumber(UUID.randomUUID()));
+        assertTrue(purchaseRepository.existsPurchaseByOrderNumber(purchase1.getOrderNumber()));
+        assertTrue(purchaseRepository.existsPurchaseByOrderNumber(purchase2.getOrderNumber()));
+        assertTrue(purchaseRepository.existsPurchaseByOrderNumber(purchase3.getOrderNumber()));
+        assertFalse(purchaseRepository.existsPurchaseByOrderNumber(UUID.randomUUID()));
     }
 
-    @Test
-    void findPurchasesByMember(){
-        // List<ReadPurchaseResponse> expectedList  = memberService.getPurchasesByMemberId(member1.getId());
-//        List<ReadPurchaseResponse> actualList = List.of(purchase1, purchase2, purchase3);
-//        assertEquals(expectedList, actualList);
-    }
-    */
-
+//     @Test
+//     void findPurchasesByMember(){
+//         List<ReadPurchaseResponse> expectedList  = memberService.getPurchasesByMemberId(member1.getId());
+// //        List<ReadPurchaseResponse> actualList = List.of(purchase1, purchase2, purchase3);
+// //        assertEquals(expectedList, actualList);
+//     }
 }

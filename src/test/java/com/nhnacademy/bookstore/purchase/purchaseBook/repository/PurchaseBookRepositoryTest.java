@@ -102,7 +102,7 @@ public class PurchaseBookRepositoryTest {
     @Test
     public void testFindAllByPurchaseId() {
         Pageable pageable = PageRequest.of(1,10);
-        Page<PurchaseBook> purchaseBooks = purchaseBookRepository.findAllByPurchaseId(purchase.getId(), pageable);
+        Page<PurchaseBook> purchaseBooks = purchaseBookRepository.findAllByPurchaseId(purchase.getId(),pageable);
 
         assertNotNull(purchaseBooks);
         assertEquals(10, purchaseBooks.getSize());

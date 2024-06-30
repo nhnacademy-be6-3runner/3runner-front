@@ -12,8 +12,14 @@ import com.nhnacademy.bookstore.purchase.purchaseBook.exception.UpdatePurchaseBo
 import com.nhnacademy.bookstore.purchase.purchaseBook.service.PurchaseBookService;
 import com.nhnacademy.bookstore.util.ApiResponse;
 import com.nhnacademy.bookstore.util.ValidationUtils;
+
 import jakarta.validation.Valid;
+import jakarta.ws.rs.Path;
+import lombok.RequiredArgsConstructor;
+
+import java.util.List;
 import java.util.Objects;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,10 +28,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -34,38 +43,35 @@ import org.springframework.web.bind.annotation.RestController;
  * @author 정주혁
  */
 @RestController
-@RequestMapping("/bookstore/purchase/book")
+@RequestMapping("/bookstore/purchases/books")
+@RequiredArgsConstructor
 public class PurchaseBookController {
 
-	private PurchaseBookService purchaseBookService;
+	private final PurchaseBookService purchaseBookService;
 
-	@Autowired
-	public PurchaseBookController(PurchaseBookService purchaseBookService) {
-		this.purchaseBookService = purchaseBookService;
-	}
+
 
 	/**
 	 * 주문 id로 자신이 주문한 책들 조회
 	 *
-	 * @param readPurchaseIdRequest 주문아이디가 포함된 requestDto
-	 * @param bindingResult requestDto의 오류발생시 오류 처리를 위한 파라미터
+	 * @param purchaseId 주문아이디가 포함된 requestDto
 	 * @return 주문id로 조회된 책들 리스트 반환
 	 */
-	@GetMapping
+	@GetMapping("/{purchaseId}")
 	public ApiResponse<Page<ReadPurchaseBookResponse>> readPurchaseBook(
-		@RequestBody @Valid ReadPurchaseIdRequest readPurchaseIdRequest, BindingResult bindingResult) {
-
-		ValidationUtils.validateBindingResult(bindingResult, new ReadPurchaseBookRequestFormException(bindingResult));
-
+		@PathVariable(value = "purchaseId")  long purchaseId
+		, @RequestParam int page
+		, @RequestParam int size
+		, @RequestParam(required = false) String sort) {
 		Pageable pageable;
-		if (!Objects.isNull(readPurchaseIdRequest.sort())) {
-			pageable = PageRequest.of(readPurchaseIdRequest.page(), readPurchaseIdRequest.page(),
-				Sort.by(readPurchaseIdRequest.sort()));
+		if (Objects.isNull(sort)) {
+			pageable = PageRequest.of(page, size);
 		} else {
-			pageable = PageRequest.of(readPurchaseIdRequest.page(), readPurchaseIdRequest.size());
+			pageable = PageRequest.of(page, size, Sort.by(sort));
 		}
+
 		Page<ReadPurchaseBookResponse> tmp =
-			purchaseBookService.readBookByPurchaseResponses(readPurchaseIdRequest, pageable);
+			purchaseBookService.readBookByPurchaseResponses( purchaseId, pageable);
 		return ApiResponse.success(tmp);
 	}
 
@@ -86,15 +92,11 @@ public class PurchaseBookController {
 	/**
 	 * 주문 책 삭제
 	 *
-	 * @param deletePurchaseBookRequest 삭제할 주문 책의 id request dto
-	 * @param bindingResult requestDto의 오류발생시 오류 처리를 위한 파라미터
 	 * @return 삭제후 void return
 	 */
-	@DeleteMapping
-	public ApiResponse<Void> deletePurchaseBook(@RequestBody @Valid DeletePurchaseBookRequest deletePurchaseBookRequest,
-		BindingResult bindingResult) {
-		ValidationUtils.validateBindingResult(bindingResult, new DeletePurchaseBookRequestFormException(bindingResult));
-		purchaseBookService.deletePurchaseBook(deletePurchaseBookRequest);
+	@DeleteMapping("/{purchaseBookId}")
+	public ApiResponse<Void> deletePurchaseBook(@PathVariable(value = "purchaseBookId") long purchaseBookId) {
+		purchaseBookService.deletePurchaseBook(purchaseBookId);
 		return ApiResponse.deleteSuccess(null);
 	}
 
