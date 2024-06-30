@@ -4,8 +4,7 @@ import org.springframework.data.domain.Page;
 
 import com.nhnacademy.front.purchase.purchase.dto.response.ReadPurchase;
 
-public interface PurchaseGuestService {
-	Page<ReadPurchase> readGuestPurchases(Long memberId);
+public interface PurchaseDetailMemberService {
 
-	boolean validatePurchase(String userId, String password);
+	Page<ReadPurchase> readPurchases(Long userId);
 }

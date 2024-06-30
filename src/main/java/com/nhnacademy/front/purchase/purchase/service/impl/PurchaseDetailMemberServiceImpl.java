@@ -1,6 +1,5 @@
 package com.nhnacademy.front.purchase.purchase.service.impl;
 
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +13,7 @@ import com.nhnacademy.front.purchase.purchase.dto.response.ReadPurchaseBookRespo
 import com.nhnacademy.front.purchase.purchase.dto.response.ReadPurchaseResponse;
 import com.nhnacademy.front.purchase.purchase.feign.PurchaseBookControllerClient;
 import com.nhnacademy.front.purchase.purchase.feign.PurchaseMemberControllerClient;
-import com.nhnacademy.front.purchase.purchase.service.PurchaseMemberService;
+import com.nhnacademy.front.purchase.purchase.service.PurchaseDetailMemberService;
 import com.nhnacademy.util.ApiResponse;
 
 import lombok.RequiredArgsConstructor;
@@ -22,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Service
-public class PurchaseMemberServiceImpl implements PurchaseMemberService {
+public class PurchaseDetailMemberServiceImpl implements PurchaseDetailMemberService {
 
 	private final PurchaseBookControllerClient purchaseBookControllerClient;
 	private final PurchaseMemberControllerClient purchaseMemberControllerClient;

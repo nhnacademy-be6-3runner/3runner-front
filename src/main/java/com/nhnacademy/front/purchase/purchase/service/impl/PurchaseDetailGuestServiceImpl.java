@@ -8,17 +8,15 @@ import org.springframework.stereotype.Service;
 
 import com.nhnacademy.front.purchase.purchase.dto.request.ReadDeletePurchaseGuestRequest;
 import com.nhnacademy.front.purchase.purchase.dto.response.ReadPurchase;
-import com.nhnacademy.front.purchase.purchase.dto.response.ReadPurchaseResponse;
 import com.nhnacademy.front.purchase.purchase.feign.PurchaseBookControllerClient;
 import com.nhnacademy.front.purchase.purchase.feign.PurchaseGuestControllerClient;
-import com.nhnacademy.front.purchase.purchase.service.PurchaseGuestService;
-import com.nhnacademy.util.ApiResponse;
+import com.nhnacademy.front.purchase.purchase.service.PurchaseDetailGuestService;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class PurchaseGuestServiceImpl implements PurchaseGuestService {
+public class PurchaseDetailGuestServiceImpl implements PurchaseDetailGuestService {
 	private final PurchaseGuestControllerClient purchaseGuestControllerClient;
 	private final PurchaseBookControllerClient purchaseBookControllerClient;
 

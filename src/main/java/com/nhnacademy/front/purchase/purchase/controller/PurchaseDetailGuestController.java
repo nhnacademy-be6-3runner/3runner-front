@@ -4,23 +4,19 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.nhnacademy.front.purchase.purchase.feign.PurchaseBookControllerClient;
-import com.nhnacademy.front.purchase.purchase.feign.PurchaseGuestControllerClient;
-import com.nhnacademy.front.purchase.purchase.service.PurchaseGuestService;
+import com.nhnacademy.front.purchase.purchase.service.PurchaseDetailGuestService;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/guest/orders")
-public class PurchaseGuestController {
+public class PurchaseDetailGuestController {
 
-	private final PurchaseGuestService purchaseGuestService;
+	private final PurchaseDetailGuestService purchaseGuestService;
 
 
 	@GetMapping
