@@ -10,18 +10,22 @@ import com.nhnacademy.front.threadlocal.TokenHolder;
 import feign.RequestInterceptor;
 
 /**
- * Feign 요청 보낼 때 스레드 로컬에서 토큰 값을 가져와 헤더로 보내는 Interceptor 설정
+ * Feign 요청에 Authorization 헤더 추가
+ * ThreadLocal 에 설정된 토큰 값 가져와서 설정
  *
  * @author 오연수
  */
 @Configuration
-public class FeignConfig {
+public class FeignRequestConfig {
+
 	@Bean
 	public RequestInterceptor requestInterceptor() {
 		return requestTemplate -> {
-			String token = TokenHolder.getAccessToken();
-			if (Objects.nonNull(token) && !token.isEmpty()) {
-				requestTemplate.header("Authorization", "Bearer " + token);
+			String accessToken = TokenHolder.getAccessToken();
+
+			// Access Token 헤더에 추가
+			if (Objects.nonNull(accessToken) && !accessToken.isEmpty()) {
+				requestTemplate.header("Authorization", "Bearer " + accessToken);
 			}
 		};
 	}

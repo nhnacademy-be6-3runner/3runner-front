@@ -1,6 +1,5 @@
 package com.nhnacademy.front.auth.controller;
 
-import java.io.IOException;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,20 +7,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.nhnacademy.front.auth.adapter.AuthAdapter;
 import com.nhnacademy.front.auth.adapter.LoginAdapter;
 import com.nhnacademy.front.auth.dto.request.LoginRequest;
 import com.nhnacademy.front.auth.dto.response.LoginResponse;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Email;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -36,13 +30,23 @@ public class LoginController {
 	LoginAdapter loginAdapter;
 	@Autowired
 	AuthAdapter authAdapter;
+	@Autowired
+	LoginService loginService;
+
 	/**
-	 * 로그인 폼 페이지를 반환한다.
+	 * login 상태를 체크한 후, 로그인 폼 페이지를 반환한다.
+	 * login 되어 있으면 / 로 redirect 한다.
 	 *
 	 * @return login form view
 	 */
 	@GetMapping("/login")
 	public String loginForm() {
+		boolean loginStatus = loginService.checkLoginStatus();
+		log.warn("login status: {}", loginStatus);
+
+		if (loginStatus) {
+			return "redirect:/";
+		}
 		return "login-form";
 	}
 
@@ -56,20 +60,21 @@ public class LoginController {
 	 */
 	@PostMapping("/login")
 	@ResponseBody
-	public LoginResponse login(@RequestParam @Email String email, @RequestParam String password,
+	public ApiResponse<LoginResponse> login(@RequestParam String email, @RequestParam String password,
 		HttpServletResponse response) {
-		ResponseEntity<LoginResponse> loginResponse = loginAdapter.login(new LoginRequest(email, password));
+		LoginResponse loginResponse = loginService.getLoginResponse(new LoginRequest(email, password));
 
-		String accessToken = loginResponse.getHeaders().getFirst("Authorization");
+		// String encodedAccess = URLEncoder.encode(TokenHolder.getAccessToken(), "UTF-8");
+		// String encodedRefresh = URLEncoder.encode(TokenHolder.getRefreshToken(), "UTF-8");
 
-		if (Objects.nonNull(accessToken)) {
-			log.warn("Access token {}", accessToken);
-			String[] tokens = accessToken.split(" ");
-			Cookie cookie = new Cookie("Access", tokens[1].replace("Bearer ", ""));
-			response.addCookie(cookie);
-		}
+		// response.addHeader("Authorization", TokenHolder.getAccessToken());
+		// response.addHeader("Refresh", TokenHolder.getRefreshToken());
 
-		return loginResponse.getBody();
+		// 쿠키로 저장
+		response.addCookie(new Cookie("Access", TokenHolder.getAccessToken()));
+		response.addCookie(new Cookie("Refresh", TokenHolder.getRefreshToken()));
+
+		return ApiResponse.success(loginResponse);
 	}
 
 	@PutMapping("/auth/login")

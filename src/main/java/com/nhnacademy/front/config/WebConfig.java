@@ -1,23 +1,25 @@
 package com.nhnacademy.front.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.nhnacademy.front.interceptor.CustomInterceptor;
 
 /**
- * 인터셉터 설정하는 Config
+ * WebConfig
+ * interceptor 설정
  *
  * @author 오연수
  */
 @Configuration
-public class InterceptorConfig implements WebMvcConfigurer {
-	private final CustomInterceptor customInterceptor;
+public class WebConfig implements WebMvcConfigurer {
 
-	public InterceptorConfig(CustomInterceptor customInterceptor) {
-		this.customInterceptor = customInterceptor;
-	}
+	@Autowired
+	@Lazy
+	private CustomInterceptor customInterceptor;
 
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {

@@ -8,5 +8,5 @@ import lombok.Builder;
  * @author 오연수
  */
 @Builder
-public record LoginResponse(String token) {
+public record LoginResponse(String message) {
 }

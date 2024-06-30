@@ -1,6 +1,6 @@
-
-server:
-  port: 3000
+#
+#server:
+#  port: 3000
 spring:
   application:
     name: 3runner-front
@@ -27,3 +27,11 @@ spring:
 
   profiles:
     active: prod
+
+  jwt:
+    secret: aaaasqwlkljlfasdfqwerafcxvzpojijoijopjewndllllllsserrrrrrwqexc
+
+  client:
+    config:
+      default:
+        errorDecoder: com.nhnacademy.front.config.CustomErrorDecoder;
