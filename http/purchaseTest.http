@@ -1,5 +1,5 @@
 ###
-GET http://localhost:8081/members/purchases/1?page=&size=5
+GET http://localhost:8081/bookstore/members/purchases/4?page=0,size=5
 Member-Id: 1
 
 ###
@@ -23,12 +23,12 @@ Content-Type: application/json
 Member-Id: 1
 
 {
-  "bookId": 11,
+  "bookId": 5,
   "quantity": 5,
   "price":  100,
-  "purchaseId": 2
+  "purchaseId": 4
 }
 
 ###
-GET http://localhost:8081/bookstore/purchases/books/1?page=0&size=5
+GET http://localhost:8081/bookstore/purchases/books/4?page=0&size=5
 Member-Id: 1

@@ -140,4 +140,6 @@ public class PurchaseMemberController {
 		return new ApiResponse<>(new ApiResponse.Header(true, 204));
 	}
 
+
+
 }

@@ -7,6 +7,7 @@ import com.nhnacademy.bookstore.book.bookCartegory.service.BookCategoryService;
 import com.nhnacademy.bookstore.book.bookTag.dto.response.ReadBookByTagResponse;
 import com.nhnacademy.bookstore.book.bookTag.dto.response.ReadTagByBookResponse;
 import com.nhnacademy.bookstore.book.category.dto.response.CategoryParentWithChildrenResponse;
+import com.nhnacademy.bookstore.entity.book.Book;
 import com.nhnacademy.bookstore.entity.bookCategory.BookCategory;
 import com.nhnacademy.bookstore.entity.category.Category;
 import com.nhnacademy.bookstore.entity.purchaseBook.PurchaseBook;
@@ -92,10 +93,14 @@ public class PurchaseBookServiceImpl implements PurchaseBookService {
 	 */
 	@Override
 	public Long createPurchaseBook(CreatePurchaseBookRequest createPurchaseBookRequest) {
+		Book book = bookRepository.findById(createPurchaseBookRequest.bookId()).orElseThrow(NotExistsBook::new);
+		int price = book.getSellingPrice() * createPurchaseBookRequest.quantity();
+
+
 		PurchaseBook purchaseBook = new PurchaseBook(
-			bookRepository.findById(createPurchaseBookRequest.bookId()).orElseThrow(NotExistsBook::new)
+			book
 			, createPurchaseBookRequest.quantity()
-			, createPurchaseBookRequest.price()
+			, price
 			, purchaseRepository.findById(createPurchaseBookRequest.purchaseId()).orElseThrow(NotExistsPurchase::new));
 
 		return purchaseBookRepository.save(purchaseBook).getId();
