@@ -26,15 +26,8 @@ public class WebControllerAdvice {
 	}
 
 	@ExceptionHandler(CustomFeignException.class)
-	public ApiResponse<ErrorResponseForm> customFeignExceptionHandler(CustomFeignException e) {
-		return ApiResponse.fail(500,
-			new ApiResponse.Body<>(
-				ErrorResponseForm.builder()
-					.title(e.getMessage())
-					.status(HttpStatus.INTERNAL_SERVER_ERROR.value())
-					.timestamp(ZonedDateTime.now(ZoneId.of("Asia/Seoul")).toString())
-					.build()
-			));
+	public ApiResponse<?> customFeignExceptionHandler(CustomFeignException e) {
+		return e.getApiResponse();
 	}
 
 }

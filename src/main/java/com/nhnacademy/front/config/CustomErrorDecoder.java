@@ -1,7 +1,13 @@
 package com.nhnacademy.front.config;
 
+import java.io.IOException;
+import java.io.InputStream;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.front.exception.CustomFeignException;
+import com.nhnacademy.front.exceptionHandler.ErrorResponseForm;
+import com.nhnacademy.front.util.ApiResponse;
 
 import feign.Response;
 import feign.codec.ErrorDecoder;
@@ -13,47 +19,23 @@ public class CustomErrorDecoder implements ErrorDecoder {
 	@Override
 	public Exception decode(String methodKey, Response response) {
 		ObjectMapper mapper = new ObjectMapper();
-		try {
-			// 응답 본문을 읽어 커스텀 예외의 필드로 설정
-			ErrorResponse errorResponse = mapper.readValue(response.body().asInputStream(), ErrorResponse.class);
-			return new CustomFeignException(
-				errorResponse.getMessage()
-			);
-		} catch (Exception e) {
+
+		try (InputStream responseBodyStream = response.body().asInputStream()) {
+			TypeReference<ApiResponse<ErrorResponseForm>> typeReference = new TypeReference<>() {
+			};
+
+			ApiResponse<ErrorResponseForm> apiResponse = mapper.readValue(responseBodyStream,
+				typeReference);
+
+			if (apiResponse != null) {
+				return new CustomFeignException(
+					apiResponse
+				);
+			}
+		} catch (IOException e) {
 			return defaultErrorDecoder.decode(methodKey, response);
 		}
-	}
-
-	// 에러 응답을 매핑할 클래스
-	public static class ErrorResponse {
-		private String message;
-		private String error;
-		private String path;
-
-		// Getters and Setters
-		public String getMessage() {
-			return message;
-		}
-
-		public void setMessage(String message) {
-			this.message = message;
-		}
-
-		public String getError() {
-			return error;
-		}
-
-		public void setError(String error) {
-			this.error = error;
-		}
-
-		public String getPath() {
-			return path;
-		}
-
-		public void setPath(String path) {
-			this.path = path;
-		}
+		return new RuntimeException("에러 디코딩 중 문제 발생");
 	}
 }
 

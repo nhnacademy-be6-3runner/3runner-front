@@ -12,8 +12,9 @@ spring:
 
   jwt:
     secret: aaaasqwlkljlfasdfqwerafcxvzpojijoijopjewndllllllsserrrrrrwqexc
-
-  client:
-    config:
-      default:
-        errorDecoder: com.nhnacademy.front.config.CustomErrorDecoder;
+  cloud:
+    openfeign:
+      client:
+        config:
+          default:
+            error-decoder: com.nhnacademy.front.config.CustomErrorDecoder

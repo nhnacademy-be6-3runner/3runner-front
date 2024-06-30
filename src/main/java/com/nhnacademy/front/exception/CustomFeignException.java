@@ -1,10 +1,18 @@
 package com.nhnacademy.front.exception;
 
-import lombok.AllArgsConstructor;
+import com.nhnacademy.front.util.ApiResponse;
 
-@AllArgsConstructor
+import lombok.Getter;
+
+@Getter
 public class CustomFeignException extends RuntimeException {
+	ApiResponse<?> apiResponse;
+
 	public CustomFeignException(String message) {
 		super(message);
+	}
+
+	public CustomFeignException(ApiResponse<?> apiResponse) {
+		this.apiResponse = apiResponse;
 	}
 }
