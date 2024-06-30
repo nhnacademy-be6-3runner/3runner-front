@@ -12,7 +12,6 @@ public record ApiCreateBookResponse(
 
 	String title,
 	String link,
-	String pubDate,
 	List<AladinItem> item
 
 ) {

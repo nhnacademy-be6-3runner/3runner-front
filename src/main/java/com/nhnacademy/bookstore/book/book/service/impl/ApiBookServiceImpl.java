@@ -87,7 +87,7 @@ public class ApiBookServiceImpl implements ApiBookService {
 		Book book = new Book(
 			bookResponse.title().substring(bookResponse.title().indexOf("-") + 2),
 			descriptionResponse.description(),
-			stringToZonedDateTime(bookResponse.pubDate()),
+			stringToZonedDateTime(bookResponse.item().getFirst().pubDate()),
 			bookResponse.item().getFirst().priceSales(),
 			100,
 			bookResponse.item().getFirst().priceSales(),
@@ -181,7 +181,7 @@ public class ApiBookServiceImpl implements ApiBookService {
 		if (Objects.isNull(dateStr)) {
 			return null;
 		}
-		DateTimeFormatter formatter = DateTimeFormatter.RFC_1123_DATE_TIME;
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		LocalDate localDateStr = LocalDate.parse(dateStr, formatter);
 
 		return localDateStr.atStartOfDay(ZoneId.systemDefault());
