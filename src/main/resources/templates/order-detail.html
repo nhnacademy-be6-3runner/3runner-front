@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>개인화 섹션</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ddd;
+        }
+
+        .section-body {
+            display: flex;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+
+        .section-body button {
+            background-color: #ffffff;
+            border: 1px solid #444;
+            color: #444;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            border-radius: 20px;
+            margin: 5px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .section-body button:hover {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .order-delivery, .user-profile {
+            padding: 20px;
+            background-color: #f6f6f6;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .order-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .order-item {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px;
+            margin-bottom: 10px;
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .order-item .order-info {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .order-item .order-details {
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .book-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .book-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .book-item img {
+            max-width: 100px; /* 이미지 크기 조절 */
+            margin-right: 10px;
+        }
+
+        .book-details {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .book-details h4,
+        .book-details h5,
+        .book-details p {
+            margin: 0;
+        }
+
+        .book-details h5,
+        .book-details p {
+            margin-top: 2px; /* 최소한의 여백 */
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .pagination button {
+            background-color: #ffffff;
+            border: 1px solid #444;
+            color: #444;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 5px;
+        }
+
+        .pagination button:hover {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+
+        .pagination button.disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="section">
+        <div class="section-body">
+            <button id="cartBtn">장바구니</button>
+            <button id="orderBtn">주문/배송</button>
+            <button id="couponBtn">보유쿠폰</button>
+        </div>
+    </div>
+
+    <div id="orderDelivery" class="order-delivery hidden">
+        <h2>주문내역</h2>
+        <ul class="order-list">
+            <!-- Thymeleaf를 사용하여 주문 항목을 렌더링 -->
+            <li class="order-item" th:each="order : ${orders}">
+                <div class="order-info">
+                    <div>
+                        <p>주문 날짜: <span th:text="${order.createdAt}">주문 날짜</span></p>
+                        <p>상태: <span th:text="${order.status}">상태</span></p>
+                    </div>
+                    <p>주문 번호: <span th:text="${order.orderNumber.toString()}">주문 번호</span></p>
+                </div>
+                <div class="order-details">
+                    <ul class="book-list">
+                        <li class="book-item" th:each="book, iter : ${order.readPurchaseBookResponses}">
+                            <img th:src="${book.readBookByPurchase().bookImage()}" alt="Product Image">
+                            <div class="book-details">
+                                <h4 th:text="${book.readBookByPurchase().title()}">Product</h4>
+                                <h5 th:text="${book.readBookByPurchase().author()}">저자</h5>
+                                <p style="font-size: 14px" th:text="${book.readBookByPurchase().publisher()}">출판사</p>
+                            </div>
+                            <div class="book-quantity-price">
+                                <p>수량 : <span th:text="${book.quantity()}"></span></p>
+                                <p>₩<span th:text="${book.price()}"></span></p>
+                            </div>
+                        </li>
+                    </ul>
+                    <div class="pagination" th:if="${order.readPurchaseBookResponses().getSize() >= 5}">
+                        <button th:classappend="${order.readPurchaseBookResponses().first} ? 'disabled'"
+                                th:onclick="@{/dashboard(userPage=${order.readPurchaseBookResponses().number - 1}, orderPage=${orders.number})}">이전
+                        </button>
+                        <span th:text="${order.readPurchaseBookResponses().number + 1}">1</span>
+                        <button th:classappend="${order.readPurchaseBookResponses().last} ? 'disabled'"
+                                th:onclick="@{/dashboard(userPage=${order.readPurchaseBookResponses().number + 1}, orderPage=${orders.number})}">다음
+                        </button>
+                    </div>
+                </div>
+                <p style="text-align: right;">₩ : <span th:text="${order.totalPrice()}"></span></p>
+
+            </li>
+
+        </ul>
+
+        <div class="pagination">
+            <button th:classappend="${orders.first} ? 'disabled'"
+                    th:onclick="|location.href='?page=${orders.number - 1}'|">이전
+            </button>
+            <button th:classappend="${orders.last} ? 'disabled'"
+                    th:onclick="|location.href='?page=${orders.number + 1}'|">다음
+            </button>
+        </div>
+    </div>
+
+    <div id="couponSection" class="hidden">
+        <h2>보유 쿠폰</h2>
+        <p>사용 가능한 쿠폰이 없습니다.</p>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const orderBtn = document.getElementById('orderBtn');
+        const cartBtn = document.getElementById('cartBtn');
+        const couponBtn = document.getElementById('couponBtn');
+
+        const orderDelivery = document.getElementById('orderDelivery');
+        const couponSection = document.getElementById('couponSection');
+
+        orderBtn.addEventListener('click', function () {
+            orderDelivery.classList.remove('hidden');
+            couponSection.classList.add('hidden');
+
+            // // Ajax 요청을 보내 member-id 헤더의 존재 여부를 확인
+            // fetch('/check-member-id', {
+            //     method: 'GET',
+            //     headers: {
+            //         'Content-Type': 'application/json'
+            //     }
+            // })
+            //     .then(response => response.json())
+            //     .then(data => {
+            //         if (data.isLoggedIn) {
+            //             // 주문배송 페이지로 이동
+            //             orderDelivery.classList.remove('hidden');
+            //             couponSection.classList.add('hidden');
+            //         } else {
+            //             // 로그인 페이지로 리디렉션
+            //             window.location.href = '/guest/orders/login';
+            //         }
+            //     })
+            //     .catch(error => {
+            //         console.error('Error:', error);
+            //     });
+        });
+
+        cartBtn.addEventListener('click', function () {
+            // Implement cart functionality here
+            console.log('Cart button clicked');
+        });
+
+        couponBtn.addEventListener('click', function () {
+            couponSection.classList.remove('hidden');
+            orderDelivery.classList.add('hidden');
+        });
+    });
+</script>
+</body>
+</html>
