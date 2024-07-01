@@ -29,6 +29,7 @@ public interface MemberService {
     Member updateStatus(Long memberId, Status status);
 
     Member updateGrade(Long memberId, Grade grade);
+
     Member updateLastLogin(Long memberId, ZonedDateTime lastLogin);
 
     List<ReadPurchaseResponse> getPurchasesByMemberId(Long memberId);
