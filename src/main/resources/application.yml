@@ -1,6 +1,6 @@
-#
-#server:
-#  port: 3000
+
+server:
+  port: 3000
 spring:
   application:
     name: 3runner-front

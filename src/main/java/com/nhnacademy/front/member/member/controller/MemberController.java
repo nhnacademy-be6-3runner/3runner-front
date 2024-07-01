@@ -11,12 +11,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import com.nhnacademy.front.auth.adapter.AuthAdapter;
 import com.nhnacademy.front.member.address.dto.response.AddressResponse;
 import com.nhnacademy.front.member.address.feign.AddressControllerClient;
 import com.nhnacademy.front.member.member.dto.request.CreateMemberRequest;
 import com.nhnacademy.front.member.member.dto.request.UpdateMemberRequest;
 import com.nhnacademy.front.member.member.dto.response.GetMemberResponse;
 import com.nhnacademy.front.member.member.feign.MemberControllerClient;
+import com.nhnacademy.front.threadlocal.TokenHolder;
+import com.nhnacademy.front.token.service.TokenService;
 import com.nhnacademy.util.ApiResponse;
 
 import jakarta.validation.Valid;
@@ -27,6 +30,9 @@ import lombok.RequiredArgsConstructor;
 public class MemberController {
 	private final MemberControllerClient memberControllerClient;
 	private final AddressControllerClient addressControllerClient;
+	private final AuthAdapter authAdapter;
+	private final TokenService tokenService;
+
 	@GetMapping("/member/createForm")
 	public String createSigninPage() {
 		return "signin";
@@ -35,9 +41,8 @@ public class MemberController {
 	@PostMapping("/member")
 	public String signin(@Valid @RequestBody CreateMemberRequest createMemberRequest) {
 		memberControllerClient.createMembers(createMemberRequest);
-		//로그인 상태인지 확인하는거 넣어줌
 
-		return "index";
+		return "test-main";
 	}//등록 요청보낸후 메인페이지 반환
 
 	@GetMapping("/member/mypageForm")
@@ -57,7 +62,8 @@ public class MemberController {
 	@DeleteMapping("/member")
 	public String deleteMember() {
 		memberControllerClient.deleteMember();
-		return "index";
+
+		return "test-main";
 	}//삭제 후 메인 페이지 반환
 	@PutMapping("/member")
 	public String updateMember(@Valid @RequestBody UpdateMemberRequest updateMemberRequest) {

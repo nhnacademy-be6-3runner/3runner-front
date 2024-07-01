@@ -20,4 +20,4 @@ management:
       enabled: true
 feign:
   client:
-      url: 3runner-gateway:8080
+      url: localhost:8080
