@@ -1,11 +1,29 @@
 package com.nhnacademy.bookstore.book.review.service;
 
+import com.nhnacademy.bookstore.book.review.dto.request.CreateReviewRequest;
+import com.nhnacademy.bookstore.book.review.dto.request.DeleteReviewRequest;
+import com.nhnacademy.bookstore.book.review.dto.response.ReviewDetailResponse;
+import com.nhnacademy.bookstore.book.review.dto.response.ReviewListResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+/**
+ * 리뷰 서비스 인터페이스입니다.
+ *
+ * @author 김은비
+ */
 public interface ReviewService {
-    // TODO 리뷰 생성
-    long createReview();
-    // TODO 리뷰 수정
+    Long createReview(long purchaseBookId, long memberId, CreateReviewRequest createReviewRequest);
 
-    // TODO 관리자 권한으로 리뷰 삭제 -> 삭제 사유도 적어야 함
+    Long updateReview(long memberId, long reviewId, CreateReviewRequest createReviewRequest);
 
-    // TODO 리뷰
+    Long deleteReview(long reviewId, long memberId, DeleteReviewRequest deleteReviewRequest);
+
+    ReviewDetailResponse readDetailReview(long reviewId);
+
+    Page<ReviewListResponse> readAllReviews(Pageable pageable);
+
+    Page<ReviewListResponse> readAllReviewsByBookId(long bookId, Pageable pageable);
+
+    Page<ReviewListResponse> readAllReviewsByMemberId(long memberId, Pageable pageable);
 }
