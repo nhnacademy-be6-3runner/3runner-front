@@ -172,7 +172,9 @@ class ApiBookServiceImplMockTest {
 			.publisher("Test Publisher")
 			.build();
 
-		ApiCreateBookResponse bookResponse = new ApiCreateBookResponse("Test Title", "Tue, 01 Jan 2019 00:00:00 GMT",
+		ApiCreateBookResponse bookResponse = new ApiCreateBookResponse("Test Title",
+			"http://www.aladin.co.kr/shop/wproduct.aspx?ISBN=334061481",
+			"Tue, 01 Jan 2019 00:00:00 GMT",
 			List.of(item));
 
 		Book book = new Book(
@@ -196,15 +198,10 @@ class ApiBookServiceImplMockTest {
 		Optional<Category> categoryOptional = Optional.of(category1);
 		BookCategory bookCategory = BookCategory.create(book, categoryOptional.get());
 
-		TotalImage totalImage = new TotalImage("image.png");
-		BookImage bookImage = new BookImage(BookImageType.MAIN, book, totalImage);
-
 		when(apiBookRepository.getBookResponse(any())).thenReturn(bookResponse);
-		when(bookRepository.save(any())).thenReturn(book);
 		when(categoryRepository.findByName(any())).thenReturn(Optional.of(category1));
 		when(bookCategoryRepository.save(any(BookCategory.class))).thenReturn(bookCategory);
-		when(imageService.createImage(any(MultipartFile.class), any())).thenReturn("image.png");
-		when(bookImageRepository.save(any(BookImage.class))).thenReturn(bookImage);
+		when(bookRepository.save(any())).thenReturn(book);
 
 		apiBookServiceImpl.save("1234567890123");
 
@@ -224,7 +221,9 @@ class ApiBookServiceImplMockTest {
 			.publisher("Test Publisher")
 			.build();
 
-		ApiCreateBookResponse bookResponse = new ApiCreateBookResponse("Test Title", "Tue, 01 Jan 2019 00:00:00 GMT",
+		ApiCreateBookResponse bookResponse = new ApiCreateBookResponse("Test Title",
+			"https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=334061481",
+			"Tue, 01 Jan 2019 00:00:00 GMT",
 			List.of(item));
 
 		Book book = new Book(
@@ -252,7 +251,6 @@ class ApiBookServiceImplMockTest {
 		BookImage bookImage = new BookImage(BookImageType.MAIN, book, totalImage);
 
 		when(apiBookRepository.getBookResponse(any())).thenReturn(bookResponse);
-		when(bookRepository.save(any())).thenReturn(book);
 		when(categoryRepository.findByName(any())).thenReturn(Optional.empty());
 
 		assertThrows(CategoryNotFoundException.class, () -> apiBookServiceImpl.save("1234567890123"));

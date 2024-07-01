@@ -9,9 +9,13 @@ import lombok.Builder;
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record ApiCreateBookResponse(
+
 	String title,
+	String link,
 	List<AladinItem> item
 
 ) {
 
 }
+
+
