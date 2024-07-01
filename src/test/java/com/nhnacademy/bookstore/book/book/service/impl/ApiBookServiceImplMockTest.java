@@ -29,10 +29,7 @@ import com.nhnacademy.bookstore.book.image.exception.MultipartFileException;
 import com.nhnacademy.bookstore.book.image.imageService.ImageService;
 import com.nhnacademy.bookstore.entity.book.Book;
 import com.nhnacademy.bookstore.entity.bookCategory.BookCategory;
-import com.nhnacademy.bookstore.entity.bookImage.BookImage;
-import com.nhnacademy.bookstore.entity.bookImage.enums.BookImageType;
 import com.nhnacademy.bookstore.entity.category.Category;
-import com.nhnacademy.bookstore.entity.totalImage.TotalImage;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -117,7 +114,7 @@ class ApiBookServiceImplMockTest {
 	@Test
 	void testStringToZonedDateTime() {
 		// Given
-		String dateStr = "Tue, 01 Jan 2019 00:00:00 GMT";
+		String dateStr = "2019-01-01";
 
 		// When
 		ZonedDateTime result = apiBookServiceImpl.stringToZonedDateTime(dateStr);
@@ -170,11 +167,11 @@ class ApiBookServiceImplMockTest {
 			.cover("https://image.aladin.co.kr/product/34132/71/coversum/e712533508_1.jpg")
 			.categoryName("category1>category2>category3")
 			.publisher("Test Publisher")
+			.pubDate("2019-01-01")
 			.build();
 
 		ApiCreateBookResponse bookResponse = new ApiCreateBookResponse("Test Title",
 			"http://www.aladin.co.kr/shop/wproduct.aspx?ISBN=334061481",
-			"Tue, 01 Jan 2019 00:00:00 GMT",
 			List.of(item));
 
 		Book book = new Book(
@@ -219,11 +216,11 @@ class ApiBookServiceImplMockTest {
 			.cover("https://image.aladin.co.kr/product/34132/71/coversum/e712533508_1.jpg")
 			.categoryName("category1>category2>category3")
 			.publisher("Test Publisher")
+			.pubDate("2019-01-01")
 			.build();
 
 		ApiCreateBookResponse bookResponse = new ApiCreateBookResponse("Test Title",
 			"https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=334061481",
-			"Tue, 01 Jan 2019 00:00:00 GMT",
 			List.of(item));
 
 		Book book = new Book(
@@ -242,13 +239,6 @@ class ApiBookServiceImplMockTest {
 			null,
 			null
 		);
-
-		Category category1 = new Category("category1");
-		Optional<Category> categoryOptional = Optional.of(category1);
-		BookCategory bookCategory = BookCategory.create(book, categoryOptional.get());
-
-		TotalImage totalImage = new TotalImage("image.png");
-		BookImage bookImage = new BookImage(BookImageType.MAIN, book, totalImage);
 
 		when(apiBookRepository.getBookResponse(any())).thenReturn(bookResponse);
 		when(categoryRepository.findByName(any())).thenReturn(Optional.empty());
