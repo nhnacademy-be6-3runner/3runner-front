@@ -5,6 +5,7 @@ import com.nhnacademy.bookstore.entity.pointRecord.PointRecord;
 import com.nhnacademy.bookstore.entity.purchase.Purchase;
 import com.nhnacademy.bookstore.member.member.exception.MemberNotExistsException;
 import com.nhnacademy.bookstore.member.member.repository.MemberRepository;
+import com.nhnacademy.bookstore.member.member.service.MemberPointService;
 import com.nhnacademy.bookstore.member.pointRecord.dto.response.ReadPointRecordResponse;
 import com.nhnacademy.bookstore.member.pointRecord.exception.NoBuyPointRecordException;
 import com.nhnacademy.bookstore.member.pointRecord.exception.NotEnoughPointException;
@@ -27,6 +28,7 @@ import java.util.List;
 @Service
 @Transactional
 public class PointRecordServiceImpl implements PointRecordService {
+    private final MemberPointService memberPointService;
     private final PointRecordRepository pointRecordRepository;
     private final MemberRepository memberRepository;
     private final PurchaseRepository purchaseRepository;
@@ -56,7 +58,10 @@ public class PointRecordServiceImpl implements PointRecordService {
         }
 
         PointRecord pointRecord = new PointRecord(usePoint, "buy point", member, purchase);
+
         pointRecordRepository.save(pointRecord);
+        memberPointService.updatePoint(memberId, usePoint);
+
 
         return pointRecord.getId();
     }
@@ -109,6 +114,7 @@ public class PointRecordServiceImpl implements PointRecordService {
                 );
 
                 pointRecordRepository.save(pointRecord);
+                memberPointService.updatePoint(p.getMember().getId(), -1 * p.getUsePoint());
 
                 return pointRecord.getId();
             }
