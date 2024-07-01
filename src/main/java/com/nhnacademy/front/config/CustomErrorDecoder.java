@@ -4,10 +4,10 @@ import java.io.IOException;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nhnacademy.front.exception.CustomFeignException;
-import com.nhnacademy.front.exceptionHandler.BasicErrorResponse;
-import com.nhnacademy.front.exceptionHandler.ErrorResponseForm;
 import com.nhnacademy.front.util.ApiResponse;
+import com.nhnacademy.global.exception.CustomFeignException;
+import com.nhnacademy.global.exceptionHandler.BasicErrorResponse;
+import com.nhnacademy.global.exceptionHandler.ErrorResponseForm;
 
 import feign.Response;
 import feign.Util;

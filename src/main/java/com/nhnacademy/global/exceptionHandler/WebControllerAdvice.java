@@ -1,4 +1,4 @@
-package com.nhnacademy.front.exceptionHandler;
+package com.nhnacademy.global.exceptionHandler;
 
 import java.io.IOException;
 import java.time.ZoneId;
@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.nhnacademy.front.auth.exception.LoginException;
-import com.nhnacademy.front.exception.CustomFeignException;
 import com.nhnacademy.front.util.ApiResponse;
+import com.nhnacademy.global.exception.CustomFeignException;
 
 import jakarta.servlet.http.HttpServletResponse;
 

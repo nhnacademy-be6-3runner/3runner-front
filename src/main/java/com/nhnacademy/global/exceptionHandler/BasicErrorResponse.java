@@ -1,4 +1,4 @@
-package com.nhnacademy.front.exceptionHandler;
+package com.nhnacademy.global.exceptionHandler;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

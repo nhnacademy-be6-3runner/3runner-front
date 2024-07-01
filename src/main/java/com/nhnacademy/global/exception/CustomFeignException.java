@@ -1,4 +1,4 @@
-package com.nhnacademy.front.exception;
+package com.nhnacademy.global.exception;
 
 import com.nhnacademy.front.util.ApiResponse;
 
@@ -19,7 +19,7 @@ public class CustomFeignException extends RuntimeException {
 	public CustomFeignException(String message) {
 		super(message);
 	}
-	
+
 	public CustomFeignException(ApiResponse<?> apiResponse) {
 		this.apiResponse = apiResponse;
 	}

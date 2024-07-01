@@ -5,13 +5,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nhnacademy.front.auth.dto.request.LoginRequest;
 import com.nhnacademy.front.auth.dto.response.LoginResponse;
 import com.nhnacademy.front.auth.service.LoginService;
 import com.nhnacademy.front.threadlocal.TokenHolder;
-import com.nhnacademy.front.util.ApiResponse;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -55,8 +53,7 @@ public class LoginController {
 	 * @return 로그인 응답 (일단 토큰 값) - 추후 main view 로 리다이렉트
 	 */
 	@PostMapping("/login")
-	@ResponseBody
-	public ApiResponse<LoginResponse> login(@RequestParam String email, @RequestParam String password,
+	public String login(@RequestParam String email, @RequestParam String password,
 		HttpServletResponse response) {
 		LoginResponse loginResponse = loginService.getLoginResponse(new LoginRequest(email, password));
 
@@ -64,7 +61,7 @@ public class LoginController {
 		response.addCookie(new Cookie("Access", TokenHolder.getAccessToken()));
 		response.addCookie(new Cookie("Refresh", TokenHolder.getRefreshToken()));
 
-		return ApiResponse.success(loginResponse);
+		return "redirect:/";
 	}
 
 	/**
@@ -75,10 +72,8 @@ public class LoginController {
 	 * @param response the response
 	 * @return the api response
 	 */
-	@GetMapping("/logout")
-	@ResponseBody
-	public ApiResponse<Void> logout(HttpServletRequest request, HttpServletResponse response) {
-		// TODO 뷰 완성되면 PostMapping 으로 바꿔주세요.
+	@PostMapping("/logout")
+	public String logout(HttpServletRequest request, HttpServletResponse response) {
 		loginService.logout();
 
 		// Cookie 삭제
@@ -93,7 +88,7 @@ public class LoginController {
 			}
 		}
 
-		return ApiResponse.success(null);
+		return "redirect:/";
 	}
 
 }
