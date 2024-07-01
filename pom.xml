@@ -172,6 +172,12 @@
             <version>1.17.2</version>
         </dependency>
 
+        <!-- Spring RabbitMQ -->
+        <dependency>
+            <groupId>org.springframework.amqp</groupId>
+            <artifactId>spring-rabbit</artifactId>
+        </dependency>
+
     </dependencies>
     <dependencyManagement>
         <dependencies>
