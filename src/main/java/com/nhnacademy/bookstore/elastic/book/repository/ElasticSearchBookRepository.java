@@ -4,6 +4,5 @@ import org.springframework.data.repository.CrudRepository;
 
 import com.nhnacademy.bookstore.elastic.document.book.BookDocument;
 
-public interface ElasticSearchBookRepository extends
-	CrudRepository<BookDocument, Long> {
+public interface ElasticSearchBookRepository extends CrudRepository<BookDocument, Long> {
 }

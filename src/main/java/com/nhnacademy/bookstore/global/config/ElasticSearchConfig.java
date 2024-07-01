@@ -14,11 +14,11 @@ public class ElasticSearchConfig {
 	// @Value("${elasticsearch.key}")
 	// private String apiKey;
 
-	@Value("${spring.elasticsearch.username}")
-	private String username;
-
-	@Value("${spring.elasticsearch.password}")
-	private String password;
+	// @Value("${spring.elasticsearch.username}")
+	// private String username;
+	//
+	// @Value("${spring.elasticsearch.password}")
+	// private String password;
 
 	@Value("${spring.elasticsearch.uris}")
 	private String[] esHost;
