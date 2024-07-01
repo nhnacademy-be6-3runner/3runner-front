@@ -8,10 +8,16 @@ import com.nhnacademy.front.auth.adapter.LoginAdapter;
 import com.nhnacademy.front.auth.adapter.LogoutAdapter;
 import com.nhnacademy.front.auth.dto.request.LoginRequest;
 import com.nhnacademy.front.auth.dto.response.LoginResponse;
+import com.nhnacademy.front.auth.exception.LoginException;
 import com.nhnacademy.front.auth.service.LoginService;
 import com.nhnacademy.front.threadlocal.TokenHolder;
 import com.nhnacademy.front.util.ApiResponse;
 
+/**
+ * 로그인 서비스 구현체
+ *
+ * @author 오연수
+ */
 @Service
 public class LoginServiceImpl implements LoginService {
 	private final LoginAdapter loginAdapter;
@@ -23,7 +29,12 @@ public class LoginServiceImpl implements LoginService {
 	}
 
 	public LoginResponse getLoginResponse(LoginRequest loginRequest) {
-		ApiResponse<LoginResponse> response = loginAdapter.login(loginRequest);
+		ApiResponse<LoginResponse> response = null;
+		try {
+			response = loginAdapter.login(loginRequest);
+		} catch (Exception e) {
+			throw new LoginException(e.getMessage());
+		}
 		return response.getBody().getData();
 	}
 

@@ -67,10 +67,18 @@ public class LoginController {
 		return ApiResponse.success(loginResponse);
 	}
 
+	/**
+	 * 로그아웃 요청을 보낸다.
+	 * 쿠키 설정을 위해 request, response 필요
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @return the api response
+	 */
 	@GetMapping("/logout")
 	@ResponseBody
 	public ApiResponse<Void> logout(HttpServletRequest request, HttpServletResponse response) {
-
+		// TODO 뷰 완성되면 PostMapping 으로 바꿔주세요.
 		loginService.logout();
 
 		// Cookie 삭제
