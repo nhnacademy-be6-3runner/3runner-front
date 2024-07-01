@@ -1,4 +1,4 @@
-package com.nhnacademy.bookstore.gradeRecord;
+package com.nhnacademy.bookstore.entity.gradeRecord;
 
 import com.nhnacademy.bookstore.entity.member.enums.Grade;
 
