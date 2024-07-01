@@ -34,7 +34,7 @@ import com.nhnacademy.bookstore.member.member.dto.request.UpdateMemberRequest;
 import com.nhnacademy.bookstore.member.member.dto.response.GetMemberResponse;
 import com.nhnacademy.bookstore.member.member.service.impl.MemberServiceImpl;
 import com.nhnacademy.bookstore.member.memberAuth.service.impl.MemberAuthServiceImpl;
-import com.nhnacademy.bookstore.member.pointRecord.service.impl.PointServiceImpl;
+import com.nhnacademy.bookstore.member.pointRecord.service.impl.PointRecordServiceImpl;
 
 @SpringBootTest
 public class MemberControllerTest {
@@ -44,7 +44,7 @@ public class MemberControllerTest {
 	@MockBean
 	MemberServiceImpl memberService;
 	@MockBean
-	PointServiceImpl pointService;
+    PointRecordServiceImpl pointService;
 	@MockBean
 	MemberAuthServiceImpl memberAuthService;
 
