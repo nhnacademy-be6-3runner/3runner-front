@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nhnacademy.bookstore.book.book.dto.response.ReadBookResponse;
@@ -68,5 +69,10 @@ public class TestController {
 		}
 
 		return "good";
+	}
+
+	@GetMapping("/test/search/{indexId}")
+	public BookDocument searchIndex(@PathVariable Long indexId) {
+		return elasticSearchBookRepository.findById(indexId).orElse(null);
 	}
 }
