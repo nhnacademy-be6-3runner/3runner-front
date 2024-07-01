@@ -11,11 +11,15 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.nhnacademy.bookstore.entity.member.Member;
+import com.nhnacademy.bookstore.entity.member.enums.AuthProvider;
 import com.nhnacademy.bookstore.entity.member.enums.Grade;
 import com.nhnacademy.bookstore.entity.member.enums.Status;
+import com.nhnacademy.bookstore.member.member.dto.request.CreateMemberRequest;
 import com.nhnacademy.bookstore.member.member.dto.request.UpdateMemberRequest;
+import com.nhnacademy.bookstore.member.member.dto.request.UserProfile;
 import com.nhnacademy.bookstore.member.member.exception.AlreadyExistsEmailException;
 import com.nhnacademy.bookstore.member.member.exception.LoginFailException;
+import com.nhnacademy.bookstore.member.member.exception.LoginOauthEmailException;
 import com.nhnacademy.bookstore.member.member.exception.MemberNotExistsException;
 import com.nhnacademy.bookstore.member.member.repository.MemberRepository;
 import com.nhnacademy.bookstore.member.member.service.MemberService;
@@ -53,6 +57,27 @@ public class MemberServiceImpl implements MemberService {
 		return memberRepository.save(member);
 	}
 
+	@Override
+	public Member saveOrGetPaycoMember(UserProfile userProfile) {
+		Optional<Member> optionalMember = memberRepository.findByEmail(userProfile.getIdNo());
+		if (optionalMember.isPresent()) {
+			return optionalMember.get();//존재하는경우, 그냥 멤버를 가져온다.
+		} else {
+			Member member = new Member();
+			member.setEmail(userProfile.getEmail());
+			member.setPassword(passwordEncoder.encode(userProfile.getIdNo()));
+			member.setGrade(Grade.General);
+			member.setStatus(Status.Active);
+			member.setName(userProfile.getName());
+			member.setPhone(userProfile.getMobile());
+			member.setPoint(5000L);
+			member.setCreatedAt(ZonedDateTime.now());
+			memberRepository.save(member);
+			//없는경우 새로 가져온다.
+		}
+		return null;
+	}
+
 	/**
 	 * Find by id member.
 	 *
@@ -70,6 +95,27 @@ public class MemberServiceImpl implements MemberService {
 		}
 	}
 
+	/**
+	 * Find by email and password member.
+	 *
+	 * @param email    the email -string 이메일 값을 받는다.
+	 * @param password the password -string 비밀번호 값을 받는다.
+	 * @return the member -해당하는 member를 반환한다.
+	 * @author 유지아 Find by email and password member. -이메일과 패스워드 값으로 조회한다.
+	 */
+	public Member readByEmailAndPassword(String email, String password) {
+		Optional<Member> member = memberRepository.findByEmail(email);
+
+		if (member.isPresent()) {
+			if (member.get().getAuthProvider() != AuthProvider.GENERAL) {
+				throw new LoginOauthEmailException(member.get().getAuthProvider());
+			}
+			if (passwordEncoder.matches(password, member.get().getPassword())) {
+				return member.get();
+			}
+		}
+		throw new LoginFailException();
+	}
 	/**
 	 * Find by email and password member.
 	 *
@@ -113,7 +159,7 @@ public class MemberServiceImpl implements MemberService {
 		member.setEmail(updateMemberRequest.email());
 		member.setPhone(updateMemberRequest.phone());
 		member.setBirthday(updateMemberRequest.birthday());
-		member.setModified_at(ZonedDateTime.now());
+		member.setModifiedAt(ZonedDateTime.now());
 
 		return memberRepository.save(member);
 	}
@@ -128,7 +174,7 @@ public class MemberServiceImpl implements MemberService {
 		Member member = memberRepository.findById(memberId).orElseThrow(MemberNotExistsException::new);
 
 		member.setStatus(Status.Withdrawn);
-		member.setDeleted_at(ZonedDateTime.now());
+		member.setDeletedAt(ZonedDateTime.now());
 
 		memberRepository.save(member);
 	}
@@ -144,7 +190,7 @@ public class MemberServiceImpl implements MemberService {
 	public Member updateStatus(Long memberId, Status status) {
 		Member member = memberRepository.findById(memberId).orElseThrow(MemberNotExistsException::new);
 		member.setStatus(status);
-		member.setModified_at(ZonedDateTime.now());
+		member.setModifiedAt(ZonedDateTime.now());
 		return memberRepository.save(member);
 	}
 
@@ -159,14 +205,14 @@ public class MemberServiceImpl implements MemberService {
 	public Member updateGrade(Long memberId, Grade grade) {
 		Member member = memberRepository.findById(memberId).orElseThrow(MemberNotExistsException::new);
 		member.setGrade(grade);
-		member.setModified_at(ZonedDateTime.now());
+		member.setModifiedAt(ZonedDateTime.now());
 		return memberRepository.save(member);
 	}
 
 	@Override
 	public Member updateLastLogin(Long memberId, ZonedDateTime lastLogin) {
 		Member member = memberRepository.findById(memberId).orElseThrow(MemberNotExistsException::new);
-		member.setLast_login_date(lastLogin);
+		member.setLastLoginDate(lastLogin);
 		return memberRepository.save(member);
 	}
 

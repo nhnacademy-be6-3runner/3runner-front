@@ -4,84 +4,101 @@ import com.nhnacademy.bookstore.entity.book.Book;
 import com.nhnacademy.bookstore.entity.bookCart.BookCart;
 import com.nhnacademy.bookstore.entity.cart.Cart;
 import com.nhnacademy.bookstore.entity.member.Member;
+import com.nhnacademy.bookstore.member.member.dto.request.CreateMemberRequest;
+import com.nhnacademy.bookstore.purchase.bookCart.repository.BookCartRepository;
 import jakarta.persistence.EntityManager;
-import org.junit.jupiter.api.AfterEach;
+import jakarta.persistence.PersistenceContext;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
-import java.util.List;
 import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-
-@ExtendWith(SpringExtension.class)
 @DataJpaTest
-class BookCartRepositoryTest {
+@Transactional
+public class BookCartRepositoryTest {
 
-    @Autowired
-    private BookCartRepository bookCartRepository;
+	@Autowired
+	private BookCartRepository bookCartRepository;
 
-    @Autowired
-    private EntityManager entityManager;
 
-    private Book book;
-    private Cart cart;
-    private Member member;
-    private BookCart bookCart;
+	@PersistenceContext
+	private EntityManager entityManager;
 
-    @BeforeEach
-    void setUp() {
-        book = new Book(
-                "Test Title",
-                "Test Description",
-                ZonedDateTime.now(),
-                1000,
-                10,
-                900,
-                0,
-                true,
-                "Test Author",
-                "123456789",
-                "Test Publisher",
-                null,
-                null,
-                null
-        );
-        entityManager.persist(book);
+	private Member member;
+	private Cart cart;
+	private Book book;
+	private BookCart bookCart;
 
-        cart = new Cart();
-        entityManager.persist(cart);
+	@BeforeEach
+	void setUp() {
+		// 테스트에 필요한 객체들 생성
+		CreateMemberRequest request = CreateMemberRequest.builder()
+			.password("password")
+			.name("John Doe")
+			.age(30)
+			.phone("1234567890")
+			.email("john.doe@example.com")
+			.birthday(ZonedDateTime.now()).build();
 
-        bookCart = new BookCart();
-        bookCart.setBook(book);
-        bookCart.setCart(cart);
-        bookCart.setQuantity(1);
-        bookCart.setCreatedAt(ZonedDateTime.now());
-        entityManager.persist(bookCart);
-    }
+		member = new Member(request);
 
-    @Test
-    void testFindByBookAndCart() {
-        Optional<BookCart> found = bookCartRepository.findByBookAndCart(book, cart);
+		cart = new Cart(member);
+		book = new Book(
+			"Sample Book Title",
+			"This is a sample description",
+			ZonedDateTime.now(),
+			1000,
+			10,
+			800,
+			1,
+			true,
+			"Author Name",
+			"1234567890123",
+			"Publisher Name",
+			null,
+			null,
+			null
+		);
+		bookCart = new BookCart(2, book, cart);
 
-        assertThat(found).isPresent();
-        assertThat(found.get().getBook()).isEqualTo(book);
-        assertThat(found.get().getCart()).isEqualTo(cart);
-    }
+		// 객체 저장
+		entityManager.persist(member);
+		entityManager.persist(cart);
+		entityManager.persist(book);
+		entityManager.persist(bookCart);
+	}
 
-    @Test
-    void testFindAllByCart() {
-        List<BookCart> found = bookCartRepository.findAllByCart(cart);
+	@Test
+	public void testFindAllByCartId() {
+		// Given
 
-        assertThat(found).isNotEmpty();
-        assertThat(found.getFirst().getCart()).isEqualTo(cart);
-    }
+		// When
+		List<BookCart> result = bookCartRepository.findAllByCartId(cart.getId());
 
+		// Then
+		assertFalse(result.isEmpty());
+		assertEquals(1, result.size());
+		assertEquals(bookCart.getId(), result.getFirst().getId());
+		assertEquals(book.getId(), result.getFirst().getBook().getId());
+		assertEquals(cart.getId(), result.getFirst().getCart().getId());
+	}
+
+	@Test
+	public void testDeleteByCart() {
+		// When
+		bookCartRepository.deleteByCart(cart);
+
+		// Then
+		Optional<BookCart> deletedBookCart = bookCartRepository.findById(bookCart.getId());
+		assertTrue(deletedBookCart.isEmpty());
+	}
 }

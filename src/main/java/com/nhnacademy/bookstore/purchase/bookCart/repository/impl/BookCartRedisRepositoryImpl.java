@@ -48,9 +48,12 @@ public class BookCartRedisRepositoryImpl implements BookCartRedisRepository {
     public Long update(String hashName, Long id, int quantity) {
         ReadBookCartGuestResponse response = (ReadBookCartGuestResponse)redisTemplate.opsForHash().get(hashName + ":", id.toString());
 
-        ReadBookCartGuestResponse updatedResponse = ReadBookCartGuestResponse.builder().bookCartId(response.getBookCartId())
-                .cartId(response.getCartId())
-                .bookId(response.getBookId())
+        ReadBookCartGuestResponse updatedResponse = ReadBookCartGuestResponse.builder()
+                .bookCartId(response.bookCartId())
+                .bookId(response.bookId())
+                .price(response.price())
+                .url(response.url())
+                .title(response.title())
                 .quantity(quantity)
                 .build();
 
@@ -70,6 +73,16 @@ public class BookCartRedisRepositoryImpl implements BookCartRedisRepository {
     public Long delete(String hashName, Long id) {
         redisTemplate.opsForHash().delete(hashName + ":", id.toString());
         return id;
+    }
+
+    /**
+     * 도서 장바구니 레디스 해쉬 전체 삭제.
+     *
+     * @param hashName 해쉬
+     */
+    @Override
+    public void deleteAll(String hashName) {
+        redisTemplate.delete(hashName + ":");
     }
 
     /**
@@ -120,7 +133,7 @@ public class BookCartRedisRepositoryImpl implements BookCartRedisRepository {
     public void loadData(List<ReadBookCartGuestResponse> bookCartGuestResponses, String hashName) {
         for (ReadBookCartGuestResponse o : bookCartGuestResponses) {
             if (Objects.nonNull(o)) {
-                redisTemplate.opsForHash().put(hashName + ":", o.getBookCartId().toString(), o);
+                redisTemplate.opsForHash().put(hashName + ":", o.bookCartId().toString(), o);
             }
         }
         redisTemplate.expire(hashName + ":", 1, TimeUnit.HOURS);
