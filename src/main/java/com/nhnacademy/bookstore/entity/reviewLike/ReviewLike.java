@@ -23,6 +23,7 @@ public class ReviewLike {
     private ZonedDateTime createdAt;
 
     @ManyToOne
+    @Setter
     private Member member;
 
     @ManyToOne
@@ -34,8 +35,18 @@ public class ReviewLike {
         this.createdAt = ZonedDateTime.now();
     }
 
-    public ReviewLike(Member member, Review review) {
-        this.member = member;
-        this.review = review;
+    /**
+     * 리뷰 좋아요 생성 메서드입니다.
+     *
+     * @param member 멤버
+     * @param review 리뷰
+     * @return 생성된 좋아요 객체
+     */
+    public static ReviewLike createReviewLike(Member member, Review review) {
+        ReviewLike reviewLike = new ReviewLike();
+        reviewLike.setReview(review);
+        reviewLike.setMember(member);
+        reviewLike.createdAt = ZonedDateTime.now();
+        return reviewLike;
     }
 }

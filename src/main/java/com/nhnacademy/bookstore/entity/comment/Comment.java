@@ -53,13 +53,36 @@ public class Comment {
         this.updatedAt = ZonedDateTime.now();
     }
 
+    public void setContent(String content) {
+        this.content = content;
+        this.updatedAt = ZonedDateTime.now();
+    }
+
     /**
      * 댓글 삭제 메서드입니다.
      *
      * @author 김은비
      */
-    void deletedComment() {
+    public void deletedComment() {
         this.deletedAt = ZonedDateTime.now();
         this.status = CommentStatus.DELETE;
+    }
+
+    /**
+     * 댓글 생성 메서드입니다.
+     *
+     * @param content 댓글 내용
+     * @param review  댓글이 달린 리뷰
+     * @param member  댓글 작성자
+     * @return 생성된 Comment 객체
+     */
+    public static Comment createComment(String content, Review review, Member member) {
+        Comment comment = new Comment();
+        comment.content = content;
+        comment.review = review;
+        comment.member = member;
+        comment.status = CommentStatus.ON;
+        comment.createdAt = ZonedDateTime.now();
+        return comment;
     }
 }
