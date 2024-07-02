@@ -16,7 +16,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-
+/**
+ * 맴버 어드민 서비스.
+ *
+ * @author 김병우
+ */
 @Transactional
 @Service
 @RequiredArgsConstructor
@@ -25,17 +29,34 @@ public class CouponAdminServiceImpl implements CouponAdminService {
     private final CouponRepository couponRepository;
     private final MemberRepository memberRepository;
 
+    /**
+     * 타입 읽기.
+     *
+     * @return 타입dto 리스트
+     */
     @Override
     public List<ReadCouponTypeResponse> readTypes() {
         return couponControllerClient.readAllTypes().getBody().getData();
     }
 
+    /**
+     * 사용처 읽기.
+     *
+     * @return 사용처dto 리스트
+     */
     @Override
     public List<ReadCouponUsageResponse> readUsages() {
         return couponControllerClient.readAllUsages().getBody().getData();
 
     }
 
+    /**
+     * 쿠폰 만들기
+     *
+     * @param createCouponFormRequest 쿠폰폼dto
+     * @param memberId 맴버 아이디
+     * @return 쿠폰아이디
+     */
     @Override
     public Long createCoupon(CreateCouponFormRequest createCouponFormRequest, Long memberId) {
         Long couponFormId = couponControllerClient.createCouponForm(createCouponFormRequest).getBody().getData();

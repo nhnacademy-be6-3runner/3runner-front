@@ -13,6 +13,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.util.List;
 
 
+/**
+ * 쿠폰 API 클라이언트.
+ *
+ * @author 김병우
+ */
 @FeignClient(name = "couponFormControllerClient", url = "http://${feign.coupon.url}")
 public interface CouponControllerClient {
 

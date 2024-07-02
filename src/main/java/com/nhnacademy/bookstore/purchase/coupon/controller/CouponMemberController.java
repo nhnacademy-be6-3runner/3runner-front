@@ -12,12 +12,23 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * 맴버 쿠폰 컨트롤러.
+ *
+ * @author 김병우
+ */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/bookstore/members")
 public class CouponMemberController {
     private final CouponMemberService couponMemberService;
 
+    /**
+     * 맴버 쿠폰 전체 읽기.
+     *
+     * @param memberId 맴버아이디
+     * @return 쿠폰폼dto 리스트
+     */
     @GetMapping("/coupons")
     private ApiResponse<List<ReadCouponFormResponse>> readCoupons(
             @RequestHeader("Member-Id") Long memberId) {

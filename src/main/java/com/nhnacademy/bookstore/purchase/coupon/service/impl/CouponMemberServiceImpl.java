@@ -24,6 +24,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * 쿠폰맴버서비스 구현체.
+ *
+ * @author 김병우
+ */
 @Transactional
 @Service
 @RequiredArgsConstructor
@@ -32,6 +37,12 @@ public class CouponMemberServiceImpl implements CouponMemberService {
     private final CouponRepository couponRepository;
     private final MemberRepository memberRepository;
 
+    /**
+     * 맴버 쿠폰 전체 읽기.
+     *
+     * @param memberId 맴버아이디
+     * @return 쿠폰폼dto 리스트
+     */
     @Override
     public List<ReadCouponFormResponse> readMemberCoupons(Long memberId) {
         Member member = memberRepository
@@ -52,6 +63,13 @@ public class CouponMemberServiceImpl implements CouponMemberService {
                 .getData();
     }
 
+    /**
+     * 쿠폰 사용.
+     *
+     * @param couponId 쿠폰아이디
+     * @param memberId 맴버아이디
+     * @return 쿠폰아이디
+     */
     @Override
     public Long useCoupons(Long couponId, Long memberId) {
         Coupon coupon = couponRepository
@@ -74,6 +92,10 @@ public class CouponMemberServiceImpl implements CouponMemberService {
         return couponId;
     }
 
+    /**
+     * 생일쿠폰 발급.
+     * 스케줄러로 발급
+     */
     @Async
     @Scheduled(cron = "0 0 13 * * ?")
     @Override
@@ -107,6 +129,11 @@ public class CouponMemberServiceImpl implements CouponMemberService {
         }
     }
 
+    /**
+     * 웰컴 쿠폰 발급 메소드.
+     *
+     * @param member 맴버
+     */
     @Override
     public void issueWelcomeCoupon(Member member) {
         CreateCouponFormRequest couponFormRequest = CreateCouponFormRequest.builder()

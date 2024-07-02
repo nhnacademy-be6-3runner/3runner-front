@@ -31,7 +31,7 @@ public class CouponAnotherMessageListener {
     private final ObjectMapper objectMapper;
 
     /**
-     * 메시지 받기.
+     * 만료기한 3일 남은 쿠폰 맴버들 메시지 큐 전송.
      *
      * @param couponFormDtosJson 쿠폰폼 dto
      */
