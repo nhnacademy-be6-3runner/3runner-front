@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nhnacademy.front.member.address.dto.response.AddressResponse;
 import com.nhnacademy.front.member.address.feign.AddressControllerClient;
@@ -21,6 +22,7 @@ import com.nhnacademy.front.member.member.feign.MemberControllerClient;
 import com.nhnacademy.front.threadlocal.TokenHolder;
 import com.nhnacademy.front.token.service.TokenService;
 import com.nhnacademy.util.ApiResponse;
+import com.nimbusds.jose.shaded.gson.JsonObject;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +41,11 @@ public class MemberController {
 
 	@PostMapping("/member")
 	public String signin(@Valid @RequestBody CreateMemberRequest createMemberRequest) {
-		memberControllerClient.createMembers(createMemberRequest);
+		System.out.println(createMemberRequest);
+		ApiResponse<Void> result = memberControllerClient.createMembers(createMemberRequest);
+		if(!result.getHeader().isSuccessful()){
+			return "redirect:/member/createForm";
+		}
 
 		return "test-main";
 	}//등록 요청보낸후 메인페이지 반환
@@ -69,6 +75,13 @@ public class MemberController {
 		memberControllerClient.updateMembers(updateMemberRequest);
 		return null;
 		//페이지 리로드 된다.
+	}
+	@ResponseBody
+	@GetMapping("/member/email")
+	public ApiResponse<Boolean> checkEmailExists(@RequestParam String email) {
+		// 이메일 존재 여부 확인 로직
+		ApiResponse<Boolean> result = memberControllerClient.emailExists(email);
+		return result;
 	}
 }
 

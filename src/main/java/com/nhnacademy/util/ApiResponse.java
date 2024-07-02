@@ -62,7 +62,7 @@ public class ApiResponse<T>{
     }
     public static <T> ApiResponse<T> deleteSuccess(T data) {
         return new ApiResponse<>(
-                new Header(false, HttpStatus.NO_CONTENT.value()),
+                new Header(true, HttpStatus.NO_CONTENT.value()),
                 new Body<>(data)
         );
     }

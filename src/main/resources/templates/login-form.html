@@ -95,13 +95,25 @@
         <div class="form-group">
             <button type="submit">Login</button>
         </div>
-        </form>
+        <!-- 에러 메시지 표시 -->
+        <div th:if="${errorMessage}">
+            <p th:text="${errorMessage}" style="color:red;"></p>
+        </div>
+    </form>
 
-    <div class="payco-login-container">
-        <a href="https://id.payco.com/oauth2.0/authorize?response_type=code&client_id=3RDUR8qJyORVrsI2PdkInS1&serviceProviderCode=FRIENDS&redirect_uri=http%3A%2F%2F3runner.shop%3A3000%2Foauth2%2Fcallback%2Fpayco&userLocale=ko_KR" class="button-link" role="button">
+        <div class="form-group">
+            <a href="https://id.payco.com/oauth2.0/authorize?response_type=code&client_id=3RDUR8qJyORVrsI2PdkInS1&serviceProviderCode=FRIENDS&redirect_uri=http%3A%2F%2F3runner.shop%3A3000%2Foauth2%2Fcallback%2Fpayco&userLocale=ko_KR" class="button-link" role="button">
             Payco Login
         </a>
-    </div>
+        </div>
+
+    <!-- 회원가입 버튼 추가 -->
+
+        <div class="form-group">
+            <a href="/member/createForm" class="button-link" role="button">
+                Sign Up
+            </a>
+        </div>
 
 
 </div>

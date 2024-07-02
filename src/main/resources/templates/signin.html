@@ -10,6 +10,14 @@
             background-color: white;
             padding: 15px 0;
         }
+        .error-message {
+            color: red;
+            font-weight: bold;
+        }
+        .success-message {
+            color: green;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -45,22 +53,28 @@
     <div class="row justify-content-center">
         <div class="col-md-6">
             <h2 class="mb-4">Register</h2>
+            <div id="email-check-message"></div> <!-- 이메일 체크 메시지 표시 -->
             <form id="registrationForm">
                 <div class="form-group">
                     <label for="email">Email address</label>
-                    <input type="email" class="form-control" id="email" placeholder="Enter email" required>
+                    <div class="input-group">
+                        <input type="email" class="form-control" id="email" placeholder="Enter email" required>
+                        <div class="input-group-append">
+                            <button type="button" id="checkEmailButton" class="btn btn-secondary">이메일 확인</button>
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" class="form-control" id="password" placeholder="Password" required>
+                    <input type="password" class="form-control" id="password" placeholder="Password" minlength="6" required>
                 </div>
                 <div class="form-group">
                     <label for="name">Name</label>
-                    <input type="text" class="form-control" id="name" placeholder="Full name" required>
+                    <input type="text" class="form-control" id="name" placeholder="Full name" minlength="1" maxlength="10" required>
                 </div>
                 <div class="form-group">
                     <label for="phone">Phone</label>
-                    <input type="tel" class="form-control" id="phone" placeholder="Phone number" required>
+                    <input type="tel" class="form-control" id="phone" placeholder="Phone number" minlength="10" maxlength="11" required>
                 </div>
                 <div class="form-group">
                     <label for="age">Age</label>
@@ -70,7 +84,7 @@
                     <label for="birthday">Birthday</label>
                     <input type="date" class="form-control" id="birthday" placeholder="Date of Birth">
                 </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" id="submitBtn" class="btn btn-primary" disabled>Submit</button>
             </form>
         </div>
     </div>
@@ -84,7 +98,58 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const form = document.getElementById('registrationForm');
+        const checkEmailButton = document.getElementById('checkEmailButton');
+        const emailCheckMessage = document.getElementById('email-check-message');
+        const submitBtn = document.getElementById('submitBtn');
+        let isEmailAvailable = false;
+
+        checkEmailButton.addEventListener('click', function() {
+            const email = document.getElementById('email').value;
+            if (!email) {
+                emailCheckMessage.textContent = "이메일을 입력하세요.";
+                emailCheckMessage.className = 'error-message';
+                return;
+            }
+
+            fetch(`/member/email?email=${encodeURIComponent(email)}`, {
+                method: 'GET',
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    if (!data.header.successful) {
+                        throw new Error('API 요청 실패');
+                        console.log("1");
+                    }
+
+                    if (data.body.data) {
+                        emailCheckMessage.textContent = "이미 존재하는 이메일입니다.";
+                        emailCheckMessage.className = 'error-message';
+                        isEmailAvailable = false;
+                        console.log("2");
+                    } else {
+                        emailCheckMessage.textContent = "사용 가능한 이메일입니다.";
+                        emailCheckMessage.className = 'success-message';
+                        isEmailAvailable = true;
+                        console.log(3);
+                    }
+                    submitBtn.disabled = !isEmailAvailable;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    emailCheckMessage.textContent = "이메일 확인 중 오류가 발생했습니다.";
+                    emailCheckMessage.className = 'error-message';
+                });
+        });
+
         form.addEventListener('submit', function(e) {
+            if (!isEmailAvailable) {
+                e.preventDefault();
+                emailCheckMessage.textContent = "이메일 확인을 완료하세요.";
+                emailCheckMessage.className = 'error-message';
+                return;
+            }
+
             e.preventDefault(); // 기본 폼 제출 행동 방지
 
             // 폼 데이터를 JSON 객체로 수집
