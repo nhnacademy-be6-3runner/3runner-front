@@ -1,13 +1,7 @@
 package com.nhnacademy.bookstore.elastic.book.repository.impl;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
-import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.query.Criteria;
 import org.springframework.data.elasticsearch.core.query.CriteriaQuery;
@@ -42,18 +36,19 @@ public class ElasticSearchCustomBookRepositoryImpl implements ElasticSearchCusto
 	// 		.map(hit -> hit.getContent())
 	// 		.collect(Collectors.toList());
 	// }
+	// Query query = new CriteriaQuery(criteria).setPageable(pageable);
 
 	@Override
-	public Page<BookDocument> searchProductsByProductName(String keyword, Pageable pageable) {
-		Criteria criteria = Criteria.where("title").contains(keyword);
+	public SearchHits<BookDocument> searchProductsByProductName(String keyword, Pageable pageable) {
+		Query searchQuery = new CriteriaQuery(new Criteria()
+			.subCriteria(new Criteria("title").boost(100).matches(keyword))
+			.subCriteria(new Criteria("author").boost(50).matches(keyword))
+			.subCriteria(new Criteria("publisher").matches(keyword))
+			// .endsWith("70%")
+		);
 
-		Query query = new CriteriaQuery(criteria).setPageable(pageable);
+		return elasticsearchOperations.search(searchQuery, BookDocument.class);
 
-		SearchHits<BookDocument> search = elasticsearchOperations.search(query, BookDocument.class);
-
-		List<BookDocument> list = search.stream().map(SearchHit::getContent).collect(Collectors.toList());
-
-		return new PageImpl<>(list, pageable, search.getTotalHits());
 	}
 
 }

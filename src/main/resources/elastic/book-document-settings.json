@@ -14,8 +14,7 @@
     "tokenizer": {
       "nori_tokenizer": {
         "type": "nori_tokenizer",
-        "decompound_mode": "mixed",
-        "user_dictionary": "custom_dictionary.txt"
+        "decompound_mode": "mixed"
       }
     },
     "filter": {
@@ -23,9 +22,7 @@
         "type": "nori_part_of_speech",
         "stoptags": [
           "E",
-          "IC",
           "J",
-          "MAG",
           "MAJ",
           "MM",
           "SP",
@@ -48,7 +45,7 @@
       },
       "suctom_synonym": {
         "type": "synonym",
-        "synonyms_path": "custom_synonym"
+        "synonyms_path": "custom_synonym.txt"
       }
     }
   }

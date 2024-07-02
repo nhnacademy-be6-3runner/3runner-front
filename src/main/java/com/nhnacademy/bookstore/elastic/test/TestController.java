@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -90,7 +90,7 @@ public class TestController {
 	}
 
 	@GetMapping("/test/search/keyword/{keyword}")
-	public Page<BookDocument> searchKeyword(@PathVariable String keyword, @RequestParam int page) {
+	public SearchHits<BookDocument> searchKeyword(@PathVariable String keyword, @RequestParam int page) {
 		Pageable pageable = PageRequest.of(page - 1, 10);
 		return elasticSearchCustomBookRepository.searchProductsByProductName(keyword, pageable);
 	}
