@@ -29,6 +29,7 @@ import com.nhnacademy.bookstore.member.memberAuth.service.impl.MemberAuthService
 import com.nhnacademy.bookstore.member.pointRecord.service.impl.PointRecordServiceImpl;
 import com.nhnacademy.bookstore.util.ApiResponse;
 
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -57,8 +58,8 @@ public class MemberController {
 
 		Auth auth = authService.getAuth("USER");
 		Member member = memberService.save(request);
-//		PointRecord pointRecord = new PointRecord(null, 5000L, 5000L, ZonedDateTime.now(), "회원가입 5000포인트 적립.", member,null);
-//		pointRecordService.save(pointRecord);
+		//		PointRecord pointRecord = new PointRecord(null, 5000L, 5000L, ZonedDateTime.now(), "회원가입 5000포인트 적립.", member,null);
+		//		pointRecordService.save(pointRecord);
 		memberAuthService.saveAuth(member, auth);
 
 		return new ApiResponse<Void>(new ApiResponse.Header(true, 201), new ApiResponse.Body<Void>(null));
@@ -146,6 +147,7 @@ public class MemberController {
 	 * @return the api response - updateMemberResponse
 	 * @author 오연수
 	 */
+	@Transactional
 	@PutMapping("/bookstore/members")
 	public ApiResponse<UpdateMemberResponse> updateMember(@RequestHeader(name = "Member-Id") Long memberId,
 		@Valid @RequestBody UpdateMemberRequest updateMemberRequest) {
