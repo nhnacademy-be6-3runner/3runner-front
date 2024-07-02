@@ -1,5 +1,6 @@
 package com.nhnacademy.bookstore.book.book.service.impl;
 
+import java.util.List;
 import java.util.Objects;
 
 import org.springframework.data.domain.Page;
@@ -13,12 +14,14 @@ import com.nhnacademy.bookstore.book.book.dto.response.ReadBookResponse;
 import com.nhnacademy.bookstore.book.book.exception.BookDoesNotExistException;
 import com.nhnacademy.bookstore.book.book.repository.BookRepository;
 import com.nhnacademy.bookstore.book.book.service.BookService;
+import com.nhnacademy.bookstore.book.bookCartegory.dto.request.CreateBookCategoryRequest;
 import com.nhnacademy.bookstore.book.bookCartegory.dto.request.UpdateBookCategoryRequest;
 import com.nhnacademy.bookstore.book.bookCartegory.service.BookCategoryService;
 import com.nhnacademy.bookstore.book.bookImage.service.BookImageService;
 import com.nhnacademy.bookstore.book.bookTag.dto.request.CreateBookTagListRequest;
 import com.nhnacademy.bookstore.book.bookTag.service.BookTagService;
 import com.nhnacademy.bookstore.entity.book.Book;
+import com.nhnacademy.bookstore.entity.bookImage.enums.BookImageType;
 
 import lombok.RequiredArgsConstructor;
 
@@ -43,7 +46,7 @@ public class BookServiceImpl implements BookService {
 	// Dto -> save book
 	@Override
 	@Transactional
-	public Long createBook(CreateBookRequest createBookRequest) {
+	public void createBook(CreateBookRequest createBookRequest) {
 		Book book = new Book(
 			createBookRequest.title(),
 			createBookRequest.description(),
@@ -61,7 +64,18 @@ public class BookServiceImpl implements BookService {
 			null
 		);
 		bookRepository.save(book);
-		return book.getId();
+
+		bookCategoryService.createBookCategory(
+			CreateBookCategoryRequest.builder()
+				.bookId(book.getId())
+				.categoryIds(createBookRequest.categoryIds())
+				.build());
+		bookTagService.createBookTag(
+			CreateBookTagListRequest.builder().bookId(book.getId()).tagIdList(createBookRequest.tagIds()).build());
+		bookImageService.createBookImage(createBookRequest.imageList(), book.getId(), BookImageType.DESCRIPTION);
+		if (!Objects.isNull(createBookRequest.imageName())) {
+			bookImageService.createBookImage(List.of(createBookRequest.imageName()), book.getId(), BookImageType.MAIN);
+		}
 	}
 
 	/**

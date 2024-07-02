@@ -1,7 +1,6 @@
 package com.nhnacademy.bookstore.book.book.controller;
 
 import java.util.List;
-import java.util.Objects;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,15 +22,12 @@ import com.nhnacademy.bookstore.book.book.dto.response.UserReadBookResponse;
 import com.nhnacademy.bookstore.book.book.exception.CreateBookRequestFormException;
 import com.nhnacademy.bookstore.book.book.exception.UpdateBookRequestFormException;
 import com.nhnacademy.bookstore.book.book.service.BookService;
-import com.nhnacademy.bookstore.book.bookCartegory.dto.request.CreateBookCategoryRequest;
 import com.nhnacademy.bookstore.book.bookCartegory.service.BookCategoryService;
 import com.nhnacademy.bookstore.book.bookImage.service.BookImageService;
-import com.nhnacademy.bookstore.book.bookTag.dto.request.CreateBookTagListRequest;
 import com.nhnacademy.bookstore.book.bookTag.dto.request.ReadBookIdRequest;
 import com.nhnacademy.bookstore.book.bookTag.dto.response.ReadTagByBookResponse;
 import com.nhnacademy.bookstore.book.bookTag.service.BookTagService;
 import com.nhnacademy.bookstore.book.category.dto.response.CategoryParentWithChildrenResponse;
-import com.nhnacademy.bookstore.entity.bookImage.enums.BookImageType;
 import com.nhnacademy.bookstore.util.ApiResponse;
 import com.nhnacademy.bookstore.util.ValidationUtils;
 
@@ -68,15 +64,7 @@ public class BookController {
 		ValidationUtils.validateBindingResult(bindingResult,
 			new CreateBookRequestFormException("책의 항목들의 범위가 잘못되었습니다."));
 
-		long bookId = bookService.createBook(createBookRequest);
-		bookCategoryService.createBookCategory(
-			CreateBookCategoryRequest.builder().bookId(bookId).categoryIds(createBookRequest.categoryIds()).build());
-		bookTagService.createBookTag(
-			CreateBookTagListRequest.builder().bookId(bookId).tagIdList(createBookRequest.tagIds()).build());
-		bookImageService.createBookImage(createBookRequest.imageList(), bookId, BookImageType.DESCRIPTION);
-		if (!Objects.isNull(createBookRequest.imageName())) {
-			bookImageService.createBookImage(List.of(createBookRequest.imageName()), bookId, BookImageType.MAIN);
-		}
+		bookService.createBook(createBookRequest);
 
 		return new ApiResponse<>(new ApiResponse.Header(true, 201));
 	}

@@ -18,7 +18,7 @@ public interface BookService {
 	 *
 	 * @param createBookRequest createBookRequest form param
 	 */
-	public Long createBook(CreateBookRequest createBookRequest);
+	void createBook(CreateBookRequest createBookRequest);
 
 	/**
 	 * 책 조회 기능.
