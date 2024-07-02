@@ -22,7 +22,7 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-public class ReviewLikeRepositoryTest {
+class ReviewLikeRepositoryTest {
     @Autowired
     ReviewLikeRepository reviewLikeRepository;
     @Autowired
@@ -93,7 +93,7 @@ public class ReviewLikeRepositoryTest {
                 null
         );
         entityManager.persist(review);
-        ReviewLike reviewLike = new ReviewLike(member2, review);
+        ReviewLike reviewLike = ReviewLike.createReviewLike(member2, review);
         entityManager.persist(reviewLike);
     }
 

@@ -33,7 +33,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-public class ReviewLikeServiceTest {
+class ReviewLikeServiceTest {
     @Mock
     private ReviewLikeRepository reviewLikeRepository;
     @Mock
@@ -46,7 +46,6 @@ public class ReviewLikeServiceTest {
     private Member member;
     private Member member2;
     private Review review;
-    private ReviewLike reviewLike;
 
     @BeforeEach
     public void setUp() {
@@ -148,7 +147,7 @@ public class ReviewLikeServiceTest {
     @DisplayName("리뷰 좋아요 삭제 테스트")
     @Test
     void deleteReviewLikeTest() {
-        reviewLike = new ReviewLike(member2, review);
+        ReviewLike reviewLike = ReviewLike.createReviewLike(member2, review);
         given(reviewLikeRepository.findById(1L)).willReturn(Optional.of(reviewLike));
         reviewLikeService.deleteReviewLike(1L, 2L);
 
