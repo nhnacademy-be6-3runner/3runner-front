@@ -47,6 +47,12 @@ public class BookDocument {
 	@Field(type = FieldType.Keyword, copyTo = {"keywordList", "keywordText"})
 	private List<String> categoryList;
 
+	private long viewCount;
+
+	private long score;
+
+	private long reviewCount;
+
 	@Field(type = FieldType.Text, analyzer = "nori_analyzer")
 	// @Field(type = FieldType.Text)
 	private List<String> keywordText;
