@@ -49,6 +49,7 @@ public class LoginResponseConfig {
 
 		@Override
 		public Object decode(Response response, Type type) throws IOException, DecodeException, FeignException {
+			System.out.println("here");
 			Map<String, Collection<String>> headers = response.headers();
 
 			// HTTP 헤더에 접근

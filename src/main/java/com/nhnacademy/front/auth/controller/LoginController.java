@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.nhnacademy.front.auth.adapter.AuthAdapter;
 import com.nhnacademy.front.auth.adapter.LoginAdapter;
 import com.nhnacademy.front.auth.dto.request.LoginRequest;
 import com.nhnacademy.front.auth.dto.response.LoginResponse;
@@ -35,8 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 public class LoginController {
 	@Autowired
 	LoginAdapter loginAdapter;
-	@Autowired
-	AuthAdapter authAdapter;
+
 	@Autowired
 	LoginService loginService;
 
@@ -46,13 +44,15 @@ public class LoginController {
 	 *
 	 * @return login form view
 	 */
+
 	@GetMapping("/login")
 	public String loginForm() {
 		boolean loginStatus = loginService.checkLoginStatus();
 		log.warn("login status: {}", loginStatus);
 
 		if (loginStatus) {
-			return "redirect:/";
+			return "test-main";
+			//return "redirect:/";
 		}
 		return "login-form";
 	}
@@ -73,6 +73,8 @@ public class LoginController {
 		// 쿠키로 저장
 		response.addCookie(new Cookie("Access", TokenHolder.getAccessToken()));
 		response.addCookie(new Cookie("Refresh", TokenHolder.getRefreshToken()));
+		boolean loginStatus = loginService.checkLoginStatus();
+		log.warn("login status: {}", loginStatus);
 
 		return "redirect:/";
 	}
@@ -114,8 +116,9 @@ public class LoginController {
 	@GetMapping("/oauth2/callback/payco")
 	public String paycoCallback(@RequestParam String code, HttpServletResponse response) {
 		//코드까지는 들어온다.
-		authAdapter.handleOAuth2Redirect(code);
-		response.addCookie(new Cookie("Access", TokenHolder.getAccessToken()));
+
+		LoginResponse loginResponse = loginAdapter.handleOAuth2Redirect(code).getBody().getData();//여기까지됌
+		response.addCookie(new Cookie("Access", TokenHolder.getAccessToken()));//
 		response.addCookie(new Cookie("Refresh", TokenHolder.getRefreshToken()));
 
 

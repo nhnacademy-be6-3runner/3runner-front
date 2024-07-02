@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import com.nhnacademy.front.auth.adapter.AuthAdapter;
+
 import com.nhnacademy.front.member.address.dto.response.AddressResponse;
 import com.nhnacademy.front.member.address.feign.AddressControllerClient;
 import com.nhnacademy.front.member.member.dto.request.CreateMemberRequest;
@@ -30,7 +30,6 @@ import lombok.RequiredArgsConstructor;
 public class MemberController {
 	private final MemberControllerClient memberControllerClient;
 	private final AddressControllerClient addressControllerClient;
-	private final AuthAdapter authAdapter;
 	private final TokenService tokenService;
 
 	@GetMapping("/member/createForm")
