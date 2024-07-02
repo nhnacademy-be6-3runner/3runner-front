@@ -73,8 +73,8 @@ public class Member {
 
 	private ZonedDateTime modifiedAt;
 	private ZonedDateTime deletedAt;
-	@NotNull
-	private AuthProvider authProvider;
+	// @NotNull
+	// private AuthProvider authProvider;
 	@OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Address> addressList = new ArrayList<>();
 
@@ -98,7 +98,7 @@ public class Member {
 		this.setBirthday(request.birthday());
 		this.setGrade(Grade.General);
 		this.setCreatedAt(ZonedDateTime.now());
-		this.setAuthProvider(AuthProvider.GENERAL);
+		// this.setAuthProvider(AuthProvider.GENERAL);
 	}
 
 }

@@ -111,9 +111,9 @@ public class MemberServiceImpl implements MemberService {
 		Optional<Member> member = memberRepository.findByEmail(email);
 
 		if (member.isPresent()) {
-			if (member.get().getAuthProvider() != AuthProvider.GENERAL) {
-				throw new LoginOauthEmailException(member.get().getAuthProvider());
-			}
+			// if (member.get().getAuthProvider() != AuthProvider.GENERAL) {
+			// 	throw new LoginOauthEmailException(member.get().getAuthProvider());
+			// }
 			if (passwordEncoder.matches(password, member.get().getPassword())) {
 				return member.get();
 			}
@@ -209,6 +209,7 @@ public class MemberServiceImpl implements MemberService {
 			.stream()
 			.map(purchase -> ReadPurchaseResponse.builder()
 				.id(purchase.getId())
+				.orderNumber(purchase.getOrderNumber())
 				.status(purchase.getStatus())
 				.deliveryPrice(purchase.getDeliveryPrice())
 				.totalPrice(purchase.getTotalPrice())

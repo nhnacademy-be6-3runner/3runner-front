@@ -59,7 +59,7 @@ public class PurchaseBookController {
 	 */
 	@GetMapping("/{purchaseId}")
 	public ApiResponse<Page<ReadPurchaseBookResponse>> readPurchaseBook(
-		@PathVariable(value = "purchaseId")  long purchaseId
+		@PathVariable(value = "purchaseId")  Long purchaseId
 		, @RequestParam int page
 		, @RequestParam int size
 		, @RequestParam(required = false) String sort) {

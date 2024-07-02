@@ -1,5 +1,27 @@
 package com.nhnacademy.bookstore.purchase.purchase.controller;
 
+import java.util.List;
+import java.util.Objects;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.nhnacademy.bookstore.member.member.service.MemberService;
 import com.nhnacademy.bookstore.purchase.purchase.dto.request.CreatePurchaseRequest;
 import com.nhnacademy.bookstore.purchase.purchase.dto.request.UpdatePurchaseMemberRequest;
@@ -8,21 +30,8 @@ import com.nhnacademy.bookstore.purchase.purchase.exception.PurchaseFormArgument
 import com.nhnacademy.bookstore.purchase.purchase.service.PurchaseMemberService;
 import com.nhnacademy.bookstore.util.ApiResponse;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Objects;
 
 /**
  * 회원 주문 컨트롤러.
@@ -74,9 +83,9 @@ public class PurchaseMemberController {
 			pageable = PageRequest.of(page, size, Sort.by(sort));
 		}
 
-		Page<ReadPurchaseResponse> response = memberService.getPurchasesByMemberId(memberId, pageable);
-
-		return ApiResponse.success(response);
+		List<ReadPurchaseResponse> response = memberService.getPurchasesByMemberId(memberId);
+		ApiResponse<Page<ReadPurchaseResponse>> responses = ApiResponse.success(new PageImpl<>(response, pageable, response.size()));
+		return responses;
 	}
 
 	/**
@@ -112,9 +121,9 @@ public class PurchaseMemberController {
 	 */
 	@PutMapping("members/purchases/{purchaseId}")
 	public ApiResponse<Void> updatePurchaseStatus(@RequestHeader("Member-Id") Long memberId,
-		@Valid @RequestBody UpdatePurchaseMemberRequest updatePurchaseRequest,
-		BindingResult bindingResult,
-		@PathVariable Long purchaseId) {
+		@Valid @RequestBody UpdatePurchaseMemberRequest updatePurchaseRequest,@PathVariable Long purchaseId,
+		BindingResult bindingResult
+		) {
 		if (bindingResult.hasErrors()) {
 			throw new PurchaseFormArgumentErrorException(bindingResult.getFieldErrors().toString());
 		}
@@ -139,6 +148,8 @@ public class PurchaseMemberController {
 
 		return new ApiResponse<>(new ApiResponse.Header(true, 204));
 	}
+
+
 
 
 

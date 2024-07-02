@@ -81,7 +81,7 @@ public class PurchaseMemberServiceImpl implements PurchaseMemberService {
 			throw new PurchaseNoAuthorizationException("권한이 없습니다");
 		}
 
-		purchase.setStatus(updatePurchaseRequest.purchaseStatus());
+		purchase.setStatus(PurchaseStatus.fromString(updatePurchaseRequest.purchaseStatus()));
 
 		purchaseRepository.save(purchase);
 

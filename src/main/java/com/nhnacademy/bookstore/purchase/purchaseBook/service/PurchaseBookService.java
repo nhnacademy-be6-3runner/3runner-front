@@ -23,6 +23,6 @@ public interface PurchaseBookService {
 
     Long updatePurchaseBook(UpdatePurchaseBookRequest updatePurchaseBookRequest);
 
-    Page<ReadPurchaseBookResponse> readBookByPurchaseResponses(long purchaseId, Pageable pageable);
+    Page<ReadPurchaseBookResponse> readBookByPurchaseResponses(Long purchaseId, Pageable pageable);
 
 }

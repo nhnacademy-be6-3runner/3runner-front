@@ -61,7 +61,7 @@ public class PurchaseBookServiceImpl implements PurchaseBookService {
 	 * @return 해당 주문의 책 리스트를 반환
 	 */
 	@Override
-	public Page<ReadPurchaseBookResponse> readBookByPurchaseResponses(long purchaseId, Pageable pageable) {
+	public Page<ReadPurchaseBookResponse> readBookByPurchaseResponses(Long purchaseId, Pageable pageable) {
 
 		return  purchaseBookCustomRepository.readBookPurchaseResponses(purchaseId, pageable);
 	}
@@ -109,7 +109,7 @@ public class PurchaseBookServiceImpl implements PurchaseBookService {
 	/**
 	 * 주문-책 삭제
 	 *
-	 * @param purchaseBookRequest 삭제할 주문-책id requestDto
+	 * @param purchaseBookId 삭제할 주문-책id requestDto
 	 */
 	@Override
 	public void deletePurchaseBook(long purchaseBookId) {
