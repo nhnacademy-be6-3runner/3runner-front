@@ -127,12 +127,12 @@ public class ReviewCustomRepositoryImpl implements ReviewCustomRepository {
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        long total = Optional.ofNullable(jpaQueryFactory
+        long totalCount = Optional.ofNullable(jpaQueryFactory
                 .select(qReview.count())
                 .from(qReview)
                 .fetchOne()).orElse(0L);
 
-        return new PageImpl<>(reviewListResponses, pageable, total);
+        return new PageImpl<>(reviewListResponses, pageable, totalCount);
     }
 
     /**
@@ -174,7 +174,7 @@ public class ReviewCustomRepositoryImpl implements ReviewCustomRepository {
                 .select(qReview.count())
                 .from(qReview)
                 .join(qReview.purchaseBook, qPurchaseBook)
-                .where(qPurchaseBook.book.id.eq(bookId))
+                .where(qPurchaseBook.book.id.eq(bookId).and(qReview.reviewStatus.eq(ReviewStatus.ON)))
                 .fetchOne()).orElse(0L);
         return new PageImpl<>(reviewListResponses, pageable, total);
     }
@@ -218,7 +218,7 @@ public class ReviewCustomRepositoryImpl implements ReviewCustomRepository {
                 .from(qReview)
                 .join(qReview.purchaseBook, qPurchaseBook)
                 .join(qPurchaseBook.purchase, qPurchase)
-                .where(qPurchase.member.id.eq(memberId))
+                .where(qPurchase.member.id.eq(memberId).and(qReview.reviewStatus.eq(ReviewStatus.ON)))
                 .fetchOne()).orElse(0L);
         return new PageImpl<>(reviewListResponses, pageable, total);
     }
