@@ -1,10 +1,11 @@
 package com.nhnacademy.bookstore.book.book.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.nhnacademy.bookstore.book.book.dto.request.CreateBookRequest;
 import com.nhnacademy.bookstore.book.book.dto.response.BookListResponse;
 import com.nhnacademy.bookstore.book.book.dto.response.ReadBookResponse;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 /**
  * 책 테이블 CRUD 서비스.
@@ -12,20 +13,22 @@ import org.springframework.data.domain.Pageable;
  * @author 김병우
  */
 public interface BookService {
-    /**
-     * 책 등록 기능.
-     *
-     * @param createBookRequest createBookRequest form param
-     */
-    public Long createBook(CreateBookRequest createBookRequest);
+	/**
+	 * 책 등록 기능.
+	 *
+	 * @param createBookRequest createBookRequest form param
+	 */
+	public Long createBook(CreateBookRequest createBookRequest);
 
-    /**
-     * 책 조회 기능.
-     *
-     * @param bookId book entity id param
-     * @return Book
-     */
-    public ReadBookResponse readBookById(Long bookId);
+	/**
+	 * 책 조회 기능.
+	 *
+	 * @param bookId book entity id param
+	 * @return Book
+	 */
+	public ReadBookResponse readBookById(Long bookId);
 
-    Page<BookListResponse> readAllBooks(Pageable pageable);
+	void updateBook(Long bookId, CreateBookRequest createBookRequest);
+
+	Page<BookListResponse> readAllBooks(Pageable pageable);
 }
