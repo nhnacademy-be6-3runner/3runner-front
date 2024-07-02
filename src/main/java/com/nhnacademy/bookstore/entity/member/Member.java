@@ -94,6 +94,7 @@ public class Member {
      * 멤버 권한 추가 메서드입니다.
      *
      * @param memberAuth 멤버 권한
+     * @author 김은비
      */
     public void addMemberAuth(MemberAuth memberAuth) {
         memberAuthList.add(memberAuth);

@@ -6,10 +6,12 @@ import com.nhnacademy.bookstore.book.review.dto.request.CreateReviewRequest;
 import com.nhnacademy.bookstore.book.review.dto.request.DeleteReviewRequest;
 import com.nhnacademy.bookstore.book.review.dto.response.ReviewDetailResponse;
 import com.nhnacademy.bookstore.book.review.dto.response.ReviewListResponse;
+import com.nhnacademy.bookstore.book.review.dto.response.UserReadReviewResponse;
 import com.nhnacademy.bookstore.book.review.exception.ReviewNotExistsException;
 import com.nhnacademy.bookstore.book.review.exception.UnauthorizedReviewAccessException;
 import com.nhnacademy.bookstore.book.review.repository.ReviewRepository;
 import com.nhnacademy.bookstore.book.review.service.ReviewService;
+import com.nhnacademy.bookstore.book.reviewLike.repository.ReviewLikeRepository;
 import com.nhnacademy.bookstore.entity.member.Member;
 import com.nhnacademy.bookstore.entity.review.Review;
 import com.nhnacademy.bookstore.entity.review.enums.ReviewStatus;
@@ -38,6 +40,7 @@ public class ReviewServiceImpl implements ReviewService {
     private final MemberRepository memberRepository;
     private final BookRepository bookRepository;
     private final PurchaseBookRepository purchaseBookRepository;
+    private final ReviewLikeRepository reviewLikeRepository;
 
     /**
      * 리뷰 생성 메서드입니다.
@@ -133,6 +136,34 @@ public class ReviewServiceImpl implements ReviewService {
             throw new ReviewNotExistsException();
         }
         return reviewRepository.getReviewDetail(reviewId);
+    }
+
+    /**
+     * 사용자에게 보여줄 리뷰 조회 (좋아요, 댓글 포함) 메서드입니다.
+     *
+     * @param reviewId 리뷰 아이디
+     * @return 리뷰 상세 정보
+     */
+    @Override
+    public UserReadReviewResponse readDetailUserReview(long reviewId) {
+        if (!reviewRepository.existsById(reviewId)) {
+            throw new ReviewNotExistsException();
+        }
+        ReviewDetailResponse reviewDetailResponse = readDetailReview(reviewId);
+        long likeCount = reviewLikeRepository.countByReviewId(reviewId);
+        return UserReadReviewResponse.builder()
+                .bookId(reviewDetailResponse.bookId())
+                .bookTitle(reviewDetailResponse.bookTitle())
+                .reviewId(reviewDetailResponse.reviewId())
+                .reviewTitle(reviewDetailResponse.reviewTitle())
+                .reviewContent(reviewDetailResponse.reviewContent())
+                .ratings(reviewDetailResponse.ratings())
+                .memberEmail(reviewDetailResponse.memberEmail())
+                .createdAt(reviewDetailResponse.createdAt())
+                .updated(reviewDetailResponse.updated())
+                .updatedAt(reviewDetailResponse.updatedAt())
+                .reviewLike(likeCount)
+                .build();
     }
 
     /**

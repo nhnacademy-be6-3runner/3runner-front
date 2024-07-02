@@ -4,6 +4,7 @@ import com.nhnacademy.bookstore.book.review.dto.request.CreateReviewRequest;
 import com.nhnacademy.bookstore.book.review.dto.request.DeleteReviewRequest;
 import com.nhnacademy.bookstore.book.review.dto.response.ReviewDetailResponse;
 import com.nhnacademy.bookstore.book.review.dto.response.ReviewListResponse;
+import com.nhnacademy.bookstore.book.review.dto.response.UserReadReviewResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -20,6 +21,8 @@ public interface ReviewService {
     Long deleteReview(long reviewId, long memberId, DeleteReviewRequest deleteReviewRequest);
 
     ReviewDetailResponse readDetailReview(long reviewId);
+
+    UserReadReviewResponse readDetailUserReview(long reviewId);
 
     Page<ReviewListResponse> readAllReviews(Pageable pageable);
 
