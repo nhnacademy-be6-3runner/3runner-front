@@ -51,7 +51,7 @@ public class ReviewLikeServiceImpl implements ReviewLikeService {
             throw new ReviewLikeAlreadyExistsException();
         }
 
-        ReviewLike reviewLike = new ReviewLike(member, review);
+        ReviewLike reviewLike = ReviewLike.createReviewLike(member, review);
         review.addReviewLike(reviewLike);
         reviewRepository.save(review);
     }
