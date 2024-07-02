@@ -19,13 +19,27 @@ import feign.codec.DecodeException;
 import feign.codec.Decoder;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Login 요청 Feign 관련 Decoder 설정
+ * LoginAdapter config 설정
+ *
+ * @author 오연수
+ */
 @Slf4j
 public class LoginResponseConfig {
+
 	@Bean
 	public Decoder decoder(ObjectFactory<HttpMessageConverters> messageConverters) {
 		return new CustomDecoder(new SpringDecoder(messageConverters));
 	}
 
+	/**
+	 * 페잉 응답에서
+	 * 1. Authorization header 읽고 스레드 로컬 Access Token 설정
+	 * 2. Cookie 읽고 스레드 로컬 Refresh Token 설정
+	 *
+	 * @author 오연수
+	 */
 	public static class CustomDecoder implements Decoder {
 		private final Decoder decoder;
 

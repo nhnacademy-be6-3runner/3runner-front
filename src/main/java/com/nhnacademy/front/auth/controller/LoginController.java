@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nhnacademy.front.auth.adapter.AuthAdapter;
 import com.nhnacademy.front.auth.adapter.LoginAdapter;
@@ -21,6 +20,7 @@ import com.nhnacademy.front.threadlocal.TokenHolder;
 import com.nhnacademy.util.ApiResponse;
 
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -66,22 +66,42 @@ public class LoginController {
 	 * @return 로그인 응답 (일단 토큰 값) - 추후 main view 로 리다이렉트
 	 */
 	@PostMapping("/login")
-	@ResponseBody
-	public ApiResponse<LoginResponse> login(@RequestParam String email, @RequestParam String password,
+	public String login(@RequestParam String email, @RequestParam String password,
 		HttpServletResponse response) {
 		LoginResponse loginResponse = loginService.getLoginResponse(new LoginRequest(email, password));
-
-		// String encodedAccess = URLEncoder.encode(TokenHolder.getAccessToken(), "UTF-8");
-		// String encodedRefresh = URLEncoder.encode(TokenHolder.getRefreshToken(), "UTF-8");
-
-		// response.addHeader("Authorization", TokenHolder.getAccessToken());
-		// response.addHeader("Refresh", TokenHolder.getRefreshToken());
 
 		// 쿠키로 저장
 		response.addCookie(new Cookie("Access", TokenHolder.getAccessToken()));
 		response.addCookie(new Cookie("Refresh", TokenHolder.getRefreshToken()));
 
-		return ApiResponse.success(loginResponse);
+		return "redirect:/";
+	}
+
+	/**
+	 * 로그아웃 요청을 보낸다.
+	 * 쿠키 설정을 위해 request, response 필요
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @return the api response
+	 */
+	@PostMapping("/logout")
+	public String logout(HttpServletRequest request, HttpServletResponse response) {
+		loginService.logout();
+
+		// Cookie 삭제
+		for (Cookie cookie : request.getCookies()) {
+			if (cookie.getName().equals("Access")) {
+				cookie.setMaxAge(0);
+				response.addCookie(cookie);
+			}
+			if (cookie.getName().equals("Refresh")) {
+				cookie.setMaxAge(0);
+				response.addCookie(cookie);
+			}
+		}
+
+		return "redirect:/";
 	}
 
 	// @PutMapping("/auth/login")

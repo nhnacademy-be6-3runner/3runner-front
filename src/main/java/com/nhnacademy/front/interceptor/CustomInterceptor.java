@@ -8,6 +8,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.nhnacademy.front.threadlocal.TokenHolder;
 import com.nhnacademy.front.token.service.TokenService;
+import com.nhnacademy.front.util.CookieUtil;
 import com.nhnacademy.front.util.JWTUtil;
 
 import jakarta.servlet.http.Cookie;
@@ -38,23 +39,41 @@ public class CustomInterceptor implements HandlerInterceptor {
 		Optional<Cookie[]> cookies = Optional.ofNullable(request.getCookies());
 		if (cookies.isPresent()) {
 			for (Cookie cookie : cookies.orElse(null)) {
+				if (cookie.getName().equals("Refresh")) {
+					String refreshToken = cookie.getValue();
+					log.warn("기존 쿠키 - refreshToken: {}", refreshToken);
+					TokenHolder.setRefreshToken(refreshToken);
+				}
 				if (cookie.getName().equals("Access")) {
 					String accessToken = cookie.getValue();
+					log.warn("기존 쿠키 - accessToken: {}", accessToken);
 
 					// Access token 만료된 경우
 					if (jwtUtil.isExpired(accessToken)) {
 						String refreshToken = findRefreshToken(request, response);
+						log.error("기존 쿠키 - refresh token: {}", refreshToken);
 
 						accessToken = tokenService.requestNewAccessToken(refreshToken);
 
 						// 기존 cookie 삭제
 						cookie.setMaxAge(0);
 						response.addCookie(cookie);
+
+						// 새로운 Access cookie 추가
+						Cookie newAccessTokenCookie = CookieUtil.createCookie("Access", accessToken);
+						response.addCookie(newAccessTokenCookie);
+						log.error("재발급 쿠키에 설정 - access token: {}", accessToken);
+
+						// 새로운 refresh cookie 추가
+						Cookie newRefreshTokenCookie = CookieUtil.createCookie("Refresh", TokenHolder.getRefreshToken(),
+							7 * 24 * 60 * 60);
+
+						response.addCookie(newRefreshTokenCookie);
+						log.error("재발급 쿠키에 설정 - refresh token: {}", TokenHolder.getRefreshToken());
 					}
 
 					TokenHolder.setAccessToken(accessToken);
 					log.info("Interceptor, Access token 토큰 홀더에 세팅");
-					break;
 				}
 			}
 		}
@@ -67,13 +86,13 @@ public class CustomInterceptor implements HandlerInterceptor {
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
 		ModelAndView modelAndView) throws Exception {
 		TokenHolder.resetAccessToken();
+		TokenHolder.resetRefreshToken();
 		log.info("Interceptor, Access token 토큰 홀더 리셋");
 	}
 
 	private String findRefreshToken(HttpServletRequest request, HttpServletResponse response) {
 		// Access Token 검증, 만료 되었으면 REFRESH TOKEN 전송
 		Cookie[] cookies = request.getCookies();
-		// String refreshToken = TokenHolder.getRefreshToken();
 		String refreshToken = null;
 		if (cookies != null) {
 			for (Cookie cookie : cookies) {
