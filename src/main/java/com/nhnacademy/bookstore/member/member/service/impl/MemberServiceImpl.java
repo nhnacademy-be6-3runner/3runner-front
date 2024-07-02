@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.nhnacademy.bookstore.purchase.coupon.service.CouponMemberService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -41,6 +42,10 @@ public class MemberServiceImpl implements MemberService {
 	private final PurchaseRepository purchaseRepository;
 	private final PasswordEncoder passwordEncoder;
 
+	/**
+	 * 웰컴 쿠폰 구현 서비스.
+	 */
+	private final CouponMemberService couponMemberService;
 	@Override
 	public Member saveOrGetPaycoMember(UserProfile userProfile) {
 		Optional<Member> optionalMember = memberRepository.findByEmail(userProfile.getIdNo());
@@ -58,6 +63,7 @@ public class MemberServiceImpl implements MemberService {
 			member.setCreatedAt(ZonedDateTime.now());
 			memberRepository.save(member);
 			//없는경우 새로 가져온다.
+			couponMemberService.issueWelcomeCoupon(member);
 		}
 		return null;
 	}
@@ -79,6 +85,8 @@ public class MemberServiceImpl implements MemberService {
 		if (findmember.isPresent()) {
 			throw new AlreadyExistsEmailException();
 		}
+
+		couponMemberService.issueWelcomeCoupon(member);
 		return memberRepository.save(member);
 	}
 
