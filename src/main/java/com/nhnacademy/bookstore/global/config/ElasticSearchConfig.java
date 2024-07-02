@@ -6,6 +6,7 @@ import org.springframework.data.elasticsearch.client.ClientConfiguration;
 import org.springframework.data.elasticsearch.support.HttpHeaders;
 
 @Configuration
+// @EnableElasticsearchRepositories
 public class ElasticSearchConfig {
 	//
 	// @Value("${elasticsearch.url}")
