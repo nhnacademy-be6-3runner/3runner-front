@@ -22,6 +22,12 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import jakarta.persistence.EntityManager;
 
+/**
+ * 주문 책 repository
+ *
+ * @author 정주혁
+ */
+
 @Repository
 public class PurchaseBookCustomRepositoryImpl implements PurchaseBookCustomRepository {
 	private final JPAQueryFactory jpaQueryFactory;
@@ -35,6 +41,13 @@ public class PurchaseBookCustomRepositoryImpl implements PurchaseBookCustomRepos
 		this.jpaQueryFactory = new JPAQueryFactory(entityManager);
 	}
 
+	/**
+	 * 주문 id(PurchaseID(Long)) 로 주문 책 dto로 변환해서 불러오기
+	 *
+	 * @param purchaseId 조회할 주문 id
+	 * @param pageable page
+	 * @return Page<ReadPurchaseBookResponse>(책dto와 주문 dto가 결합된 값)
+	 */
 	@Override
 	public Page<ReadPurchaseBookResponse> readBookPurchaseResponses(Long purchaseId, Pageable pageable) {
 		List<ReadPurchaseBookResponse> response = jpaQueryFactory.select(
@@ -68,11 +81,18 @@ public class PurchaseBookCustomRepositoryImpl implements PurchaseBookCustomRepos
 			.where(qPurchaseBook.purchase.id.eq(purchaseId))
 			.fetchOne());
 		if (total <= 0) {
-			throw new NullPointerException();
+			total = 0L;
 		}
 
 		return new PageImpl<>(response, pageable, total);
 	}
+	/**
+	 * 주문 id(orderNumber(UUID)) 로 주문 책 dto로 변환해서 불러오기
+	 *
+	 * @param purchaseId 조회할 주문 id
+	 * @param pageable page
+	 * @return Page<ReadPurchaseBookResponse>(책dto와 주문 dto가 결합된 값)
+	 */
 	@Override
 	public Page<ReadPurchaseBookResponse> readGuestBookPurchaseResponses(String purchaseId, Pageable pageable) {
 		List<ReadPurchaseBookResponse> response = jpaQueryFactory.select(
@@ -106,7 +126,7 @@ public class PurchaseBookCustomRepositoryImpl implements PurchaseBookCustomRepos
 			.where(qPurchaseBook.purchase.orderNumber.eq(UUID.fromString(purchaseId)))
 			.fetchOne());
 		if (total <= 0) {
-			throw new NullPointerException();
+			total = 0L;
 		}
 
 		return new PageImpl<>(response, pageable, total);
