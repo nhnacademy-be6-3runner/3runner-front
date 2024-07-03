@@ -1,16 +1,18 @@
 package com.nhnacademy.front.purchase.purchase.service.impl;
 
-import java.util.Objects;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
-import com.nhnacademy.front.purchase.purchase.dto.request.ReadDeletePurchaseGuestRequest;
-import com.nhnacademy.front.purchase.purchase.dto.response.ReadPurchase;
+import com.nhnacademy.front.entity.purchase.enums.PurchaseStatus;
+import com.nhnacademy.front.purchase.purchase.dto.request.UpdatePurchaseGuestRequest;
+import com.nhnacademy.front.purchase.purchase.dto.response.ReadPurchaseBookResponse;
+import com.nhnacademy.front.purchase.purchase.dto.response.ReadPurchaseResponse;
 import com.nhnacademy.front.purchase.purchase.feign.PurchaseBookControllerClient;
 import com.nhnacademy.front.purchase.purchase.feign.PurchaseGuestControllerClient;
 import com.nhnacademy.front.purchase.purchase.service.PurchaseDetailGuestService;
+import com.nhnacademy.util.ApiResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,15 +23,25 @@ public class PurchaseDetailGuestServiceImpl implements PurchaseDetailGuestServic
 	private final PurchaseBookControllerClient purchaseBookControllerClient;
 
 	@Override
-	public Page<ReadPurchase> readGuestPurchases(Long memberId){
-		// ApiResponse<ReadPurchaseResponse> readPurchase =  purchaseGuestControllerClient.readPurchase();
-		return null;
-	}
-	@Override
-	public boolean validatePurchase(String userId, String password) {
-		return !Objects.isNull(
-			purchaseGuestControllerClient.readPurchase(ReadDeletePurchaseGuestRequest.builder().orderNumber(
-				UUID.fromString(userId)).password(password).build()).getBody().getData());
+	public ReadPurchaseResponse readGuestPurchases(String orderNumber, String password){
+		ApiResponse<ReadPurchaseResponse> readPurchase =  purchaseGuestControllerClient.readPurchase(orderNumber, password);
+		return readPurchase.getBody().getData();
 	}
 
+	@Override
+	public Page<ReadPurchaseBookResponse> readGuestPurchaseBooks(String orderNumber,int page,int size,String sort) {
+
+		return purchaseBookControllerClient.readGuestPurchaseBook(orderNumber,page,size,sort).getBody().getData();
+	}
+
+	@Override
+	public boolean validatePurchase(String orderNumber, String password) {
+		return purchaseGuestControllerClient.validatePurchases(orderNumber, password).getBody().getData();
+	}
+
+	@Override
+	public void updatePurchaseStatus(String purchaseId){
+		purchaseGuestControllerClient.updatePurchaseStatus( UpdatePurchaseGuestRequest.builder().purchaseStatus(
+			PurchaseStatus.CONFIRMED).orderNumber(UUID.fromString(purchaseId)).build());
+	}
 }

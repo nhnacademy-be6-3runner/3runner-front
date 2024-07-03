@@ -27,8 +27,9 @@ import java.util.List;
 @FeignClient(name = "purchaseMemberControllerClient", url = "http://${feign.client.url}")
 public interface PurchaseMemberControllerClient {
 
-    @GetMapping("/members/purchases/{purchaseId}")
-    ApiResponse<ReadPurchaseResponse> readPurchase (@RequestHeader("Member-Id") Long memberId, @PathVariable(value = "purchaseId", required = false) Long purchaseId);
+    @GetMapping("/bookstore/members/purchases/{purchaseId}")
+    ApiResponse<ReadPurchaseResponse> readPurchase (@RequestHeader("Member-Id") Long memberId
+        , @PathVariable(value = "purchaseId", required = false) Long purchaseId);
 
     @GetMapping("/bookstore/members/purchases")
     ApiResponse<Page<ReadPurchaseResponse>> readPurchases (@RequestHeader(value = "Member-Id", required = false) Long memberId

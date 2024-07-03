@@ -1,5 +1,6 @@
 package com.nhnacademy.front.purchase.purchase.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.nhnacademy.front.entity.purchase.enums.MemberType;
 import com.nhnacademy.front.entity.purchase.enums.PurchaseStatus;
 import lombok.Builder;
@@ -9,13 +10,13 @@ import java.util.UUID;
 
 @Builder
 public record ReadPurchaseResponse(long id,
-                                   UUID orderNumber,
-                                   PurchaseStatus status,
-                                   int deliveryPrice,
-                                   int totalPrice,
-                                   ZonedDateTime createdAt,
-                                   String road , 			// 주소
-                                   String password,
-                                   MemberType memberType) {
+								   UUID orderNumber,
+								   PurchaseStatus status,
+								   int deliveryPrice,
+								   int totalPrice,
+								   ZonedDateTime createdAt,
+								   String road,
+								   String password,
+								   MemberType memberType) {
 
 }

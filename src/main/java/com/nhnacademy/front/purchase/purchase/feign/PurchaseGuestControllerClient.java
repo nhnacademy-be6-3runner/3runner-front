@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @FeignClient(name = "purchaseGuestControllerClient", url = "http://${feign.client.url}")
 public interface PurchaseGuestControllerClient {
     @GetMapping("/bookstore/guests/purchases")
-    ApiResponse<ReadPurchaseResponse> readPurchase (@Valid @RequestBody ReadDeletePurchaseGuestRequest readPurchaseRequest);
+    ApiResponse<ReadPurchaseResponse> readPurchase (@RequestParam String orderNumber,@RequestParam String password);
 
     @PostMapping("/bookstore/guests/purchases")
     ApiResponse<Void> createPurchase (@Valid @RequestBody CreatePurchaseRequest createPurchaseRequest);
@@ -24,4 +24,8 @@ public interface PurchaseGuestControllerClient {
 
     @DeleteMapping("/bookstore/guests/purchases")
     ApiResponse<Void> deletePurchases (@Valid @RequestBody ReadDeletePurchaseGuestRequest readDeletePurchaseGuestRequest);
+
+    @GetMapping("/bookstore/guests/purchases/validate")
+    ApiResponse<Boolean> validatePurchases(@RequestParam String orderNumber,@RequestParam String password);
+
 }

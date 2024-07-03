@@ -18,7 +18,7 @@ import com.nhnacademy.util.ApiResponse;
 
 import jakarta.validation.Valid;
 
-@FeignClient(name = "purchaseBookClient", url = "http://localhost:8081")
+@FeignClient(name = "purchaseBookClient", url = "http://${feign.client.url}")
 public interface PurchaseBookControllerClient {
 
 
@@ -37,11 +37,17 @@ public interface PurchaseBookControllerClient {
 
 	@GetMapping("/bookstore/purchases/books/{purchaseId}")
 	ApiResponse<Page<ReadPurchaseBookResponse>> readPurchaseBook(
-		@PathVariable(value = "purchaseId")  long purchaseId
+		@PathVariable(value = "purchaseId")  Long purchaseId
 		, @RequestParam int page
 		, @RequestParam int size
 		, @RequestParam(required = false) String sort);
 
+	@GetMapping("/bookstore/purchases/books/guests/{purchaseId}")
+	ApiResponse<Page<ReadPurchaseBookResponse>> readGuestPurchaseBook(
+		@PathVariable(value = "purchaseId")  String purchaseId
+		, @RequestParam int page
+		, @RequestParam int size
+		, @RequestParam(required = false) String sort);
 
 
 }

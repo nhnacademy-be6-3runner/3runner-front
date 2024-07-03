@@ -1,6 +1,7 @@
 package com.nhnacademy.front.purchase.purchase.dto.response;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -19,7 +20,6 @@ public record ReadPurchase(long id,
 						   String createdAt,
 						   String road , 			// 주소
 						   String password,
-						   MemberType memberType,
-						   Page<ReadPurchaseBookResponse> readPurchaseBookResponses
+						   MemberType memberType
 ) {
 }

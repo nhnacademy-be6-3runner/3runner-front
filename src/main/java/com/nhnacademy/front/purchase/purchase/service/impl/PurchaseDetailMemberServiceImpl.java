@@ -8,6 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 
+import com.nhnacademy.front.entity.purchase.enums.PurchaseStatus;
+import com.nhnacademy.front.purchase.purchase.dto.request.UpdatePurchaseMemberRequest;
 import com.nhnacademy.front.purchase.purchase.dto.response.ReadPurchase;
 import com.nhnacademy.front.purchase.purchase.dto.response.ReadPurchaseBookResponse;
 import com.nhnacademy.front.purchase.purchase.dto.response.ReadPurchaseResponse;
@@ -33,7 +35,6 @@ public class PurchaseDetailMemberServiceImpl implements PurchaseDetailMemberServ
 		List<ReadPurchase> orderDetail = new ArrayList<>();
 		ApiResponse<Page<ReadPurchaseResponse>> responses =  purchaseMemberControllerClient.readPurchases(memberId,0,3,null);
 		for(ReadPurchaseResponse response : responses.getBody().getData()){
-			Page<ReadPurchaseBookResponse> bookByPurchases = purchaseBookControllerClient.readPurchaseBook(response.id(), 0,5,null).getBody().getData();
 			orderDetail.add(ReadPurchase.builder()
 					.id(response.id())
 					.orderNumber(response.orderNumber().toString())
@@ -45,11 +46,25 @@ public class PurchaseDetailMemberServiceImpl implements PurchaseDetailMemberServ
 					.password(response.password())
 					.status(response.status())
 					.totalPrice(response.totalPrice())
-					.readPurchaseBookResponses(bookByPurchases)
 				.build());
 
 		}
 		return new PageImpl<>(orderDetail);
+	}
+
+	@Override
+	public Page<ReadPurchaseBookResponse> readPurchaseBookResponses(Long purchaseId, int page, int size, String sort){
+		return purchaseBookControllerClient.readPurchaseBook(purchaseId, page,size,null).getBody().getData();
+	}
+
+	@Override
+	public PurchaseStatus readPurchaseStatus(Long purchaseId){
+		return purchaseMemberControllerClient.readPurchase(1L,purchaseId).getBody().getData().status();
+	}
+
+	@Override
+	public void updatePurchaseStatus(long purchaseId){
+		purchaseMemberControllerClient.updatePurchaseStatus(1L, UpdatePurchaseMemberRequest.builder().purchaseStatus(PurchaseStatus.CONFIRMED).build(),purchaseId);
 	}
 
 }
