@@ -12,3 +12,13 @@ spring:
     cache: false
     prefix: classpath:/templates/
     suffix: .html
+
+
+  jwt:
+    secret: aaaasqwlkljlfasdfqwerafcxvzpojijoijopjewndllllllsserrrrrrwqexc
+  cloud:
+    openfeign:
+      client:
+        config:
+          default:
+            error-decoder: com.nhnacademy.front.config.CustomErrorDecoder
