@@ -20,6 +20,7 @@ public record CreateReviewRequest(
         @Size(min = 1, max = 50) String title,
         @Size(min = 1, max = 200) String content,
         @NotNull double ratings,
+        String imageName,
         List<String> imageList
 ) {
 }
