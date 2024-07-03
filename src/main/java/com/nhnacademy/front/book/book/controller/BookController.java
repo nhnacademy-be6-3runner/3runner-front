@@ -2,6 +2,7 @@ package com.nhnacademy.front.book.book.controller;
 
 import com.nhnacademy.front.book.book.dto.request.UserCreateBookRequest;
 import com.nhnacademy.front.book.book.dto.response.BookListResponse;
+import com.nhnacademy.front.book.book.dto.response.UserReadBookResponse;
 import com.nhnacademy.front.book.book.service.BookService;
 import com.nhnacademy.front.book.image.service.ImageService;
 import lombok.RequiredArgsConstructor;
@@ -10,17 +11,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-
-import java.util.List;
-
-import com.nhnacademy.front.book.book.dto.request.UserCreateBookRequest;
-import com.nhnacademy.front.book.book.dto.response.UserReadBookResponse;
-import com.nhnacademy.front.book.book.service.BookService;
-import com.nhnacademy.front.book.image.service.ImageService;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller

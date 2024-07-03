@@ -95,15 +95,15 @@ public class BookServiceImpl implements BookService {
 
 	/**
 	 * String 으로 되어있는 아이디 값들을 리스트로 변환
-	 * @param StringId id 가 하나의 String 으로 이어져있음 ex -> 1,2,3,4
+	 * @param stringId id 가 하나의 String 으로 이어져있음 ex -> 1,2,3,4
 	 * @return 리스트로 반환
 	 */
-	private List<Long> stringIdToList(String StringId) {
+	private List<Long> stringIdToList(String stringId) {
 		List<Long> idList = new ArrayList<>();
-		if (Objects.isNull(StringId)) {
+		if (Objects.isNull(stringId)) {
 			return idList;
 		}
-		String[] idSplit = StringId.split(",");
+		String[] idSplit = stringId.split(",");
 
 		for (String idStr : idSplit) {
 			idList.add(Long.parseLong(idStr));
