@@ -11,6 +11,8 @@ spring:
       database: 11
       password: "*N2vya7H@muDTwdNMR!"
 
+
+
   jpa:
     open-in-view: false
     show-sql: true
@@ -22,7 +24,7 @@ spring:
         highlight_sql: true
         auto_quote_keyword: true
 
-        ddl-auto: update
+  #        ddl-auto: update
 
   servlet:
     multipart:
@@ -34,7 +36,21 @@ spring:
     username: be6_3runner
     password: tHos2g5st4@XH7mT
     driver-class-name: com.mysql.cj.jdbc.Driver
+    type: org.apache.commons.dbcp2.BasicDataSource
+    dbcp2:
+      initial-size: 5
+      max-total: 20
+      max-idle: 20
+      min-idle: 5
+      test-on-borrow: true
+      validation-query: SELECT 1
 
+
+  rabbitmq:
+    host: 133.186.241.167
+    port: 5672
+    username: admin
+    password: nhnacademy123!
 
   profiles:
     active: dev

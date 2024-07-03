@@ -81,14 +81,12 @@ public class PaymentController {
         InputStream responseStream = isSuccess ? connection.getInputStream() : connection.getErrorStream();
 
         // 결제 성공 및 실패 비즈니스 로직을 구현하세요.
-
         if (isSuccess) {
             if (Objects.isNull(memberId)) {
                 paymentGuestService.payment(cartId, address, password, Integer.parseInt(amount), orderId);
             } else {
                 paymentMemberService.payment(memberId, address, Integer.parseInt(amount), orderId);
             }
-
         } else {
             throw new TossPaymentException("토스 최종 결제가 실패하였습니다.");
         }

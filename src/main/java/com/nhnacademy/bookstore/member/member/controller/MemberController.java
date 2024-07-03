@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.nhnacademy.bookstore.entity.auth.Auth;
 import com.nhnacademy.bookstore.entity.member.Member;
 import com.nhnacademy.bookstore.entity.member.enums.Status;
-import com.nhnacademy.bookstore.entity.pointRecord.PointRecord;
 import com.nhnacademy.bookstore.member.auth.dto.AuthResponse;
 import com.nhnacademy.bookstore.member.auth.service.impl.AuthServiceImpl;
 import com.nhnacademy.bookstore.member.member.dto.request.CreateMemberRequest;
@@ -27,20 +26,12 @@ import com.nhnacademy.bookstore.member.member.dto.response.GetMemberResponse;
 import com.nhnacademy.bookstore.member.member.dto.response.UpdateMemberResponse;
 import com.nhnacademy.bookstore.member.member.service.impl.MemberServiceImpl;
 import com.nhnacademy.bookstore.member.memberAuth.service.impl.MemberAuthServiceImpl;
-import com.nhnacademy.bookstore.member.pointRecord.service.impl.PointServiceImpl;
+import com.nhnacademy.bookstore.member.pointRecord.service.impl.PointRecordServiceImpl;
 import com.nhnacademy.bookstore.util.ApiResponse;
 
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.*;
-
-import java.time.ZonedDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * The type Member controller.
@@ -51,7 +42,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MemberController {
 	private final MemberServiceImpl memberService;
-	private final PointServiceImpl pointRecordService;
+	private final PointRecordServiceImpl pointRecordService;
 	private final AuthServiceImpl authService;
 	private final MemberAuthServiceImpl memberAuthService;
 	private final PasswordEncoder passwordEncoder;
@@ -67,8 +58,8 @@ public class MemberController {
 
 		Auth auth = authService.getAuth("USER");
 		Member member = memberService.save(request);
-		PointRecord pointRecord = new PointRecord(null, 5000L, 5000L, ZonedDateTime.now(), "회원가입 5000포인트 적립.", member);
-		pointRecordService.save(pointRecord);
+		//		PointRecord pointRecord = new PointRecord(null, 5000L, 5000L, ZonedDateTime.now(), "회원가입 5000포인트 적립.", member,null);
+		//		pointRecordService.save(pointRecord);
 		memberAuthService.saveAuth(member, auth);
 
 		return new ApiResponse<Void>(new ApiResponse.Header(true, 201), new ApiResponse.Body<Void>(null));
@@ -156,6 +147,7 @@ public class MemberController {
 	 * @return the api response - updateMemberResponse
 	 * @author 오연수
 	 */
+	@Transactional
 	@PutMapping("/bookstore/members")
 	public ApiResponse<UpdateMemberResponse> updateMember(@RequestHeader(name = "Member-Id") Long memberId,
 		@Valid @RequestBody UpdateMemberRequest updateMemberRequest) {
