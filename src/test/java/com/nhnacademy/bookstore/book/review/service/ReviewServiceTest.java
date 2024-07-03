@@ -75,8 +75,8 @@ class ReviewServiceTest {
 
     @BeforeEach
     public void setUp() {
-        createReviewRequest = new CreateReviewRequest("좋은 책입니다", "추천합니다", 5, null);
-        updateReviewRequest = new CreateReviewRequest("좋은 책입니다2", "추천합니다", 5, null);
+        createReviewRequest = new CreateReviewRequest("좋은 책입니다", "추천합니다", 5, null, null);
+        updateReviewRequest = new CreateReviewRequest("좋은 책입니다2", "추천합니다", 5, null, null);
         deleteReviewRequest = new DeleteReviewRequest("부적절한 내용");
 
         member1 = new Member(CreateMemberRequest.builder()
