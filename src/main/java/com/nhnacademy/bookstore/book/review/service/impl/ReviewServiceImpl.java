@@ -131,7 +131,6 @@ public class ReviewServiceImpl implements ReviewService {
      * @return 리뷰 상세 정보
      */
     @Override
-    @Transactional(readOnly = true)
     public ReviewDetailResponse readDetailReview(long reviewId) {
         if (!reviewRepository.existsById(reviewId)) {
             throw new ReviewNotExistsException();
@@ -140,7 +139,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     /**
-     * 사용자에게 보여줄 리뷰 조회 (좋아요, 댓글 포함) 메서드입니다.
+     * 사용자에게 보여줄 리뷰 조회 (좋아요 포함) 메서드입니다.
      *
      * @param reviewId 리뷰 아이디
      * @return 리뷰 상세 정보
