@@ -1,26 +1,7 @@
 package com.nhnacademy.bookstore.purchase.purchaseBook.controller;
 
-import com.nhnacademy.bookstore.purchase.purchaseBook.dto.request.CreatePurchaseBookRequest;
-import com.nhnacademy.bookstore.purchase.purchaseBook.dto.request.DeletePurchaseBookRequest;
-import com.nhnacademy.bookstore.purchase.purchaseBook.dto.request.ReadPurchaseIdRequest;
-import com.nhnacademy.bookstore.purchase.purchaseBook.dto.request.UpdatePurchaseBookRequest;
-import com.nhnacademy.bookstore.purchase.purchaseBook.dto.response.ReadPurchaseBookResponse;
-import com.nhnacademy.bookstore.purchase.purchaseBook.exception.CreatePurchaseBookRequestFormException;
-import com.nhnacademy.bookstore.purchase.purchaseBook.exception.DeletePurchaseBookRequestFormException;
-import com.nhnacademy.bookstore.purchase.purchaseBook.exception.ReadPurchaseBookRequestFormException;
-import com.nhnacademy.bookstore.purchase.purchaseBook.exception.UpdatePurchaseBookRequestFormException;
-import com.nhnacademy.bookstore.purchase.purchaseBook.service.PurchaseBookService;
-import com.nhnacademy.bookstore.util.ApiResponse;
-import com.nhnacademy.bookstore.util.ValidationUtils;
-
-import jakarta.validation.Valid;
-import jakarta.ws.rs.Path;
-import lombok.RequiredArgsConstructor;
-
-import java.util.List;
 import java.util.Objects;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -36,6 +17,18 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.nhnacademy.bookstore.purchase.purchaseBook.dto.request.CreatePurchaseBookRequest;
+import com.nhnacademy.bookstore.purchase.purchaseBook.dto.request.UpdatePurchaseBookRequest;
+import com.nhnacademy.bookstore.purchase.purchaseBook.dto.response.ReadPurchaseBookResponse;
+import com.nhnacademy.bookstore.purchase.purchaseBook.exception.CreatePurchaseBookRequestFormException;
+import com.nhnacademy.bookstore.purchase.purchaseBook.exception.UpdatePurchaseBookRequestFormException;
+import com.nhnacademy.bookstore.purchase.purchaseBook.service.PurchaseBookService;
+import com.nhnacademy.bookstore.util.ApiResponse;
+import com.nhnacademy.bookstore.util.ValidationUtils;
+
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 주문내역 - 책 controller
@@ -72,6 +65,35 @@ public class PurchaseBookController {
 
 		Page<ReadPurchaseBookResponse> tmp =
 			purchaseBookService.readBookByPurchaseResponses( purchaseId, pageable);
+		return ApiResponse.success(tmp);
+	}
+
+	/**
+	 *  회원 주문 orderNumber로 조회
+	 *
+	 * @param memberId 회원 Id
+	 * @param purchaseId 주문 orderNumber
+	 * @param page 현재 페이지
+	 * @param size 페이지에 한번에 보여주는 개수
+	 * @param sort 정렬
+	 * @return 주문 orderNumber 로 조회된 책들 리스트 반환
+	 */
+	@GetMapping("/guests/{purchaseId}")
+	public ApiResponse<Page<ReadPurchaseBookResponse>> readGuestPurchaseBook(
+		@RequestHeader(name = "Member-Id") Long memberId,
+		@PathVariable(value = "purchaseId")  String purchaseId
+		, @RequestParam int page
+		, @RequestParam int size
+		, @RequestParam(required = false) String sort) {
+		Pageable pageable;
+		if (Objects.isNull(sort)) {
+			pageable = PageRequest.of(page, size);
+		} else {
+			pageable = PageRequest.of(page, size, Sort.by(sort));
+		}
+
+		Page<ReadPurchaseBookResponse> tmp =
+			purchaseBookService.readGuestBookByPurchaseResponses(purchaseId,memberId, pageable);
 		return ApiResponse.success(tmp);
 	}
 

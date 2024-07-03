@@ -119,7 +119,7 @@ public class PurchaseMemberController {
 	 * @param purchaseId 주문 아이디
 	 * @return Api
 	 */
-	@PutMapping("members/purchases/{purchaseId}")
+	@PutMapping("/members/purchases/{purchaseId}")
 	public ApiResponse<Void> updatePurchaseStatus(@RequestHeader("Member-Id") Long memberId,
 		@Valid @RequestBody UpdatePurchaseMemberRequest updatePurchaseRequest,@PathVariable Long purchaseId,
 		BindingResult bindingResult
@@ -139,7 +139,7 @@ public class PurchaseMemberController {
 	 * @param purchaseId 주문 아이디
 	 * @return api
 	 */
-	@DeleteMapping("members/purchases/{purchaseId}")
+	@DeleteMapping("/members/purchases/{purchaseId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public ApiResponse<Void> deletePurchases(@RequestHeader("Member-Id") Long memberId,
 		@PathVariable Long purchaseId) {

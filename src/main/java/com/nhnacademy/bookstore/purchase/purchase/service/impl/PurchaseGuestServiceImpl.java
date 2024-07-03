@@ -29,7 +29,7 @@ import java.util.UUID;
  * @author 김병우
  */
 @Service
-@Transactional(readOnly = true)
+@Transactional
 @RequiredArgsConstructor
 public class PurchaseGuestServiceImpl implements PurchaseGuestService {
 	private final PurchaseRepository purchaseRepository;
@@ -44,7 +44,8 @@ public class PurchaseGuestServiceImpl implements PurchaseGuestService {
 	@Override
 	public Long createPurchase(CreatePurchaseRequest createPurchaseRequest) {
 		Purchase purchase = new Purchase(
-			UUID.fromString(createPurchaseRequest.orderId()),
+			//UUID.fromString(createPurchaseRequest.orderId()),
+			UUID.randomUUID(), //TODO : 바꿔놓기
 			PurchaseStatus.PROCESSING,
 			createPurchaseRequest.deliveryPrice(),
 			createPurchaseRequest.totalPrice(),
@@ -74,9 +75,8 @@ public class PurchaseGuestServiceImpl implements PurchaseGuestService {
 	 */
 	@Override
 	public Long updatePurchase(UpdatePurchaseGuestRequest updatePurchaseGuestRequest) {
-		Optional<Purchase> purchaseOptional = purchaseRepository.findPurchaseByOrderNumber(
-			updatePurchaseGuestRequest.orderNumber());
-		Purchase purchase = validateGuest(purchaseOptional, updatePurchaseGuestRequest.password());
+		Purchase purchase = purchaseRepository.findPurchaseByOrderNumber(
+			updatePurchaseGuestRequest.orderNumber()).orElseThrow();
 
 		purchase.setStatus(updatePurchaseGuestRequest.purchaseStatus());
 
@@ -99,6 +99,7 @@ public class PurchaseGuestServiceImpl implements PurchaseGuestService {
 
 		return ReadPurchaseResponse.builder()
 			.id(purchase.getId())
+			.orderNumber(orderNumber)
 			.status(purchase.getStatus())
 			.deliveryPrice(purchase.getDeliveryPrice())
 			.totalPrice(purchase.getTotalPrice())
@@ -129,7 +130,7 @@ public class PurchaseGuestServiceImpl implements PurchaseGuestService {
 	 * @param password 비밀번호
 	 * @return 주문
 	 */
-	public Purchase validateGuest(Optional<Purchase> purchaseOptional, String password) {
+	private Purchase validateGuest(Optional<Purchase> purchaseOptional, String password) {
 		if (purchaseOptional.isEmpty()) {
 			throw new PurchaseDoesNotExistException("주문이 없습니다.");
 		}
@@ -139,5 +140,21 @@ public class PurchaseGuestServiceImpl implements PurchaseGuestService {
 			throw new PurchaseNoAuthorizationException("권한이 없습니다.");
 		}
 		return purchase;
+	}
+
+	/**
+	 * 비회원 주문 인증
+	 * 
+	 * @author 정주혁
+	 *
+	 * @param orderNumber 주문
+	 * @param password 비밀 번호
+	 * @return 인증->완 boolean 불가-> false
+	 */
+    @Override
+	public Boolean validateGuest(UUID orderNumber, String password) {
+		Purchase purchase = purchaseRepository.findPurchaseByOrderNumber(orderNumber).orElseThrow();
+		return encoder.matches(password, purchase.getPassword());
+
 	}
 }

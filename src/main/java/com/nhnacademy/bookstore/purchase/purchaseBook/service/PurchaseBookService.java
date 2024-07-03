@@ -25,4 +25,6 @@ public interface PurchaseBookService {
 
     Page<ReadPurchaseBookResponse> readBookByPurchaseResponses(Long purchaseId, Pageable pageable);
 
+    Page<ReadPurchaseBookResponse> readGuestBookByPurchaseResponses(String purchaseId, Long memberId, Pageable pageable);
+
 }

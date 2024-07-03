@@ -38,7 +38,7 @@ public class PurchaseManagerServiceImpl implements PurchaseManagerService {
 	}
 
 	@Override
-	public Long updatePurchaseStatus(long memberId, String purchaseId, String status) {
+	public Long updatePurchaseStatus(String purchaseId, String status) {
 
 		Purchase purchase = purchaseRepository.findPurchaseByOrderNumber(UUID.fromString(purchaseId))
 			.orElseThrow(() -> new PurchaseDoesNotExistException(""));

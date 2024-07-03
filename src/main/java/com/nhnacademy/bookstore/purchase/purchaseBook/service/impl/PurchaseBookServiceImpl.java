@@ -66,6 +66,13 @@ public class PurchaseBookServiceImpl implements PurchaseBookService {
 		return  purchaseBookCustomRepository.readBookPurchaseResponses(purchaseId, pageable);
 	}
 
+	@Override
+	public Page<ReadPurchaseBookResponse> readGuestBookByPurchaseResponses(String purchaseId, Long memberId, Pageable pageable) {
+
+
+		return  purchaseBookCustomRepository.readGuestBookPurchaseResponses(purchaseId, pageable);
+	}
+
 	/**
 	 * bookId와 purchaseId로 수정한 주문-책을 조회한후 update
 	 *

@@ -9,5 +9,5 @@ public interface PurchaseManagerService {
 
 	List<ReadPurchaseResponse> readPurchaseAll();
 
-	Long updatePurchaseStatus(long memberId, String purchaseId, String status);
+	Long updatePurchaseStatus(String purchaseId, String status);
 }

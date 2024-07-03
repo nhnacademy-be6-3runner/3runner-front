@@ -13,5 +13,6 @@ public interface PurchaseGuestService {
     Long updatePurchase(UpdatePurchaseGuestRequest updatePurchaseGuestRequest);
     ReadPurchaseResponse readPurchase( UUID orderNumber, String password);
     void deletePurchase(UUID orderNumber, String password);
+    Boolean validateGuest(UUID orderNumber, String password);
 
 }

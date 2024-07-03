@@ -7,4 +7,7 @@ import com.nhnacademy.bookstore.purchase.purchaseBook.dto.response.ReadPurchaseB
 
 public interface PurchaseBookCustomRepository {
 	Page<ReadPurchaseBookResponse> readBookPurchaseResponses(Long purchaseId, Pageable pageable);
+
+	Page<ReadPurchaseBookResponse> readGuestBookPurchaseResponses(String purchaseId, Pageable pageable);
+
 }

@@ -32,6 +32,20 @@ Member-Id: 1
 }
 
 ###
+POST http://localhost:8081/bookstore/guests/purchases
+Content-Type: application/json
+
+{
+  "deliveryPrice": 1000,
+  "orderId": "123e4567-e89b-12d3-a456-426614174000",
+  "password": "1234",
+  "totalPrice": 100000,
+  "road": "동탄"
+}
+
+
+
+##################
 
 POST http://localhost:8081/bookstore/purchases/books
 Content-Type: application/json
@@ -41,7 +55,7 @@ Member-Id: 1
   "bookId": 11,
   "quantity": 5,
   "price":  100,
-  "purchaseId": 4
+  "purchaseId": 6
 }
 
 ###
