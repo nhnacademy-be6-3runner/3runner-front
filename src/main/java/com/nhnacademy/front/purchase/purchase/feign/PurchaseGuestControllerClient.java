@@ -14,14 +14,18 @@ import org.springframework.web.bind.annotation.*;
 @FeignClient(name = "purchaseGuestControllerClient", url = "http://${feign.client.url}")
 public interface PurchaseGuestControllerClient {
     @GetMapping("/bookstore/guests/purchases")
-    ApiResponse<ReadPurchaseResponse> readPurchase (@Valid @RequestBody ReadDeletePurchaseGuestRequest readPurchaseRequest, BindingResult bindingResult);
+    ApiResponse<ReadPurchaseResponse> readPurchase (@RequestParam String orderNumber,@RequestParam String password);
 
     @PostMapping("/bookstore/guests/purchases")
-    ApiResponse<Void> createPurchase (@Valid @RequestBody CreatePurchaseRequest createPurchaseRequest, BindingResult bindingResult);
+    ApiResponse<Void> createPurchase (@Valid @RequestBody CreatePurchaseRequest createPurchaseRequest);
 
     @PutMapping("/bookstore/guests/purchases")
-    ApiResponse<Void> updatePurchaseStatus (@Valid @RequestBody UpdatePurchaseGuestRequest updatePurchaseGuestRequest, BindingResult bindingResult);
+    ApiResponse<Void> updatePurchaseStatus (@Valid @RequestBody UpdatePurchaseGuestRequest updatePurchaseGuestRequest);
 
     @DeleteMapping("/bookstore/guests/purchases")
-    ApiResponse<Void> deletePurchases (@Valid @RequestBody ReadDeletePurchaseGuestRequest readDeletePurchaseGuestRequest, BindingResult bindingResult);
+    ApiResponse<Void> deletePurchases (@Valid @RequestBody ReadDeletePurchaseGuestRequest readDeletePurchaseGuestRequest);
+
+    @GetMapping("/bookstore/guests/purchases/validate")
+    ApiResponse<Boolean> validatePurchases(@RequestParam String orderNumber,@RequestParam String password);
+
 }

@@ -1,26 +1,41 @@
 package com.nhnacademy.front.purchase.purchase.feign;
 
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
 import com.nhnacademy.front.purchase.purchase.dto.request.CreatePurchaseRequest;
-import com.nhnacademy.front.purchase.purchase.dto.request.ReadDeletePurchaseGuestRequest;
-import com.nhnacademy.front.purchase.purchase.dto.request.UpdatePurchaseGuestRequest;
 import com.nhnacademy.front.purchase.purchase.dto.request.UpdatePurchaseMemberRequest;
+import com.nhnacademy.front.purchase.purchase.dto.response.ReadPurchaseBookResponse;
 import com.nhnacademy.front.purchase.purchase.dto.response.ReadPurchaseResponse;
 import com.nhnacademy.util.ApiResponse;
+
 import jakarta.validation.Valid;
-import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.http.HttpStatus;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @FeignClient(name = "purchaseMemberControllerClient", url = "http://${feign.client.url}")
 public interface PurchaseMemberControllerClient {
-    @GetMapping("/members/purchases/{purchaseId}")
-    ApiResponse<ReadPurchaseResponse> readPurchase (@RequestHeader("Member-Id") Long memberId, @PathVariable(value = "purchaseId", required = false) Long purchaseId);
+
+    @GetMapping("/bookstore/members/purchases/{purchaseId}")
+    ApiResponse<ReadPurchaseResponse> readPurchase (@RequestHeader("Member-Id") Long memberId
+        , @PathVariable(value = "purchaseId", required = false) Long purchaseId);
 
     @GetMapping("/bookstore/members/purchases")
-    ApiResponse<List<ReadPurchaseResponse>> readPurchases (@RequestHeader("Member-Id") Long memberId);
+    ApiResponse<Page<ReadPurchaseResponse>> readPurchases (@RequestHeader(value = "Member-Id", required = false) Long memberId
+        , @RequestParam int page
+        , @RequestParam int size
+        , @RequestParam(required = false) String sort);
 
     @PostMapping("/bookstore/members/purchases")
     ApiResponse<Void> createPurchase (@RequestHeader("Member-Id") Long memberId, @Valid @RequestBody CreatePurchaseRequest createPurchaseRequest);

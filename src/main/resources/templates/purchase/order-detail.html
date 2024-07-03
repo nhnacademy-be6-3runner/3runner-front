@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>개인화 섹션</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/order-detail.css">
+</head>
+<body>
+<div class="section-body">
+    <button id="orderBtn">주문/배송</button>
+</div>
+<div id="orderDelivery" class="order-delivery hidden">
+    <h2>주문내역</h2>
+    <ul class="order-list">
+        <li class="order-item" th:each="order : ${orders}" >
+            <div class="order-info">
+                <div>
+                    <p>주문 번호:</p>
+                    <p th:text="${order.orderNumber.toString()}">주문 번호</p>
+                </div>
+                <div>
+                    <p>주문 날짜:</p>
+                    <p th:text="${order.createdAt}">주문 날짜</p>
+                </div>
+                <div>
+                    <p>상태:</p>
+                    <p th:text="${order.status}" id="order-status-${order.orderNumber}">상태</p>
+                </div>
+                <div>
+                    <p>총 금액:</p>
+                    <p th:text="${order.totalPrice()}+' ₩'">총 금액</p>
+                </div>
+            </div>
+            <div class="order-buttons">
+                <button class="details-btn" th:attr="data-order-id=${order.id()}">자세히 보기</button>
+                <form method="post" th:action="@{'/order/members/{purchaseId}' (purchaseId = ${order.id()})}">
+                    <button type="submit" class="confirm-order-btn" th:if="${order.status.toString() != 'CONFIRMED'}"  >주문 확정</button>
+                </form>
+                <button class="refund-btn" th:if="${order.status.toString() == 'COMPLETED'}" th:attr="data-order-id=${order.orderNumber}">결제 취소</button>
+            </div>
+        </li>
+        <div class="text-center mt-4">
+            <nav>
+                <ul class="pagination justify-content-center">
+                    <li class="page-item" th:classappend="${orders.hasPrevious()} ? '' : 'disabled'">
+                        <a class="page-link" href="#" th:onclick="'loadBooks(' + (${orders.number} - 1) + ', ' + ${orders.size} + '); return false;'">이전</a>
+                    </li>
+                    <li class="page-item" th:each="i : ${#numbers.sequence(0, orders.totalPages - 1)}" th:classappend="${i} == ${orders.number} ? 'active' ">
+                        <a class="page-link" href="#" th:onclick="'loadBooks(' + ${i} + ', ' + ${orders.size} + '); return false;'" th:text="${i + 1}">1</a>
+                    </li>
+                    <li class="page-item" th:classappend="${orders.hasNext()} ? '' : 'disabled'">
+                        <a class="page-link" href="#" th:onclick="'loadBooks(' + (${orders.number} + 1) + ', ' + ${orders.size} + '); return false;'">다음</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </ul>
+
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const orderBtn = document.getElementById('orderBtn');
+        const orderDelivery = document.getElementById('orderDelivery');
+
+
+        orderBtn.addEventListener('click', function () {
+
+            fetch('/order/check',{
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.isLoggedIn) {
+                        // 주문배송 페이지로 이동
+                        orderDelivery.classList.remove('hidden');
+                    } else {
+                        // 로그인 페이지로 리디렉션
+                        window.location.href = '/guest/orders/login';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+
+
+
+            orderDelivery.classList.remove('hidden');
+
+        });
+
+
+        document.querySelectorAll('.details-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                const orderId = this.getAttribute('data-order-id');
+                window.location.href = `/order/members/books/${orderId}`;
+            });
+        });
+
+        document.querySelectorAll('.refund-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                const orderId = this.getAttribute('data-order-id');
+                console.log(`Refund order ${orderId}`);
+            });
+        });
+    });
+</script>
+
+</body>
+</html>
