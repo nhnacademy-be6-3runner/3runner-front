@@ -111,9 +111,9 @@ public class MemberServiceImpl implements MemberService {
 		Optional<Member> member = memberRepository.findByEmail(email);
 
 		if (member.isPresent()) {
-			// if (member.get().getAuthProvider() != AuthProvider.GENERAL) {
-			// 	throw new LoginOauthEmailException(member.get().getAuthProvider());
-			// }
+			if (member.get().getAuthProvider() != AuthProvider.GENERAL) {
+				throw new LoginOauthEmailException(member.get().getAuthProvider());
+			}
 			if (passwordEncoder.matches(password, member.get().getPassword())) {
 				return member.get();
 			}
