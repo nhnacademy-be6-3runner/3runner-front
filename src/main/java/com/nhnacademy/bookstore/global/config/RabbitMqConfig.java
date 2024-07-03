@@ -1,7 +1,6 @@
 package com.nhnacademy.bookstore.global.config;
 
 import com.nhnacademy.bookstore.purchase.coupon.messageListener.CouponAnotherMessageListener;
-import com.nhnacademy.bookstore.purchase.coupon.messageListener.CouponMessageListener;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Queue;
@@ -33,7 +32,7 @@ public class RabbitMqConfig {
     @Value("${spring.rabbitmq.password}")
     private String rabbitmqPassword;
 
-    private static final String queueName1 = "3RUNNER-COUPON-EXPIRED-TODAY";
+    private static final String queueName1 = "3RUNNER-COUPON-ISSUED";
     private static final String queueName2 = "3RUNNER-COUPON-EXPIRED-IN-THREE-DAY";
     private static final String exchangeName ="3RUNNER-EXCHANGE-NAME";
     private static final String routingKey1="3RUNNER-ROUTING-KEY";
@@ -87,16 +86,6 @@ public class RabbitMqConfig {
     }
 
     @Bean
-    public SimpleMessageListenerContainer expiredCouponListenerContainer(ConnectionFactory connectionFactory,
-                                                                         @Qualifier("expiredCouponListenerAdapter")MessageListenerAdapter expiredCouponListenerAdapter) {
-        SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
-        container.setConnectionFactory(connectionFactory);
-        container.setQueueNames(queueName1);
-        container.setMessageListener(expiredCouponListenerAdapter);
-        return container;
-    }
-
-    @Bean
     public SimpleMessageListenerContainer expiredThreeDayCouponListenerContainer(ConnectionFactory connectionFactory,
                                                                                  @Qualifier("expiredThreeDayCouponListenerAdapter") MessageListenerAdapter expiredThreeDayCouponListenerAdapter) {
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
@@ -104,11 +93,6 @@ public class RabbitMqConfig {
         container.setQueueNames(queueName2);
         container.setMessageListener(expiredThreeDayCouponListenerAdapter);
         return container;
-    }
-
-    @Bean(name = "expiredCouponListenerAdapter")
-    public MessageListenerAdapter listenerAdapter1(CouponMessageListener expiredCouponListenerAdapter) {
-        return new MessageListenerAdapter(expiredCouponListenerAdapter, "쿠폰 만료일이 하루 남았습니다.");
     }
 
     @Bean(name = "expiredThreeDayCouponListenerAdapter")

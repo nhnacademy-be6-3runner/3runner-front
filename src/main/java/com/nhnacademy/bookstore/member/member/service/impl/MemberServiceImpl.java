@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.nhnacademy.bookstore.purchase.coupon.service.CouponMemberService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -42,25 +43,10 @@ public class MemberServiceImpl implements MemberService {
 	private final PasswordEncoder passwordEncoder;
 
 	/**
-	 * Save member.
-	 *
-	 * @param request the member -Member값을 받아온다.
-	 * @return the member -저장 후 member값을 그대로 반환한다.
-	 * @author 유지아 Save member. -멤버값을 받아와 저장한다.(이메일 중복하는걸로 확인하면 좋을듯)
+	 * 웰컴 쿠폰 구현 서비스.
 	 */
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public Member save(CreateMemberRequest request) {
-		CreateMemberRequest encodedRequest = new CreateMemberRequest(request.email(),
-			passwordEncoder.encode(request.password()), request.name(), request.phone(), request.age(),
-			request.birthday());
-		Member member = new Member(encodedRequest);
-		Optional<Member> findmember = memberRepository.findByEmail(member.getEmail());
-		if (findmember.isPresent()) {
-			throw new AlreadyExistsEmailException();
-		}
-		return memberRepository.save(member);
-	}
-
+	private final CouponMemberService couponMemberService;
+  
 	@Override
 	public Member saveOrGetPaycoMember(UserProfile userProfile) {
 		Optional<Member> optionalMember = memberRepository.findByEmail(userProfile.getIdNo());
@@ -78,8 +64,31 @@ public class MemberServiceImpl implements MemberService {
 			member.setCreatedAt(ZonedDateTime.now());
 			memberRepository.save(member);
 			//없는경우 새로 가져온다.
+			couponMemberService.issueWelcomeCoupon(member);
 		}
 		return null;
+	}
+
+	/**
+	 * Save member.
+	 *
+	 * @param request the member -Member값을 받아온다.
+	 * @return the member -저장 후 member값을 그대로 반환한다.
+	 * @author 유지아 Save member. -멤버값을 받아와 저장한다.(이메일 중복하는걸로 확인하면 좋을듯)
+	 */
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	public Member save(CreateMemberRequest request) {
+		CreateMemberRequest encodedRequest = new CreateMemberRequest(request.email(),
+			passwordEncoder.encode(request.password()), request.name(), request.phone(), request.age(),
+			request.birthday());
+		Member member = new Member(encodedRequest);
+		Optional<Member> findmember = memberRepository.findByEmail(member.getEmail());
+		if (findmember.isPresent()) {
+			throw new AlreadyExistsEmailException();
+		}
+
+		couponMemberService.issueWelcomeCoupon(member);
+		return memberRepository.save(member);
 	}
 
 	/**

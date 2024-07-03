@@ -1,6 +1,4 @@
 package com.nhnacademy.bookstore.purchase.coupon.repository;
-
-
 import com.nhnacademy.bookstore.purchase.coupon.dto.CouponResponse;
 
 import java.util.List;

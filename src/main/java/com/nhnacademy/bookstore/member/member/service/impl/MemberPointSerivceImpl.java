@@ -1,12 +1,16 @@
 package com.nhnacademy.bookstore.member.member.service.impl;
 
 import com.nhnacademy.bookstore.entity.member.Member;
+import com.nhnacademy.bookstore.member.member.dto.response.GetMemberResponse;
+import com.nhnacademy.bookstore.member.member.dto.response.ReadMemberResponse;
 import com.nhnacademy.bookstore.member.member.exception.MemberNotExistsException;
 import com.nhnacademy.bookstore.member.member.repository.MemberRepository;
 import com.nhnacademy.bookstore.member.member.service.MemberPointService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * 맴버 포인트 서비스 구현체.
@@ -37,4 +41,18 @@ public class MemberPointSerivceImpl implements MemberPointService {
         return memberId;
     }
 
+    @Override
+    public List<ReadMemberResponse> readAll() {
+        return memberRepository
+                .findAll()
+                .stream()
+                .map(m -> ReadMemberResponse.builder()
+                        .memberId(m.getId())
+                        .name(m.getName())
+                        .phone(m.getPhone())
+                        .age(m.getAge())
+                        .email(m.getEmail())
+                        .build()
+                ).toList();
+    }
 }
