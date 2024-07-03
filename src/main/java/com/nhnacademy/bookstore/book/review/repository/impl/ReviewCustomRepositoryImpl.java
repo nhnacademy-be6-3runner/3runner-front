@@ -11,6 +11,7 @@ import com.nhnacademy.bookstore.entity.purchaseBook.QPurchaseBook;
 import com.nhnacademy.bookstore.entity.review.QReview;
 import com.nhnacademy.bookstore.entity.review.enums.ReviewStatus;
 import com.nhnacademy.bookstore.entity.reviewImage.QReviewImage;
+import com.nhnacademy.bookstore.entity.reviewLike.QReviewLike;
 import com.nhnacademy.bookstore.entity.totalImage.QTotalImage;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPAExpressions;
@@ -39,6 +40,7 @@ public class ReviewCustomRepositoryImpl implements ReviewCustomRepository {
     private static final QBook qBook = QBook.book;
     private static final QTotalImage qTotalImage = QTotalImage.totalImage;
     private static final QReviewImage qReviewImage = QReviewImage.reviewImage;
+    private static final QReviewLike qReviewLike = QReviewLike.reviewLike;
 
     public ReviewCustomRepositoryImpl(EntityManager entityManager) {
         this.jpaQueryFactory = new JPAQueryFactory(entityManager);
@@ -111,7 +113,10 @@ public class ReviewCustomRepositoryImpl implements ReviewCustomRepository {
                         qTotalImage.url,
                         qReview.rating,
                         qMember.email,
-                        qReview.createdAt
+                        qReview.createdAt,
+                        JPAExpressions.select(qReviewLike.count())
+                                .from(qReviewLike)
+                                .where(qReviewLike.review.id.eq(qReview.id))
                 ))
                 .from(qReview)
                 .join(qReview.purchaseBook, qPurchaseBook)
@@ -152,7 +157,10 @@ public class ReviewCustomRepositoryImpl implements ReviewCustomRepository {
                         qTotalImage.url,
                         qReview.rating,
                         qMember.email,
-                        qReview.createdAt
+                        qReview.createdAt,
+                        JPAExpressions.select(qReviewLike.count())
+                                .from(qReviewLike)
+                                .where(qReviewLike.review.id.eq(qReview.id))
                 ))
                 .from(qReview)
                 .join(qReview.purchaseBook, qPurchaseBook)
@@ -196,7 +204,10 @@ public class ReviewCustomRepositoryImpl implements ReviewCustomRepository {
                         qTotalImage.url,
                         qReview.rating,
                         qMember.email,
-                        qReview.createdAt
+                        qReview.createdAt,
+                        JPAExpressions.select(qReviewLike.count())
+                                .from(qReviewLike)
+                                .where(qReviewLike.review.id.eq(qReview.id))
                 ))
                 .from(qReview)
                 .join(qReview.purchaseBook, qPurchaseBook)

@@ -34,7 +34,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 @DataJpaTest
 @Import(ReviewCustomRepositoryImpl.class)
-public class ReviewRepositoryTest {
+class ReviewRepositoryTest {
     @Autowired
     private EntityManager entityManager;
 

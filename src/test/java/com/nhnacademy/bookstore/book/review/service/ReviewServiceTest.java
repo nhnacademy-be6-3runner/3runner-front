@@ -48,7 +48,7 @@ import static org.mockito.Mockito.verify;
 
 @Slf4j
 @ExtendWith(MockitoExtension.class)
-public class ReviewServiceTest {
+class ReviewServiceTest {
 
     @Mock
     private ReviewRepository reviewRepository;
@@ -66,6 +66,7 @@ public class ReviewServiceTest {
     private ReviewServiceImpl reviewService;
 
     private CreateReviewRequest createReviewRequest;
+    private CreateReviewRequest updateReviewRequest;
     private DeleteReviewRequest deleteReviewRequest;
     private Review review;
     private PurchaseBook purchaseBook;
@@ -75,6 +76,7 @@ public class ReviewServiceTest {
     @BeforeEach
     public void setUp() {
         createReviewRequest = new CreateReviewRequest("좋은 책입니다", "추천합니다", 5, null);
+        updateReviewRequest = new CreateReviewRequest("좋은 책입니다2", "추천합니다", 5, null);
         deleteReviewRequest = new DeleteReviewRequest("부적절한 내용");
 
         member1 = new Member(CreateMemberRequest.builder()
@@ -169,12 +171,12 @@ public class ReviewServiceTest {
     void testUpdateReview() {
         given(reviewRepository.findById(1L)).willReturn(Optional.of(review));
 
-        Long reviewId = reviewService.updateReview(1L, member1.getId(), createReviewRequest);
+        Long reviewId = reviewService.updateReview(1L, member1.getId(), updateReviewRequest);
 
         assertThat(reviewId).isEqualTo(review.getId());
-        assertThat(review.getTitle()).isEqualTo(createReviewRequest.title());
-        assertThat(review.getContent()).isEqualTo(createReviewRequest.content());
-        assertThat(review.getRating()).isEqualTo(createReviewRequest.ratings());
+        assertThat(review.getTitle()).isEqualTo(updateReviewRequest.title());
+        assertThat(review.getContent()).isEqualTo(updateReviewRequest.content());
+        assertThat(review.getRating()).isEqualTo(updateReviewRequest.ratings());
 
         verify(reviewRepository, Mockito.never()).save(review);
     }

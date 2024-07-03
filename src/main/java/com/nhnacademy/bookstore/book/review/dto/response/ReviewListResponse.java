@@ -22,6 +22,7 @@ public record ReviewListResponse(
         String imgUrl, // 메인 사진
         double rating,
         String memberEmail,
-        ZonedDateTime createdAt
+        ZonedDateTime createdAt,
+        long reviewLike
 ) {
 }
