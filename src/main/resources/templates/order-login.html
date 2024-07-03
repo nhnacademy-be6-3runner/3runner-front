@@ -65,7 +65,7 @@
 <body>
 <div class="login-container">
     <h2>비회원 주문 확인</h2>
-    <form action="/guest/orders" method="POST">
+    <form action="/orders/guests" method="POST">
         <input type="text" name="orderNumber" placeholder="OrderNumber" required><br>
         <input type="password" name="password" placeholder="Password" required><br>
         <input type="submit" value="Login">
@@ -75,13 +75,5 @@
     </div>
 </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const errorMessage = document.querySelector('.error-message');
-        if (errorMessage.textContent.trim() !== '') {
-            errorMessage.style.display = 'block';
-        }
-    });
-</script>
 </body>
 </html>

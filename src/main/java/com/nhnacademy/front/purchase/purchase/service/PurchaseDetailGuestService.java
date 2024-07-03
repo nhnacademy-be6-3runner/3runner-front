@@ -7,6 +7,12 @@ import com.nhnacademy.front.purchase.purchase.dto.response.ReadPurchase;
 import com.nhnacademy.front.purchase.purchase.dto.response.ReadPurchaseBookResponse;
 import com.nhnacademy.front.purchase.purchase.dto.response.ReadPurchaseResponse;
 
+
+/**
+ * 비회원 주문조회 service Interface
+ *
+ * @author 정주혁
+ */
 public interface PurchaseDetailGuestService {
 	ReadPurchaseResponse readGuestPurchases(String orderNumber, String password);
 

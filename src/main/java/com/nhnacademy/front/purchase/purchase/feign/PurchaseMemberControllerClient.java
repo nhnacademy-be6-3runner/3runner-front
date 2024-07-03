@@ -23,7 +23,7 @@ import com.nhnacademy.util.ApiResponse;
 import jakarta.validation.Valid;
 
 import java.util.List;
-
+//Todo: 헤더 지우기
 @FeignClient(name = "purchaseMemberControllerClient", url = "http://${feign.client.url}")
 public interface PurchaseMemberControllerClient {
 

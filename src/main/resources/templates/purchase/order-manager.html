@@ -265,11 +265,11 @@
                 </div>
                 <div>
                     <p>상태:</p>
-                    <p th:text="${order.status}" id="order-status-${order.orderNumber}">상태</p>
+                    <p th:text="${order.status()}" id="order-status-${order.orderNumber}">상태</p>
                 </div>
             </div>
             <div class="order-buttons">
-                <form th:action="@{//managers/purchases/{purchaseId} (pur)}" method="POST">
+                <form th:action="@{/orders/managers/{purchaseId} (purchaseId= ${order.orderNumber()})}" method="POST">
                     <div class="dropdown">
                         <select name="dropdown">
 
@@ -281,7 +281,7 @@
 
                         </select>
                     </div>
-                    <button type="submit" class="submit-btn">Submit</button>
+                    <button type="submit" class="submit-btn" name="상태 변경">변경</button>
                 </form>
 
             </div>
