@@ -13,16 +13,11 @@ import lombok.Setter;
  */
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
 @Builder
+@Getter
 public class CategoryParentWithChildrenResponse {
 	private long id;
 	private String name;
 	@Setter
 	private List<CategoryParentWithChildrenResponse> childrenList;
-
-	public CategoryParentWithChildrenResponse(Long id, String name) {
-		this.id = id;
-		this.name = name;
-	}
 }

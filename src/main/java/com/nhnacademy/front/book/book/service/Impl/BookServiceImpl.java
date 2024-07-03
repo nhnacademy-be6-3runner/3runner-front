@@ -1,5 +1,16 @@
 package com.nhnacademy.front.book.book.service.Impl;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Service;
+
 import com.nhnacademy.front.book.book.controller.feign.ApiBookClient;
 import com.nhnacademy.front.book.book.controller.feign.BookClient;
 import com.nhnacademy.front.book.book.dto.request.CreateBookRequest;
@@ -10,18 +21,9 @@ import com.nhnacademy.front.book.book.exception.InvalidApiResponseException;
 import com.nhnacademy.front.book.book.exception.NotFindBookException;
 import com.nhnacademy.front.book.book.service.BookService;
 import com.nhnacademy.front.util.ApiResponse;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
 @Slf4j
 @Service
@@ -75,6 +77,29 @@ public class BookServiceImpl implements BookService {
 		return getResponse.getBody().getData();
 	}
 
+	@Override
+	public void updateBook(long bookId, UserCreateBookRequest userCreateBookRequest, String imageName) {
+
+		CreateBookRequest updateBookRequest = CreateBookRequest.builder()
+			.title(userCreateBookRequest.title())
+			.description(userCreateBookRequest.description())
+			.publishedDate(stringToZonedDateTime(userCreateBookRequest.publishedDate()))
+			.price(userCreateBookRequest.price())
+			.quantity(userCreateBookRequest.quantity())
+			.sellingPrice(userCreateBookRequest.sellingPrice())
+			.packing(userCreateBookRequest.packing())
+			.author(userCreateBookRequest.author())
+			.isbn(userCreateBookRequest.isbn())
+			.publisher(userCreateBookRequest.publisher())
+			.imageName(imageName)
+			.imageList(descriptionToImageList(userCreateBookRequest.description()))
+			.tagIds(stringIdToList(userCreateBookRequest.tagList()))
+			.categoryIds(stringIdToList(userCreateBookRequest.categoryList()))
+			.build();
+
+		bookClient.updateBook(bookId, updateBookRequest);
+	}
+
 	/**
 	 *
 	 *  내용 에서 이미지 추출하는 코드
@@ -112,7 +137,6 @@ public class BookServiceImpl implements BookService {
 		return idList;
 	}
 
-
 	/**
 	 * String -> ZoneDateTime 으로 변경
 	 * @param dateStr 바꿀 date String  형태는 yyyy-MM-dd
@@ -127,7 +151,6 @@ public class BookServiceImpl implements BookService {
 		return localDateStr.atStartOfDay(ZoneId.systemDefault());
 	}
 
-
 	/**
 	 *
 	 * 메인 페이지에 도서 리스트를 불러오는 메서드입니다.
@@ -135,15 +158,15 @@ public class BookServiceImpl implements BookService {
 	 * @return 도서 리스트
 	 */
 	@Override
-    public Page<BookListResponse> readLimitBooks(int limit) {
-        ApiResponse<Page<BookListResponse>> response = bookClient.readAllBooks(2, limit);
+	public Page<BookListResponse> readLimitBooks(int limit) {
+		ApiResponse<Page<BookListResponse>> response = bookClient.readAllBooks(2, limit);
 
-        if (response.getHeader().isSuccessful() && response.getBody() != null) {
-            return response.getBody().getData();
-        } else {
-            throw new InvalidApiResponseException("메인페이지 도서 리스트 조회 exception");
-        }
-    }
+		if (response.getHeader().isSuccessful() && response.getBody() != null) {
+			return response.getBody().getData();
+		} else {
+			throw new InvalidApiResponseException("메인페이지 도서 리스트 조회 exception");
+		}
+	}
 
 	/**
 	 * 도서 페이지 조회 메서드입니다.
