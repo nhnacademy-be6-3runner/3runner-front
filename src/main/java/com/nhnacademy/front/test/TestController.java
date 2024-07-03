@@ -9,20 +9,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/bookstore")
 public class TestController {
-    @Autowired
-    private Adapter testAdapter;
+	@Autowired
+	private Adapter testAdapter;
 
-    @GetMapping("/book")
-    public ResponseEntity<String> getBooks() {
-        String str = testAdapter.getBook();
-        return ResponseEntity.ok(str);
-    }
+	@GetMapping("/book")
+	public ResponseEntity<String> getBooks() {
+		String str = testAdapter.getBook();
+		return ResponseEntity.ok(str);
+	}
 
-    @GetMapping("/coupon")
-    public ResponseEntity<String> getCoupon() {
-        String str = testAdapter.getCoupon();
-        return ResponseEntity.ok(str);
-    }
-
+	@GetMapping("/coupon")
+	public ResponseEntity<String> getCoupon() {
+		String str = testAdapter.getCoupon();
+		return ResponseEntity.ok(str);
+	}
 
 }
