@@ -141,7 +141,6 @@ public class BookTagServiceImpl implements BookTagService {
 
 		book.getBookTagList().clear();
 
-		log.info("bookTag size : {}", book.getBookTagList().size());
 		bookRepository.save(book);
 		for (Tag tag : bookTagList) {
 			BookTag bookTag = new BookTag(book, tag);
