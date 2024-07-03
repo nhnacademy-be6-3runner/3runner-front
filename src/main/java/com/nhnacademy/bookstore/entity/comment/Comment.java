@@ -40,7 +40,7 @@ public class Comment {
     @Setter
     private Review review;
 
-    @OneToOne
+    @ManyToOne
     private Member member;
 
     @PrePersist
