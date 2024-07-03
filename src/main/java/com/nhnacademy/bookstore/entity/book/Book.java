@@ -159,4 +159,8 @@ public class Book {
 		this.bookTagList.add(bookTag);
 		bookTag.setBook(this);
 	}
+
+	public void viewBook() {
+		viewCount++;
+	}
 }
