@@ -31,4 +31,6 @@ public interface BookService {
 	void updateBook(Long bookId, CreateBookRequest createBookRequest);
 
 	Page<BookListResponse> readAllBooks(Pageable pageable);
+
+	void deleteBook(Long bookId);
 }

@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -125,6 +126,18 @@ public class BookController {
 			new UpdateBookRequestFormException("책의 항목들의 범위가 잘못되었습니다."));
 
 		bookService.updateBook(bookId, createBookRequest);
+
+		return new ApiResponse<>(new ApiResponse.Header(true, 200));
+	}
+
+	/**
+	 * 책 삭제 관련 컨트롤러
+	 * @param bookId 삭제할 책의 아이디
+	 * @return 삭제
+	 */
+	@DeleteMapping("/{bookId}")
+	public ApiResponse<Void> deleteBook(@PathVariable Long bookId) {
+		bookService.deleteBook(bookId);
 
 		return new ApiResponse<>(new ApiResponse.Header(true, 200));
 	}

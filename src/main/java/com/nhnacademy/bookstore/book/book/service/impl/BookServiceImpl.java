@@ -128,4 +128,9 @@ public class BookServiceImpl implements BookService {
 	public Page<BookListResponse> readAllBooks(Pageable pageable) {
 		return bookRepository.readBookList(pageable);
 	}
+
+	@Override
+	public void deleteBook(Long bookId) {
+		bookRepository.deleteById(bookId);
+	}
 }
