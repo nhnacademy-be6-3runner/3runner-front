@@ -34,7 +34,14 @@ import com.nhnacademy.bookstore.member.member.dto.request.UpdateMemberRequest;
 import com.nhnacademy.bookstore.member.member.dto.response.GetMemberResponse;
 import com.nhnacademy.bookstore.member.member.service.impl.MemberServiceImpl;
 import com.nhnacademy.bookstore.member.memberAuth.service.impl.MemberAuthServiceImpl;
-import com.nhnacademy.bookstore.member.pointRecord.service.impl.PointServiceImpl;
+import com.nhnacademy.bookstore.member.pointRecord.service.impl.PointRecordServiceImpl;
+import static org.mockito.ArgumentMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import java.time.ZonedDateTime;
+import java.util.Arrays;
 
 @SpringBootTest
 public class MemberControllerTest {
@@ -44,7 +51,7 @@ public class MemberControllerTest {
 	@MockBean
 	MemberServiceImpl memberService;
 	@MockBean
-	PointServiceImpl pointService;
+    PointRecordServiceImpl pointService;
 	@MockBean
 	MemberAuthServiceImpl memberAuthService;
 

@@ -18,6 +18,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Entity
@@ -37,6 +38,7 @@ public class BookImage {
 	@NotNull
 	private BookImageType type;
 
+	@Setter
 	@ManyToOne(cascade = CascadeType.ALL)
 	private Book book;
 
@@ -46,6 +48,11 @@ public class BookImage {
 	public BookImage(BookImageType type, Book book, TotalImage totalImage) {
 		this.type = type;
 		this.book = book;
+		this.totalImage = totalImage;
+	}
+
+	public BookImage(BookImageType type, TotalImage totalImage) {
+		this.type = type;
 		this.totalImage = totalImage;
 	}
 
