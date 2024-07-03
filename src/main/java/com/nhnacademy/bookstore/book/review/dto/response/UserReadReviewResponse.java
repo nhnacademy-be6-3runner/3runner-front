@@ -33,7 +33,5 @@ public record UserReadReviewResponse(
         boolean updated,
         ZonedDateTime updatedAt,
         long reviewLike
-        // TODO 댓글 추가
-        
 ) {
 }

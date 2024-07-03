@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
  *
  * @author 김은비
  */
+// TODO requestMapping 은 수정할 예정입니다.
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/bookstore/books")
@@ -37,7 +38,7 @@ public class ReviewController {
      * @param bindingResult       데이터 바인딩 결과
      * @return ApiResponse<>
      */
-    @PostMapping("/reviews")
+    @PostMapping("/reviews/create")
     public ApiResponse<Void> createReview(@RequestParam long purchaseId, @RequestHeader("Member-Id") Long memberId, @Valid @RequestBody CreateReviewRequest createReviewRequest,
                                           BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -74,11 +75,18 @@ public class ReviewController {
     @GetMapping("reviews/{reviewId}")
     public ApiResponse<UserReadReviewResponse> readReviewDetail(@PathVariable long reviewId) {
         UserReadReviewResponse userReadReviewResponse = reviewService.readDetailUserReview(reviewId);
-        // TODO 리뷰 댓글 서비스 추가
 
         return ApiResponse.success(userReadReviewResponse);
     }
 
+    /**
+     * 책 아이디로 리뷰 전체 조회 메서드입니다.
+     *
+     * @param bookId 책 아이디
+     * @param page   페이지
+     * @param size   사이즈
+     * @return ApiResponse<reviewListResponse>
+     */
     @GetMapping("/{bookId}/reviews")
     public ApiResponse<Page<ReviewListResponse>> readReviewsByBookId(@PathVariable long bookId, @RequestParam int page, @RequestParam int size) {
         Pageable pageable = PageRequest.of(page, size);
@@ -89,8 +97,21 @@ public class ReviewController {
         );
     }
 
-    // TODO 사용자 아이디로 리뷰 조회
-    // mypage 에서 진행?
-
-
+    /**
+     * 사용자 아이디로 리뷰 전체 조회 메서드입니다.
+     *
+     * @param memberId 멤버 아이디
+     * @param page     페이지
+     * @param size     사이즈
+     * @return ApiResponse<reviewListResponse>
+     */
+    @GetMapping("/reviews/member")
+    public ApiResponse<Page<ReviewListResponse>> readReviewsByMemberId(@RequestHeader("Member-Id") Long memberId, @RequestParam int page, @RequestParam int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ReviewListResponse> reviewList = reviewService.readAllReviewsByMemberId(memberId, pageable);
+        return new ApiResponse<>(
+                new ApiResponse.Header(true, 200),
+                new ApiResponse.Body<>(reviewList)
+        );
+    }
 }

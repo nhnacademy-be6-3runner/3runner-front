@@ -1,9 +1,9 @@
 package com.nhnacademy.bookstore.book.comment.service.impl;
 
-import com.nhnacademy.bookstore.book.comment.controller.exception.CommentNotExistsException;
-import com.nhnacademy.bookstore.book.comment.controller.exception.UnauthorizedCommentAccessException;
 import com.nhnacademy.bookstore.book.comment.dto.request.CreateCommentRequest;
 import com.nhnacademy.bookstore.book.comment.dto.response.CommentResponse;
+import com.nhnacademy.bookstore.book.comment.exception.CommentNotExistsException;
+import com.nhnacademy.bookstore.book.comment.exception.UnauthorizedCommentAccessException;
 import com.nhnacademy.bookstore.book.comment.repository.CommentRepository;
 import com.nhnacademy.bookstore.book.comment.service.CommentService;
 import com.nhnacademy.bookstore.book.review.exception.ReviewNotExistsException;
@@ -69,6 +69,12 @@ public class CommentServiceImpl implements CommentService {
     }
 
 
+    /**
+     * 댓글 삭제 메서드입니다.
+     *
+     * @param commentId 댓글 아이디
+     * @param memberId  사용자 아이디
+     */
     @Override
     public void deleteComment(long commentId, long memberId) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(CommentNotExistsException::new);
