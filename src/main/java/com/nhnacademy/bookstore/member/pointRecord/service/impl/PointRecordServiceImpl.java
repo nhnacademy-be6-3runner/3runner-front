@@ -14,6 +14,8 @@ import com.nhnacademy.bookstore.member.pointRecord.service.PointRecordService;
 import com.nhnacademy.bookstore.purchase.purchase.exception.PurchaseDoesNotExistException;
 import com.nhnacademy.bookstore.purchase.purchase.repository.PurchaseRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -73,21 +75,20 @@ public class PointRecordServiceImpl implements PointRecordService {
      * @return 포인트레코드 dto 리스트
      */
     @Override
-    public List<ReadPointRecordResponse> readByMemberId(Long memberId) {
+    public Page<ReadPointRecordResponse> readByMemberId(Long memberId, Pageable pageable) {
         Member member = memberRepository
                 .findById(memberId)
                 .orElseThrow(MemberNotExistsException::new);
 
-        List<PointRecord> pointRecords = pointRecordRepository.findAllByMember(member);
+        Page<PointRecord> pointRecords = pointRecordRepository.findAllByMember(member, pageable);
 
-        return pointRecords.stream()
+        return pointRecords
                 .map(pointRecord -> ReadPointRecordResponse.builder()
-                        .recordId(pointRecord.getId())
-                        .usePoint(pointRecord.getUsePoint())
-                        .createdAt(pointRecord.getCreatedAt())
-                        .content(pointRecord.getContent())
-                        .build())
-                .toList();
+                .recordId(pointRecord.getId())
+                .usePoint(pointRecord.getUsePoint())
+                .createdAt(pointRecord.getCreatedAt())
+                .content(pointRecord.getContent())
+                .build());
     }
 
     /**

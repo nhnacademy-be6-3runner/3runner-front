@@ -2,6 +2,8 @@ package com.nhnacademy.bookstore.member.pointRecord.service;
 
 import com.nhnacademy.bookstore.entity.pointRecord.PointRecord;
 import com.nhnacademy.bookstore.member.pointRecord.dto.response.ReadPointRecordResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -15,6 +17,6 @@ public interface PointRecordService {
 
     Long refundByPurchaseId(Long purchaseId);
 
-    List<ReadPointRecordResponse> readByMemberId(Long memberId);
+    Page<ReadPointRecordResponse> readByMemberId(Long memberId, Pageable pageable);
 
 }
