@@ -26,7 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final MemberRepository memberRepository;
@@ -41,6 +40,7 @@ public class CommentServiceImpl implements CommentService {
      * @return 생성된 댓글 아이디
      */
     @Override
+    @Transactional
     public Long createComment(long reviewId, long memberId, CreateCommentRequest createCommentRequest) {
         Member member = memberRepository.findById(memberId).orElseThrow(MemberNotExistsException::new);
         Review review = reviewRepository.findById(reviewId).orElseThrow(ReviewNotExistsException::new);
@@ -58,6 +58,7 @@ public class CommentServiceImpl implements CommentService {
      * @return 수정된 댓글 아이디
      */
     @Override
+    @Transactional
     public Long updateComment(long commentId, long memberId, CreateCommentRequest createCommentRequest) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(CommentNotExistsException::new);
         if (comment.getMember().getId() != memberId) {
@@ -76,6 +77,7 @@ public class CommentServiceImpl implements CommentService {
      * @param memberId  사용자 아이디
      */
     @Override
+    @Transactional
     public void deleteComment(long commentId, long memberId) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(CommentNotExistsException::new);
         if (comment.getMember().getId() != memberId) {
@@ -92,6 +94,7 @@ public class CommentServiceImpl implements CommentService {
      * @return 댓글 리스트
      */
     @Override
+    @Transactional(readOnly = true)
     public Page<CommentResponse> readAllCommentsByReviewId(Long reviewId, Pageable pageable) {
         return commentRepository.readAllCommentsByReviewId(reviewId, pageable);
     }
@@ -104,6 +107,7 @@ public class CommentServiceImpl implements CommentService {
      * @return 댓글 리스트
      */
     @Override
+    @Transactional(readOnly = true)
     public Page<CommentResponse> readAllCommentsByMemberId(Long memberId, Pageable pageable) {
         return commentRepository.readAllCommentByMemberId(memberId, pageable);
     }

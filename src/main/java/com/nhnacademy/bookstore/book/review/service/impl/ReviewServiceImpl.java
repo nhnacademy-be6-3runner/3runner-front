@@ -131,6 +131,7 @@ public class ReviewServiceImpl implements ReviewService {
      * @return 리뷰 상세 정보
      */
     @Override
+    @Transactional(readOnly = true)
     public ReviewDetailResponse readDetailReview(long reviewId) {
         if (!reviewRepository.existsById(reviewId)) {
             throw new ReviewNotExistsException();
@@ -145,6 +146,7 @@ public class ReviewServiceImpl implements ReviewService {
      * @return 리뷰 상세 정보
      */
     @Override
+    @Transactional(readOnly = true)
     public UserReadReviewResponse readDetailUserReview(long reviewId) {
         if (!reviewRepository.existsById(reviewId)) {
             throw new ReviewNotExistsException();
@@ -173,6 +175,7 @@ public class ReviewServiceImpl implements ReviewService {
      * @return 전체 조회 리스트
      */
     @Override
+    @Transactional(readOnly = true)
     public Page<ReviewListResponse> readAllReviews(Pageable pageable) {
         return reviewRepository.getReviewList(pageable);
     }
@@ -185,6 +188,7 @@ public class ReviewServiceImpl implements ReviewService {
      * @return 리뷰 리스트
      */
     @Override
+    @Transactional(readOnly = true)
     public Page<ReviewListResponse> readAllReviewsByBookId(long bookId, Pageable pageable) {
         if (!bookRepository.existsById(bookId)) {
             throw new BookDoesNotExistException("존재하지 않는 책입니다.");
@@ -200,6 +204,7 @@ public class ReviewServiceImpl implements ReviewService {
      * @return 리뷰 리스트
      */
     @Override
+    @Transactional(readOnly = true)
     public Page<ReviewListResponse> readAllReviewsByMemberId(long memberId, Pageable pageable) {
         if (!memberRepository.existsById(memberId)) {
             throw new MemberNotExistsException();
