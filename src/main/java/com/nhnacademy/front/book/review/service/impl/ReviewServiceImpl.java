@@ -6,30 +6,31 @@ import com.nhnacademy.front.book.review.dto.request.UserCreateReviewRequest;
 import com.nhnacademy.front.book.review.service.ReviewService;
 import com.nhnacademy.front.util.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ReviewServiceImpl implements ReviewService {
-
     private final ReviewClient reviewClient;
 
     @Override
-    public Long createReview(long purchaseBookId, long memberId, UserCreateReviewRequest request, String imageName) {
+    public Long createReview(long purchaseBookId, Long memberId, UserCreateReviewRequest request) {
         CreateReviewRequest createReviewRequest = CreateReviewRequest.builder()
                 .title(request.title())
                 .content(request.content())
                 .imageList(contentToImageList(request.content()))
                 .ratings(request.ratings())
-                .imageName(imageName).build();
+                .build();
+        log.info("리뷰 생성 : {}", createReviewRequest);
         ApiResponse<Long> response = reviewClient.createReview(purchaseBookId, memberId, createReviewRequest);
         return response.getBody().getData();
     }
-
-
 
     private List<String> contentToImageList(String content) {
         List<String> imageList = new ArrayList<>();
