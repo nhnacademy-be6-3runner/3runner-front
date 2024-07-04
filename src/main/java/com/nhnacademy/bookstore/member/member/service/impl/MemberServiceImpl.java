@@ -226,6 +226,7 @@ public class MemberServiceImpl implements MemberService {
 			.stream()
 			.map(purchase -> ReadPurchaseResponse.builder()
 				.id(purchase.getId())
+				.orderNumber(purchase.getOrderNumber())
 				.status(purchase.getStatus())
 				.deliveryPrice(purchase.getDeliveryPrice())
 				.totalPrice(purchase.getTotalPrice())

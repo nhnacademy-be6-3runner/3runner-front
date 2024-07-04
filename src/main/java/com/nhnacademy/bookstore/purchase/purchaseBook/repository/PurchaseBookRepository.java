@@ -16,5 +16,6 @@ import java.util.Optional;
  */
 public interface PurchaseBookRepository extends JpaRepository<PurchaseBook, Long> {
     Page<PurchaseBook> findAllByPurchaseId(Long purchaseId, Pageable pageable);
+
     Optional<PurchaseBook> findByPurchaseIdAndBookId(Long purchaseId, Long bookId);
 }
