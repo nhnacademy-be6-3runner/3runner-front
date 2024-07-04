@@ -40,7 +40,7 @@ public class PurchaseDetailMemberServiceImpl implements PurchaseDetailMemberServ
 	@Override
 	public Page<ReadPurchase> readPurchases(){
 		List<ReadPurchase> orderDetail = new ArrayList<>();
-		ApiResponse<Page<ReadPurchaseResponse>> responses =  purchaseMemberControllerClient.readPurchases( 1L,0,3,null);
+		ApiResponse<Page<ReadPurchaseResponse>> responses =  purchaseMemberControllerClient.readPurchases( 0,3,null);
 		for(ReadPurchaseResponse response : responses.getBody().getData()){
 			orderDetail.add(ReadPurchase.builder()
 					.id(response.id())
@@ -81,7 +81,7 @@ public class PurchaseDetailMemberServiceImpl implements PurchaseDetailMemberServ
 	 */
 	@Override
 	public PurchaseStatus readPurchaseStatus(Long purchaseId){
-		return purchaseMemberControllerClient.readPurchase(1L,purchaseId).getBody().getData().status();
+		return purchaseMemberControllerClient.readPurchase(purchaseId).getBody().getData().status();
 	}
 
 	/**
@@ -91,7 +91,7 @@ public class PurchaseDetailMemberServiceImpl implements PurchaseDetailMemberServ
 	 */
 	@Override
 	public void updatePurchaseStatus(long purchaseId){
-		purchaseMemberControllerClient.updatePurchaseStatus(1L, UpdatePurchaseMemberRequest.builder().purchaseStatus(PurchaseStatus.CONFIRMED).build(),purchaseId);
+		purchaseMemberControllerClient.updatePurchaseStatus( UpdatePurchaseMemberRequest.builder().purchaseStatus(PurchaseStatus.CONFIRMED).build(),purchaseId);
 	}
 
 }

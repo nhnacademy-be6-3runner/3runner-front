@@ -23,27 +23,24 @@ import com.nhnacademy.util.ApiResponse;
 import jakarta.validation.Valid;
 
 import java.util.List;
-//Todo: 헤더 지우기
 @FeignClient(name = "purchaseMemberControllerClient", url = "http://${feign.client.url}")
 public interface PurchaseMemberControllerClient {
 
     @GetMapping("/bookstore/members/purchases/{purchaseId}")
-    ApiResponse<ReadPurchaseResponse> readPurchase (@RequestHeader("Member-Id") Long memberId
-        , @PathVariable(value = "purchaseId", required = false) Long purchaseId);
+    ApiResponse<ReadPurchaseResponse> readPurchase (@PathVariable(value = "purchaseId", required = false) Long purchaseId);
 
     @GetMapping("/bookstore/members/purchases")
-    ApiResponse<Page<ReadPurchaseResponse>> readPurchases (@RequestHeader(value = "Member-Id", required = false) Long memberId
-        , @RequestParam int page
+    ApiResponse<Page<ReadPurchaseResponse>> readPurchases (@RequestParam int page
         , @RequestParam int size
         , @RequestParam(required = false) String sort);
 
     @PostMapping("/bookstore/members/purchases")
-    ApiResponse<Void> createPurchase (@RequestHeader("Member-Id") Long memberId, @Valid @RequestBody CreatePurchaseRequest createPurchaseRequest);
+    ApiResponse<Void> createPurchase (@Valid @RequestBody CreatePurchaseRequest createPurchaseRequest);
 
     @PutMapping("/bookstore/members/purchases/{purchaseId}")
-    ApiResponse<Void> updatePurchaseStatus (@RequestHeader("Member-Id") Long memberId, @Valid @RequestBody UpdatePurchaseMemberRequest updatePurchaseRequest,@PathVariable Long purchaseId);
+    ApiResponse<Void> updatePurchaseStatus (@Valid @RequestBody UpdatePurchaseMemberRequest updatePurchaseRequest,@PathVariable Long purchaseId);
 
     @DeleteMapping("/bookstore/members/purchases/{purchaseId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    ApiResponse<Void> deletePurchases (@RequestHeader("Member-Id") Long memberId, @PathVariable Long purchaseId);
+    ApiResponse<Void> deletePurchases (@PathVariable Long purchaseId);
 }

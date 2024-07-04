@@ -1,7 +1,5 @@
 package com.nhnacademy.front.purchase.purchase.controller;
 
-import java.util.Objects;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,7 +46,6 @@ public class PurchaseDetailGuestController {
 		@RequestParam(defaultValue = "30", required = false) int size,
 		@RequestParam(required = false) String sort,
 		Model model) {
-		// String password = Objects.requireNonNull(model.getAttribute("password")).toString();
 		model.addAttribute("guestorder",purchaseGuestService.readGuestPurchases(orderNumber,password));
 		model.addAttribute("guestorderbooks",purchaseGuestService.readGuestPurchaseBooks(orderNumber,page,size,sort));
 		return "/purchase/guest/order-detail-guest";
