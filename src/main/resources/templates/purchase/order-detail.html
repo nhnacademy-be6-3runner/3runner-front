@@ -10,7 +10,7 @@
 <div class="section-body">
     <button id="orderBtn">주문/배송</button>
 </div>
-<div id="orderDelivery" class="order-delivery hidden">
+<div id="orderDelivery" class="order-delivery" th:if="${orders}">
     <h2>주문내역</h2>
     <ul class="order-list">
         <li class="order-item" th:each="order : ${orders}" >
@@ -21,11 +21,11 @@
                 </div>
                 <div>
                     <p>주문 날짜:</p>
-                    <p th:text="${order.createdAt}">주문 날짜</p>
+                    <p th:text="${order.createdAt()}">주문 날짜</p>
                 </div>
                 <div>
                     <p>상태:</p>
-                    <p th:text="${order.status}" id="order-status-${order.orderNumber}">상태</p>
+                    <p th:text="${order.status()}" id="order-status-${order.orderNumber}">상태</p>
                 </div>
                 <div>
                     <p>총 금액:</p>
@@ -34,7 +34,7 @@
             </div>
             <div class="order-buttons">
                 <button class="details-btn" th:attr="data-order-id=${order.id()}">자세히 보기</button>
-                <form method="post" th:action="@{'/order/members/{purchaseId}' (purchaseId = ${order.id()})}">
+                <form method="post" th:action="@{'/orders/members/{purchaseId}' (purchaseId = ${order.id()})}">
                     <button type="submit" class="confirm-order-btn" th:if="${order.status.toString() != 'CONFIRMED'}"  >주문 확정</button>
                 </form>
                 <button class="refund-btn" th:if="${order.status.toString() == 'COMPLETED'}" th:attr="data-order-id=${order.orderNumber}">결제 취소</button>
@@ -77,10 +77,10 @@
                 .then(data => {
                     if (data.isLoggedIn) {
                         // 주문배송 페이지로 이동
-                        orderDelivery.classList.remove('hidden');
+                        window.location.href = '/orders/members';
                     } else {
                         // 로그인 페이지로 리디렉션
-                        window.location.href = '/guest/orders/login';
+                        window.location.href = '/orders/guests/login';
                     }
                 })
                 .catch(error => {
@@ -97,7 +97,7 @@
         document.querySelectorAll('.details-btn').forEach(button => {
             button.addEventListener('click', function () {
                 const orderId = this.getAttribute('data-order-id');
-                window.location.href = `/order/members/books/${orderId}`;
+                window.location.href = `/orders/members/books/${orderId}`;
             });
         });
 

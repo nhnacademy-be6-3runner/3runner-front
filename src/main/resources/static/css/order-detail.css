@@ -76,6 +76,12 @@ body {
     gap: 5px;
     flex: 1; /* Ensure order-info takes up available space */
 }
+/* 수정된 부분: form 요소를 포함하여 주문 확정 버튼을 총 금액 바로 아래로 이동 */
+.order-info > div,
+.order-info > form{
+    display: flex;
+    align-items: center;
+}
 
 .order-buttons {
     display: flex;
