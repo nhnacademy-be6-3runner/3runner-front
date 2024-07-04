@@ -20,12 +20,19 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import com.nhnacademy.bookstore.book.book.dto.request.CreateBookRequest;
+import com.nhnacademy.bookstore.book.book.dto.response.BookForCouponResponse;
 import com.nhnacademy.bookstore.book.book.dto.response.BookListResponse;
 import com.nhnacademy.bookstore.book.book.dto.response.ReadBookResponse;
 import com.nhnacademy.bookstore.book.book.exception.BookDoesNotExistException;
 import com.nhnacademy.bookstore.book.book.repository.BookRepository;
 import com.nhnacademy.bookstore.book.book.service.impl.BookServiceImpl;
+import com.nhnacademy.bookstore.book.bookCartegory.dto.request.CreateBookCategoryRequest;
+import com.nhnacademy.bookstore.book.bookCartegory.service.BookCategoryService;
+import com.nhnacademy.bookstore.book.bookImage.service.BookImageService;
+import com.nhnacademy.bookstore.book.bookTag.dto.request.CreateBookTagListRequest;
+import com.nhnacademy.bookstore.book.bookTag.service.BookTagService;
 import com.nhnacademy.bookstore.entity.book.Book;
+import com.nhnacademy.bookstore.entity.bookImage.enums.BookImageType;
 
 @ExtendWith(MockitoExtension.class)
 class BookServiceImplTest {
@@ -33,6 +40,13 @@ class BookServiceImplTest {
 	private BookRepository bookRepository;
 	@InjectMocks
 	private BookServiceImpl bookService;
+
+	@Mock
+	private BookCategoryService bookCategoryService;
+	@Mock
+	private BookTagService bookTagService;
+	@Mock
+	private BookImageService bookImageService;
 
 	@Test
 	public void testCreateBook() {
@@ -59,6 +73,9 @@ class BookServiceImplTest {
 		assertThat(request.tagIds().size()).isEqualTo(3);
 		assertThat(request.categoryIds().size()).isEqualTo(3);
 		verify(bookRepository, times(1)).save(any(Book.class));
+		verify(bookCategoryService, times(1)).createBookCategory(any(CreateBookCategoryRequest.class));
+		verify(bookTagService, times(1)).createBookTag(any(CreateBookTagListRequest.class));
+		verify(bookImageService, times(2)).createBookImage(anyList(), anyLong(), any(BookImageType.class));
 	}
 
 	@Test
@@ -112,5 +129,23 @@ class BookServiceImplTest {
 		when(bookRepository.readBookList(any(Pageable.class))).thenReturn(bookPage);
 
 		assertEquals(bookPage.getTotalElements(), bookService.readAllBooks(pageable).getTotalElements());
+	}
+
+	@Test
+	public void readBookByIds() {
+		Book book = new Book("Sample Book", "Sample Description", ZonedDateTime.now(),
+			100, 50, 80, 500, true, "John Doe",
+			"1234567789", "Sample Publisher", null, null, null);
+		book.setId(1L);
+
+		List<Book> bookList = List.of(book);
+
+		when(bookRepository.findAllById(List.of(1L))).thenReturn(bookList);
+
+		List<BookForCouponResponse> bookResponseList = bookService.readBookByIds(List.of(1L));
+		assertEquals(1, bookResponseList.size());
+		assertEquals(book.getTitle(), bookResponseList.getFirst().title());
+		assertEquals(book.getId(), bookResponseList.getFirst().id());
+
 	}
 }

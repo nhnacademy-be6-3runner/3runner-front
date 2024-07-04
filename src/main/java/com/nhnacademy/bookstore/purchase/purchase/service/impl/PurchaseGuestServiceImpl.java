@@ -11,7 +11,9 @@ import com.nhnacademy.bookstore.purchase.purchase.exception.PurchaseDoesNotExist
 import com.nhnacademy.bookstore.purchase.purchase.exception.PurchaseNoAuthorizationException;
 import com.nhnacademy.bookstore.purchase.purchase.repository.PurchaseRepository;
 import com.nhnacademy.bookstore.purchase.purchase.service.PurchaseGuestService;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -27,9 +29,10 @@ import java.util.UUID;
  * @author 김병우
  */
 @Service
-@Transactional(readOnly = true)
+@Transactional
 @RequiredArgsConstructor
 public class PurchaseGuestServiceImpl implements PurchaseGuestService {
+  
     private final PurchaseRepository purchaseRepository;
     private final PasswordEncoder encoder;
 
@@ -81,6 +84,37 @@ public class PurchaseGuestServiceImpl implements PurchaseGuestService {
         return purchase.getId();
     }
 
+	/**
+	 * 비회원 주문 생성
+	 *
+	 * @param createPurchaseRequest 생성 폼
+	 * @return 주문아이디
+	 */
+	@Override
+	public Long createPurchase(CreatePurchaseRequest createPurchaseRequest) {
+		Purchase purchase = new Purchase(
+			//UUID.fromString(createPurchaseRequest.orderId()),
+			UUID.randomUUID(), //TODO : 바꿔놓기
+			PurchaseStatus.PROCESSING,
+			createPurchaseRequest.deliveryPrice(),
+			createPurchaseRequest.totalPrice(),
+			ZonedDateTime.now(),
+			createPurchaseRequest.road(),
+			encoder.encode(createPurchaseRequest.password()),
+			MemberType.NONMEMBER,
+			null,
+			null, //TODO : Point 구현 후 연결 필요
+			null,
+			null
+		);
+
+		if (purchaseRepository.existsPurchaseByOrderNumber(purchase.getOrderNumber())) {
+			throw new PurchaseAlreadyExistException("주문 번호가 중복되었습니다.");
+		}
+
+		purchaseRepository.save(purchase);
+		return purchase.getId();
+	}
     /**
      * 비회원 주문 조회
      *

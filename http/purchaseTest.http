@@ -1,5 +1,6 @@
 ###
-GET http://localhost:8081/bookstore/members/purchases?memberId=1
+GET http://localhost:8081/bookstore/managers/purchases
+Member-Id: 1
 
 ###
 POST http://localhost:8081/bookstore/members/purchases
@@ -7,8 +8,60 @@ Content-Type: application/json
 Member-Id: 1
 
 {
+
   "deliveryPrice" : 100,
   "totalPrice": 100000,
   "road": "광주",
-  "password": "1234"
+  "password": "1234",
+  "orderId" : "12345678911"
 }
+
+###
+PUT http://localhost:8081/bookstore/managers/purchases/b5a79f5b-faaf-4de0-897c-e0c0101a1c11?purchaseStatus=CONFIRMED
+Content-Type: application/json
+Member-Id: 1
+
+
+###
+PUT http://localhost:8081/bookstore/members/purchases/4
+Content-Type: application/json
+Member-Id: 1
+
+{
+  "purchaseStatus": "COMPLETED"
+}
+
+###
+POST http://localhost:8081/bookstore/guests/purchases
+Content-Type: application/json
+
+{
+  "deliveryPrice": 1000,
+  "orderId": "123e4567-e89b-12d3-a456-426614174000",
+  "password": "1234",
+  "totalPrice": 100000,
+  "road": "동탄"
+}
+
+
+
+##################
+
+POST http://localhost:8081/bookstore/purchases/books
+Content-Type: application/json
+Member-Id: 1
+
+{
+  "bookId": 11,
+  "quantity": 5,
+  "price":  100,
+  "purchaseId": 6
+}
+
+###
+GET http://localhost:8081/bookstore/purchases/books/4?page=0&size=5
+Member-Id: 1
+
+###
+GET http://localhost:8081/bookstore/members/purchases?page=0&size=3
+Member-Id: 1

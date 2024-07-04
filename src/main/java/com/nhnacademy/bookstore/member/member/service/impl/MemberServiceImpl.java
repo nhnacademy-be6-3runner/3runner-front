@@ -46,6 +46,7 @@ public class MemberServiceImpl implements MemberService {
 	 * 웰컴 쿠폰 구현 서비스.
 	 */
 	private final CouponMemberService couponMemberService;
+  
 	@Override
 	public Member saveOrGetPaycoMember(UserProfile userProfile) {
 		Optional<Member> optionalMember = memberRepository.findByEmail(userProfile.getIdNo());
@@ -125,6 +126,14 @@ public class MemberServiceImpl implements MemberService {
 			if (passwordEncoder.matches(password, member.get().getPassword())) {
 				return member.get();
 			}
+		}
+		throw new LoginFailException();
+	}
+
+	public Member readByEmail(String email) {
+		Optional<Member> member = memberRepository.findByEmail(email);
+		if (member.isPresent()) {
+			return member.get();
 		}
 		throw new LoginFailException();
 	}
@@ -217,6 +226,7 @@ public class MemberServiceImpl implements MemberService {
 			.stream()
 			.map(purchase -> ReadPurchaseResponse.builder()
 				.id(purchase.getId())
+				.orderNumber(purchase.getOrderNumber())
 				.status(purchase.getStatus())
 				.deliveryPrice(purchase.getDeliveryPrice())
 				.totalPrice(purchase.getTotalPrice())
