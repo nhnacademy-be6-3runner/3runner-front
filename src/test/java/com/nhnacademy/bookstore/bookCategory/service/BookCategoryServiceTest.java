@@ -290,4 +290,5 @@ class BookCategoryServiceTest {
 		assertEquals(getContent.size(), categoryList.size());
 
 	}
+
 }

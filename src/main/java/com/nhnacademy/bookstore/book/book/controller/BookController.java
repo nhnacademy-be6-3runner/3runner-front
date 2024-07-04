@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nhnacademy.bookstore.book.book.dto.request.CreateBookRequest;
+import com.nhnacademy.bookstore.book.book.dto.response.BookForCouponResponse;
 import com.nhnacademy.bookstore.book.book.dto.response.BookListResponse;
 import com.nhnacademy.bookstore.book.book.dto.response.ReadBookResponse;
 import com.nhnacademy.bookstore.book.book.dto.response.UserReadBookResponse;
@@ -141,4 +142,16 @@ public class BookController {
 
 		return new ApiResponse<>(new ApiResponse.Header(true, 200));
 	}
+
+	/**
+	 * 쿠폰에서 필요한 책의 아이디들로 책들을 검색하는 Api
+	 * @param ids    책의 id list
+	 * @return 검색된 책의 list
+	 */
+	@GetMapping("/list")
+	public ApiResponse<List<BookForCouponResponse>> readAllBooksForCoupon(@RequestParam List<Long> ids) {
+		List<BookForCouponResponse> response = bookService.readBookByIds(ids);
+		return ApiResponse.success(response);
+	}
+
 }

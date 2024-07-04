@@ -20,6 +20,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import com.nhnacademy.bookstore.book.book.dto.request.CreateBookRequest;
+import com.nhnacademy.bookstore.book.book.dto.response.BookForCouponResponse;
 import com.nhnacademy.bookstore.book.book.dto.response.BookListResponse;
 import com.nhnacademy.bookstore.book.book.dto.response.ReadBookResponse;
 import com.nhnacademy.bookstore.book.book.exception.BookDoesNotExistException;
@@ -128,5 +129,23 @@ class BookServiceImplTest {
 		when(bookRepository.readBookList(any(Pageable.class))).thenReturn(bookPage);
 
 		assertEquals(bookPage.getTotalElements(), bookService.readAllBooks(pageable).getTotalElements());
+	}
+
+	@Test
+	public void readBookByIds() {
+		Book book = new Book("Sample Book", "Sample Description", ZonedDateTime.now(),
+			100, 50, 80, 500, true, "John Doe",
+			"1234567789", "Sample Publisher", null, null, null);
+		book.setId(1L);
+
+		List<Book> bookList = List.of(book);
+
+		when(bookRepository.findAllById(List.of(1L))).thenReturn(bookList);
+
+		List<BookForCouponResponse> bookResponseList = bookService.readBookByIds(List.of(1L));
+		assertEquals(1, bookResponseList.size());
+		assertEquals(book.getTitle(), bookResponseList.getFirst().title());
+		assertEquals(book.getId(), bookResponseList.getFirst().id());
+
 	}
 }

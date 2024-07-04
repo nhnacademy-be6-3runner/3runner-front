@@ -1,9 +1,12 @@
 package com.nhnacademy.bookstore.book.book.service;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.nhnacademy.bookstore.book.book.dto.request.CreateBookRequest;
+import com.nhnacademy.bookstore.book.book.dto.response.BookForCouponResponse;
 import com.nhnacademy.bookstore.book.book.dto.response.BookListResponse;
 import com.nhnacademy.bookstore.book.book.dto.response.ReadBookResponse;
 
@@ -33,4 +36,6 @@ public interface BookService {
 	Page<BookListResponse> readAllBooks(Pageable pageable);
 
 	void deleteBook(Long bookId);
+
+	List<BookForCouponResponse> readBookByIds(List<Long> ids);
 }

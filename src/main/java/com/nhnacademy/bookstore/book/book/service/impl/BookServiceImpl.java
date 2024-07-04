@@ -1,5 +1,6 @@
 package com.nhnacademy.bookstore.book.book.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.nhnacademy.bookstore.book.book.dto.request.CreateBookRequest;
+import com.nhnacademy.bookstore.book.book.dto.response.BookForCouponResponse;
 import com.nhnacademy.bookstore.book.book.dto.response.BookListResponse;
 import com.nhnacademy.bookstore.book.book.dto.response.ReadBookResponse;
 import com.nhnacademy.bookstore.book.book.exception.BookDoesNotExistException;
@@ -125,13 +127,39 @@ public class BookServiceImpl implements BookService {
 		bookImageService.updateBookImage(createBookRequest.imageName(), createBookRequest.imageList(), bookId);
 	}
 
+	/**
+	 * 모든 책 읽기 pageable 로
+	 * @param pageable 설정된 pageable
+	 * @return 페이지
+	 */
 	@Override
 	public Page<BookListResponse> readAllBooks(Pageable pageable) {
 		return bookRepository.readBookList(pageable);
 	}
 
+	/**
+	 * 책 삭제
+	 * 연결된 테이블은 cascade all 설정으로 다 삭제 하도록 함
+	 * @param bookId 책 삭제 아이디
+	 */
 	@Override
 	public void deleteBook(Long bookId) {
 		bookRepository.deleteById(bookId);
+	}
+
+	/**
+	 * id 리스트를 통해서 북 response 생성
+	 * @param ids 찾을 ids
+	 * @return 찾은 북
+	 */
+	@Override
+	public List<BookForCouponResponse> readBookByIds(List<Long> ids) {
+		List<Book> bookList = bookRepository.findAllById(ids);
+		List<BookForCouponResponse> responses = new ArrayList<>();
+		for (Book book : bookList) {
+			responses.add(BookForCouponResponse.builder().id(book.getId()).title(book.getTitle()).build());
+		}
+		return responses;
+
 	}
 }
