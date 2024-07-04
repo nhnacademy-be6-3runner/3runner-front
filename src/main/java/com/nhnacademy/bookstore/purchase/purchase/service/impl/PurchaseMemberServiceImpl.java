@@ -1,6 +1,7 @@
 package com.nhnacademy.bookstore.purchase.purchase.service.impl;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -80,7 +81,7 @@ public class PurchaseMemberServiceImpl implements PurchaseMemberService {
             throw new PurchaseNoAuthorizationException("권한이 없습니다");
         }
 
-        purchase.setStatus(updatePurchaseRequest.purchaseStatus());
+        purchase.setStatus(PurchaseStatus.valueOf(updatePurchaseRequest.purchaseStatus()));
 
         purchaseRepository.save(purchase);
 

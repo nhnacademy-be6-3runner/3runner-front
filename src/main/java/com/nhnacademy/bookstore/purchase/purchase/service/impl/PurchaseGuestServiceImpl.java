@@ -37,36 +37,6 @@ public class PurchaseGuestServiceImpl implements PurchaseGuestService {
     private final PasswordEncoder encoder;
 
     /**
-     * 비회원 주문 생성
-     *
-     * @param createPurchaseRequest 생성 폼
-     * @return 주문아이디
-     */
-    @Override
-    public Long createPurchase(CreatePurchaseRequest createPurchaseRequest) {
-        Purchase purchase = new Purchase(
-                UUID.randomUUID(),
-                PurchaseStatus.PROCESSING,
-                3000,
-                createPurchaseRequest.totalPrice(),
-                ZonedDateTime.now(),
-                createPurchaseRequest.road(),
-                createPurchaseRequest.password(),
-                createPurchaseRequest.shippingDate(),
-                createPurchaseRequest.isPacking(),
-                MemberType.NONMEMBER,
-                null
-        );
-
-        if(purchaseRepository.existsPurchaseByOrderNumber(purchase.getOrderNumber())) {
-            throw new PurchaseAlreadyExistException("주문 번호가 중복되었습니다.");
-        }
-
-        purchaseRepository.save(purchase);
-        return purchase.getId();
-    }
-
-    /**
      * 비회원 주문 업데이트.
      *
      * @param updatePurchaseGuestRequest 업데이트 폼
@@ -92,21 +62,19 @@ public class PurchaseGuestServiceImpl implements PurchaseGuestService {
 	 */
 	@Override
 	public Long createPurchase(CreatePurchaseRequest createPurchaseRequest) {
-		Purchase purchase = new Purchase(
-			//UUID.fromString(createPurchaseRequest.orderId()),
-			UUID.randomUUID(), //TODO : 바꿔놓기
-			PurchaseStatus.PROCESSING,
-			createPurchaseRequest.deliveryPrice(),
-			createPurchaseRequest.totalPrice(),
-			ZonedDateTime.now(),
-			createPurchaseRequest.road(),
-			encoder.encode(createPurchaseRequest.password()),
-			MemberType.NONMEMBER,
-			null,
-			null, //TODO : Point 구현 후 연결 필요
-			null,
-			null
-		);
+        Purchase purchase = new Purchase(
+                UUID.fromString(createPurchaseRequest.orderId()),
+                PurchaseStatus.PROCESSING,
+                createPurchaseRequest.deliveryPrice(),
+                createPurchaseRequest.totalPrice(),
+                ZonedDateTime.now(),
+                createPurchaseRequest.road(),
+                encoder.encode(createPurchaseRequest.password()),
+                createPurchaseRequest.shippingDate(),
+                createPurchaseRequest.isPacking(),
+                MemberType.NONMEMBER,
+                null
+        );
 
 		if (purchaseRepository.existsPurchaseByOrderNumber(purchase.getOrderNumber())) {
 			throw new PurchaseAlreadyExistException("주문 번호가 중복되었습니다.");
@@ -155,6 +123,22 @@ public class PurchaseGuestServiceImpl implements PurchaseGuestService {
     }
 
     /**
+     * 비회원 주문 인증
+     *
+     * @author 정주혁
+     *
+     * @param orderNumber 주문
+     * @param password 비밀 번호
+     * @return 인증->완 boolean 불가-> false
+     */
+    @Override
+    public Boolean validateGuest(UUID orderNumber, String password) {
+        Purchase purchase = purchaseRepository.findPurchaseByOrderNumber(orderNumber).orElseThrow();
+        return encoder.matches(password, purchase.getPassword());
+
+    }
+
+    /**
      * 비회원 주문 번호, 비밀번호 검증
      *
      * @param purchaseOptional 주문
@@ -162,12 +146,12 @@ public class PurchaseGuestServiceImpl implements PurchaseGuestService {
      * @return 주문
      */
     private Purchase validateGuest(Optional<Purchase> purchaseOptional, String password){
-        if(purchaseOptional.isEmpty()){
+        if (purchaseOptional.isEmpty()) {
             throw new PurchaseDoesNotExistException("주문이 없습니다.");
         }
 
         Purchase purchase = purchaseOptional.get();
-        if(!encoder.matches(password, purchase.getPassword())){
+        if (!encoder.matches(password, purchase.getPassword())) {
             throw new PurchaseNoAuthorizationException("권한이 없습니다.");
         }
         return purchase;
