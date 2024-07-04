@@ -1,4 +1,5 @@
 package com.nhnacademy.bookstore.purchase.payment.controller;
+import com.nhnacademy.bookstore.purchase.payment.dto.CreatePaymentMemberRequest;
 import com.nhnacademy.bookstore.purchase.payment.exception.TossPaymentException;
 import com.nhnacademy.bookstore.purchase.payment.service.PaymentGuestService;
 import com.nhnacademy.bookstore.purchase.payment.service.PaymentMemberService;
@@ -9,8 +10,6 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Controller;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,28 +19,33 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.time.ZonedDateTime;
 import java.util.Base64;
 import java.util.Objects;
 
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-public class PaymentController {
+public class PaymentMemberController {
     private final PaymentGuestService paymentGuestService;
     private final PaymentMemberService paymentMemberService;
 
-    @RequestMapping(value = "/bookstore/payments/confirm")
+    @RequestMapping(value = "/bookstore/payments/members/confirm")
     public ResponseEntity<JSONObject> confirmPayment(
             @RequestHeader(value = "Member-Id",required = false) Long memberId,
-            @RequestParam Long cartId,
-            @RequestParam String address,
-            @RequestParam String password,
+            @RequestParam(required = false) Integer discountedPrice,
+            @RequestParam(required = false) Integer discountedPoint,
+            @RequestParam(required = false) Boolean isPacking,
+            @RequestParam(required = false) ZonedDateTime shippingDate,
+            @RequestParam(required = false) String road,
+            @RequestParam(required = false) Long couponFormId,
             @RequestBody String jsonBody) throws Exception {
 
         JSONParser parser = new JSONParser();
         String orderId;
         String amount;
         String paymentKey;
+
         try {
             // 클라이언트에서 받은 JSON 요청 바디입니다.
             JSONObject requestData = (JSONObject) parser.parse(jsonBody);
@@ -51,7 +55,7 @@ public class PaymentController {
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
-        ;
+
         JSONObject obj = new JSONObject();
         obj.put("orderId", orderId);
         obj.put("amount", amount);
@@ -82,11 +86,19 @@ public class PaymentController {
 
         // 결제 성공 및 실패 비즈니스 로직을 구현하세요.
         if (isSuccess) {
-            if (Objects.isNull(memberId)) {
-                paymentGuestService.payment(cartId, address, password, Integer.parseInt(amount), orderId);
-            } else {
-                paymentMemberService.payment(memberId, address, Integer.parseInt(amount), orderId);
-            }
+            paymentMemberService.payment(CreatePaymentMemberRequest.builder()
+                            .memberId(memberId)
+                            .discountedPoint(discountedPoint)
+                            .discountedPrice(discountedPrice)
+                            .isPacking(isPacking)
+                            .shippingDate(shippingDate)
+                            .road(road)
+                            .couponFormId(couponFormId)
+                            .amount(Integer.parseInt(amount))
+                            .orderId(orderId)
+                    .build());
+
+
         } else {
             throw new TossPaymentException("토스 최종 결제가 실패하였습니다.");
         }

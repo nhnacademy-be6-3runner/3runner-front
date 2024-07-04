@@ -18,6 +18,8 @@ public record ReadPurchaseResponse(long id,
                                    ZonedDateTime createdAt,
                                    String road,
                                    String password,
-                                   MemberType memberType) {
+                                   MemberType memberType,
+                                   ZonedDateTime shippingDate,
+                                   boolean isPacking) {
 
 }
