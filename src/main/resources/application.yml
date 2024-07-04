@@ -34,6 +34,14 @@ spring:
     username: be6_3runner
     password: tHos2g5st4@XH7mT
     driver-class-name: com.mysql.cj.jdbc.Driver
+    type: org.apache.commons.dbcp2.BasicDataSource
+    dbcp2:
+      initial-size: 5
+      max-total: 20
+      max-idle: 20
+      min-idle: 5
+      test-on-borrow: true
+      validation-query: SELECT 1
 
   rabbitmq:
     host: 133.186.241.167
