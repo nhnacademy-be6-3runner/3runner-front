@@ -134,4 +134,19 @@ public class BookCartController {
             return ApiResponse.deleteSuccess(bookCartMemberService.deleteBookCartMember(deleteBookCartGuestRequest));
         }
     }
+
+    @DeleteMapping("/{cartId}")
+    public ApiResponse<Long> deleteAllCart(
+            @PathVariable Long cartId,
+            @RequestHeader(value = "Member-Id", required = false) Long memberId
+    ) {
+        if (Objects.isNull(memberId)) {
+            Long response = bookCartGuestService.deleteAllBookCart(cartId);
+
+            return ApiResponse.deleteSuccess(response);
+        } else {
+
+            return ApiResponse.deleteSuccess(bookCartMemberService.deleteAllBookCart(cartId));
+        }
+    }
 }

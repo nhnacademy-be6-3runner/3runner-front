@@ -49,7 +49,7 @@ public class CouponMemberServiceImpl implements CouponMemberService {
                 .findById(memberId)
                 .orElseThrow(MemberNotExistsException::new);
 
-        List<Coupon> coupons = couponRepository.findByMember(member);
+        List<Coupon> coupons = couponRepository.findByMemberAndCouponStatus(member, CouponStatus.READY);
 
         List<Long> couponFormIds = new ArrayList<>();
 
@@ -110,8 +110,8 @@ public class CouponMemberServiceImpl implements CouponMemberService {
                         .name("Birthday Coupon")
                         .maxPrice(100000)
                         .minPrice(10000)
-                        .couponTypeId(2L)
-                        .couponUsageId(2L)
+                        .couponTypeId(5L)
+                        .couponUsageId(3L)
                         .build();
 
                 couponControllerClient.createCouponForm(couponFormRequest);
@@ -142,8 +142,8 @@ public class CouponMemberServiceImpl implements CouponMemberService {
                 .name("Welcome Coupon")
                 .maxPrice(100000)
                 .minPrice(10000)
-                .couponTypeId(3L)
-                .couponUsageId(2L)
+                .couponTypeId(5L)
+                .couponUsageId(3L)
                 .build();
 
         couponControllerClient.createCouponForm(couponFormRequest);
@@ -157,5 +157,11 @@ public class CouponMemberServiceImpl implements CouponMemberService {
         );
 
         couponRepository.save(coupon);
+    }
+
+    @Override
+    public Long readCoupon(Long couponFormId) {
+        Coupon coupon = couponRepository.findCouponByCouponFormId(couponFormId).orElseThrow(()->new CouponDoesNotExistException(couponFormId+" 해당 쿠폰 폼 아이디가 없습니다."));
+        return coupon.getId();
     }
 }

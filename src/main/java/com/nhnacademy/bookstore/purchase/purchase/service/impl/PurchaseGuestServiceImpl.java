@@ -42,17 +42,16 @@ public class PurchaseGuestServiceImpl implements PurchaseGuestService {
     @Override
     public Long createPurchase(CreatePurchaseRequest createPurchaseRequest) {
         Purchase purchase = new Purchase(
-                UUID.fromString(createPurchaseRequest.orderId()),
+                UUID.randomUUID(),
                 PurchaseStatus.PROCESSING,
-                createPurchaseRequest.deliveryPrice(),
+                3000,
                 createPurchaseRequest.totalPrice(),
                 ZonedDateTime.now(),
                 createPurchaseRequest.road(),
-                encoder.encode(createPurchaseRequest.password()),
+                createPurchaseRequest.password(),
+                createPurchaseRequest.shippingDate(),
+                createPurchaseRequest.isPacking(),
                 MemberType.NONMEMBER,
-                null,
-                null, //TODO : Point 구현 후 연결 필요
-                null,
                 null
         );
 
@@ -92,7 +91,7 @@ public class PurchaseGuestServiceImpl implements PurchaseGuestService {
     @Override
     public ReadPurchaseResponse readPurchase(UUID orderNumber, String password) {
         Optional<Purchase> purchaseOptional = purchaseRepository.findPurchaseByOrderNumber(orderNumber);
-        Purchase purchase = validateGuest(purchaseOptional,password);
+        Purchase purchase = validateGuest(purchaseOptional, password);
 
         return ReadPurchaseResponse.builder()
                 .id(purchase.getId())
@@ -103,6 +102,8 @@ public class PurchaseGuestServiceImpl implements PurchaseGuestService {
                 .road(purchase.getRoad())
                 .password(purchase.getPassword())
                 .memberType(purchase.getMemberType())
+                .isPacking(purchase.isPacking())
+                .shippingDate(purchase.getShippingDate())
                 .build();
     }
 
@@ -115,7 +116,7 @@ public class PurchaseGuestServiceImpl implements PurchaseGuestService {
     @Override
     public void deletePurchase(UUID orderNumber, String password) {
         Optional<Purchase> purchaseOptional = purchaseRepository.findPurchaseByOrderNumber(orderNumber);
-        Purchase purchase = validateGuest(purchaseOptional,password);
+        Purchase purchase = validateGuest(purchaseOptional, password);
         purchaseRepository.delete(purchase);
     }
 

@@ -44,16 +44,15 @@ public class PurchaseMemberServiceImpl implements PurchaseMemberService {
         Purchase purchase = new Purchase(
                 UUID.randomUUID(),
                 PurchaseStatus.PROCESSING,
-                createPurchaseRequest.deliveryPrice(),
+                3000,
                 createPurchaseRequest.totalPrice(),
                 ZonedDateTime.now(),
                 createPurchaseRequest.road(),
-                null,
+                createPurchaseRequest.password(),
+                createPurchaseRequest.shippingDate(),
+                createPurchaseRequest.isPacking(),
                 MemberType.MEMBER,
-                memberService.readById(memberId),
-                null, //TODO : Point 구현 후 연결 필요
-                null,
-                null
+                memberService.readById(memberId)
         );
 
         if(purchaseRepository.existsPurchaseByOrderNumber(purchase.getOrderNumber())) {
@@ -114,6 +113,8 @@ public class PurchaseMemberServiceImpl implements PurchaseMemberService {
                 .road(purchase.getRoad())
                 .password(purchase.getPassword())
                 .memberType(purchase.getMemberType())
+                .shippingDate(purchase.getShippingDate())
+                .isPacking(purchase.isPacking())
                 .build();
     }
 

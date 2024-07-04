@@ -1,7 +1,9 @@
 package com.nhnacademy.bookstore.purchase.payment.service;
 
+import com.nhnacademy.bookstore.purchase.payment.dto.CreatePaymentMemberRequest;
+
 public interface PaymentMemberService {
-    Long payment(Long memberId, String address, Integer totalPrice, String orderId);
+    Long payment(CreatePaymentMemberRequest createPaymentMemberRequest);
     Long refund();
     Long partialRefund();
 }
