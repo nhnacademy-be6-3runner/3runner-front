@@ -80,7 +80,6 @@ public class PurchaseBookController {
 	 */
 	@GetMapping("/guests/{purchaseId}")
 	public ApiResponse<Page<ReadPurchaseBookResponse>> readGuestPurchaseBook(
-		@RequestHeader(name = "Member-Id") Long memberId,
 		@PathVariable(value = "purchaseId")  String purchaseId
 		, @RequestParam int page
 		, @RequestParam int size
@@ -93,7 +92,7 @@ public class PurchaseBookController {
 		}
 
 		Page<ReadPurchaseBookResponse> tmp =
-			purchaseBookService.readGuestBookByPurchaseResponses(purchaseId,memberId, pageable);
+			purchaseBookService.readGuestBookByPurchaseResponses(purchaseId, pageable);
 		return ApiResponse.success(tmp);
 	}
 

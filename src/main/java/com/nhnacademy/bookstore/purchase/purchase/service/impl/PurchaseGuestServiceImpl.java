@@ -44,19 +44,18 @@ public class PurchaseGuestServiceImpl implements PurchaseGuestService {
 	@Override
 	public Long createPurchase(CreatePurchaseRequest createPurchaseRequest) {
 		Purchase purchase = new Purchase(
-			//UUID.fromString(createPurchaseRequest.orderId()),
-			UUID.randomUUID(), //TODO : 바꿔놓기
+			UUID.fromString(createPurchaseRequest.orderId()),
 			PurchaseStatus.PROCESSING,
 			createPurchaseRequest.deliveryPrice(),
 			createPurchaseRequest.totalPrice(),
 			ZonedDateTime.now(),
 			createPurchaseRequest.road(),
 			encoder.encode(createPurchaseRequest.password()),
+			createPurchaseRequest.shippingDate(),
+			createPurchaseRequest.isPacking(),
 			MemberType.NONMEMBER,
-			null,
-			null, //TODO : Point 구현 후 연결 필요
-			null,
 			null
+
 		);
 
 		if (purchaseRepository.existsPurchaseByOrderNumber(purchase.getOrderNumber())) {

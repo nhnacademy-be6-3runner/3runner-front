@@ -3,6 +3,7 @@ package com.nhnacademy.bookstore.purchase.purchase.service.impl;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,8 +32,9 @@ import lombok.RequiredArgsConstructor;
 public class PurchaseMemberServiceImpl implements PurchaseMemberService {
 	private final PurchaseRepository purchaseRepository;
 	private final MemberService memberService;
+	private final PasswordEncoder passwordEncoder;
 
-    /**
+	/**
      * 주문 생성.
      *
      * @param createPurchaseRequest 주문 생성 폼
@@ -41,20 +43,21 @@ public class PurchaseMemberServiceImpl implements PurchaseMemberService {
      */
     @Override
     public Long createPurchase(CreatePurchaseRequest createPurchaseRequest, Long memberId) {
-        Purchase purchase = new Purchase(
-                UUID.randomUUID(),
-                PurchaseStatus.PROCESSING,
-                createPurchaseRequest.deliveryPrice(),
-                createPurchaseRequest.totalPrice(),
-                ZonedDateTime.now(),
-                createPurchaseRequest.road(),
-                null,
-                MemberType.MEMBER,
-                memberService.readById(memberId),
-                null, //TODO : Point 구현 후 연결 필요
-                null,
-                null
-        );
+		Purchase purchase = new Purchase(
+			//UUID.fromString(createPurchaseRequest.orderId()),
+			UUID.randomUUID(), //TODO : 바꿔놓기
+			PurchaseStatus.PROCESSING,
+			createPurchaseRequest.deliveryPrice(),
+			createPurchaseRequest.totalPrice(),
+			ZonedDateTime.now(),
+			createPurchaseRequest.road(),
+			passwordEncoder.encode(createPurchaseRequest.password()),
+			createPurchaseRequest.shippingDate(),
+			createPurchaseRequest.isPacking(),
+			MemberType.NONMEMBER,
+			memberService.readById(memberId)
+
+		);
 
 		if (Boolean.TRUE.equals(purchaseRepository.existsPurchaseByOrderNumber(purchase.getOrderNumber()))) {
 			throw new PurchaseAlreadyExistException("주문 번호가 중복되었습니다.");

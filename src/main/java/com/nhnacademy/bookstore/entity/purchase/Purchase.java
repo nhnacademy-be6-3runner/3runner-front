@@ -10,7 +10,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +49,9 @@ public class Purchase {
 
     private String password;
 
+    private ZonedDateTime shippingDate;
+    private Boolean isPacking;
+
     @NotNull
     private MemberType memberType;
 
@@ -62,15 +64,12 @@ public class Purchase {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchase", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PurchaseCoupon> purchaseCouponList = new ArrayList<>();
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
-    }
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchase", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PointRecord> pointRecordList = new ArrayList<>();
 
-    public Purchase(UUID orderNumber, PurchaseStatus status, int deliveryPrice, int totalPrice, ZonedDateTime createdAt, String road, String password, MemberType memberType, Member member, List<PointRecord> pointRecord, List<PurchaseBook> purchaseBookList, List<PurchaseCoupon> purchaseCouponList) {
+
+    public Purchase(UUID orderNumber, PurchaseStatus status, int deliveryPrice, int totalPrice, ZonedDateTime createdAt, String road, String password, ZonedDateTime shippingDate, Boolean isPacking, MemberType memberType, Member member) {
         this.orderNumber = orderNumber;
         this.status = status;
         this.deliveryPrice = deliveryPrice;
@@ -78,11 +77,10 @@ public class Purchase {
         this.createdAt = createdAt;
         this.road = road;
         this.password = password;
+        this.shippingDate = shippingDate;
+        this.isPacking = isPacking;
         this.memberType = memberType;
         this.member = member;
-        this.pointRecordList = pointRecord;
-        this.purchaseBookList = purchaseBookList;
-        this.purchaseCouponList = purchaseCouponList;
     }
 
     @Override

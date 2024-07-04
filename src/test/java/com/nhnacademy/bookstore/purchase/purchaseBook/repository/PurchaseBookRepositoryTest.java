@@ -20,6 +20,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -69,20 +70,19 @@ public class PurchaseBookRepositoryTest {
 
         // Purchase 초기화
         purchase = new Purchase(
-                1L,
                 UUID.randomUUID(),
                 PurchaseStatus.SHIPPED,
                 10,
                 10,
                 ZonedDateTime.now(),
+                "gwangju",
                 "hhh",
-                null,
+                ZonedDateTime.now(ZoneId.of("Seoul")),
+                true,
                 MemberType.MEMBER,
-                null,
-                null,
-                null,
                 null
         );
+        purchase.setId(1L);
         purchaseRepository.save(purchase);
 
         // PurchaseBook 초기화

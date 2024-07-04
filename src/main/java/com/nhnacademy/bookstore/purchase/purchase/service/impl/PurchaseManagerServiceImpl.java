@@ -45,8 +45,8 @@ public class PurchaseManagerServiceImpl implements PurchaseManagerService {
 
 
 		purchase.setStatus(PurchaseStatus.fromString(status));
+		Purchase t = purchaseRepository.save(purchase);
 
-
-		return purchaseRepository.save(purchase).getId();
+		return t.getId();
 	}
 }
