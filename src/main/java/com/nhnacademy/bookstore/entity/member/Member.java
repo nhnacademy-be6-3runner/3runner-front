@@ -1,6 +1,7 @@
 package com.nhnacademy.bookstore.entity.member;
 
 import com.nhnacademy.bookstore.entity.address.Address;
+import com.nhnacademy.bookstore.entity.member.enums.AuthProvider;
 import com.nhnacademy.bookstore.entity.member.enums.Grade;
 import com.nhnacademy.bookstore.entity.member.enums.Status;
 import com.nhnacademy.bookstore.entity.memberAuth.MemberAuth;
@@ -65,6 +66,8 @@ public class Member {
     private ZonedDateTime modifiedAt;
     private ZonedDateTime deletedAt;
 
+    private AuthProvider authProvider;
+
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Address> addressList = new ArrayList<>();
 
@@ -88,6 +91,7 @@ public class Member {
         this.setBirthday(request.birthday());
         this.setGrade(Grade.General);
         this.setCreatedAt(ZonedDateTime.now());
+        this.setAuthProvider(AuthProvider.GENERAL);
     }
 
     /**
