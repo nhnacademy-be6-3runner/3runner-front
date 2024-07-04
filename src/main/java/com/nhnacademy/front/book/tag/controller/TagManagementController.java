@@ -2,6 +2,7 @@ package com.nhnacademy.front.book.tag.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,6 +34,12 @@ public class TagManagementController {
 	@PostMapping("/admin/tag/management")
 	public String adminTagAdd(@RequestParam(name = "tag-name") String name) {
 		tagService.createTag(name);
+		return "admin/admin_tag";
+	}
+
+	@GetMapping("/admin/tag/delete/{tagId}")
+	public String adminTagDelete(@PathVariable Long tagId) {
+		tagService.deleteTag(tagId);
 		return "admin/admin_tag";
 	}
 }

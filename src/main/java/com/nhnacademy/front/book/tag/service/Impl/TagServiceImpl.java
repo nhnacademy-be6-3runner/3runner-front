@@ -55,4 +55,13 @@ public class TagServiceImpl implements TagService {
 	public void createTag(String name) {
 		tagClient.createTage(name);
 	}
+
+	/**
+	 * 태그 삭제
+	 * @param tagId 삭제할 태그 아이디
+	 */
+	@Override
+	public void deleteTag(long tagId) {
+		tagClient.deleteTage(tagId);
+	}
 }

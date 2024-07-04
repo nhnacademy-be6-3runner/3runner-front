@@ -12,4 +12,6 @@ public interface TagService {
 	Page<TagResponse> readAllAdminBookTags(int page, int size);
 
 	void createTag(String name);
+
+	void deleteTag(long tagId);
 }
