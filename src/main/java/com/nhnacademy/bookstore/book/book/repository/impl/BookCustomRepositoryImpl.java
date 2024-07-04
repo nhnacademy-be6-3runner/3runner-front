@@ -1,6 +1,15 @@
 package com.nhnacademy.bookstore.book.book.repository.impl;
 
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Repository;
+
 import com.nhnacademy.bookstore.book.book.dto.response.BookListResponse;
+import com.nhnacademy.bookstore.book.book.dto.response.BookManagementResponse;
 import com.nhnacademy.bookstore.book.book.dto.response.ReadBookResponse;
 import com.nhnacademy.bookstore.book.book.repository.BookCustomRepository;
 import com.nhnacademy.bookstore.entity.book.QBook;
@@ -12,14 +21,6 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import jakarta.persistence.EntityManager;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Repository;
-
-import java.util.List;
-import java.util.Optional;
 
 @Repository
 public class BookCustomRepositoryImpl implements BookCustomRepository {
@@ -88,6 +89,30 @@ public class BookCustomRepositoryImpl implements BookCustomRepository {
 		}
 		return content.getFirst();
 	}
+
+	@Override
+	public Page<BookManagementResponse> readAdminBookList(Pageable pageable) {
+		List<BookManagementResponse> content = jpaQueryFactory.select(
+				Projections.constructor(BookManagementResponse.class,
+					qBook.id,
+					qBook.title,
+					qBook.price,
+					qBook.sellingPrice,
+					qBook.author,
+					qBook.quantity,
+					qBook.viewCount))
+			.from(qBook)
+			.offset(pageable.getOffset())
+			.limit(pageable.getPageSize())
+			.fetch();
+		long total = Optional.ofNullable(
+			jpaQueryFactory.select(qBook.count())
+				.from(qBook)
+				.fetchOne()
+		).orElse(0L);
+		return new PageImpl<>(content, pageable, total);
+	}
+
 }
 
 
