@@ -11,6 +11,7 @@ import com.nhnacademy.bookstore.util.ApiResponse;
 import com.nhnacademy.bookstore.util.ValidationUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
  *
  * @author 김은비
  */
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/bookstore")
@@ -41,8 +43,10 @@ public class ReviewController {
     @PostMapping("/{purchaseBookId}/create")
     public ApiResponse<Long> createReview(@PathVariable long purchaseBookId, @RequestHeader("Member-Id") Long memberId, @Valid @RequestBody CreateReviewRequest createReviewRequest,
                                           BindingResult bindingResult) {
+        log.info("리뷰 생성된 책 아이디 : {}", purchaseBookId);
         ValidationUtils.validateBindingResult(bindingResult, new CreateReviewRequestFormException(bindingResult.getFieldErrors().toString()));
         Long reviewId = reviewService.createReview(purchaseBookId, memberId, createReviewRequest);
+        log.info("추가된 이미지 갯수 : {}", createReviewRequest.imageList().size());
         reviewImageService.createReviewImage(createReviewRequest.imageList(), reviewId);
         return ApiResponse.createSuccess(reviewId);
     }

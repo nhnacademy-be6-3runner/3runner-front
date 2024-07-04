@@ -9,8 +9,8 @@ import com.nhnacademy.bookstore.entity.review.Review;
 import com.nhnacademy.bookstore.entity.reviewImage.ReviewImage;
 import com.nhnacademy.bookstore.entity.totalImage.TotalImage;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -23,6 +23,7 @@ import java.util.Optional;
  *
  * @author 김은비, 한민기
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ReviewImageServiceImpl implements ReviewImageService {
@@ -51,6 +52,7 @@ public class ReviewImageServiceImpl implements ReviewImageService {
                     review.get(), totalImage);
             reviewImageRepository.save(reviewImage);
         }
+        log.info("리뷰 이미지 생성");
     }
 
     /**
@@ -59,7 +61,7 @@ public class ReviewImageServiceImpl implements ReviewImageService {
      * @param imageList 이미지 리스트
      * @param reviewId  리뷰 아이디
      */
-    @Transactional(propagation = Propagation.MANDATORY)
+    @Transactional
     @Override
     public void createReviewImage(List<String> imageList, long reviewId) {
         List<CreateReviewImageRequest> createReviewImageRequestList = new ArrayList<>();

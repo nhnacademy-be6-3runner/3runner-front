@@ -19,10 +19,10 @@ import com.nhnacademy.bookstore.member.member.exception.MemberNotExistsException
 import com.nhnacademy.bookstore.member.member.repository.MemberRepository;
 import com.nhnacademy.bookstore.purchase.purchaseBook.repository.PurchaseBookRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
@@ -32,6 +32,7 @@ import java.time.ZonedDateTime;
  *
  * @author 김은비
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ReviewServiceImpl implements ReviewService {
@@ -51,9 +52,10 @@ public class ReviewServiceImpl implements ReviewService {
      * @return 생성된 리뷰 아이디
      */
     @Override
-    @Transactional(propagation = Propagation.MANDATORY)
+    @Transactional
     public Long createReview(long purchaseBookId, long memberId, CreateReviewRequest createReviewRequest) {
         if (!reviewRepository.existByPurchaseBook(purchaseBookId, memberId)) {
+            log.info("회원이 주문한 책이 아닙니다. purchaseBookId : {}, member id : {}", purchaseBookId, memberId);
             throw new UnauthorizedReviewAccessException();
         }
 
@@ -78,7 +80,7 @@ public class ReviewServiceImpl implements ReviewService {
      * @return 수정된 리뷰 아이디
      */
     @Override
-    @Transactional(propagation = Propagation.MANDATORY)
+    @Transactional
     public Long updateReview(long reviewId, long memberId, CreateReviewRequest createReviewRequest) {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(ReviewNotExistsException::new);

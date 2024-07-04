@@ -18,9 +18,8 @@ import java.util.List;
 @Builder
 public record CreateReviewRequest(
         @Size(min = 1, max = 50) String title,
-        @Size(min = 1, max = 200) String content,
-        @NotNull double ratings,
-        String imageName,
+        @NotNull String content,
+        double ratings,
         List<String> imageList
 ) {
 }
