@@ -3,7 +3,7 @@ package com.nhnacademy.front.purchase.purchase.service.impl;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
-import com.nhnacademy.front.purchase.purchase.dto.response.ReadPurchaseResponse;
+import com.nhnacademy.front.purchase.purchase.dto.purchase.response.ReadPurchaseResponse;
 import com.nhnacademy.front.purchase.purchase.feign.PurchaseManagerControllerClient;
 import com.nhnacademy.front.purchase.purchase.service.PurchaseDetailManagerService;
 

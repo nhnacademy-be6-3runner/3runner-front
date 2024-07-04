@@ -1,11 +1,9 @@
 package com.nhnacademy.front.purchase.purchase.service;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
-import com.nhnacademy.front.purchase.purchase.dto.response.ReadPurchase;
-import com.nhnacademy.front.purchase.purchase.dto.response.ReadPurchaseBookResponse;
-import com.nhnacademy.front.purchase.purchase.dto.response.ReadPurchaseResponse;
+import com.nhnacademy.front.purchase.purchase.dto.purchase.response.ReadPurchaseBookResponse;
+import com.nhnacademy.front.purchase.purchase.dto.purchase.response.ReadPurchaseResponse;
 
 public interface PurchaseDetailGuestService {
 	ReadPurchaseResponse readGuestPurchases(String orderNumber, String password);

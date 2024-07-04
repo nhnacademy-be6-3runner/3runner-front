@@ -1,7 +1,9 @@
 package com.nhnacademy.front.purchase.cart.controller;
 
 import com.nhnacademy.front.purchase.cart.dto.request.CreateBookCartRequest;
+import com.nhnacademy.front.purchase.cart.dto.request.ReadAllBookCartMemberRequest;
 import com.nhnacademy.front.purchase.cart.dto.request.UpdateBookCartRequest;
+import com.nhnacademy.front.purchase.cart.dto.response.ReadAllBookCartMemberResponse;
 import com.nhnacademy.front.purchase.cart.dto.response.ReadBookCartGuestResponse;
 import com.nhnacademy.front.purchase.cart.feign.BookCartControllerClient;
 import jakarta.servlet.http.Cookie;
@@ -24,10 +26,8 @@ import java.util.Objects;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/api")
 public class CartController {
-    private final BookCartControllerClient bookCartGuestControllerClient;
-
+    private final BookCartControllerClient bookCartControllerClient;
 
     /**
      * 장바구니 테스트 담기.
@@ -58,12 +58,24 @@ public class CartController {
             @RequestHeader(value = "Member-Id", required = false) Long memberId,
             Model model){
 
-        log.info("{}",cartId);
-        List<ReadBookCartGuestResponse> items = bookCartGuestControllerClient.readCart(cartId).getBody().getData();
+        model.addAttribute("memberId", memberId);
+        if (Objects.isNull(memberId)){
 
-        log.info("{}", items);
-        model.addAttribute("response", items);
-        model.addAttribute("cartId", cartId.toString());
+            List<ReadBookCartGuestResponse> items = bookCartControllerClient
+                    .readCart(cartId)
+                    .getBody().getData();
+
+            model.addAttribute("response", items);
+            model.addAttribute("cartId", cartId.toString());
+        } else {
+
+            List<ReadAllBookCartMemberResponse> items = bookCartControllerClient
+                    .readAllBookCartMember(memberId)
+                    .getBody().getData();
+
+            model.addAttribute("response", items);
+            model.addAttribute("cartId", memberId.toString());
+        }
 
         return "purchase/cart";
     }
@@ -88,34 +100,66 @@ public class CartController {
             HttpServletResponse response,
             Model model) throws IOException {
 
-        if(Objects.isNull(cartId)){
-            cartId = bookCartGuestControllerClient.createCart(
+        if (Objects.nonNull(memberId)) {
+            List<ReadAllBookCartMemberResponse> list = bookCartControllerClient
+                    .readAllBookCartMember(memberId)
+                    .getBody().getData();
+
+            for(ReadAllBookCartMemberResponse l : list){
+                if(l.bookId().equals(bookId)){
+                    bookCartControllerClient.updateCart(
+                            UpdateBookCartRequest.builder()
+                                    .bookId(bookId)
+                                    .cartId(memberId)
+                                    .quantity(quantity)
+                                    .build(),
+                            memberId
+                    );
+
+                    response.sendRedirect("/carts");
+                    return;
+                }
+            }
+
+            bookCartControllerClient.createCart(
                     CreateBookCartRequest.builder()
                             .bookId(bookId)
                             .quantity(quantity)
                             .build(),
                     memberId).getBody().getData();
 
-            log.info("created : {}",cartId);
-
-            Cookie cartCookie = new Cookie("cartId", cartId.toString());
-            cartCookie.setHttpOnly(true);
-            cartCookie.setSecure(true);
-            cartCookie.setPath("/");
-            cartCookie.setMaxAge(60 * 60 * 24 * 7);
-            response.addCookie(cartCookie);
-            response.sendRedirect("/api/carts");
+            response.sendRedirect("/carts");
         } else {
-            bookCartGuestControllerClient.updateCart(
-                    UpdateBookCartRequest.builder().
-                            bookId(bookId).
-                            cartId(cartId).
-                            quantity(quantity)
-                            .build(),
-                    memberId
-            );
+            if(Objects.isNull(cartId)){
+                cartId = bookCartControllerClient.createCart(
+                        CreateBookCartRequest.builder()
+                                .bookId(bookId)
+                                .quantity(quantity)
+                                .build(),
+                        memberId).getBody().getData();
 
-            response.sendRedirect("/api/carts");
+                log.info("created : {}",cartId);
+
+                Cookie cartCookie = new Cookie("cartId", cartId.toString());
+                cartCookie.setHttpOnly(true);
+                cartCookie.setSecure(true);
+                cartCookie.setPath("/");
+                cartCookie.setMaxAge(60 * 60 * 24 * 7);
+                response.addCookie(cartCookie);
+                response.sendRedirect("/api/carts");
+
+            } else {
+                bookCartControllerClient.updateCart(
+                        UpdateBookCartRequest.builder()
+                                .bookId(bookId)
+                                .cartId(cartId)
+                                .quantity(quantity)
+                                .build(),
+                        memberId
+                );
+
+                response.sendRedirect("/api/carts");
+            }
         }
     }
 }

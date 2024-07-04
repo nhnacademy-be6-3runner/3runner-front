@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8" />
+</head>
+<body>
+<h2>결제 성공</h2>
+
+<h4>주문 내역</h4>
+<div th:each="item : ${response}" class="cart-item d-flex justify-content-between align-items-center">
+    <div class="cart-item-info d-flex align-items-center">
+        <img th:src="|/static/${item.url()}|"
+             src="/static/img/no-image.png" alt="Product Image" class="mr-3" style="width: 150px">
+        <div style="margin-left: 10px">
+            <h4 th:text="${item.title()}">Product</h4>
+            <p>₩<span th:text="${item.price()}"></span></p>
+            <div class="d-flex align-items-center">
+                <input type="hidden" th:id="${item.bookId()}" th:value="${item.bookId()}">
+                <input type="hidden" th:id="${item.bookCartId()}" th:value="${item.bookCartId()}">
+                <input type="number" class="form-control mx-2 quantity-input" th:value="${item.quantity}" readonly>
+            </div>
+        </div>
+    </div>
+</div>
+<h4>총금액</h4>
+<h4 th:text="${totalPrice}">Product</h4>
+<h4>배송지</h4>
+<h4 th:text="${address}">address</h4>
+<h4>주문아이디</h4>
+<h4 th:text="${orderId}">orderId</h4>
+<h4>설정한 패스워드</h4>
+<h4 th:text="${password}">password</h4>
+<p id="paymentKey"></p>
+<p id="orderId"></p>
+<p id="amount"></p>
+<input type="hidden" id="cartId"  name="cartId" th:value="${cartId}">
+
+<script th:inline="javascript">
+    // 쿼리 파라미터 값이 결제 요청할 때 보낸 데이터와 동일한지 반드시 확인하세요.
+    // 클라이언트에서 결제 금액을 조작하는 행위를 방지할 수 있습니다.
+    const urlParams = new URLSearchParams(window.location.search);
+    const paymentKey = urlParams.get("paymentKey");
+    const orderId = urlParams.get("orderId");
+    const amount = urlParams.get("amount");
+    const cartId = urlParams.get("cartId");
+    var address = urlParams.get("address");
+    var password = urlParams.get("password");
+
+    async function confirm() {
+        const requestData = {
+            paymentKey: paymentKey,
+            orderId: orderId,
+            amount: amount,
+
+        };
+
+        const response = await fetch("http://localhost:8081/bookstore/payments/guests/confirm?cartId="+cartId+"&address="+address+"&password="+password+"&isPacking="+isPacking+"&shipping="+shipping, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(requestData),
+        });
+        console.log(response);
+
+        const json = await response.json();
+
+        if (!response.ok) {
+            // 결제 실패 비즈니스 로직을 구현하세요.
+            console.log(json);
+            window.location.href = `/api/payments/guests/fail?message=${json.message}&code=${json.code}`;
+        }
+
+        // 결제 성공 비즈니스 로직을 구현하세요.
+        console.log(json);
+    }
+    confirm();
+
+    const paymentKeyElement = document.getElementById("paymentKey");
+    const orderIdElement = document.getElementById("orderId");
+    const amountElement = document.getElementById("amount");
+
+    orderIdElement.textContent = "주문번호: " + orderId;
+    amountElement.textContent = "결제 금액: " + amount;
+    paymentKeyElement.textContent = "paymentKey: " + paymentKey;
+</script>
+</body>
+</html>

@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.nhnacademy.front.entity.purchase.enums.PurchaseStatus;
-import com.nhnacademy.front.purchase.purchase.dto.response.ReadPurchase;
-import com.nhnacademy.front.purchase.purchase.dto.response.ReadPurchaseBookResponse;
+import com.nhnacademy.front.purchase.purchase.dto.purchase.response.ReadPurchase;
+import com.nhnacademy.front.purchase.purchase.dto.purchase.response.ReadPurchaseBookResponse;
 import com.nhnacademy.front.purchase.purchase.service.PurchaseDetailMemberService;
 import com.nhnacademy.util.ApiResponse;
 

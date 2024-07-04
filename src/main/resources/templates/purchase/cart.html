@@ -62,20 +62,27 @@
 <!--        <button class="btn btn-danger">Empty Cart</button>-->
     </div>
     <br>
+    <div class="cart-item-actions">
+        <button class="btn btn-outline-danger" th:attr="onclick='deleteAll('+${cartId}+')'">Remove All</button>
+    </div>
     <div class="cart-items">
         <div th:each="item, iter: ${response}" class="cart-item d-flex justify-content-between align-items-center">
             <div class="cart-item-info d-flex">
-                <img th:src="|/static/${item.url()}|"
+                <img th:src="@{/api/images/book/download(fileName=${item.url()})}"
                      src="/static/img/no-image.png" alt="Product Image" class="mr-3" style="width: 150px">
                 <div style="margin-left: 10px">
                     <h4 th:text="${item.title()}">Product</h4>
                     <p>₩<span th:text="${item.price()}"></span></p>
                     <div class="d-flex">
-                        <input type="hidden" th:id="'bookId-' + ${iter.index}" th:value="${item.bookId()}">
+                        <input type="hidden" th:id="'bookId-'+${iter.index}" th:value="${item.bookId()}">
+                        <input type="hidden" th:id="'bookId1-'+${iter.index}" th:value="${item.bookId()}">
                         <input type="hidden" th:id="'bookCartId-' + ${iter.index}" th:value="${item.bookCartId()}">
                         <button class="btn btn-outline-secondary" th:attr="onclick='updateQuantity(' + ${iter.index} + ', -1)'">-</button>
-                        <input type="number" class="form-control mx-2 quantity-input" th:value="${item.quantity}" th:id="'quantity-' + ${iter.index}" style="width: 80px;" readonly>
+                        <label>
+                            <input type="number" class="form-control mx-2 quantity-input" th:value="${item.quantity}" th:id="'quantity-' + ${iter.index}" style="width: 80px;" readonly>
+                        </label>
                         <button class="btn btn-outline-secondary" th:attr="onclick='updateQuantity(' + ${iter.index} + ', 1)'">+</button>
+                        <span th:if="${item.leftQuantity != null and item.quantity != null and item.leftQuantity - item.quantity < 0}">재고가 없습니다.</span>
                     </div>
                 </div>
             </div>
@@ -89,10 +96,18 @@
         <h4>Total: ₩<span id="total-price">0.00</span></h4>
     </div>
     <div class="cart-footer">
-        <form action="/api/purchases" method="post">
-            <input type="hidden" name="cartId" id="cartId" th:value="${cartId}">
-            <button class="btn btn-primary">Proceed to Checkout</button>
-        </form>
+        <div th:if="${memberId}==null">
+            <form action="/api/purchases" method="post">
+                <input type="hidden" name="cartId" id="cartId" th:value="${cartId}">
+                <button class="btn btn-primary">Guest Proceed to Checkout</button>
+            </form>
+        </div>
+        <div th:if="${memberId}!=null">
+            <form action="/api/purchases" method="post">
+                <input type="hidden" name="memberId" id="memberId" th:value="${memberId}">
+                <button class="btn btn-primary">Member Proceed to Checkout</button>
+            </form>
+        </div>
     </div>
 </main>
 <footer class="bg-white text-dark p-3">
@@ -107,9 +122,10 @@
     });
 
     function updateQuantity(index, delta) {
-        var quantityInput = document.getElementById('quantity-'+index);
-        var bookId = document.getElementById('bookId-'+index).value;
-        var bookCartId = document.getElementById('bookCartId-'+index).value;
+        const quantityInput = document.getElementById('quantity-'+index);
+        const bookId =  document.getElementById('bookId-'+index).value;
+        const bookId1 =  document.getElementById('bookId1-'+index).value;
+        const bookCartId = document.getElementById('bookCartId-'+index).value;
         var newQuantity = parseInt(quantityInput.value) + delta;
         if (newQuantity < 0) {
             newQuantity = 0;
@@ -117,6 +133,7 @@
         quantityInput.value = newQuantity;
 
         var url = 'http://localhost:8081/bookstore/carts';
+        // var url = 'http://133.186.143.40/bookstore/carts';
         var method = 'PUT';
         var cartIdElement = document.getElementById('cartId').value;
 
@@ -159,6 +176,8 @@
             error: function(xhr, status, error) {
                 console.log(parseInt(cartIdElement));
                 console.log(parseInt(bookId));
+                console.log(parseInt(bookId1))
+                console.log(parseInt(bookCartId))
                 console.log(parseInt(newQuantity));
                 console.error('Error:', error);
                 console.error('Status:', status);
@@ -190,6 +209,22 @@
             type: 'DELETE',
             contentType: 'application/json',
             data: JSON.stringify({bookCartId:parseInt(bookCartId), cartId: parseInt(cartId)}),
+            success: function(response) {
+                console.log(response);
+                location.reload();
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);
+                console.error('Status:', status);
+                console.error('XHR:', xhr);
+            }
+        });
+    }
+
+    function deleteAll(cartId) {
+        $.ajax({
+            url: 'http://localhost:8081/bookstore/carts/'+cartId,
+            type: 'DELETE',
             success: function(response) {
                 console.log(response);
                 location.reload();

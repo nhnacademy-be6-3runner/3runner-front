@@ -2,6 +2,7 @@ package com.nhnacademy.front.purchase.cart.feign;
 
 import com.nhnacademy.front.purchase.cart.dto.request.CreateBookCartRequest;
 import com.nhnacademy.front.purchase.cart.dto.request.DeleteBookCartRequest;
+import com.nhnacademy.front.purchase.cart.dto.request.ReadAllBookCartMemberRequest;
 import com.nhnacademy.front.purchase.cart.dto.request.UpdateBookCartRequest;
 import com.nhnacademy.front.purchase.cart.dto.response.ReadAllBookCartMemberResponse;
 import com.nhnacademy.front.purchase.cart.dto.response.ReadBookCartGuestResponse;
@@ -20,7 +21,8 @@ public interface BookCartControllerClient {
         ApiResponse<List<ReadBookCartGuestResponse>> readCart(@PathVariable("cartId") Long cartId);
 
         @GetMapping("/bookstore/carts")
-        ApiResponse<List<ReadAllBookCartMemberResponse>> readAllBookCartMember(@RequestHeader(name = "Member-Id") Long userId);
+        ApiResponse<List<ReadAllBookCartMemberResponse>> readAllBookCartMember(
+                @RequestHeader(value = "Member-Id", required = false) Long memberId);
 
         @PostMapping("/bookstore/carts")
         ApiResponse<Long> createCart(
