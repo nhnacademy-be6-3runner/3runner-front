@@ -19,7 +19,10 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.Objects;
 
@@ -33,10 +36,10 @@ public class PaymentMemberController {
     @RequestMapping(value = "/bookstore/payments/members/confirm")
     public ResponseEntity<JSONObject> confirmPayment(
             @RequestHeader(value = "Member-Id",required = false) Long memberId,
-            @RequestParam(required = false) Integer discountedPrice,
-            @RequestParam(required = false) Integer discountedPoint,
-            @RequestParam(required = false) Boolean isPacking,
-            @RequestParam(required = false) ZonedDateTime shippingDate,
+            @RequestParam(required = false) String discountedPrice,
+            @RequestParam(required = false) String discountedPoint,
+            @RequestParam(required = false) String isPacking,
+            @RequestParam(required = false) String shippingDate,
             @RequestParam(required = false) String road,
             @RequestParam(required = false) Long couponFormId,
             @RequestBody String jsonBody) throws Exception {
@@ -45,6 +48,7 @@ public class PaymentMemberController {
         String orderId;
         String amount;
         String paymentKey;
+        memberId = 1L;
 
         try {
             // 클라이언트에서 받은 JSON 요청 바디입니다.
@@ -86,12 +90,14 @@ public class PaymentMemberController {
 
         // 결제 성공 및 실패 비즈니스 로직을 구현하세요.
         if (isSuccess) {
+            LocalDate localDate = LocalDate.parse(shippingDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
             paymentMemberService.payment(CreatePaymentMemberRequest.builder()
                             .memberId(memberId)
-                            .discountedPoint(discountedPoint)
-                            .discountedPrice(discountedPrice)
-                            .isPacking(isPacking)
-                            .shippingDate(shippingDate)
+                            .discountedPoint(Integer.parseInt(discountedPoint))
+                            .discountedPrice(Integer.parseInt(discountedPrice))
+                            .isPacking(Boolean.valueOf(isPacking))
+                            .shippingDate(localDate.atStartOfDay(ZoneId.systemDefault()))
                             .road(road)
                             .couponFormId(couponFormId)
                             .amount(Integer.parseInt(amount))
