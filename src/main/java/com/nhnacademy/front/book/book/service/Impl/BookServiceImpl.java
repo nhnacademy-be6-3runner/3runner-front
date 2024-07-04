@@ -16,6 +16,7 @@ import com.nhnacademy.front.book.book.controller.feign.BookClient;
 import com.nhnacademy.front.book.book.dto.request.CreateBookRequest;
 import com.nhnacademy.front.book.book.dto.request.UserCreateBookRequest;
 import com.nhnacademy.front.book.book.dto.response.BookListResponse;
+import com.nhnacademy.front.book.book.dto.response.BookManagementResponse;
 import com.nhnacademy.front.book.book.dto.response.UserReadBookResponse;
 import com.nhnacademy.front.book.book.exception.InvalidApiResponseException;
 import com.nhnacademy.front.book.book.exception.NotFindBookException;
@@ -100,6 +101,11 @@ public class BookServiceImpl implements BookService {
 		bookClient.updateBook(bookId, updateBookRequest);
 	}
 
+	@Override
+	public void deleteBook(long bookId) {
+		bookClient.deleteBook(bookId);
+	}
+
 	/**
 	 *
 	 *  내용 에서 이미지 추출하는 코드
@@ -177,6 +183,17 @@ public class BookServiceImpl implements BookService {
 	@Override
 	public Page<BookListResponse> readAllBooks(int page, int size) {
 		ApiResponse<Page<BookListResponse>> response = bookClient.readAllBooks(page, size);
+
+		if (response.getHeader().isSuccessful() && response.getBody() != null) {
+			return response.getBody().getData();
+		} else {
+			throw new InvalidApiResponseException("도서 페이지 조회 exception");
+		}
+	}
+
+	@Override
+	public Page<BookManagementResponse> readAllAdminBooks(int page, int size) {
+		ApiResponse<Page<BookManagementResponse>> response = bookClient.readAllAdminBooks(page, size);
 
 		if (response.getHeader().isSuccessful() && response.getBody() != null) {
 			return response.getBody().getData();
