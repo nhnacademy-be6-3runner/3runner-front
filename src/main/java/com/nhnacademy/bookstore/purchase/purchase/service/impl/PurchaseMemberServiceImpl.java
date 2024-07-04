@@ -1,5 +1,11 @@
 package com.nhnacademy.bookstore.purchase.purchase.service.impl;
 
+import java.time.ZonedDateTime;
+import java.util.UUID;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.nhnacademy.bookstore.entity.purchase.Purchase;
 import com.nhnacademy.bookstore.entity.purchase.enums.MemberType;
 import com.nhnacademy.bookstore.entity.purchase.enums.PurchaseStatus;
@@ -13,12 +19,6 @@ import com.nhnacademy.bookstore.purchase.purchase.exception.PurchaseNoAuthorizat
 import com.nhnacademy.bookstore.purchase.purchase.repository.PurchaseRepository;
 import com.nhnacademy.bookstore.purchase.purchase.service.PurchaseMemberService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.time.ZonedDateTime;
-import java.util.List;
-import java.util.UUID;
 
 /**
  * 회원 주문 서비스 구현체.
@@ -27,10 +27,10 @@ import java.util.UUID;
  */
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 public class PurchaseMemberServiceImpl implements PurchaseMemberService {
-    private final PurchaseRepository purchaseRepository;
-    private final MemberService memberService;
+	private final PurchaseRepository purchaseRepository;
+	private final MemberService memberService;
 
     /**
      * 주문 생성.
@@ -44,16 +44,15 @@ public class PurchaseMemberServiceImpl implements PurchaseMemberService {
         Purchase purchase = new Purchase(
                 UUID.randomUUID(),
                 PurchaseStatus.PROCESSING,
-                createPurchaseRequest.deliveryPrice(),
+                3000,
                 createPurchaseRequest.totalPrice(),
                 ZonedDateTime.now(),
                 createPurchaseRequest.road(),
-                null,
+                createPurchaseRequest.password(),
+                createPurchaseRequest.shippingDate(),
+                createPurchaseRequest.isPacking(),
                 MemberType.MEMBER,
-                memberService.readById(memberId),
-                null, //TODO : Point 구현 후 연결 필요
-                null,
-                null
+                memberService.readById(memberId)
         );
 
         if(purchaseRepository.existsPurchaseByOrderNumber(purchase.getOrderNumber())) {
@@ -114,6 +113,8 @@ public class PurchaseMemberServiceImpl implements PurchaseMemberService {
                 .road(purchase.getRoad())
                 .password(purchase.getPassword())
                 .memberType(purchase.getMemberType())
+                .shippingDate(purchase.getShippingDate())
+                .isPacking(purchase.isPacking())
                 .build();
     }
 

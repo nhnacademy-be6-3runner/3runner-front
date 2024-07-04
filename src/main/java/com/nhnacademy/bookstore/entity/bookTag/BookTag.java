@@ -13,6 +13,7 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @AllArgsConstructor
@@ -28,6 +29,7 @@ public class BookTag {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
+	@Setter
 	@ManyToOne
 	private Book book;
 

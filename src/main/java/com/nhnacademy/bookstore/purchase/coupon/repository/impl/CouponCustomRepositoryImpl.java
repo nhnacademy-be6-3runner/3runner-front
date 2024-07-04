@@ -39,7 +39,7 @@ public class CouponCustomRepositoryImpl implements CouponCustomRepository {
         List<Tuple> tuples = queryFactory
                 .select(qMember.id,
                         qCoupon.id
-                        )
+                )
                 .from(qCoupon)
                 .join(qCoupon.member, qMember)
                 .where(qCoupon.couponFormId.in(couponFormIds))

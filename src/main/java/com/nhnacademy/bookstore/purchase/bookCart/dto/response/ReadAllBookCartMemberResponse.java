@@ -10,5 +10,6 @@ public record ReadAllBookCartMemberResponse(
         int price,
         String url,
         String title,
-        int quantity) {
+        int quantity,
+        int leftQuantity) {
 }

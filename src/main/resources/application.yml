@@ -43,6 +43,7 @@ spring:
       test-on-borrow: true
       validation-query: SELECT 1
 
+
   rabbitmq:
     host: 133.186.241.167
     port: 5672

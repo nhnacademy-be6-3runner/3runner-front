@@ -5,5 +5,5 @@ import lombok.Builder;
 
 
 @Builder
-public record UpdatePurchaseMemberRequest(PurchaseStatus purchaseStatus) {
+public record UpdatePurchaseMemberRequest(String purchaseStatus) {
 }

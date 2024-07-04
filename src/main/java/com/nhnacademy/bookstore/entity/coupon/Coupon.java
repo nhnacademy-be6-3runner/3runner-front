@@ -7,13 +7,16 @@ import com.nhnacademy.bookstore.entity.purchaseCoupon.PurchaseCoupon;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity@Getter@Setter
+@Entity
+@Getter@Setter
+@NoArgsConstructor
 public class Coupon {
 
     @Id
@@ -33,8 +36,17 @@ public class Coupon {
     private Member member;
 
 
+    @PrePersist
+    private void issued() {
+        issuedAt = ZonedDateTime.now();
+    }
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "coupon", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PurchaseCoupon> purchaseCouponList = new ArrayList<>();
 
-
+    public Coupon(long couponFormId, CouponStatus couponStatus, Member member) {
+        this.couponFormId = couponFormId;
+        this.couponStatus = couponStatus;
+        this.member = member;
+    }
 }

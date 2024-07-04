@@ -1,0 +1,22 @@
+package com.nhnacademy.bookstore.purchase.coupon.service;
+
+import com.nhnacademy.bookstore.entity.coupon.Coupon;
+import com.nhnacademy.bookstore.entity.member.Member;
+import com.nhnacademy.bookstore.purchase.coupon.feign.dto.request.CreateCouponFormRequest;
+import com.nhnacademy.bookstore.purchase.coupon.feign.dto.response.ReadCouponFormResponse;
+
+import java.util.List;
+
+public interface CouponMemberService {
+    List<ReadCouponFormResponse> readMemberCoupons(Long memberId);
+
+    Long useCoupons(Long couponId, Long memberId);
+
+    void issueBirthdayCoupon();
+
+    void issueWelcomeCoupon(Member member);
+
+    Long refundCoupons(Long couponId, Long memberId);
+
+    Long readCoupon(Long couponFormId);
+}

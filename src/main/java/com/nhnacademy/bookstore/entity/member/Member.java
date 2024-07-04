@@ -73,8 +73,9 @@ public class Member {
 
 	private ZonedDateTime modifiedAt;
 	private ZonedDateTime deletedAt;
-	@NotNull
+
 	private AuthProvider authProvider;
+
 	@OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Address> addressList = new ArrayList<>();
 
