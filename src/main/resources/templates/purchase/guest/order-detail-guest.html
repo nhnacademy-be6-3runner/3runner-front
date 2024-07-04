@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>order-book</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/order-detail.css">
+</head>
+<body th:data-purchase-id="${orderNumber}">
+<h2>주문내역</h2>
+<div class="order-info">
+    <div>
+        <p>주문 번호:</p>
+        <p th:text="${guestorder.orderNumber}">주문 번호</p>
+    </div>
+    <div>
+        <p>주문 날짜:</p>
+        <p th:text="${guestorder.createdAt}">주문 날짜</p>
+    </div>
+    <div>
+        <p>상태:</p>
+        <p th:text="${guestorder.status.toString()}" >상태</p>
+    </div>
+    <div>
+        <p>총 금액:</p>
+        <p th:text="${guestorder.totalPrice()}+' ₩'">총 금액</p>
+    </div>
+</div>
+<form method="post" th:action="@{'/order/guest/{purchaseId}' (purchaseId = ${guestorder.orderNumber().toString()})}">
+    <button type="submit" class="confirm-order-btn" th:if="${guestorder.status.toString() != 'CONFIRMED'}"  >주문 확정</button>
+</form>
+
+<div class="order-details">
+    <ul class="book-list">
+        <li class="book-item" th:each="book, iter : ${guestorderbooks}">
+            <img th:src="@{/api/images/book/download(fileName=${book.readBookByPurchase().bookImage()})}"
+                 th:data-book-image="${book.readBookByPurchase().bookImage()}" alt="Product Image">
+            <div class="book-details">
+                <p style="font-size: 18px" th:text="${book.readBookByPurchase().title()}">Product</p>
+                <p style="font-size: 16px" th:text="${book.readBookByPurchase().author()}">저자</p>
+                <p style="font-size: 14px" th:text="${book.readBookByPurchase().publisher()}">출판사</p>
+            </div>
+            <div class="book-quantity-price">
+                <p>수량 : <span th:text="${book.quantity()}"></span></p>
+                <p>₩<span th:text="${book.price()}"></span></p>
+            </div>
+            <button class="order-delivery" th:if="${guestorder.status.toString() == 'CONFIRMED'}">리뷰</button>
+        </li>
+
+    </ul>
+    <div class="text-center mt-4">
+        <nav>
+            <ul class="pagination justify-content-center">
+                <li class="page-item" th:classappend="${guestorderbooks.hasPrevious()} ? '' : 'disabled'">
+                    <a class="page-link" href="#"
+                       th:onclick="'loadBooks(' + (${guestorderbooks.number} - 1) + ', ' + ${guestorderbooks.size} + '); return false;'">이전</a>
+                </li>
+                <li class="page-item" th:each="i : ${#numbers.sequence(0, guestorderbooks.totalPages - 1)}"
+                    th:classappend="${i} == ${guestorderbooks.number} ">
+                    <a class="page-link" href="#"
+                       th:onclick="'loadBooks(' + ${i} + ', ' + ${guestorderbooks.size} + '); return false;'"
+                       th:text="${i + 1}">1</a>
+                </li>
+                <li class="page-item" th:classappend="${guestorderbooks.hasNext()} ? '' : 'disabled'">
+                    <a class="page-link" href="#"
+                       th:onclick="'loadBooks(' + (${guestorderbooks.number} + 1) + ', ' + ${guestorderbooks.size} + '); return false;'">다음</a>
+                </li>
+
+            </ul>
+        </nav>
+    </div>
+
+</div>
+
+<script>
+    const purchaseId = document.body.getAttribute('data-purchase-id');
+
+    function loadBooks(page, size) {
+        window.location.href = `/guest/orders/${orderNumber}?page=${page}&size=${size}`;
+    }
+</script>
+
+</body>
+</html>
