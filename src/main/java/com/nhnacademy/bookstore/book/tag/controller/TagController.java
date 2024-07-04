@@ -72,7 +72,7 @@ public class TagController {
 	 * @return ApiResponse<Void> 성공시 success헤더만 보냄
 	 */
 	@DeleteMapping
-	public ApiResponse<Void> deleteTag(@Valid @RequestBody DeleteTagRequest deleteTagRequest,
+	public ApiResponse<Void> deleteTag(@Valid @ModelAttribute DeleteTagRequest deleteTagRequest,
 		BindingResult bindingResult) {
 		ValidationUtils.validateBindingResult(bindingResult,
 			new DeleteTagRequestFormException(bindingResult.getFieldErrors().toString()));
