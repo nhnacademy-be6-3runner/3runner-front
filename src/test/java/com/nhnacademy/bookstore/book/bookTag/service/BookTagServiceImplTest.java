@@ -9,6 +9,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -213,5 +214,41 @@ class BookTagServiceImplTest {
 		when(tagRepository.existsById(anyLong())).thenReturn(false);
 
 		assertThrows(NotExistsBookTagException.class, () -> bookTagService.createBookTag(createBookTagListRequest));
+	}
+
+	@Test
+	void updateBookTag() {
+		Tag tag1 = new Tag();
+		tag1.setName("태그 1");
+
+		Tag tag2 = new Tag();
+		tag2.setName("태그 2");
+		Tag tag3 = new Tag();
+		tag3.setName("태그 3");
+
+		Book book = new Book("Sample Book", "Sample Description", ZonedDateTime.now(), 100, 50, 80, 500, true,
+			"12346789",
+			"John Doe", "Sample Publisher", null, null, null);
+
+		BookTag bookTag1 = new BookTag(book, tag1);
+		BookTag bookTag2 = new BookTag(book, tag2);
+		BookTag bookTag3 = new BookTag(book, tag3);
+
+		List<BookTag> bookTagList = List.of(bookTag1, bookTag2, bookTag3);
+
+		when(bookRepository.findById(anyLong())).thenReturn(Optional.of(book));
+		when(tagRepository.findAllById(anyList())).thenReturn(List.of(tag1, tag2, tag3));
+		when(bookTagRepository.save(any(BookTag.class))).thenReturn(bookTag2);
+
+		CreateBookTagListRequest tagListRequest = CreateBookTagListRequest.builder().build();
+		bookTagService.updateBookTag(tagListRequest);
+	}
+
+	@Test
+	void updateBookTag_Fail_1() {
+		when(bookRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+		CreateBookTagListRequest tagListRequest = CreateBookTagListRequest.builder().build();
+		assertThrows(BookDoesNotExistException.class, () -> bookTagService.updateBookTag(tagListRequest));
 	}
 }
