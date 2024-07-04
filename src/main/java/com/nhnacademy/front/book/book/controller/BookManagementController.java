@@ -134,7 +134,7 @@ public class BookManagementController {
 	 * @param bookId 도서 삭제할 아이디
 	 * @return 도서 삭제 후 관리자로 다시감
 	 */
-	@GetMapping("/publisher/book/delete/{bookId}")
+	@GetMapping("/admin/book/delete/{bookId}")
 	public String deleteBook(@PathVariable Long bookId) {
 		bookService.deleteBook(bookId);
 		return "redirect:/admin/book/management";
