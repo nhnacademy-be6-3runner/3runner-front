@@ -44,8 +44,7 @@ public class PurchaseMemberServiceImpl implements PurchaseMemberService {
     @Override
     public Long createPurchase(CreatePurchaseRequest createPurchaseRequest, Long memberId) {
 		Purchase purchase = new Purchase(
-			//UUID.fromString(createPurchaseRequest.orderId()),
-			UUID.randomUUID(), //TODO : 바꿔놓기
+			UUID.fromString(createPurchaseRequest.orderId()),
 			PurchaseStatus.PROCESSING,
 			createPurchaseRequest.deliveryPrice(),
 			createPurchaseRequest.totalPrice(),
@@ -54,7 +53,7 @@ public class PurchaseMemberServiceImpl implements PurchaseMemberService {
 			passwordEncoder.encode(createPurchaseRequest.password()),
 			createPurchaseRequest.shippingDate(),
 			createPurchaseRequest.isPacking(),
-			MemberType.NONMEMBER,
+			MemberType.MEMBER,
 			memberService.readById(memberId)
 
 		);
