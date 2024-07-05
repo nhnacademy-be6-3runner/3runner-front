@@ -44,11 +44,6 @@ public class CustomInterceptor implements HandlerInterceptor {
 
 		if (cookies.isPresent()) {
 			for (Cookie cookie : cookies.orElse(null)) {
-				if(cookie.getValue().equals("cartId")){
-					String refreshToken = cookie.getValue();
-					log.warn("카트 쿠키 - refreshToken: {}", refreshToken);
-					TokenHolder.setRefreshToken(refreshToken);
-				}
 				if (cookie.getName().equals("Refresh")) {
 					String refreshToken = cookie.getValue();
 					log.warn("기존 쿠키 - refreshToken: {}", refreshToken);

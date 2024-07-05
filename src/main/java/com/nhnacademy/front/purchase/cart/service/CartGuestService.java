@@ -27,7 +27,7 @@ public class CartGuestService {
     public Cookie createNewCart(Long cartId){
         Cookie cartCookie = new Cookie("cartId", cartId.toString());
         cartCookie.setHttpOnly(true);
-        cartCookie.setSecure(true);
+        cartCookie.setSecure(false);
         cartCookie.setPath("/");
         cartCookie.setMaxAge(60 * 60 * 24 * 7);
         return cartCookie;
