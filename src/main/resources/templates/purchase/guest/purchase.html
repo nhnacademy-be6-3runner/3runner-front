@@ -195,7 +195,7 @@
 <script type="text/javascript">
     window.onload = function(){
         document.getElementById("newwin").onclick = function(){
-            window.open("https://business.juso.go.kr/addrlink/addrLinkUrl.do?confmKey=devU01TX0FVVEgyMDI0MDYyNzEwMTkxOTExNDg2OTc=&returnUrl=http://133.186.143.40:3000/purchases/guests/addresses","","width=700px,height=500px,top=200px,left=200px;");
+            window.open("https://business.juso.go.kr/addrlink/addrLinkUrl.do?confmKey=devU01TX0FVVEgyMDI0MDYyNzEwMTkxOTExNDg2OTc=&returnUrl="+ window.location.origin+"/purchases/guests/addresses","","width=700px,height=500px,top=200px,left=200px;");
         }
     };
     function setCountyOffice(name){

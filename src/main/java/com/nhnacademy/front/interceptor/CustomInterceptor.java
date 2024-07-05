@@ -42,9 +42,6 @@ public class CustomInterceptor implements HandlerInterceptor {
 		Exception {
 		Optional<Cookie[]> cookies = Optional.ofNullable(request.getCookies());
 
-		if(CorsUtils.isCorsRequest(request)){
-			return true;
-		}
 		if (cookies.isPresent()) {
 			for (Cookie cookie : cookies.orElse(null)) {
 				if (cookie.getName().equals("Refresh")) {
@@ -85,8 +82,12 @@ public class CustomInterceptor implements HandlerInterceptor {
 				}
 			}
 		}
-
 		log.warn("Interceptor, Access Token 확인 {}", TokenHolder.getAccessToken());
+
+		if(CorsUtils.isCorsRequest(request)){
+			return HandlerInterceptor.super.preHandle(request, response, handler);
+		}
+
 		return HandlerInterceptor.super.preHandle(request, response, handler);
 	}
 
