@@ -83,7 +83,7 @@ public class PurchaseManagerServiceImpl implements PurchaseManagerService {
 			tenDaysAgo);
 
 		for (Purchase purchase : purchases) {
-			purchase.setStatus(PurchaseStatus.CONFIRMED);
+			purchase.setStatus(PurchaseStatus.CONFIRMATION);
 			purchaseRepository.save(purchase);
 		}
 	}
