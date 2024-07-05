@@ -97,13 +97,13 @@
     </div>
     <div class="cart-footer">
         <div th:if="${memberId}==null">
-            <form action="/api/purchases" method="post">
+            <form action="/purchases" method="post">
                 <input type="hidden" name="cartId" id="cartId" th:value="${cartId}">
                 <button class="btn btn-primary">Guest Proceed to Checkout</button>
             </form>
         </div>
         <div th:if="${memberId}!=null">
-            <form action="/api/purchases" method="post">
+            <form action="/purchases" method="post">
                 <input type="hidden" name="memberId" id="memberId" th:value="${memberId}">
                 <button class="btn btn-primary">Member Proceed to Checkout</button>
             </form>
@@ -132,8 +132,8 @@
         }
         quantityInput.value = newQuantity;
 
-        var url = 'http://localhost:8081/bookstore/carts';
-        // var url = 'http://133.186.143.40/bookstore/carts';
+        //var url = 'http://localhost:8081/bookstore/carts';
+        var url = 'http://133.186.143.40/bookstore/carts';
         var method = 'PUT';
         var cartIdElement = document.getElementById('cartId').value;
 

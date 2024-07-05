@@ -46,6 +46,22 @@
         a:hover {
             text-decoration: underline;
         }
+        .info-box {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            font-weight: bold;
+        }
+        .btn-lg {
+             padding: 10px 20px;
+             font-size: 1.25rem;
+             line-height: 1.5;
+             border-radius: .3rem;
+        }
     </style>
 </head>
 <body>
@@ -99,7 +115,7 @@
             <div class="cart-item-info d-flex align-items-center">
                 <img th:src="@{/api/images/book/download(fileName=${item.url()})}"
                      src="/static/img/no-image.png" alt="Product Image" class="mr-3" style="width: 150px">
-                <div style="margin-left: 10px">
+                <div class="ml-3">
                     <h4 th:text="${item.title()}">Product</h4>
                     <p>₩<span class="price-input" th:text="${item.price()}"></span></p>
                     <div class="d-flex align-items-center">
@@ -112,35 +128,50 @@
             </div>
         </div>
 
-        <div class="checkout-header text-center mb-3">
+        <div class="checkout-summary text-center mb-3">
             <h4>배송비 추가금 : 3000원</h4>
-            <h4 class="total-book-price">도서 가격 : <span type="number" id="total-book-price"></span> 원</h4>
-            <h4 class="total-price">총 가격 : <span type="number" id="total-price"></span> 원</h4>
-            <br/>
+            <h4 class="total-book-price">도서 가격 : <span id="total-book-price"></span> 원</h4>
+            <h4 class="total-price">총 가격 : <span id="total-price"></span> 원</h4>
         </div>
 
+
+        <!-- 주소찾기 -->
         <div class="form-group">
-            <div>
-                <button id="newwin" class="btn btn-success" type="button">주소찾기</button>
+            <label for="countyOfficeName">주소찾기</label>
+            <div class="info-box">
+                <input type="text" id="countyOfficeName" class="form-control" placeholder="주소" value="주소없음" disabled>
+                <p></p>
+                <div class="d-flex justify-content-end">
+                    <button id="newwin" class="btn btn-success mb-2 btn-lg" type="button">주소찾기</button>
+                </div>
             </div>
-            <input type="text" id="countyOfficeName" class="form-control" placeholder="주소" disabled>
         </div>
+
+        <!-- 비회원 비밀번호 -->
         <div class="form-group">
             <label for="password">비회원 비밀번호</label>
-            <input type="password" id="password" class="form-control" placeholder="비밀번호 입력">
+            <div class="info-box">
+                <input type="password" id="password" class="form-control" placeholder="비밀번호 입력">
+            </div>
         </div>
+
         <!-- 포장 유무 체크 -->
-        <div class="form-group text-center mb-3">
+        <div class="form-group">
             <label for="gift-box">포장 유무</label>
-            <input type="checkbox" id="gift-box" name="giftWrap" />
-            <span>포장을 원하시면 체크해주세요.</span>
+            <div class="info-box">
+                <input type="checkbox" id="gift-box" name="giftWrap">
+                <span>포장을 원하시면 체크해주세요.</span>
+            </div>
         </div>
 
         <!-- 배송 날짜 지정 -->
-        <div class="form-group text-center mb-3">
+        <div class="form-group">
             <label for="delivery-box">배송 날짜 지정</label>
-            <input type="date" id="delivery-box" name="deliveryDate" class="form-control" />
+            <div class="info-box">
+                <input type="date" id="delivery-box" name="deliveryDate" class="form-control">
+            </div>
         </div>
+
 
         <!-- 결제 UI, 이용약관 UI 영역 -->
         <div id="payment-method" class="mb-3"></div>
@@ -149,7 +180,11 @@
     </form>
 
     <!-- 결제하기 버튼 -->
-    <button id="payment-button" class="btn btn-primary btn-block">결제하기</button>
+    <div class="form-group">
+        <div class="d-flex justify-content-end">
+            <button id="payment-button" class="btn btn-primary btn-block btn-lg">결제하기</button>
+        </div>
+    </div>
 </main>
 <footer class="bg-white text-dark p-3">
     <div class="container text-center footer-content">
@@ -160,7 +195,7 @@
 <script type="text/javascript">
     window.onload = function(){
         document.getElementById("newwin").onclick = function(){
-            window.open("https://business.juso.go.kr/addrlink/addrLinkUrl.do?confmKey=devU01TX0FVVEgyMDI0MDYyNzEwMTkxOTExNDg2OTc=&returnUrl=http://localhost:3000/api/purchases/guests/addresses","","width=700px,height=500px,top=200px,left=200px;");
+            window.open("https://business.juso.go.kr/addrlink/addrLinkUrl.do?confmKey=devU01TX0FVVEgyMDI0MDYyNzEwMTkxOTExNDg2OTc=&returnUrl=http://133.186.143.40/purchases/guests/addresses","","width=700px,height=500px,top=200px,left=200px;");
         }
     };
     function setCountyOffice(name){
@@ -249,8 +284,8 @@
         paymentWidget.requestPayment({
             orderId: orderNumber,
             orderName: '3runner Store:'+orderNumber,
-            successUrl: window.location.origin + "/api/payments/guest/success?cartId="+cartId+"&address="+address+"&password="+password+"&isPacking="+isPacking+"&shipping="+shipping,
-            failUrl: window.location.origin + "/api/payments/guest/fail",
+            successUrl: window.location.origin + "/payments/guests/success?cartId="+cartId+"&address="+address+"&password="+password+"&isPacking="+isPacking+"&shipping="+shipping,
+            failUrl: window.location.origin + "/payments/guests/fail",
             customerEmail: "비회원",
             customerName: "비회원",
             customerMobilePhone: "01012345678",

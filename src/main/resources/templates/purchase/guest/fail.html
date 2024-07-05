@@ -1,13 +1,80 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="utf-8" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout Page</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .info-box {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            font-weight: bold;
+        }
+
+        .btn-lg {
+            padding: 10px 20px;
+            font-size: 1.25rem;
+            line-height: 1.5;
+            border-radius: .3rem;
+        }
+    </style>
 </head>
 
-<body>
-<h2> 결제 실패 </h2>
-<p id="code"></p>
-<p id="message"></p>
+<body><!-- Header -->
+<header class="header-v4">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light menu-desktop">
+        <div class="container">
+            <!-- Logo -->
+            <a class="navbar-brand logo" href="#">
+                3runner
+            </a>
+
+            <!-- Toggler/collapsibe Button -->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Navbar links -->
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="login.html">login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="logout.html">logout</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="mypage.html">my page</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="register.html">register</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/carts">cart</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+<main>
+    <h2> 결제 실패 </h2>
+    <p id="code"></p>
+    <p id="message"></p>
+</main>
+<footer class="bg-white text-dark p-3">
+    <div class="container text-center footer-content">
+        &copy; 2024 3runner
+    </div>
+</footer>
 </body>
 </html>
 

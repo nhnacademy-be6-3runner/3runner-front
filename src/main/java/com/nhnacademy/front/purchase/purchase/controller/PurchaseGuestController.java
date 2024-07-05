@@ -27,7 +27,7 @@ public class PurchaseGuestController {
      * @param model 모델
      * @return purchase view
      */
-    @GetMapping("/api/purchases/guests/{cartId}")
+    @GetMapping("/purchases/guests/{cartId}")
     public String purchase(@PathVariable("cartId") Long cartId, Model model){
         List<ReadBookCartGuestResponse> items = bookCartGuestControllerClient.readCart(cartId).getBody().getData();
 
@@ -45,7 +45,7 @@ public class PurchaseGuestController {
      * @param model 모델
      * @return address view
      */
-    @PostMapping("/api/purchases/guests/addresses")
+    @PostMapping("/purchases/guests/addresses")
     public String address(String roadFullAddr, Model model){
 
         model.addAttribute("roadFullAddr", roadFullAddr);

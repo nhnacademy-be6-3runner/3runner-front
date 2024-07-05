@@ -46,6 +46,24 @@
         a:hover {
             text-decoration: underline;
         }
+        .info-box {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            font-weight: bold;
+        }
+
+        .btn-lg {
+            padding: 10px 20px;
+            font-size: 1.25rem;
+            line-height: 1.5;
+            border-radius: .3rem;
+        }
     </style>
 </head>
 <body>
@@ -80,7 +98,7 @@
                         <a class="nav-link" href="register.html">register</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="cart.html">cart</a>
+                        <a class="nav-link" href="/carts">cart</a>
                     </li>
                 </ul>
             </div>
@@ -98,7 +116,7 @@
             <div class="cart-item-info d-flex align-items-center">
                 <img th:src="@{/api/images/book/download(fileName=${item.url()})}"
                      src="/static/img/no-image.png" alt="Product Image" class="mr-3" style="width: 150px">
-                <div style="margin-left: 10px">
+                <div  class="ml-3">
                     <h4 th:text="${item.title()}">Product</h4>
                     <p>₩<span class="price-input" th:text="${item.price()}"></span></p>
                     <div class="d-flex align-items-center">
@@ -111,56 +129,61 @@
             </div>
         </div>
 
-        <div class="checkout-header text-center mb-3">
+        <div class="checkout-summary text-center mb-3">
             <h4>배송비 추가금 : 3000원</h4>
-            <h4 class="total-book-price">도서 가격 : <span type="number" id="total-book-price"></span> 원</h4>
-            <h4 class="total-price">총 가격 : <span type="number" id="total-price"></span> 원</h4>
-            <br/>
+            <h4 class="total-book-price">도서 가격 : <span id="total-book-price"></span> 원</h4>
+            <h4 class="total-price">총 가격 : <span id="total-price"></span> 원</h4>
         </div>
 
         <!-- 포장 유무 체크 -->
-        <div class="form-group text-center mb-3">
+        <div class="form-group text-left mb-3">
             <label for="gift-box">포장 유무</label>
-            <input type="checkbox" id="gift-box" name="giftWrap" />
-            <span>포장을 원하시면 체크해주세요.</span>
+            <div class="info-box">
+                <input type="checkbox" id="gift-box" name="giftWrap">
+                <span>포장을 원하시면 체크해주세요.</span>
+            </div>
         </div>
 
         <!-- 배송 날짜 지정 -->
-        <div class="form-group text-center mb-3">
+        <div class="form-group text-left mb-3">
             <label for="delivery-box">배송 날짜 지정</label>
-            <input type="date" id="delivery-box" name="deliveryDate" class="form-control" />
-        </div>
-
-        <div class="form-group">
-            <div>
-                <button id="newwin" class="btn btn-success" type="button">주소추가</button>
+            <div class="info-box">
+                <input type="date" id="delivery-box" name="deliveryDate" class="form-control">
             </div>
-            <input type="hidden" id="countyOfficeName" class="form-control" placeholder="주소" disabled>
         </div>
 
         <!-- 주소 선택 -->
         <div class="form-group">
             <label for="address-box">주소 선택</label>
-            <select class="form-control" id="address-box">
-                <option th:each="address : ${addresses}" th:value="${address.addressId()}" th:text="${address.state()} + ${address.city()} + ${address.road()} +'  '+${address.name()}"></option>
-            </select>
+            <div class="info-box">
+                <select class="form-control" id="address-box">
+                    <option th:each="address : ${addresses}" th:value="${address.addressId()}" th:text="${address.state()} + ${address.city()} + ${address.road()} +'  '+${address.name()}"></option>
+                </select>
+                <p></p>
+
+                <div class="d-flex justify-content-end">
+                    <button id="newwin" class="btn btn-success btn-lg mb-2" type="button">주소추가</button>
+                </div>
+            </div>
         </div>
 
         <!-- 포인트 사용 -->
-        <div>
-            잔여 포인트: <span th:text="${memberInfo.point()}"></span>
-            <label for="point-box"> 포인트사용 </label>
-            <input type="number" id="point-box" value="0" th:max="${memberInfo.point()}"/>
+        <div class="form-group">
+            <label for="point-box">포인트 사용 (잔여 포인트: <span th:text="${memberInfo.point()}"></span>)</label>
+            <div class="info-box">
+                <input type="number" id="point-box" class="form-control" value="0" th:max="${memberInfo.point()}">
+            </div>
         </div>
 
         <!-- 할인 쿠폰 -->
         <div class="form-group">
-            <label for="coupon-box" class="form-check-label">쿠폰 적용</label>
-            <select class="form-control" id="coupon-box">
-                <option value="" data-final-discount-price="0">-- 쿠폰을 선택하세요 --</option>
-                <option th:each="coupon : ${coupons}" th:value="${coupon.couponFormId()}" th:final-discount-price="${coupon.finalDiscountPrice()}"
-                        th:text="'최종할인가 : ' + ${coupon.finalDiscountPrice()} +',  '+${coupon.name()} +',  '+ ${coupon.type()} +',  '+ ${coupon.usage()}" ></option>
-            </select>
+            <label for="coupon-box">쿠폰 적용</label>
+            <div class="info-box">
+                <select class="form-control" id="coupon-box">
+                    <option value="" data-final-discount-price="0">-- 쿠폰을 선택하세요 --</option>
+                    <option th:each="coupon : ${coupons}" th:value="${coupon.couponFormId()}" th:attr="data-final-discount-price=${coupon.finalDiscountPrice()}" th:text="'최종할인가 : ' + ${coupon.finalDiscountPrice()} +',  '+${coupon.name()} +',  '+ ${coupon.type()} +',  '+ ${coupon.usage()}"></option>
+                </select>
+            </div>
         </div>
 
 
@@ -170,8 +193,12 @@
 
     </form>
 
-    <!-- 결제하기 버튼 -->
-    <button id="payment-button" class="btn btn-primary btn-block">결제하기</button>
+        <!-- 결제하기 버튼 -->
+        <div class="form-group text-center">
+            <div class="d-flex justify-content-end">
+                <button id="payment-button" class="btn btn-primary btn-lg">결제하기</button>
+            </div>
+        </div>
 </main>
 <footer class="bg-white text-dark p-3">
     <div class="container text-center footer-content">
@@ -308,8 +335,8 @@
         paymentWidget.requestPayment({
             orderId: orderNumber,
             orderName: '3runner Store:'+orderNumber,
-            successUrl: window.location.origin + "/api/payments/members/success?discountedPrice="+discountedPrice+"&discountedPoint="+discountedPoint+"&isPacking="+isPacking+"&shipping="+shipping+"&road="+road+"&couponFormId="+couponFormId,
-            failUrl: window.location.origin + "/api/payments/members/fail",
+            successUrl: window.location.origin + "/payments/members/success?discountedPrice="+discountedPrice+"&discountedPoint="+discountedPoint+"&isPacking="+isPacking+"&shipping="+shipping+"&road="+road+"&couponFormId="+couponFormId,
+            failUrl: window.location.origin + "/payments/members/fail",
             customerEmail: [[${memberInfo.email()}]],
             customerName: [[${memberInfo.name()}]],
             customerMobilePhone: [[${memberInfo.phone()}]],

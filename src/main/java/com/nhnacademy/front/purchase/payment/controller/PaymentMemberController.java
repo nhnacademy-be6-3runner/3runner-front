@@ -33,7 +33,7 @@ public class PaymentMemberController {
      * @param model 모델
      * @return success view
      */
-    @GetMapping("/api/payments/members/success")
+    @GetMapping("/payments/members/success")
     public String paymentSuccessPage(
             @RequestParam(required = false) Long memberId,
             @RequestParam(required = false) String discountedPrice,
@@ -77,7 +77,7 @@ public class PaymentMemberController {
      * @param model 모델
      * @return fail view
      */
-    @GetMapping("/api/payments/members/fail")
+    @GetMapping("/payments/members/fail")
     public String paymentFailPage(
             @RequestParam String message,
             @RequestParam String code,

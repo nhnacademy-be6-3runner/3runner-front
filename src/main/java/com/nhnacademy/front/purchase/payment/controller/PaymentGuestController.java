@@ -35,12 +35,14 @@ public class PaymentGuestController {
      * @param model 모델
      * @return success view
      */
-    @GetMapping("/api/payments/guest/success")
+    @GetMapping("/payments/guests/success")
     public String paymentSuccessPage(
             @RequestParam(required = false) Long cartId,
             @RequestParam(required = false) Long memberId,
-            @RequestParam String address,
-            @RequestParam String password,
+            @RequestParam(required = false) String isPacking,
+            @RequestParam(required = false) String shipping,
+            @RequestParam(required = false) String address,
+            @RequestParam(required = false) String password,
             @RequestParam String paymentType,
             @RequestParam String orderId,
             @RequestParam String paymentKey,
@@ -63,6 +65,8 @@ public class PaymentGuestController {
         model.addAttribute("orderId", orderId);
         model.addAttribute("paymentKey", paymentKey);
         model.addAttribute("amount", amount);
+        model.addAttribute("isPacking", isPacking);
+        model.addAttribute("shipping", shipping);
         return "purchase/guest/success";
     }
 
@@ -75,7 +79,7 @@ public class PaymentGuestController {
      * @param model 모델
      * @return fail view
      */
-    @GetMapping("/api/payments/guest/fail")
+    @GetMapping("/payments/guests/fail")
     public String paymentFailPage(
             @RequestParam String message,
             @RequestParam String code,
