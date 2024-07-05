@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.nhnacademy.front.purchase.purchase.dto.response.ReadPurchaseResponse;
+import com.nhnacademy.front.purchase.purchase.dto.purchase.response.ReadPurchaseResponse;
 import com.nhnacademy.front.purchase.purchase.service.PurchaseDetailGuestService;
 
 import lombok.RequiredArgsConstructor;
