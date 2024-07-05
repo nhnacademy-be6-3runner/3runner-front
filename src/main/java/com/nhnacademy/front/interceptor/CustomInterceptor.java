@@ -40,7 +40,9 @@ public class CustomInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws
 		Exception {
-
+		if(CorsUtils.isPreFlightRequest(request)){
+			return true;
+		}
 		if(CorsUtils.isCorsRequest(request)){
 			return true;
 		}
