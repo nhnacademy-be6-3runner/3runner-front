@@ -48,13 +48,16 @@ public class BookCartGuestServiceImpl implements BookCartGuestService {
      * @return bookCartId
      */
     @Override
-    public Long createBookCart(Long bookId, int quantity) {
+    public Long createBookCart(Long bookId, Long cartId, int quantity) {
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new BookDoesNotExistException("도서가 존재하지 않습니다"));
-
-        Cart cart = new Cart();
-        cartRepository.save(cart);
-        long cartId = cart.getId();
+        Cart cart;
+        if (Objects.isNull(cartId) || cartId == 0) {
+            cart = new Cart();
+            cartRepository.save(cart);
+            cartId = cart.getId();
+        }
+        cart = cartRepository.findById(cartId).orElseThrow(()->new CartDoesNotExistException("카트가 존재하지 않습니다."));
 
         if (bookCartRepository.existsBookCartByBookAndCart(book, cart)) {
             updateBookCart(bookId, cartId, quantity);
