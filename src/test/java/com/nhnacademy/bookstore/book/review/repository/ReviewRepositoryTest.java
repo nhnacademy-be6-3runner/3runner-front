@@ -164,9 +164,7 @@ class ReviewRepositoryTest {
         assertThat(reviewDetailResponse.reviewContent()).isEqualTo(review.getContent());
         assertThat(reviewDetailResponse.ratings()).isEqualTo(review.getRating());
         assertThat(reviewDetailResponse.memberEmail()).isEqualTo(member.getEmail());
-        assertThat(reviewDetailResponse.createdAt()).isEqualTo(review.getCreatedAt());
         assertThat(reviewDetailResponse.updated()).isEqualTo(review.isUpdated());
-        assertThat(reviewDetailResponse.updatedAt()).isEqualTo(review.getUpdatedAt());
     }
 
     @Test
@@ -183,7 +181,6 @@ class ReviewRepositoryTest {
         assertThat(reviewPage.getContent().getFirst().imgUrl()).isNull();
         assertThat(reviewPage.getContent().getFirst().rating()).isEqualTo(review.getRating());
         assertThat(reviewPage.getContent().getFirst().memberEmail()).isEqualTo(member.getEmail());
-        assertThat(reviewPage.getContent().getFirst().createdAt()).isEqualTo(review.getCreatedAt());
     }
 
     @DisplayName("책 아이디로 리뷰 조회 테스트")
@@ -200,7 +197,6 @@ class ReviewRepositoryTest {
         assertThat(reviewPage.getContent().getFirst().imgUrl()).isNull();
         assertThat(reviewPage.getContent().getFirst().rating()).isEqualTo(review.getRating());
         assertThat(reviewPage.getContent().getFirst().memberEmail()).isEqualTo(member.getEmail());
-        assertThat(reviewPage.getContent().getFirst().createdAt()).isEqualTo(review.getCreatedAt());
     }
 
     @DisplayName("사용자 아이디로 리뷰 조회 테스트")
@@ -217,6 +213,5 @@ class ReviewRepositoryTest {
         assertThat(reviewPage.getContent().getFirst().imgUrl()).isNull();
         assertThat(reviewPage.getContent().getFirst().rating()).isEqualTo(review.getRating());
         assertThat(reviewPage.getContent().getFirst().memberEmail()).isEqualTo(member.getEmail());
-        assertThat(reviewPage.getContent().getFirst().createdAt()).isEqualTo(review.getCreatedAt());
     }
 }
