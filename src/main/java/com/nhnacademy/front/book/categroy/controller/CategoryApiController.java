@@ -6,10 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.nhnacademy.front.book.categroy.controller.feign.CategoryClient;
 import com.nhnacademy.front.book.categroy.dto.response.CategoryChildrenResponse;
-import com.nhnacademy.front.book.categroy.exception.NotFindCategoryException;
-import com.nhnacademy.front.util.ApiResponse;
+import com.nhnacademy.front.book.categroy.service.CategoryService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,9 +22,9 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/api/categories")
 @RequiredArgsConstructor
 @Slf4j
-public class CategoryController {
+public class CategoryApiController {
 
-	private final CategoryClient categoryClient;
+	private final CategoryService categoryService;
 
 	/**
 	 *  * 책 등록 화면에서 모든 카테고리 불러오기
@@ -34,15 +32,7 @@ public class CategoryController {
 	 */
 	@GetMapping
 	public List<CategoryChildrenResponse> readAllCategories() {
-
-		ApiResponse<List<CategoryChildrenResponse>> getResponse = categoryClient.readAllTagSet();
-
-		log.info(getResponse.getBody().getData().toString());
-		if (!getResponse.getHeader().isSuccessful()) {
-			throw new NotFindCategoryException();
-		}
-
-		return getResponse.getBody().getData();
+		return categoryService.readAllCategoryList();
 	}
 
 }
