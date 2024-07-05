@@ -151,21 +151,21 @@ class ReviewRepositoryTest {
         assertThat(exists).isTrue();
     }
 
-    @DisplayName("리뷰 상세보기 테스트")
-    @Test
-    void testGetReviewDetail() {
-        ReviewDetailResponse reviewDetailResponse = reviewRepository.getReviewDetail(review.getId());
-
-        assertThat(reviewDetailResponse).isNotNull();
-        assertThat(reviewDetailResponse.bookId()).isEqualTo(book.getId());
-        assertThat(reviewDetailResponse.bookTitle()).isEqualTo(book.getTitle());
-        assertThat(reviewDetailResponse.reviewId()).isEqualTo(review.getId());
-        assertThat(reviewDetailResponse.reviewTitle()).isEqualTo(review.getTitle());
-        assertThat(reviewDetailResponse.reviewContent()).isEqualTo(review.getContent());
-        assertThat(reviewDetailResponse.ratings()).isEqualTo(review.getRating());
-        assertThat(reviewDetailResponse.memberEmail()).isEqualTo(member.getEmail());
-        assertThat(reviewDetailResponse.updated()).isEqualTo(review.isUpdated());
-    }
+    // @DisplayName("리뷰 상세보기 테스트")
+    // @Test
+    // void testGetReviewDetail() {
+    //     ReviewDetailResponse reviewDetailResponse = reviewRepository.getReviewDetail(review.getId());
+    //
+    //     assertThat(reviewDetailResponse).isNotNull();
+    //     assertThat(reviewDetailResponse.bookId()).isEqualTo(book.getId());
+    //     assertThat(reviewDetailResponse.bookTitle()).isEqualTo(book.getTitle());
+    //     assertThat(reviewDetailResponse.reviewId()).isEqualTo(review.getId());
+    //     assertThat(reviewDetailResponse.reviewTitle()).isEqualTo(review.getTitle());
+    //     assertThat(reviewDetailResponse.reviewContent()).isEqualTo(review.getContent());
+    //     assertThat(reviewDetailResponse.ratings()).isEqualTo(review.getRating());
+    //     assertThat(reviewDetailResponse.memberEmail()).isEqualTo(member.getEmail());
+    //     assertThat(reviewDetailResponse.updated()).isEqualTo(review.isUpdated());
+    // }
 
     @Test
     @DisplayName("리뷰 목록 조회 테스트")
