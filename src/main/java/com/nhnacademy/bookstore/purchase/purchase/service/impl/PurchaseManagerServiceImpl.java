@@ -1,11 +1,8 @@
 package com.nhnacademy.bookstore.purchase.purchase.service.impl;
 
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -15,18 +12,27 @@ import com.nhnacademy.bookstore.entity.purchase.Purchase;
 import com.nhnacademy.bookstore.entity.purchase.enums.PurchaseStatus;
 import com.nhnacademy.bookstore.purchase.purchase.dto.response.ReadPurchaseResponse;
 import com.nhnacademy.bookstore.purchase.purchase.exception.PurchaseDoesNotExistException;
-import com.nhnacademy.bookstore.purchase.purchase.exception.PurchaseNoAuthorizationException;
 import com.nhnacademy.bookstore.purchase.purchase.repository.PurchaseRepository;
 import com.nhnacademy.bookstore.purchase.purchase.service.PurchaseManagerService;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * 관리자 주문 상태 조회및 수정 서비스
+ *
+ * @author 정주혁
+ *
+ */
 @Service
 @RequiredArgsConstructor
-
+@Transactional
 public class PurchaseManagerServiceImpl implements PurchaseManagerService {
 	private final PurchaseRepository purchaseRepository;
 
+	/**
+	 * 모든 주문 조회 가져오기
+	 * @return 모든 주문 list
+	 */
 	@Override
 	public List<ReadPurchaseResponse> readPurchaseAll() {
 		List<Purchase> purchases = purchaseRepository.findAll();
@@ -43,6 +49,13 @@ public class PurchaseManagerServiceImpl implements PurchaseManagerService {
 			.toList();
 	}
 
+	/**
+	 * 주문 상태 업데이트
+	 *
+	 * @param purchaseId 수정할 주문
+	 * @param status 주문 상태
+	 * @return 수정된 주문 id
+	 */
 	@Override
 	public Long updatePurchaseStatus(String purchaseId, String status) {
 
@@ -59,8 +72,11 @@ public class PurchaseManagerServiceImpl implements PurchaseManagerService {
 		return t.getId();
 	}
 
+	/**
+	 * 주문 상태가 출고 날짜 이후 10일이 지나면 자동적으로 주문 확정 변환
+	 *
+	 */
 	@Scheduled(cron = "0 0 0 * * ?") // 매일 자정에 실행
-	@Transactional
 	public void updateOrderStatus() {
 		ZonedDateTime tenDaysAgo = ZonedDateTime.now().minusDays(10);
 		List<Purchase> purchases = purchaseRepository.findByShippingDateBefore(
