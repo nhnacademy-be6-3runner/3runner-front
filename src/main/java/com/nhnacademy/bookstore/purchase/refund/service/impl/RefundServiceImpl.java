@@ -10,14 +10,14 @@ import com.nhnacademy.bookstore.entity.purchase.Purchase;
 import com.nhnacademy.bookstore.purchase.payment.repository.PaymentRepository;
 import com.nhnacademy.bookstore.purchase.purchase.repository.PurchaseRepository;
 import com.nhnacademy.bookstore.purchase.refund.repository.RefundRepository;
-import com.nhnacademy.bookstore.purchase.refund.service.refundService;
+import com.nhnacademy.bookstore.purchase.refund.service.RefundService;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class refundServiceImpl implements refundService {
+public class RefundServiceImpl implements RefundService {
 
 	private final RefundRepository refundRepository;
 	private final PurchaseRepository purchaseRepository;

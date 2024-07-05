@@ -6,7 +6,7 @@ public enum PurchaseStatus {
      * 배달 완료, 환불 요청, 환불 완료, 주문 확정
      */
     PROCESSING, COMPLETED, DELIVERY_START, DELIVERY_PROGRESS,
-    DELIVERY_COMPLETED, REFUNDED_REQUEST, REFUNDED_COMPLETED, CONFIRMATION;
+    DELIVERY_COMPLETED, REFUNDED_REQUEST, CONFIRMATION, REFUNDED_COMPLETED ;
 
     public static PurchaseStatus fromString(String status) {
         if (status == null) {

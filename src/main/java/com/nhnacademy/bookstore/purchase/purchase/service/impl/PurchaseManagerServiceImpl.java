@@ -82,6 +82,7 @@ public class PurchaseManagerServiceImpl implements PurchaseManagerService {
 		List<Purchase> purchases = purchaseRepository.findByShippingDateBefore(
 			tenDaysAgo);
 
+
 		for (Purchase purchase : purchases) {
 			purchase.setStatus(PurchaseStatus.CONFIRMATION);
 			purchaseRepository.save(purchase);

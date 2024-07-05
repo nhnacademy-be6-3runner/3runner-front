@@ -45,7 +45,8 @@ public class PurchaseMemberServiceImpl implements PurchaseMemberService {
     @Override
     public Long createPurchase(CreatePurchaseRequest createPurchaseRequest, Long memberId) {
 		Purchase purchase = new Purchase(
-			UUID.fromString(createPurchaseRequest.orderId()),
+			// UUID.fromString(createPurchaseRequest.orderId()),
+			UUID.randomUUID(),
 			PurchaseStatus.COMPLETED,
 			createPurchaseRequest.deliveryPrice(),
 			createPurchaseRequest.totalPrice(),
