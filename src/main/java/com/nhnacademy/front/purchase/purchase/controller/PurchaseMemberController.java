@@ -51,9 +51,10 @@ public class PurchaseMemberController {
 
         ApiResponse.Body<List<ReadCouponFormResponse>> response = couponControllerClient.readCoupons().getBody();
 
-        List<CouponDiscountPriceDto> validCoupons = purchaseCouponService.getValidCoupons(items, response);
+        //List<CouponDiscountPriceDto> validCoupons = purchaseCouponService.getValidCoupons(items, response);
 
-        model.addAttribute("coupons", validCoupons);
+        model.addAttribute("coupons", null);
+        //model.addAttribute("coupons", validCoupons);
         model.addAttribute("response", items);
         model.addAttribute("addresses", addresses);
         model.addAttribute("memberInfo", memberInfo);
