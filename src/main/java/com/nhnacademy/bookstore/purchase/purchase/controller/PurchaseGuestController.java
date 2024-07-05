@@ -81,7 +81,7 @@ public class PurchaseGuestController {
     @PutMapping("/guests/purchases")
     public ApiResponse<Void> updatePurchaseStatus (@Valid @RequestBody UpdatePurchaseGuestRequest updatePurchaseGuestRequest,
                                                    BindingResult bindingResult) {
-        if(bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             throw new PurchaseFormArgumentErrorException(bindingResult.getFieldErrors().toString());
         }
         purchaseGuestService.updatePurchase(updatePurchaseGuestRequest);

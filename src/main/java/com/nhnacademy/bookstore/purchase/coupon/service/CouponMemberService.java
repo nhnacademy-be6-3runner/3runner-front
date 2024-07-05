@@ -10,13 +10,13 @@ import java.util.List;
 public interface CouponMemberService {
     List<ReadCouponFormResponse> readMemberCoupons(Long memberId);
 
-    Long useCoupons(Long couponId, Long memberId);
+    Long useCoupons(Long couponFormId, Long memberId);
 
     void issueBirthdayCoupon();
 
     void issueWelcomeCoupon(Member member);
 
-    Long refundCoupons(Long couponId, Long memberId);
+    Long refundCoupons(Long couponFormId, Long memberId);
 
     Long readCoupon(Long couponFormId);
 }

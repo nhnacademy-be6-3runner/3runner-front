@@ -55,10 +55,6 @@ public class PointRecordServiceImpl implements PointRecordService {
                 .findById(purchaseId)
                 .orElseThrow(()-> new PurchaseDoesNotExistException(purchaseId + "가 존재하지 않습니다"));
 
-        if (member.getPoint() + usePoint < 0) {
-           throw new NotEnoughPointException("현재 잔여 포인트 : " + member.getPoint() + "  -  잔여 포인트가 부족합니다.");
-        }
-
         PointRecord pointRecord = new PointRecord(usePoint, "buy point", member, purchase);
 
         pointRecordRepository.save(pointRecord);

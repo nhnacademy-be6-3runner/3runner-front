@@ -1,4 +1,5 @@
 package com.nhnacademy.bookstore.purchase.payment.controller;
+import com.nhnacademy.bookstore.purchase.payment.dto.CreatePaymentGuestRequest;
 import com.nhnacademy.bookstore.purchase.payment.exception.TossPaymentException;
 import com.nhnacademy.bookstore.purchase.payment.service.PaymentGuestService;
 import com.nhnacademy.bookstore.purchase.payment.service.PaymentMemberService;
@@ -18,6 +19,9 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 
 @Slf4j
@@ -28,10 +32,12 @@ public class PaymentGuestController {
 
     @RequestMapping(value = "/bookstore/payments/guests/confirm")
     public ResponseEntity<JSONObject> confirmPayment(
-            @RequestHeader(value = "Member-Id",required = false) Long memberId,
-            @RequestParam Long cartId,
-            @RequestParam String address,
-            @RequestParam String password,
+            @RequestHeader(value = "Member-Id", required = false) Long memberId,
+            @RequestParam(required = false)  Long cartId,
+            @RequestParam(required = false)  String road,
+            @RequestParam(required = false)  String password,
+            @RequestParam(required = false) String isPacking,
+            @RequestParam(required = false) String shipping,
             @RequestBody String jsonBody) throws Exception {
 
         JSONParser parser = new JSONParser();
@@ -77,8 +83,19 @@ public class PaymentGuestController {
         InputStream responseStream = isSuccess ? connection.getInputStream() : connection.getErrorStream();
 
         // 결제 성공 및 실패 비즈니스 로직을 구현하세요.
+        LocalDate localDate = LocalDate.parse(shipping, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         if (isSuccess) {
-            paymentGuestService.payment(cartId, address, password, Integer.parseInt(amount), orderId);
+            paymentGuestService.payment(CreatePaymentGuestRequest.builder()
+                    .shippingDate(localDate.atStartOfDay(ZoneId.systemDefault()))
+                    .password(password)
+                    .cartId(cartId)
+                    .amount(Integer.valueOf(amount))
+                    .isPacking(Boolean.valueOf(isPacking))
+                    .orderId(orderId)
+                    .road(road)
+                    .build()
+            );
+
         } else {
             throw new TossPaymentException("토스 최종 결제가 실패하였습니다.");
         }
