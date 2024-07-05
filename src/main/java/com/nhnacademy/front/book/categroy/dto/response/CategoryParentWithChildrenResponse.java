@@ -16,8 +16,8 @@ import lombok.Setter;
 @Builder
 @Getter
 public class CategoryParentWithChildrenResponse {
-	private long id;
-	private String name;
-	@Setter
-	private List<CategoryParentWithChildrenResponse> childrenList;
+    private long id;
+    private String name;
+    @Setter
+    private List<CategoryParentWithChildrenResponse> childrenList;
 }

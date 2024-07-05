@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class HomeController {
 	@GetMapping
 	public String home() {
-
-		return "test-main";
+		return "main/main";
 	}
 }
