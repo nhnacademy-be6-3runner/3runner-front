@@ -35,19 +35,19 @@
             <div class="order-buttons">
                 <button class="details-btn" th:attr="data-order-id=${order.id()}">자세히 보기</button>
                 <form method="post" th:action="@{'/orders/members/{purchaseId}' (purchaseId = ${order.id()})}">
-                    <button type="submit" class="confirm-order-btn" th:if="${order.status.toString() != 'CONFIRMED'}"  >주문 확정</button>
+                    <button type="submit" class="confirm-order-btn" th:if="${order.status.toString() != 'CONFIRMATION'}"  >주문 확정</button>
                 </form>
                 <!-- 결제 취소 버튼 (COMPLETED 상태인 경우) -->
                 <button class="refund-btn"
-                        th:if="${guestorder.status.toString() == 'COMPLETED'}"
-                        th:attr="data-order-id=${guestorder.orderNumber}"
+                        th:if="${order.status.toString() == 'COMPLETED'}"
+                        th:attr="data-order-id=${order.orderNumber}"
                         th:text="'결제 취소'">
                 </button>
 
                 <!-- 환불 버튼 (COMPLETED가 아니고 CONFIRMED 상태가 아닌 경우) -->
                 <button class="refund-btn"
-                        th:if="${guestorder.status.toString() != 'COMPLETED' && guestorder.status.toString() != 'CONFIRMED'}"
-                        th:attr="data-order-id=${guestorder.orderNumber}"
+                        th:if="${order.status.toString() != 'COMPLETED' && order.status.toString() != 'CONFIRMATION'}"
+                        th:attr="data-order-id=${order.orderNumber}"
                         th:text="'환불'">
                 </button>
             </div>
@@ -79,7 +79,7 @@
 
         orderBtn.addEventListener('click', function () {
 
-            fetch('/order/check',{
+            fetch('/orders/check',{
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -87,7 +87,7 @@
             })
                 .then(response => response.json())
                 .then(data => {
-                    if (data.isLoggedIn) {
+                    if (data.body.data.isLoggedIn) {
                         // 주문배송 페이지로 이동
                         window.location.href = '/orders/members';
                     } else {

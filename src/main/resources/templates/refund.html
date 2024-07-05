@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Refund</title>
+    <script src="https://js.tosspayments.com/v1/payment-widget"></script>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/order-detail.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .menu-desktop {
+            background-color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .refund-header {
+            margin: 20px 0;
+        }
+        .order-item {
+            background-color: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+        }
+        .order-item img {
+            border-radius: 5px;
+        }
+        footer {
+            margin-top: 50px;
+            background-color: #fff;
+            border-top: 1px solid #dee2e6;
+        }
+        .footer-content {
+            padding: 20px 0;
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .toggle-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        .toggle-btn.active {
+            background-color: #28a745;
+        }
+    </style>
+</head>
+<body>
+<!-- Header -->
+<header class="header-v4">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light menu-desktop">
+        <div class="container">
+            <!-- Logo -->
+            <a class="navbar-brand logo" href="#">
+                3runner
+            </a>
+
+            <!-- Toggler/collapsibe Button -->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Navbar links -->
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="login.html">login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="logout.html">logout</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="mypage.html">my page</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="register.html">register</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="cart.html">cart</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<main class="container my-5">
+    <div class="refund-header text-center">
+        <h2>환불 요청</h2>
+        <h4 id="orderNumber" th:text="${orderNumber}"></h4>
+    </div>
+
+    <form>
+        <div class="order-details">
+            <ul class="book-list">
+                <li class="book-item" th:each="book, iter : ${books}">
+                    <img th:src="@{/api/images/book/download(fileName=${book.readBookByPurchase().bookImage()})}" th:data-book-image="${book.readBookByPurchase().bookImage()}" alt="Product Image">
+                    <div class="book-details">
+                        <p style="font-size: 18px" th:text="${book.readBookByPurchase().title()}">Product</p>
+                        <p style="font-size: 16px" th:text="${book.readBookByPurchase().author()}">저자</p>
+                        <p style="font-size: 14px" th:text="${book.readBookByPurchase().publisher()}">출판사</p>
+                    </div>
+                    <div class="book-quantity-price">
+                        <button class="btn btn-outline-secondary" type="button" th:onclick="updateQuantity(${iter.index}, -1)">-</button>
+                        <input type="number" class="form-control mx-2 quantity-input" th:value="${book.quantity}" th:id="'quantity-' + ${iter.index}" data-max="${book.maxQuantity}" style="width: 80px;" readonly>
+                        <button class="btn btn-outline-secondary" type="button" th:onclick="updateQuantity(${iter.index}, 1)" >+</button>
+                    </div>
+                </li>
+            </ul>
+            <div class="text-center mt-4">
+                <button type="button" class="toggle-btn" id="toggle-max-btn" onclick="toggleMaxQuantities()">모두 최대치로 설정</button>
+            </div>
+            <div class="text-center mt-4">
+                <nav>
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item" th:classappend="${books.hasPrevious()} ? '' : 'disabled'">
+                            <a class="page-link" href="#" th:onclick="'loadBooks(' + (${books.number} - 1) + ', ' + ${books.size} + '); return false;'">이전</a>
+                        </li>
+                        <li class="page-item" th:each="i : ${#numbers.sequence(0, books.totalPages - 1)}" th:classappend="${i} == ${books.number} ? 'active' ">
+                            <a class="page-link" href="#" th:onclick="'loadBooks(' + ${i} + ', ' + ${books.size} + '); return false;'" th:text="${i + 1}">1</a>
+                        </li>
+                        <li class="page-item" th:classappend="${books.hasNext()} ? '' : 'disabled'">
+                            <a class="page-link" href="#" th:onclick="'loadBooks(' + (${books.number} + 1) + ', ' + ${books.size} + '); return false;'">다음</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4>총 환불 금액</h4>
+            <h4 class="total-refund"><span type="number" id="total-refund"></span></h4>
+        </div>
+
+        <div class="form-group">
+            <label for="refund-reason">환불 사유</label>
+            <textarea id="refund-reason" class="form-control" placeholder="환불 사유를 입력하세요"></textarea>
+        </div>
+
+        <!-- 환불 신청 버튼 -->
+        <button id="refund-button" class="btn btn-danger btn-block">환불 신청</button>
+
+    </form>
+</main>
+<footer class="bg-white text-dark p-3">
+    <div class="container text-center footer-content">
+        &copy; 2024 3runner
+    </div>
+</footer>
+
+<script type="text/javascript">
+    const itemsPerPage = 5;
+    let currentPage = 1;
+    let allMaxSet = false;
+
+    function updateQuantity(index, delta) {
+        allMaxSet = false; // 토글 해제
+        document.getElementById('toggle-max-btn').classList.remove('active');
+        var quantityInput = document.getElementById('quantity-' + index);
+        var newQuantity = parseInt(quantityInput.value) + delta;
+        var maxQuantity = parseInt(quantityInput.getAttribute('data-max'));
+
+        if (newQuantity < 0) {
+            newQuantity = 0;
+        } else if (newQuantity > maxQuantity) {
+            newQuantity = maxQuantity;
+        }
+
+        quantityInput.value = newQuantity;
+        calculateTotalRefund();
+    }
+
+    function toggleMaxQuantities() {
+        var toggleButton = document.getElementById('toggle-max-btn');
+        var quantityInputs = document.querySelectorAll('.quantity-input');
+
+        if (!allMaxSet) {
+            quantityInputs.forEach(function(input) {
+                input.value = input.getAttribute('data-max');
+            });
+            toggleButton.classList.add('active');
+            allMaxSet = true;
+        } else {
+            quantityInputs.forEach(function(input) {
+                input.value = 0;
+            });
+            toggleButton.classList.remove('active');
+            allMaxSet = false;
+        }
+
+        calculateTotalRefund();
+    }
+
+    function calculateTotalRefund() {
+        var total = 0.0;
+        var orderItems = document.querySelectorAll('.order-item');
+        orderItems.forEach(function(item) {
+            var price = parseFloat(item.querySelector('p span').innerText);
+            var quantity = parseInt(item.querySelector('.quantity-input').value);
+
+            total += price * quantity;
+        });
+
+        if (isNaN(total)) {
+            total = 0.0;
+        }
+        document.getElementById('total-refund').innerText = total.toFixed(0);
+    }
+
+    document.getElementById('refund-button').addEventListener('click', function() {
+        var refundReason = document.getElementById('refund-reason').value;
+        var orderNumber = document.getElementById('orderNumber').textContent;
+        var refundAmount = document.getElementById('total-refund').textContent;
+
+        if (refundReason.trim() === "") {
+            alert("환불 사유를 입력하세요.");
+            return;
+        }
+
+        // 환불 요청 처리
+        // 여기에 환불 요청을 서버로 전송하는 코드를 추가합니다.
+        console.log("Order Number:", orderNumber);
+        console.log("Refund Reason:", refundReason);
+        console.log("Refund Amount:", refundAmount);
+
+        alert("환불 요청이 접수되었습니다.");
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        calculateTotalRefund();
+    });
+</script>
+</body>
+</html>
