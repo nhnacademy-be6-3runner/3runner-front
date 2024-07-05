@@ -6,7 +6,6 @@ import com.nhnacademy.bookstore.book.review.repository.ReviewCustomRepository;
 import com.nhnacademy.bookstore.entity.book.QBook;
 import com.nhnacademy.bookstore.entity.member.QMember;
 import com.nhnacademy.bookstore.entity.purchase.QPurchase;
-import com.nhnacademy.bookstore.entity.purchase.enums.PurchaseStatus;
 import com.nhnacademy.bookstore.entity.purchaseBook.QPurchaseBook;
 import com.nhnacademy.bookstore.entity.review.QReview;
 import com.nhnacademy.bookstore.entity.review.enums.ReviewStatus;
@@ -61,8 +60,8 @@ public class ReviewCustomRepositoryImpl implements ReviewCustomRepository {
                 .from(qPurchaseBook)
                 .join(qPurchaseBook.purchase, qPurchase)
                 .where(qPurchaseBook.id.eq(purchaseBookId)
-                        .and(qPurchase.member.id.eq(memberId))
-                        .and(qPurchase.status.eq(PurchaseStatus.CONFIRMATION)))
+                        .and(qPurchase.member.id.eq(memberId)))
+//                        .and(qPurchase.status.eq(PurchaseStatus.CONFIRMATION)))
                 .fetchFirst();
         return count != null && count > 0;
     }
