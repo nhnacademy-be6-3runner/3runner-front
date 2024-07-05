@@ -16,7 +16,7 @@ public class ReviewController {
 
     @GetMapping("/{purchaseBookId}/review")
     public String createReview(@PathVariable long purchaseBookId) {
-        return "/review/create-review";
+        return "review/create-review";
     }
 
     @PostMapping(value = "/{purchaseBookId}/review", consumes = "multipart/form-data")
@@ -24,6 +24,6 @@ public class ReviewController {
                                UserCreateReviewRequest reviewRequest) {
         log.info(reviewRequest.toString());
         reviewService.createReview(purchaseBookId, memberId, reviewRequest);
-        return "/review/create-review";
+        return "review/create-review";
     }
 }
