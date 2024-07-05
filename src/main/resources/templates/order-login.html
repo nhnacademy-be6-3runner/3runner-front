@@ -65,6 +65,7 @@
 <body>
 <div class="login-container">
     <h2>비회원 주문 확인</h2>
+    <p class="error-message" th:if="${message}" th:text="${message}"></p>
     <form action="/orders/guests" method="POST">
         <input type="text" name="orderNumber" placeholder="OrderNumber" required><br>
         <input type="password" name="password" placeholder="Password" required><br>
