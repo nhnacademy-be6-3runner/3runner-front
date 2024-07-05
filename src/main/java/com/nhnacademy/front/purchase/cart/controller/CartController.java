@@ -46,10 +46,15 @@ public class CartController {
     public String cartView(
             @CookieValue(value = "cartId", required = false) Long cartId,
             @RequestHeader(value = "Member-Id", required = false) Long memberId,
+            HttpServletResponse response,
             Model model){
 
         model.addAttribute("memberId", memberId);
         if (Objects.isNull(memberId)){
+            if(Objects.isNull(cartId)){
+                cartId = bookCartControllerClient.createGuestCart().getBody().getData();
+                response.addCookie(cartGuestService.createNewCart(cartId));
+            }
 
             List<ReadBookCartGuestResponse> items = bookCartControllerClient
                     .readCart(cartId)
@@ -109,16 +114,18 @@ public class CartController {
 
                 response.addCookie(cartGuestService.createNewCart(cartId));
                 response.sendRedirect("/carts");
+                return;
             }
 
             if (cartGuestService.checkBookCart(cartId, bookId)) {
                 bookCartControllerClient.updateCart(UpdateBookCartRequest.builder().bookId(bookId).cartId(cartId).quantity(quantity).build(), memberId);
 
+
                 response.sendRedirect("/carts");
                 return;
             }
 
-            bookCartControllerClient.createCart(CreateBookCartRequest.builder().bookId(bookId).quantity(quantity).build(), memberId).getBody().getData();
+            bookCartControllerClient.createCart(CreateBookCartRequest.builder().bookId(bookId).userId(cartId).quantity(quantity).build(), memberId).getBody().getData();
 
             response.sendRedirect("/carts");
         }
