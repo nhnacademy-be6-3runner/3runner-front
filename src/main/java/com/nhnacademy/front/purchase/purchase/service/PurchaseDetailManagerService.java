@@ -2,7 +2,7 @@ package com.nhnacademy.front.purchase.purchase.service;
 
 import org.springframework.data.domain.Page;
 
-import com.nhnacademy.front.purchase.purchase.dto.response.ReadPurchaseResponse;
+import com.nhnacademy.front.purchase.purchase.dto.purchase.response.ReadPurchaseResponse;
 
 /**
  * 관리자 주문조회 service Interface

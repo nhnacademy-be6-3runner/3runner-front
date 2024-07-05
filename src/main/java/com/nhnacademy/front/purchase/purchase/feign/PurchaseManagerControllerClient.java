@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.nhnacademy.front.purchase.purchase.dto.response.ReadPurchaseResponse;
+import com.nhnacademy.front.purchase.purchase.dto.purchase.response.ReadPurchaseResponse;
 import com.nhnacademy.front.util.ApiResponse;
 
 @FeignClient(name = "purchaseManagerControllerClient", url = "http://${feign.client.url}")

@@ -50,7 +50,7 @@
                         <a class="nav-link" href="register.html">register</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="purchase/cart.html">cart</a>
+                        <a class="nav-link" href="/carts">cart</a>
                     </li>
                 </ul>
             </div>
@@ -60,10 +60,27 @@
 
 <main class="container my-5">
     <div class="cart-header d-flex justify-content-between align-items-center">
-        <form action="/api/carts" method="post">
-            <input type="hidden" id="bookId" name="bookId" value="1"/>
+        <form action="/carts" method="post">
+            <input type="hidden" id="bookId" name="bookId" value="6"/>
             <input type="hidden" id="quantity" name="quantity" value="1"/>
-            <button type="submit" class="btn btn-primary btn-block">장바구니 담기</button>
+            <button type="submit" class="btn btn-primary btn-block">TEST 장바구니 담기</button>
+        </form>
+    </div>
+
+    <div class="cart-header d-flex justify-content-between align-items-center">
+        <form action="/book/1" method="get">
+            <button type="submit" class="btn btn-primary btn-block">북1 상세 화면 가기</button>
+        </form>
+    </div>
+    <div class="cart-header d-flex justify-content-between align-items-center">
+        <form action="/book/2" method="get">
+            <button type="submit" class="btn btn-primary btn-block">북2 상세 화면 가기</button>
+        </form>
+    </div>
+
+    <div class="cart-header d-flex justify-content-between align-items-center">
+        <form action="/book/3" method="get">
+            <button type="submit" class="btn btn-primary btn-block">북3 상세 화면 가기</button>
         </form>
     </div>
 </main>

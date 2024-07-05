@@ -5,11 +5,12 @@ import lombok.Builder;
 /**
  * 카트 응답 폼.
  *
- * @author 김병우
  * @param bookCartId
+ * @param bookId
+ * @param price
+ * @param url
  * @param title
  * @param quantity
- * @param price
  */
 @Builder
 public record ReadBookCartGuestResponse(
@@ -18,5 +19,6 @@ public record ReadBookCartGuestResponse(
         int price,
         String url,
         String title,
-        int quantity){
+        int quantity,
+        int leftQuantity){
 }
