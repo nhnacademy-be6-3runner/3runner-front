@@ -45,7 +45,7 @@ public class PurchaseGuestServiceImpl implements PurchaseGuestService {
 	public Long createPurchase(CreatePurchaseRequest createPurchaseRequest) {
 		Purchase purchase = new Purchase(
 			UUID.fromString(createPurchaseRequest.orderId()),
-			PurchaseStatus.PROCESSING,
+			PurchaseStatus.COMPLETED,
 			createPurchaseRequest.deliveryPrice(),
 			createPurchaseRequest.totalPrice(),
 			ZonedDateTime.now(),
@@ -157,7 +157,10 @@ public class PurchaseGuestServiceImpl implements PurchaseGuestService {
 	 */
     @Override
 	public Boolean validateGuest(UUID orderNumber, String password) {
-		Purchase purchase = purchaseRepository.findPurchaseByOrderNumber(orderNumber).orElseThrow();
+		Purchase purchase = purchaseRepository.findPurchaseByOrderNumber(orderNumber).orElse(null);
+		if (purchase == null) {
+			return false;
+		}
 		return encoder.matches(password, purchase.getPassword());
 
 	}
