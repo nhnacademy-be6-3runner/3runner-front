@@ -17,6 +17,7 @@ import com.nhnacademy.bookstore.book.book.exception.BookDoesNotExistException;
 import com.nhnacademy.bookstore.book.book.exception.CreateBookRequestFormException;
 import com.nhnacademy.bookstore.book.book.exception.UpdateBookRequestFormException;
 import com.nhnacademy.bookstore.book.image.exception.NotFindImageException;
+import com.nhnacademy.bookstore.book.tag.exception.AlreadyHaveTagException;
 import com.nhnacademy.bookstore.member.address.exception.AddressFullException;
 import com.nhnacademy.bookstore.member.address.exception.AddressNotExistsException;
 import com.nhnacademy.bookstore.member.member.exception.AlreadyExistsEmailException;
@@ -77,7 +78,8 @@ public class WebControllerAdvice {
 		PurchaseAlreadyExistException.class,
 		BookCartArgumentErrorException.class,
 		TossPaymentException.class,
-		UpdateBookRequestFormException.class
+		UpdateBookRequestFormException.class,
+		AlreadyHaveTagException.class
 	})
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ApiResponse<ErrorResponseForm> badRequestHandler(Exception ex, Model model) {

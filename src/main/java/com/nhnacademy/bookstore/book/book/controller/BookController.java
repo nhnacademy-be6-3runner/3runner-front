@@ -19,13 +19,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.nhnacademy.bookstore.book.book.dto.request.CreateBookRequest;
 import com.nhnacademy.bookstore.book.book.dto.response.BookForCouponResponse;
 import com.nhnacademy.bookstore.book.book.dto.response.BookListResponse;
+import com.nhnacademy.bookstore.book.book.dto.response.BookManagementResponse;
 import com.nhnacademy.bookstore.book.book.dto.response.ReadBookResponse;
 import com.nhnacademy.bookstore.book.book.dto.response.UserReadBookResponse;
 import com.nhnacademy.bookstore.book.book.exception.CreateBookRequestFormException;
 import com.nhnacademy.bookstore.book.book.exception.UpdateBookRequestFormException;
+import com.nhnacademy.bookstore.book.book.repository.BookRepository;
 import com.nhnacademy.bookstore.book.book.service.BookService;
 import com.nhnacademy.bookstore.book.bookCartegory.service.BookCategoryService;
-import com.nhnacademy.bookstore.book.bookImage.service.BookImageService;
 import com.nhnacademy.bookstore.book.bookTag.dto.request.ReadBookIdRequest;
 import com.nhnacademy.bookstore.book.bookTag.dto.response.ReadTagByBookResponse;
 import com.nhnacademy.bookstore.book.bookTag.service.BookTagService;
@@ -49,7 +50,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class BookController {
 	private final BookService bookService;
-	private final BookImageService bookImageService;
+	private final BookRepository bookRepository;
 	private final BookTagService bookTagService;
 	private final BookCategoryService bookCategoryService;
 
@@ -82,6 +83,11 @@ public class BookController {
 		);
 	}
 
+	/**
+	 * 책 상세보기 -> 조회수가 올라갑니다.
+	 * @param bookId 책 아이디
+	 * @return 책 조회 정보
+	 */
 	@GetMapping("/{bookId}")
 	public ApiResponse<UserReadBookResponse> readBook(@PathVariable("bookId") Long bookId) {
 		ReadBookResponse detailBook = bookService.readBookById(bookId);
@@ -108,7 +114,6 @@ public class BookController {
 			.categoryList(categoryList)
 			.tagList(tagList)
 			.build();
-
 		return ApiResponse.success(book);
 	}
 
@@ -152,6 +157,23 @@ public class BookController {
 	public ApiResponse<List<BookForCouponResponse>> readAllBooksForCoupon(@RequestParam List<Long> ids) {
 		List<BookForCouponResponse> response = bookService.readBookByIds(ids);
 		return ApiResponse.success(response);
+	}
+
+	/**
+	 * 관리자 페이지에서 확인할 내용
+	 * @param page 페이지
+	 * @param size 페이지 사이즈
+	 * @return 관리자 페이지에서 사용할 책 리스트
+	 */
+	@GetMapping("/admin")
+	public ApiResponse<Page<BookManagementResponse>> readAllAdminBooks(@RequestParam(defaultValue = "0") int page,
+		@RequestParam(defaultValue = "10") int size) {
+		Pageable pageable = PageRequest.of(page, size);
+		Page<BookManagementResponse> bookList = bookService.readAllAdminBooks(pageable);
+		return new ApiResponse<>(
+			new ApiResponse.Header(true, 200),
+			new ApiResponse.Body<>(bookList)
+		);
 	}
 
 }
