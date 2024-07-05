@@ -24,7 +24,6 @@ import com.nhnacademy.bookstore.book.book.dto.response.ReadBookResponse;
 import com.nhnacademy.bookstore.book.book.dto.response.UserReadBookResponse;
 import com.nhnacademy.bookstore.book.book.exception.CreateBookRequestFormException;
 import com.nhnacademy.bookstore.book.book.exception.UpdateBookRequestFormException;
-import com.nhnacademy.bookstore.book.book.repository.BookRepository;
 import com.nhnacademy.bookstore.book.book.service.BookService;
 import com.nhnacademy.bookstore.book.bookCartegory.service.BookCategoryService;
 import com.nhnacademy.bookstore.book.bookTag.dto.request.ReadBookIdRequest;
@@ -50,7 +49,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class BookController {
 	private final BookService bookService;
-	private final BookRepository bookRepository;
 	private final BookTagService bookTagService;
 	private final BookCategoryService bookCategoryService;
 

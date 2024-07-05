@@ -70,7 +70,7 @@ public class TagControllerTest {
 		ApiResponse<Void> responseEntity = tagController.createTag(createTagRequest, bindingResult);
 
 		// Verify
-		assertEquals(200, responseEntity.getHeader().getResultCode());
+		assertEquals(201, responseEntity.getHeader().getResultCode());
 		assertTrue(responseEntity.getHeader().isSuccessful());
 
 		verify(tagService).createTag(createTagRequest);

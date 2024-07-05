@@ -21,7 +21,6 @@ import com.nhnacademy.bookstore.BaseDocumentTest;
 import com.nhnacademy.bookstore.book.book.dto.response.ReadBookResponse;
 import com.nhnacademy.bookstore.book.book.service.BookService;
 import com.nhnacademy.bookstore.book.bookCartegory.service.BookCategoryService;
-import com.nhnacademy.bookstore.book.bookImage.service.BookImageService;
 import com.nhnacademy.bookstore.book.bookTag.dto.request.ReadBookIdRequest;
 import com.nhnacademy.bookstore.book.bookTag.dto.response.ReadTagByBookResponse;
 import com.nhnacademy.bookstore.book.bookTag.service.BookTagService;
@@ -32,14 +31,13 @@ class BookControllerTest extends BaseDocumentTest {
 	@MockBean
 	private BookService bookService;
 	@MockBean
-	private BookImageService bookImageService;
-	@MockBean
 	private BookTagService bookTagService;
 	@MockBean
 	private BookCategoryService bookCategoryService;
 
 	@Test
-	void createBook() {
+	void create() {
+
 	}
 
 	@DisplayName("책 디테일 뷰 가져오기")
