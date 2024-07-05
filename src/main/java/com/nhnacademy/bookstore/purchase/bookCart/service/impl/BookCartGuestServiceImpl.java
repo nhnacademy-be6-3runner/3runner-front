@@ -139,7 +139,7 @@ public class BookCartGuestServiceImpl implements BookCartGuestService {
         bookCartRepository.delete(bookCart);
         //bookCartRedisRepository.delete(cartId.toString(), bookCart.getId());
 
-        return cartId;
+        return bookCartId;
     }
 
     /**

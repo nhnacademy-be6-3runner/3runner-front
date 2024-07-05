@@ -11,7 +11,7 @@ import lombok.Setter;
 
 @Entity
 @Getter@Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class PurchaseCoupon {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
