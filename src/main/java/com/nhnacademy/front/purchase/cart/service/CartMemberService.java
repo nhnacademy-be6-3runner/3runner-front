@@ -12,8 +12,8 @@ import java.util.List;
 public class CartMemberService {
     private final BookCartControllerClient bookCartControllerClient;
 
-    public boolean checkBookCart(Long memberId ,Long bookId) {
-        List<ReadAllBookCartMemberResponse> list = bookCartControllerClient.readAllBookCartMember(memberId).getBody().getData();
+    public boolean checkBookCart(Long bookId) {
+        List<ReadAllBookCartMemberResponse> list = bookCartControllerClient.readAllBookCartMember().getBody().getData();
 
         for (ReadAllBookCartMemberResponse l : list) {
             if (l.bookId().equals(bookId)) {
