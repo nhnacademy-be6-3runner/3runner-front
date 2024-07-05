@@ -91,8 +91,12 @@ public class PurchaseGuestServiceImpl implements PurchaseGuestService {
 	 * @param password 주문 비밀번호
 	 * @return 비회원 주문
 	 */
+	@SuppressWarnings("checkstyle:WhitespaceAround")
 	@Override
 	public ReadPurchaseResponse readPurchase(UUID orderNumber, String password) {
+		if(Boolean.FALSE.equals(validateGuest(orderNumber,password))){
+			return null;
+		}
 		Optional<Purchase> purchaseOptional = purchaseRepository.findPurchaseByOrderNumber(orderNumber);
 		Purchase purchase = validateGuest(purchaseOptional, password);
 

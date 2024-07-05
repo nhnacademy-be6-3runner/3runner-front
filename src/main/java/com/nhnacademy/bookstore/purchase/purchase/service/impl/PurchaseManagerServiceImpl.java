@@ -1,10 +1,15 @@
 package com.nhnacademy.bookstore.purchase.purchase.service.impl;
 
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.nhnacademy.bookstore.entity.purchase.Purchase;
 import com.nhnacademy.bookstore.entity.purchase.enums.PurchaseStatus;
@@ -18,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+
 public class PurchaseManagerServiceImpl implements PurchaseManagerService {
 	private final PurchaseRepository purchaseRepository;
 
@@ -45,8 +51,24 @@ public class PurchaseManagerServiceImpl implements PurchaseManagerService {
 
 
 		purchase.setStatus(PurchaseStatus.fromString(status));
-		Purchase t = purchaseRepository.save(purchase);
+		if(status.equals("DELIVERY_START")&& purchase.getShippingDate() == null){
+			purchase.setShippingDate(ZonedDateTime.now());
+		}
+		Purchase t= purchaseRepository.save(purchase);
 
 		return t.getId();
+	}
+
+	@Scheduled(cron = "0 0 0 * * ?") // 매일 자정에 실행
+	@Transactional
+	public void updateOrderStatus() {
+		ZonedDateTime tenDaysAgo = ZonedDateTime.now().minusDays(10);
+		List<Purchase> purchases = purchaseRepository.findByShippingDateBefore(
+			tenDaysAgo);
+
+		for (Purchase purchase : purchases) {
+			purchase.setStatus(PurchaseStatus.CONFIRMED);
+			purchaseRepository.save(purchase);
+		}
 	}
 }
