@@ -40,4 +40,7 @@ public interface BookCartControllerClient {
                 @Valid @RequestBody DeleteBookCartRequest deleteBookCartGuestRequest,
                 @RequestHeader(value = "Member-Id", required = false) Long memberId
         );
+
+        @PostMapping("/bookstore/guests/carts")
+        ApiResponse<Long> createGuestCart();
 }

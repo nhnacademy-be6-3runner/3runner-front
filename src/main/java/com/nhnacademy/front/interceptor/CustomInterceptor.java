@@ -2,7 +2,9 @@ package com.nhnacademy.front.interceptor;
 
 import java.util.Optional;
 
+import org.springframework.cloud.client.actuator.HasFeatures;
 import org.springframework.stereotype.Component;
+import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -25,18 +27,24 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CustomInterceptor implements HandlerInterceptor {
 
+	private final HasFeatures feignFeature;
 	private JWTUtil jwtUtil;
 	private TokenService tokenService;
 
-	public CustomInterceptor(JWTUtil jwtUtil, TokenService tokenService) {
+	public CustomInterceptor(JWTUtil jwtUtil, TokenService tokenService, HasFeatures feignFeature) {
 		this.jwtUtil = jwtUtil;
 		this.tokenService = tokenService;
+		this.feignFeature = feignFeature;
 	}
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws
 		Exception {
 		Optional<Cookie[]> cookies = Optional.ofNullable(request.getCookies());
+
+		if(CorsUtils.isCorsRequest(request)){
+			return true;
+		}
 		if (cookies.isPresent()) {
 			for (Cookie cookie : cookies.orElse(null)) {
 				if (cookie.getName().equals("Refresh")) {
