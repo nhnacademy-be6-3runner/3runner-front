@@ -1,4 +1,4 @@
-package com.nhnacademy.front.purchase.purchase.dto.member.response;
+package com.nhnacademy.front.member.member.dto.response;
 
 import lombok.Builder;
 
@@ -8,6 +8,6 @@ import lombok.Builder;
  * @author 오연수
  */
 @Builder
-public record UpdateMemberResponse (
+public record UpdateMemberResponse(
         String id, String name
 ){}
