@@ -52,7 +52,7 @@ public class PurchaseMemberServiceImpl implements PurchaseMemberService {
 			createPurchaseRequest.totalPrice(),
 			ZonedDateTime.now(),
 			createPurchaseRequest.road(),
-			passwordEncoder.encode(createPurchaseRequest.password()),
+			"member has no password",
 			createPurchaseRequest.shippingDate(),
 			createPurchaseRequest.isPacking(),
 			MemberType.MEMBER,
