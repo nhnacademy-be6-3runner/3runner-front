@@ -20,7 +20,7 @@ public class CartMemberServiceImpl implements CartMemberService {
 
     @Override
     public Long createCart(long userId){
-        if(cartRepository.existsById(userId)){
+        if (cartRepository.existsById(userId)) {
             throw new AlreadyExistsCartException();
         }
         Cart cart = new Cart(memberRepository.findById(userId).orElseThrow(NotExistsMemberException::new));
@@ -28,4 +28,10 @@ public class CartMemberServiceImpl implements CartMemberService {
         return cart.getId();
     }
 
+    @Override
+    public Long createGuestCart() {
+        Cart cart = new Cart();
+        cartRepository.save(cart);
+        return cart.getId();
+    }
 }
