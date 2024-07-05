@@ -5,10 +5,14 @@ import com.nhnacademy.bookstore.entity.payment.enums.PaymentStatus;
 import com.nhnacademy.bookstore.entity.paymentType.PaymentType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.ZonedDateTime;
 
 @Entity
+@Getter
+@Setter
 public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,7 +37,7 @@ public class Payment {
         this.paidAt = ZonedDateTime.now();
     }
 
-    @ManyToOne
+    @OneToOne
     private Purchase purchase;
 
     @ManyToOne

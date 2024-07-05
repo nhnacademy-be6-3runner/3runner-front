@@ -47,7 +47,7 @@ public class PurchaseCouponServiceImpl implements PurchaseCouponService {
                         .purchaseCouponId(o.getId())
                         .couponId(o.getCoupon().getId())
                         .purchaseId(o.getPurchase().getId())
-                        .status(o.getStatus())
+                        .status(o.getStatus().toString())
                         .discountPrice(o.getDiscountPrice())
                         .build()
                 ).toList();
@@ -73,7 +73,7 @@ public class PurchaseCouponServiceImpl implements PurchaseCouponService {
                 .orElseThrow(()->new CouponDoesNotExistException(couponFormId + "쿠폰이 없습니다."));
 
 
-        PurchaseCoupon purchaseCoupon = new PurchaseCoupon(discountPrice, "구매" , coupon, purchase);
+        PurchaseCoupon purchaseCoupon = new PurchaseCoupon(discountPrice, (short)0, coupon, purchase);
 
         purchaseCouponRepository.save(purchaseCoupon);
 
