@@ -7,16 +7,19 @@ import com.nhnacademy.bookstore.book.review.dto.request.DeleteReviewRequest;
 import com.nhnacademy.bookstore.book.review.dto.response.ReviewDetailResponse;
 import com.nhnacademy.bookstore.book.review.dto.response.ReviewListResponse;
 import com.nhnacademy.bookstore.book.review.dto.response.UserReadReviewResponse;
+import com.nhnacademy.bookstore.book.review.exception.OrderNotConfirmedException;
 import com.nhnacademy.bookstore.book.review.exception.ReviewNotExistsException;
 import com.nhnacademy.bookstore.book.review.exception.UnauthorizedReviewAccessException;
 import com.nhnacademy.bookstore.book.review.repository.ReviewRepository;
 import com.nhnacademy.bookstore.book.review.service.ReviewService;
 import com.nhnacademy.bookstore.book.reviewLike.repository.ReviewLikeRepository;
 import com.nhnacademy.bookstore.entity.member.Member;
+import com.nhnacademy.bookstore.entity.purchase.enums.PurchaseStatus;
 import com.nhnacademy.bookstore.entity.review.Review;
 import com.nhnacademy.bookstore.entity.review.enums.ReviewStatus;
 import com.nhnacademy.bookstore.member.member.exception.MemberNotExistsException;
 import com.nhnacademy.bookstore.member.member.repository.MemberRepository;
+import com.nhnacademy.bookstore.purchase.purchase.exception.PurchaseDoesNotExistException;
 import com.nhnacademy.bookstore.purchase.purchaseBook.repository.PurchaseBookRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -61,11 +64,15 @@ public class ReviewServiceImpl implements ReviewService {
 
         Review review = Review.builder()
                 .purchaseBook(purchaseBookRepository.findById(purchaseBookId)
-                        .orElseThrow(() -> new IllegalArgumentException("구매한 책을 찾을 수 없습니다.")))
+                        .orElseThrow(() -> new PurchaseDoesNotExistException("구매한 책을 찾을 수 없습니다.")))
                 .title(createReviewRequest.title())
                 .content(createReviewRequest.content())
                 .rating(createReviewRequest.ratings())
                 .build();
+
+        if (review.getPurchaseBook().getPurchase().getStatus() != PurchaseStatus.CONFIRMATION) {
+            throw new OrderNotConfirmedException("주문 확정 상태가 아닙니다.");
+        }
 
         reviewRepository.save(review);
         return review.getId();
