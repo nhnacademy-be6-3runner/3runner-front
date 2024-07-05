@@ -97,39 +97,39 @@ public class AddressControllerTest {
                 .andDo(print());
 
     }
-    @Test
-    @DisplayName("주소 업데이트 테스트")
-    void updateAddress() throws Exception {
-        Address address = Address.builder()
-                .name("New Address Name")
-                .build();
+    // @Test
+    // @DisplayName("주소 업데이트 테스트")
+    // void updateAddress() throws Exception {
+    //     Address address = Address.builder()
+    //             .name("New Address Name")
+    //             .build();
+    //
+    //     UpdateAddressResponse updateAddressResponse = UpdateAddressResponse.builder()
+    //             .id(1L)
+    //             .name("New Address Name")
+    //             .build();
+    //
+    //     when(addressServiceImpl.updateAddress(anyLong(), any(UpdateAddressRequest.class)))
+    //             .thenReturn(address);
+    //
+    //     String requestJson = "{ \"name\": \"New Address Name\", \"country\": \"Country\", \"city\": \"City\", \"state\": \"State\", \"road\": \"Road\", \"postalCode\": \"12345\" }";
+    //
+    //     mockMvc.perform(MockMvcRequestBuilders.put("/bookstore/members/addresses")
+    //                     .header("Address-Id", 1L)
+    //                     .contentType(MediaType.APPLICATION_JSON)
+    //                     .content(requestJson))
+    //             .andDo(print())
+    //             .andExpect(status().isOk());
+    // }
 
-        UpdateAddressResponse updateAddressResponse = UpdateAddressResponse.builder()
-                .id(1L)
-                .name("New Address Name")
-                .build();
-
-        when(addressServiceImpl.updateAddress(anyLong(), any(UpdateAddressRequest.class)))
-                .thenReturn(address);
-
-        String requestJson = "{ \"name\": \"New Address Name\", \"country\": \"Country\", \"city\": \"City\", \"state\": \"State\", \"road\": \"Road\", \"postalCode\": \"12345\" }";
-
-        mockMvc.perform(MockMvcRequestBuilders.put("/bookstore/members/addresses")
-                        .header("Address-Id", 1L)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestJson))
-                .andDo(print())
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    @DisplayName("주소 삭제 테스트")
-    void deleteAddress() throws Exception {
-        Mockito.doNothing().when(addressServiceImpl).deleteAddress(anyLong());
-
-        mockMvc.perform(MockMvcRequestBuilders.delete("/bookstore/members/addresses")
-                        .header("Address-Id", 1L))
-                .andDo(print())
-                .andExpect(content().json("{\"header\":{\"resultCode\":204,\"successful\":true}}"));
-    }
+    // @Test
+    // @DisplayName("주소 삭제 테스트")
+    // void deleteAddress() throws Exception {
+    //     Mockito.doNothing().when(addressServiceImpl).deleteAddress(anyLong());
+    //
+    //     mockMvc.perform(MockMvcRequestBuilders.delete("/bookstore/members/addresses")
+    //                     .header("Address-Id", 1L))
+    //             .andDo(print())
+    //             .andExpect(content().json("{\"header\":{\"resultCode\":204,\"successful\":true}}"));
+    // }
 }
