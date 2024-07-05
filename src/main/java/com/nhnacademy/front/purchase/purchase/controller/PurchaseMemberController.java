@@ -38,7 +38,7 @@ public class PurchaseMemberController {
     private final PurchaseCouponService purchaseCouponService;
 
     @GetMapping("/purchases/members")
-    public String purchase(@RequestHeader(required = false) Long memberId, Model model){
+    public String purchase(Model model){
 
         List<ReadAllBookCartMemberResponse> items = bookCartGuestControllerClient
                 .readAllBookCartMember().getBody().getData();
@@ -55,7 +55,6 @@ public class PurchaseMemberController {
 
         model.addAttribute("coupons", validCoupons);
         model.addAttribute("response", items);
-        model.addAttribute("memberId", memberId);
         model.addAttribute("addresses", addresses);
         model.addAttribute("memberInfo", memberInfo);
         model.addAttribute("orderNumber", UUID.randomUUID());
