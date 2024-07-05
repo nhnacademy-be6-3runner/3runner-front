@@ -10,10 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -34,7 +31,7 @@ public class PurchaseController {
      * 비회원, 회원 판별 주문.
      *
      * @param cartId 카트아이디
-     * @param memberId 맴버아이디
+     * @param Access 맴버아이디
      * @param response HTTP RESPONSE
      * @throws IOException
      */
@@ -42,22 +39,22 @@ public class PurchaseController {
     public void purchase(
             @RequestParam(value = "cartId", required = false) Long cartId,
             @RequestParam(value = "bookId", required = false) Long bookId,
-            @RequestHeader(value = "Member-Id", required = false) Long memberId,
+            @CookieValue(required = false) String Access,
             HttpServletResponse response
     ) throws IOException {
-        if(Objects.isNull(memberId)){
+        if(Objects.isNull(Access)){
             if(Objects.nonNull(bookId)) {
                 if (Objects.isNull(cartId)) {
-                    cartId = bookCartControllerClient.createCart(CreateBookCartRequest.builder().bookId(bookId).quantity(1).build(), memberId).getBody().getData();
+                    cartId = bookCartControllerClient.createCart(CreateBookCartRequest.builder().bookId(bookId).quantity(1).build()).getBody().getData();
 
                     response.addCookie(cartGuestService.createNewCart(cartId));
                 }
                 if (cartGuestService.checkBookCart(cartId, bookId)) {
-                    bookCartControllerClient.createCart(CreateBookCartRequest.builder().bookId(bookId).quantity(1).build(), memberId).getBody().getData();
+                    bookCartControllerClient.createCart(CreateBookCartRequest.builder().bookId(bookId).quantity(1).build()).getBody().getData();
                 }
 
 
-                bookCartControllerClient.updateCart(UpdateBookCartRequest.builder().bookId(bookId).cartId(cartId).quantity(1).build(), memberId);
+                bookCartControllerClient.updateCart(UpdateBookCartRequest.builder().bookId(bookId).cartId(cartId).quantity(1).build());
             }
             response.sendRedirect("purchases/guests/"+cartId);
 
@@ -65,11 +62,11 @@ public class PurchaseController {
 
             if(Objects.nonNull(bookId)) {
 
-                if (cartMemberService.checkBookCart(memberId, bookId)) {
-                    bookCartControllerClient.updateCart(UpdateBookCartRequest.builder().bookId(bookId).cartId(memberId).quantity(1).build(), memberId);
+                if (cartMemberService.checkBookCart(bookId)) {
+                    bookCartControllerClient.updateCart(UpdateBookCartRequest.builder().bookId(bookId).cartId(0).quantity(1).build());
 
                 }
-                bookCartControllerClient.createCart(CreateBookCartRequest.builder().bookId(bookId).quantity(1).build(), memberId).getBody().getData();
+                bookCartControllerClient.createCart(CreateBookCartRequest.builder().bookId(bookId).quantity(1).build()).getBody().getData();
             }
             response.sendRedirect("purchases/members");
 

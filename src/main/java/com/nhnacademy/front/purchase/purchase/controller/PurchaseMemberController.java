@@ -41,15 +41,15 @@ public class PurchaseMemberController {
     public String purchase(@RequestHeader(required = false) Long memberId, Model model){
 
         List<ReadAllBookCartMemberResponse> items = bookCartGuestControllerClient
-                .readAllBookCartMember(memberId).getBody().getData();
+                .readAllBookCartMember().getBody().getData();
 
         List<AddressResponse> addresses = memberAddressControllerClient
-                .readAllAddresses(memberId).getBody().getData();
+                .readAllAddresses().getBody().getData();
 
         GetMemberResponse memberInfo = memberControllerClient
-                .readById(memberId).getBody().getData();
+                .readById().getBody().getData();
 
-        ApiResponse.Body<List<ReadCouponFormResponse>> response = couponControllerClient.readCoupons(memberId).getBody();
+        ApiResponse.Body<List<ReadCouponFormResponse>> response = couponControllerClient.readCoupons().getBody();
 
         List<CouponDiscountPriceDto> validCoupons = purchaseCouponService.getValidCoupons(items, response);
 
@@ -72,7 +72,7 @@ public class PurchaseMemberController {
                           String roadFullAddr,
                           Model model) {
 
-        memberAddressControllerClient.createAddress(CreateAddressRequest.builder().city(roadAddrPart1).state(roadAddrPart2).road(zipNo).name(addrDetail).country("대한민국").postalCode(zipNo).build(),memberId);
+        memberAddressControllerClient.createAddress(CreateAddressRequest.builder().city(roadAddrPart1).state(roadAddrPart2).road(zipNo).name(addrDetail).country("대한민국").postalCode(zipNo).build());
 
         model.addAttribute("roadFullAddr", roadFullAddr);
 

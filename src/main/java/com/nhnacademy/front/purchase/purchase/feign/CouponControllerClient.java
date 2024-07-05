@@ -20,5 +20,5 @@ public interface CouponControllerClient {
                                           @RequestBody Integer discountPrice);
 
     @GetMapping("/bookstore/members/coupons")
-    ApiResponse<List<ReadCouponFormResponse>> readCoupons(@RequestHeader("Member-Id") Long memberId);
+    ApiResponse<List<ReadCouponFormResponse>> readCoupons();
 }

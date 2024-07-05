@@ -181,7 +181,7 @@
             <div class="info-box">
                 <select class="form-control" id="coupon-box">
                     <option value="" data-final-discount-price="0">-- 쿠폰을 선택하세요 --</option>
-                    <option th:each="coupon : ${coupons}" th:value="${coupon.couponFormId()}" th:attr="data-final-discount-price=${coupon.finalDiscountPrice()}" th:text="'최종할인가 : ' + ${coupon.finalDiscountPrice()} +',  '+${coupon.name()} +',  '+ ${coupon.type()} +',  '+ ${coupon.usage()}"></option>
+                    <option th:each="coupon : ${coupons}" th:value="${coupon.couponFormId()}" th:attr="final-discount-price=${coupon.finalDiscountPrice()}" th:text="'최종할인가 : ' + ${coupon.finalDiscountPrice()} +',  '+${coupon.name()} +',  '+ ${coupon.type()} +',  '+ ${coupon.usage()}"></option>
                 </select>
             </div>
         </div>
@@ -319,7 +319,6 @@
         var selectedFinalDiscountPrice = selectedOption.getAttribute('final-discount-price');
 
 
-        //paymentMethodWidget.updateAmount(amount-parseInt(selectedFinalDiscountPrice));
         discountedPrice = parseInt(selectedFinalDiscountPrice);
         couponFormId = parseInt(selectedCouponId);
 
@@ -331,7 +330,7 @@
     button.addEventListener("click", function () {
         // 결제를 요청하기 전에 orderId, amount를 서버에 저장하세요.
         // 결제 과정에서 악의적으로 결제 금액이 바뀌는 것을 확인하는 용도입니다.
-        paymentMethodWidget.updateAmount(amount-parseInt(discountedPrice)-parseInt(discountedPoint));
+        paymentMethodWidget.updateAmount(parseInt(amount)-parseInt(discountedPrice)-parseInt(discountedPoint));
         paymentWidget.requestPayment({
             orderId: orderNumber,
             orderName: '3runner Store:'+orderNumber,
@@ -339,7 +338,7 @@
             failUrl: window.location.origin + "/payments/members/fail",
             customerEmail: [[${memberInfo.email()}]],
             customerName: [[${memberInfo.name()}]],
-            customerMobilePhone: [[${memberInfo.phone()}]],
+            customerMobilePhone: "01012345678"//[[${memberInfo.phone()}]],
         });
     });
 </script>
