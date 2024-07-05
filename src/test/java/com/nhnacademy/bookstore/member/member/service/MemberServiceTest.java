@@ -40,10 +40,8 @@ class MemberServiceTest {
 		// Given
 		Long memberId = 1L;
 		UpdateMemberRequest updateRequest = UpdateMemberRequest.builder()
-			.password("newPassword")
 			.name("newName")
 			.age(25)
-			.email("new@example.com")
 			.phone("12345678900")
 			.birthday(ZonedDateTime.parse("2000-01-01T00:00:00Z"))
 			.build();
