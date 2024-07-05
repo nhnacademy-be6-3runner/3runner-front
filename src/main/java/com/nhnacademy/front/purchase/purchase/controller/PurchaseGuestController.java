@@ -3,7 +3,6 @@ package com.nhnacademy.front.purchase.purchase.controller;
 import com.nhnacademy.front.purchase.cart.dto.response.ReadBookCartGuestResponse;
 import com.nhnacademy.front.purchase.cart.feign.BookCartControllerClient;
 import lombok.RequiredArgsConstructor;
-import org.json.simple.parser.JSONParser;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +27,7 @@ public class PurchaseGuestController {
      * @param model 모델
      * @return purchase view
      */
-    @GetMapping("/api/purchases/guests/{cartId}")
+    @GetMapping("/purchases/guests/{cartId}")
     public String purchase(@PathVariable("cartId") Long cartId, Model model){
         List<ReadBookCartGuestResponse> items = bookCartGuestControllerClient.readCart(cartId).getBody().getData();
 
@@ -46,7 +45,7 @@ public class PurchaseGuestController {
      * @param model 모델
      * @return address view
      */
-    @PostMapping("/api/purchases/guests/addresses")
+    @PostMapping("/purchases/guests/addresses")
     public String address(String roadFullAddr, Model model){
 
         model.addAttribute("roadFullAddr", roadFullAddr);

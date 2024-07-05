@@ -1,69 +1,35 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Header</title>
-    <link rel="stylesheet" href="/css/index.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-</head>
 <body>
-<header>
-    <div class="header-top">
-        <div class="logo">
-            <img src="path/to/your/logo.png" alt="Book Store Logo">
+<div th:fragment="header">
+    <!-- 헤더 -->
+    <header class="py-3 header-custom">
+        <div class="container d-flex flex-wrap justify-content-between align-items-center">
+            <div class="d-flex justify-content-center flex-grow-1">
+                <a href="/static" class="d-flex align-items-center mb-3 mb-lg-0 text-light text-decoration-none">
+                    <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></svg>
+                    <span class="fs-4">Book Store</span>
+                </a>
+            </div>
+            <form class="col-12 col-lg-auto mb-3 mb-lg-0" style="flex: 1;">
+                <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
+            </form>
         </div>
-        <div class="search-bar">
-            <input type="text" placeholder="통합 검색">
-            <button>Search</button>
+    </header>
+
+    <!-- 네비게이션 바 -->
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-custom border-bottom box-shadow mb-3 no-gap-nav">
+        <div class="container">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav" id="categoryMenu">
+                    <!-- 동적으로 생성될 카테고리 리스트 -->
+                </ul>
+            </div>
         </div>
-        <div class="user-menu">
-            <a href="#">Login</a> <a href="#">Cart</a>
-        </div>
-    </div>
-</header>
-<nav class="header-nav">
-    <ul>
-        <li>
-            <a href="#" onclick="toggleMenu(event, 'top-category-1')">최상위 카테고리 1</a>
-            <ul id="top-category-1" class="submenu">
-                <li>
-                    <a href="#" onclick="toggleMenu(event, 'sub-category-1-1')">상위 카테고리 1-1</a>
-                    <ul id="sub-category-1-1" class="submenu">
-                        <li><a href="/category/1-1-1" th:href="@{/category/1-1-1}">하위 카테고리 1-1-1</a></li>
-                        <li><a href="/category/1-1-2" th:href="@{/category/1-1-2}">하위 카테고리 1-1-2</a></li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#" onclick="toggleMenu(event, 'sub-category-1-2')">상위 카테고리 1-2</a>
-                    <ul id="sub-category-1-2" class="submenu">
-                        <li><a href="/category/1-2-1" th:href="@{/category/1-2-1}">하위 카테고리 1-2-1</a></li>
-                        <li><a href="/category/1-2-2" th:href="@{/category/1-2-2}">하위 카테고리 1-2-2</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </li>
-        <li>
-            <a href="#" onclick="toggleMenu(event, 'top-category-2')">최상위 카테고리 2</a>
-            <ul id="top-category-2" class="submenu">
-                <li>
-                    <a href="#" onclick="toggleMenu(event, 'sub-category-2-1')">상위 카테고리 2-1</a>
-                    <ul id="sub-category-2-1" class="submenu">
-                        <li><a href="/category/2-1-1" th:href="@{/category/2-1-1}">하위 카테고리 2-1-1</a></li>
-                        <li><a href="/category/2-1-2" th:href="@{/category/2-1-2}">하위 카테고리 2-1-2</a></li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#" onclick="toggleMenu(event, 'sub-category-2-2')">상위 카테고리 2-2</a>
-                    <ul id="sub-category-2-2" class="submenu">
-                        <li><a href="/category/2-2-1" th:href="@{/category/2-2-1}">하위 카테고리 2-2-1</a></li>
-                        <li><a href="/category/2-2-2" th:href="@{/category/2-2-2}">하위 카테고리 2-2-2</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </li>
-        <!-- Add more top-level categories as needed -->
-    </ul>
-</nav>
+    </nav>
+</div>
 </body>
 </html>

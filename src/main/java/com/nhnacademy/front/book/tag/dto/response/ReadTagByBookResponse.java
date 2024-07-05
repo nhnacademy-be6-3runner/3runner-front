@@ -7,5 +7,5 @@ import lombok.Builder;
  * @author 정주혁
  */
 @Builder
-public record ReadTagByBookResponse(String name) {
+public record ReadTagByBookResponse(Long id, String name) {
 }

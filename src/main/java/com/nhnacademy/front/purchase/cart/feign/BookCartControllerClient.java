@@ -5,8 +5,8 @@ import com.nhnacademy.front.purchase.cart.dto.request.DeleteBookCartRequest;
 import com.nhnacademy.front.purchase.cart.dto.request.UpdateBookCartRequest;
 import com.nhnacademy.front.purchase.cart.dto.response.ReadAllBookCartMemberResponse;
 import com.nhnacademy.front.purchase.cart.dto.response.ReadBookCartGuestResponse;
+import com.nhnacademy.front.util.ApiResponse;
 import com.nhnacademy.global.config.FeignConfiguration;
-import com.nhnacademy.util.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +20,8 @@ public interface BookCartControllerClient {
         ApiResponse<List<ReadBookCartGuestResponse>> readCart(@PathVariable("cartId") Long cartId);
 
         @GetMapping("/bookstore/carts")
-        ApiResponse<List<ReadAllBookCartMemberResponse>> readAllBookCartMember(@RequestHeader(name = "Member-Id") Long userId);
+        ApiResponse<List<ReadAllBookCartMemberResponse>> readAllBookCartMember(
+                @RequestHeader(value = "Member-Id", required = false) Long memberId);
 
         @PostMapping("/bookstore/carts")
         ApiResponse<Long> createCart(

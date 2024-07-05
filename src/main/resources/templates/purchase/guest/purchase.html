@@ -46,6 +46,22 @@
         a:hover {
             text-decoration: underline;
         }
+        .info-box {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            font-weight: bold;
+        }
+        .btn-lg {
+             padding: 10px 20px;
+             font-size: 1.25rem;
+             line-height: 1.5;
+             border-radius: .3rem;
+        }
     </style>
 </head>
 <body>
@@ -97,59 +113,65 @@
     <form>
         <div th:each="item : ${response}" class="cart-item d-flex justify-content-between align-items-center">
             <div class="cart-item-info d-flex align-items-center">
-                <img th:src="|/static/${item.url()}|"
+                <img th:src="@{/api/images/book/download(fileName=${item.url()})}"
                      src="/static/img/no-image.png" alt="Product Image" class="mr-3" style="width: 150px">
-                <div style="margin-left: 10px">
+                <div class="ml-3">
                     <h4 th:text="${item.title()}">Product</h4>
-                    <p>₩<span th:text="${item.price()}"></span></p>
+                    <p>₩<span class="price-input" th:text="${item.price()}"></span></p>
                     <div class="d-flex align-items-center">
                         <input type="hidden" th:id="${item.bookId()}" th:value="${item.bookId()}">
                         <input type="hidden" th:id="${item.bookCartId()}" th:value="${item.bookCartId()}">
                         <input type="number" class="form-control mx-2 quantity-input" th:value="${item.quantity}" readonly>
+                        <span th:if="${item.leftQuantity != null and item.quantity != null and item.leftQuantity - item.quantity < 0}">재고가 없습니다.</span>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h4>총 가격</h4>
-            <h4 class="total-price"><span type="number" id="total-price"></span></h4>
-            <br/>
-            <br/>
-            <br/>
-            <div>
-                <button id="newwin" class="btn btn-success" type="button">주소찾기</button>
+        <div class="checkout-summary text-center mb-3">
+            <h4>배송비 추가금 : 3000원</h4>
+            <h4 class="total-book-price">도서 가격 : <span id="total-book-price"></span> 원</h4>
+            <h4 class="total-price">총 가격 : <span id="total-price"></span> 원</h4>
+        </div>
+
+
+        <!-- 주소찾기 -->
+        <div class="form-group">
+            <label for="countyOfficeName">주소찾기</label>
+            <div class="info-box">
+                <input type="text" id="countyOfficeName" class="form-control" placeholder="주소" value="주소없음" disabled>
+                <p></p>
+                <div class="d-flex justify-content-end">
+                    <button id="newwin" class="btn btn-success mb-2 btn-lg" type="button">주소찾기</button>
+                </div>
             </div>
         </div>
 
-        <div class="form-group">
-            <input type="text" id="countyOfficeName" class="form-control" placeholder="주소" disabled>
-        </div>
+        <!-- 비회원 비밀번호 -->
         <div class="form-group">
             <label for="password">비회원 비밀번호</label>
-            <input type="password" id="password" class="form-control" placeholder="비밀번호 입력">
+            <div class="info-box">
+                <input type="password" id="password" class="form-control" placeholder="비밀번호 입력">
+            </div>
         </div>
 
-        <!-- 배송비 적용 멘트 -->
-        <div>
-            <input type="checkbox" id="shipping-box" />
-            <label for="shipping-box"> 배송비 3000원 </label>
+        <!-- 포장 유무 체크 -->
+        <div class="form-group">
+            <label for="gift-box">포장 유무</label>
+            <div class="info-box">
+                <input type="checkbox" id="gift-box" name="giftWrap">
+                <span>포장을 원하시면 체크해주세요.</span>
+            </div>
         </div>
-        <!-- 포인트 사용 -->
-        <div>
-            <span>잔여 포인트: </span>
-            <input type="number" id="point-box" value="500"/>
-            <label for="point-box"> 포인트사용 </label>
+
+        <!-- 배송 날짜 지정 -->
+        <div class="form-group">
+            <label for="delivery-box">배송 날짜 지정</label>
+            <div class="info-box">
+                <input type="date" id="delivery-box" name="deliveryDate" class="form-control">
+            </div>
         </div>
-        <!-- 할인 쿠폰 -->
-        <div class="form-group form-check">
-            <label for="coupon-box" class="form-check-label">쿠폰 적용</label>
-            <select class="form-check-input" id="coupon-box">
-                <option value="5000">5,000원 쿠폰</option>
-                <option value="10000">10,000원 쿠폰</option>
-                <option value="15000">15,000원 쿠폰</option>
-            </select>
-        </div>
+
 
         <!-- 결제 UI, 이용약관 UI 영역 -->
         <div id="payment-method" class="mb-3"></div>
@@ -158,7 +180,11 @@
     </form>
 
     <!-- 결제하기 버튼 -->
-    <button id="payment-button" class="btn btn-primary btn-block">결제하기</button>
+    <div class="form-group">
+        <div class="d-flex justify-content-end">
+            <button id="payment-button" class="btn btn-primary btn-block btn-lg">결제하기</button>
+        </div>
+    </div>
 </main>
 <footer class="bg-white text-dark p-3">
     <div class="container text-center footer-content">
@@ -169,7 +195,7 @@
 <script type="text/javascript">
     window.onload = function(){
         document.getElementById("newwin").onclick = function(){
-            window.open("https://business.juso.go.kr/addrlink/addrLinkUrl.do?confmKey=devU01TX0FVVEgyMDI0MDYyNzEwMTkxOTExNDg2OTc=&returnUrl=http://localhost:3000/api/purchases/guests/addresses","","width=700px,height=500px,top=200px,left=200px;");
+            window.open("https://business.juso.go.kr/addrlink/addrLinkUrl.do?confmKey=devU01TX0FVVEgyMDI0MDYyNzEwMTkxOTExNDg2OTc=&returnUrl=http://133.186.143.40/purchases/guests/addresses","","width=700px,height=500px,top=200px,left=200px;");
         }
     };
     function setCountyOffice(name){
@@ -178,11 +204,6 @@
 </script>
 <!--토스결제창-->
 <script th:inline="javascript">
-    const point = document.getElementById("point-box");
-    const coupon = document.getElementById("coupon-box");
-
-    const pointInt = parseInt(document.getElementById("point-box").value);
-    const couponInt = parseInt(document.getElementById("coupon-box").value);
     const button = document.getElementById("payment-button");
 
     var amount = 0.0;
@@ -190,6 +211,10 @@
     const address = document.getElementById("countyOfficeName").value;
     const password = document.getElementById("password").value;
     const orderNumber = document.getElementById("orderNumber").textContent;
+    var isPacking = false;
+    var shipping = null;
+    var road = null;
+
     <!--총 가격-->
     document.addEventListener('DOMContentLoaded', function() {
         calculateTotal();
@@ -198,7 +223,7 @@
         var total = 0.0;
         var cartItems = document.querySelectorAll('.cart-item');
         cartItems.forEach(function(item) {
-            var price = parseFloat(item.querySelector('p span').innerText);
+            var price = parseFloat(item.querySelector('.price-input').innerText);
             var quantity = parseInt(item.querySelector('.quantity-input').value);
 
             total += price * quantity;
@@ -207,19 +232,15 @@
         if (isNaN(total)) {
             total = 0.0;
         }
-        amount = total.toFixed(0);
-        document.getElementById('total-price').innerText = total.toFixed(0);
+        amount = (total+3000).toFixed(0);
+
+        document.getElementById('total-book-price').innerText = total.toFixed(0);
+        document.getElementById('total-price').innerText = amount;
     }
 
-
-
-    // 구매자의 고유 아이디를 불러와서 customerKey로 설정하세요.
-    // 이메일・전화번호와 같이 유추가 가능한 값은 안전하지 않습니다.
     const widgetClientKey = "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm";
 
-    //customerkey는 구매자와 1대1로 연결되는 값 -> memberId,
-    const customerKey = "yM-oaX0FM2fjv8Gjs7xDb";
-    //const paymentWidget = PaymentWidget(widgetClientKey, customerKey); // 회원 결제
+    const customerKey = orderNumber;
     const paymentWidget = PaymentWidget(widgetClientKey, PaymentWidget.ANONYMOUS) // 비회원 결제
 
     const paymentMethodWidget = paymentWidget.renderPaymentMethods(
@@ -233,29 +254,41 @@
         { variantKey: "AGREEMENT" }
     );
 
-    button.addEventListener("click", function () {
-        // 결제를 요청하기 전에 orderId, amount를 서버에 저장하세요.
-        // 결제 과정에서 악의적으로 결제 금액이 바뀌는 것을 확인하는 용도입니다.
-        const cartId = [[${cartId}]];
+    // 포장 유무 체크 이벤트 리스너
+    document.getElementById('gift-box').addEventListener('change', function () {
+        var isGiftWrap = this.checked;
+        console.log("Gift Wrap: ", isGiftWrap);
+        isPacking = isGiftWrap;
+    });
 
+    // 배송 날짜 지정 이벤트 리스너
+    document.getElementById('delivery-box').addEventListener('change', function () {
+        var deliveryDate = this.value;
+        console.log("Delivery Date: ", deliveryDate);
+        shipping = deliveryDate;
+    });
+
+
+    button.addEventListener("click", function () {
+        const cartId = [[${cartId}]];
         var address = document.getElementById("countyOfficeName").value;
         var password = document.getElementById("password").value;
 
         console.log(amount);
-        console.log(couponInt);
-        console.log(pointInt);
         console.log(address);
         console.log(password);
-        paymentMethodWidget.updateAmount(amount-couponInt-pointInt);
+        console.log(isPacking);
+        console.log(shipping);
+        paymentMethodWidget.updateAmount(amount);
 
         paymentWidget.requestPayment({
             orderId: orderNumber,
-            orderName: orderNumber,
-            successUrl: window.location.origin + "/api/payments/success?cartId="+cartId+"&address="+address+"&password="+password,
-            failUrl: window.location.origin + "/api/payments/fail?cartId="+cartId,
+            orderName: '3runner Store:'+orderNumber,
+            successUrl: window.location.origin + "/payments/guests/success?cartId="+cartId+"&address="+address+"&password="+password+"&isPacking="+isPacking+"&shipping="+shipping,
+            failUrl: window.location.origin + "/payments/guests/fail",
             customerEmail: "비회원",
             customerName: "비회원",
-            customerMobilePhone: "01077771111",
+            customerMobilePhone: "01012345678",
         });
     });
 </script>

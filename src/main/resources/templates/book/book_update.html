@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${book.id != null ? '책 수정' : '책 등록'}"></title>
+    <style>
+        /* 기존 스타일 그대로 유지 */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 80%;
+            margin: 50px auto;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="file"],
+        input[type="number"],
+        input[type="date"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px;
+            margin: 6px 0 12px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        textarea {
+            height: 200px;
+            resize: vertical;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-buttons {
+            text-align: center;
+        }
+
+        .form-buttons button {
+            padding: 10px 20px;
+            margin: 0 10px;
+            border: none;
+            border-radius: 4px;
+            background-color: #5cb85c;
+            color: white;
+            cursor: pointer;
+        }
+
+        .form-buttons button.reset {
+            background-color: #d9534f;
+        }
+
+        .tag-search-group {
+            position: relative;
+        }
+
+        .tag-search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            max-height: 150px;
+            overflow-y: auto;
+            z-index: 10;
+        }
+
+        .tag-search-results div {
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .tag-search-results div:hover {
+            background-color: #f4f4f4;
+        }
+
+        .selected-tags,
+        .selected-categories {
+            display: flex;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .selected-tags span,
+        .selected-categories span {
+            background-color: #5cb85c;
+            color: white;
+            padding: 5px 10px;
+            margin: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .selected-tags span:hover,
+        .selected-categories span:hover {
+            background-color: #4cae4c;
+        }
+
+        ul {
+            list-style-type: none;
+        }
+
+        .nested {
+            display: none;
+        }
+
+        .active {
+            display: block;
+        }
+
+        .caret-down::after {
+            content: "\25BC";
+        }
+    </style>
+
+    <!-- TUI 에디터 CSS CDN -->
+    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css"/>
+</head>
+<body>
+<div class="container">
+    <h2 th:text="${book.id != null ? '책 수정 화면 입니다.' : '책 등록 화면 입니다.'}" style="text-align: center;"></h2>
+
+    <form id="editorForm" th:action="${'/publisher/book/update/' + bookId}" method="POST"
+          enctype="multipart/form-data">
+        <!-- 숨겨진 필드로 book.id를 추가하여 수정 시 사용 -->
+        <input type="hidden" name="id" th:value="${book.id}"/>
+
+        <div class="form-group">
+            <label for="title">제목</label>
+            <input type="text" id="title" name="title" th:value="${book.title}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="author">작가</label>
+            <input type="text" id="author" name="author" th:value="${book.author}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="publisher">출판사</label>
+            <input type="text" id="publisher" name="publisher" th:value="${book.publisher}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="publishedDate">출판일</label>
+            <input type="date" id="publishedDate" name="publishedDate"
+                   th:value="${publishedDate}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="isbn">ISBN</label>
+            <input type="text" id="isbn" name="isbn" th:value="${book.isbn}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="price">정가</label>
+            <input type="number" id="price" name="price" th:value="${book.price}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="quantity">수량</label>
+            <input type="number" id="quantity" name="quantity" th:value="${book.quantity}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="sellingPrice">판매가</label>
+            <input type="number" id="sellingPrice" name="sellingPrice" th:value="${book.sellingPrice}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="giftWrap">선물포장여부</label>
+            <select id="giftWrap" name="packing" th:value="${book.packing}" required>
+                <option value="true" th:selected="${book.packing == true}">예</option>
+                <option value="false" th:selected="${book.packing == false}">아니오</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="image">책표지 업로드</label>
+            <input type="file" id="image" name="image">
+            <div id="uploadedImage" th:if="${book.imagePath}">
+                <h3>이전 이미지</h3>
+                <img th:src="@{/api/images/book/download(fileName=${book.imagePath})}" alt="책 표지"
+                     style="max-width: 100px;"/>
+            </div>
+        </div>
+
+        <h3>책 설명</h3>
+        <div id="content"></div>
+        <input type="hidden" id="description" name="description" th:value="${book.description}"/>
+
+        <div class="form-group tag-search-group">
+            <label for="tag-search">책 태그 검색</label>
+            <input type="text" id="tag-search" placeholder="책 태그 검색">
+            <div class="tag-search-results" id="tag-search-results"></div>
+            <div class="selected-tags" id="selected-tags"></div>
+            <input type="hidden" id="tags" name="tagList" th:value="${book.tagList}"/>
+        </div>
+
+        <div class="form-group">
+            <label for="category">카테고리</label>
+            <ul id="category"></ul>
+            <input type="hidden" id="categorySet" name="categoryList" th:value="${book.categoryList}"/>
+        </div>
+
+        <div class="form-group selected-categories">
+            <label>선택된 카테고리: </label>
+            <div id="selectedCategories"></div>
+        </div>
+
+        <div class="form-buttons">
+            <button type="submit">완료</button>
+            <button type="reset" class="reset">초기화</button>
+        </div>
+    </form>
+</div>
+
+<!-- TUI 에디터 JS CDN -->
+<script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+<script th:inline="javascript">
+    class CategoryManager {
+        constructor() {
+            this.selectedCategories = new Map();
+            this.selectedCategoriesContainer = document.getElementById('selectedCategories');
+            this.hiddenCategoriesInput = document.getElementById('categorySet');
+        }
+
+        addCategory(id, name) {
+            if (!this.selectedCategories.has(id)) {
+                this.selectedCategories.set(id, name);
+                this._renderCategory(id, name);
+                this._updateHiddenInput();
+            }
+        }
+
+        removeCategory(id) {
+            if (this.selectedCategories.has(id)) {
+                this.selectedCategories.delete(id);
+                this._removeCategoryElement(id);
+                this._updateHiddenInput();
+            }
+        }
+
+        _renderCategory(id, name) {
+            const span = document.createElement('span');
+            span.textContent = `${name}`;
+            span.dataset.id = id;
+            span.onclick = () => this.removeCategory(id);
+            this.selectedCategoriesContainer.appendChild(span);
+        }
+
+        _removeCategoryElement(id) {
+            const span = this.selectedCategoriesContainer.querySelector(`span[data-id="${id}"]`);
+            if (span) {
+                this.selectedCategoriesContainer.removeChild(span);
+            }
+        }
+
+        _updateHiddenInput() {
+            const categoryIds = Array.from(this.selectedCategories.keys()).join(',');
+            this.hiddenCategoriesInput.value = categoryIds;
+        }
+
+        addParentCategories(categoryMap, categoryId) {
+            const category = categoryMap.get(categoryId);
+            if (category && category.parentId) {
+                this.addCategory(category.parentId, category.parentName);
+                this.addParentCategories(categoryMap, category.parentId);
+            }
+        }
+    }
+
+    class TagManager {
+        constructor() {
+            this.selectedTags = new Map();
+            this.selectedTagsContainer = document.getElementById('selected-tags');
+            this.hiddenTagsInput = document.getElementById('tags');
+        }
+
+        addTag(id, name) {
+            if (!this.selectedTags.has(id)) {
+                this.selectedTags.set(id, name);
+                this._renderTag(id, name);
+                this._updateHiddenInput();
+            }
+        }
+
+        removeTag(id) {
+            if (this.selectedTags.has(id)) {
+                this.selectedTags.delete(id);
+                this._removeTagElement(id);
+                this._updateHiddenInput();
+            }
+        }
+
+        _renderTag(id, name) {
+            const span = document.createElement('span');
+            span.textContent = `${name}`;
+            span.dataset.id = id;
+            span.onclick = () => this.removeTag(id);
+            this.selectedTagsContainer.appendChild(span);
+        }
+
+        _removeTagElement(id) {
+            const span = this.selectedTagsContainer.querySelector(`span[data-id="${id}"]`);
+            if (span) {
+                this.selectedTagsContainer.removeChild(span);
+            }
+        }
+
+        _updateHiddenInput() {
+            const tagIds = Array.from(this.selectedTags.keys()).join(',');
+            this.hiddenTagsInput.value = tagIds;
+        }
+    }
+
+    const categoryManager = new CategoryManager();
+    const tagManager = new TagManager();
+
+    const editor = new toastui.Editor({
+        el: document.querySelector('#content'),
+        height: '500px',
+        initialEditType: 'wysiwyg',
+        initialValue: /*[[${book.description}]]*/ [], // 기존 설명 데이터를 에디터 초기값으로 설정
+        previewStyle: 'vertical',
+        placeholder: '내용을 입력해 주세요.',
+        hooks: {
+            async addImageBlobHook(blob, callback) {
+                try {
+                    const formData = new FormData();
+                    formData.append('image', blob);
+                    const type = 'book'; // 여기에 실제 값을 넣으세요.
+                    const url = `/api/images/${type}/upload`;
+
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        body: formData,
+                    });
+
+                    const filename = await response.text();
+                    console.log('서버에 저장된 파일명 : ', filename);
+
+                    const imageUrl = `/api/images/${type}/download?fileName=${filename}`;
+                    callback(imageUrl, 'image alt attribute');
+
+                } catch (error) {
+                    console.error('업로드 실패 : ', error);
+                }
+            }
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const tagSearchInput = document.getElementById('tag-search');
+        const tagSearchResults = document.getElementById('tag-search-results');
+
+        let tags = new Set();
+        const initialTags = /*[[${requiredTagList}]]*/ 'default'; // 문자열로 된 JSON 리스트
+
+        initialTags.forEach(tag => {
+            tagManager.addTag(tag.id, tag.name);
+        });
+
+        fetch('/api/tags')
+            .then(response => response.json())
+            .then(data => {
+                tags = new Set(data.map(tag => JSON.stringify(tag)));
+            })
+            .catch(error => console.error('태그 로드 실패:', error));
+
+        tagSearchInput.addEventListener('input', function () {
+            const query = tagSearchInput.value.toLowerCase();
+            tagSearchResults.innerHTML = '';
+            if (query) {
+                const filteredTags = Array.from(tags).map(tag => JSON.parse(tag)).filter(tag => tag.name.toLowerCase().includes(query));
+                filteredTags.forEach(tag => {
+                    const div = document.createElement('div');
+                    div.textContent = tag.name;
+                    div.addEventListener('click', function () {
+                        tagManager.addTag(tag.id, tag.name);
+                        tagSearchInput.value = '';
+                        tagSearchResults.innerHTML = '';
+                    });
+                    tagSearchResults.appendChild(div);
+                });
+            }
+        });
+
+        const categoryMap = new Map();
+        const selectedCategories = /*[[${requiredCategoryList}]]*/ 'default'; // 문자열로 된 JSON 리스트
+        selectedCategories.forEach(CategoryResponse => {
+            categoryManager.addCategory(CategoryResponse.id, CategoryResponse.name);
+        });
+
+        fetch('/api/categories')
+            .then(response => response.json())
+            .then(data => {
+                console.log('카테고리 데이터:', data); // 데이터가 올바르게 로드되는지 확인
+                const categoryContainer = document.getElementById('category');
+                data.forEach(category => {
+                    categoryMap.set(category.id, {
+                        ...category,
+                        parentId: null,
+                        parentName: null
+                    });
+                    createCategoryTree(category, categoryContainer, categoryMap, null, null);
+                });
+            })
+            .catch(error => console.error('카테고리 로드 실패:', error));
+
+        function createCategoryTree(category, parentElement, categoryMap, parentId, parentName) {
+            const li = document.createElement('li');
+            const span = document.createElement('span');
+            span.textContent = category.name;
+            span.classList.add('category-item');
+            span.onclick = () => selectCategory(category.id, category.name);
+
+            if (parentId !== null) {
+                categoryMap.set(category.id, {
+                    ...category,
+                    parentId: parentId,
+                    parentName: parentName
+                });
+            }
+
+            if (category.childrenList && category.childrenList.length > 0) {
+                span.onclick = () => {
+                    li.querySelector('.nested').classList.toggle('active');
+                    span.classList.toggle('caret-down');
+                };
+                const ul = document.createElement('ul');
+                ul.classList.add('nested');
+                category.childrenList.forEach(child => {
+                    createCategoryTree(child, ul, categoryMap, category.id, category.name);
+                });
+                li.appendChild(span);
+                li.appendChild(ul);
+            } else {
+                span.onclick = () => selectCategory(category.id, category.name);
+                li.appendChild(span);
+            }
+            parentElement.appendChild(li);
+
+            // 디버그: DOM 요소가 제대로 추가되는지 확인
+            console.log('추가된 카테고리 요소:', li);
+        }
+
+        function selectCategory(id, name) {
+            categoryManager.addCategory(id, name);
+            categoryManager.addParentCategories(categoryMap, id);
+        }
+    });
+
+    document.getElementById('editorForm').addEventListener('submit', function (event) {
+        document.getElementById('description').value = editor.getHTML();
+    });
+</script>
+</body>
+</html>

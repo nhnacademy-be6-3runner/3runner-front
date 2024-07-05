@@ -356,13 +356,20 @@
                     (<span th:text="${reviewCount}"></span> reviews)
                 </span>
             </div>
+
             <div class="options">
                 <label for="quantity">수량</label>
-                <input type="number" id="quantity" name="quantity" value="1">
+                <input type="number" id="quantityCart" name="quantityCart" value="1">
             </div>
             <div class="action-buttons">
-                <a href="#" class="add-to-cart">장바구니 담기</a>
-                <a href="#" class="buy-now">바로 구매</a>
+                <input type="hidden" id="bookIdCart" name="bookIdCart" th:value="${book.id()}"/>
+                <button class="add-to-cart" onclick="submitCart()">장바구니 담기</button>
+
+                <form action="/api/purchases" method="POST">
+                    <input type="hidden" id="quantity" name="quantity" value="1">
+                    <input type="hidden" id="bookId" name="bookId" th:value="${book.id()}"/>
+                    <button type="submit" class="buy-now">바로 구매</button>
+                </form>
             </div>
         </div>
     </div>
@@ -393,6 +400,30 @@
     </div>
 
 </div>
+<script>
+    function addCart(bookId, quantity) {
+        $.ajax({
+            url: window.location.origin+'/api/carts',
+            type: 'POST',
+            contentType: 'application/x-www-form-urlencoded',
+            data: $.param({bookId: bookId, quantity: quantity}),
+            success: function(response) {
+                console.log(response);
+                window.location.href = window.location.origin+'/api/carts';
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);
+                console.error('Status:', status);
+                console.error('XHR:', xhr);
+            }
+        });
+    }
+    function submitCart() {
+        const bookId = document.getElementById('bookIdCart').value;
+        const quantity = document.getElementById('quantityCart').value;
+        addCart(bookId, quantity);
+    }
+</script>
 
 <footer class="footer">
     <p>&copy; 2024 All rights reserved. Template by <a href="https://colorlib.com" target="_blank" style="color: #fff;">Colorlib</a>

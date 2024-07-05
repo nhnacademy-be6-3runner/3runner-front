@@ -1,5 +1,6 @@
 package com.nhnacademy.front.purchase.purchase.feign;
 
+import com.nhnacademy.front.util.ApiResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -10,11 +11,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.nhnacademy.front.purchase.purchase.dto.request.CreatePurchaseBookRequest;
-import com.nhnacademy.front.purchase.purchase.dto.request.DeletePurchaseBookRequest;
-import com.nhnacademy.front.purchase.purchase.dto.request.UpdatePurchaseBookRequest;
-import com.nhnacademy.front.purchase.purchase.dto.response.ReadPurchaseBookResponse;
-import com.nhnacademy.util.ApiResponse;
+import com.nhnacademy.front.purchase.purchase.dto.purchase.request.CreatePurchaseBookRequest;
+import com.nhnacademy.front.purchase.purchase.dto.purchase.request.DeletePurchaseBookRequest;
+import com.nhnacademy.front.purchase.purchase.dto.purchase.request.UpdatePurchaseBookRequest;
+import com.nhnacademy.front.purchase.purchase.dto.purchase.response.ReadPurchaseBookResponse;
+
 
 import jakarta.validation.Valid;
 

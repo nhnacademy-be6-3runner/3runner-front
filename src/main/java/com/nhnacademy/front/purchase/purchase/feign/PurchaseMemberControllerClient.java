@@ -1,8 +1,8 @@
 package com.nhnacademy.front.purchase.purchase.feign;
 
+import com.nhnacademy.front.util.ApiResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,15 +14,13 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import com.nhnacademy.front.purchase.purchase.dto.request.CreatePurchaseRequest;
-import com.nhnacademy.front.purchase.purchase.dto.request.UpdatePurchaseMemberRequest;
-import com.nhnacademy.front.purchase.purchase.dto.response.ReadPurchaseBookResponse;
-import com.nhnacademy.front.purchase.purchase.dto.response.ReadPurchaseResponse;
-import com.nhnacademy.util.ApiResponse;
+import com.nhnacademy.front.purchase.purchase.dto.purchase.request.CreatePurchaseRequest;
+import com.nhnacademy.front.purchase.purchase.dto.purchase.request.UpdatePurchaseMemberRequest;
+import com.nhnacademy.front.purchase.purchase.dto.purchase.response.ReadPurchaseResponse;
+
 
 import jakarta.validation.Valid;
 
-import java.util.List;
 @FeignClient(name = "purchaseMemberControllerClient", url = "http://${feign.client.url}")
 public interface PurchaseMemberControllerClient {
 
@@ -42,5 +40,5 @@ public interface PurchaseMemberControllerClient {
 
     @DeleteMapping("/bookstore/members/purchases/{purchaseId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    ApiResponse<Void> deletePurchases (@PathVariable Long purchaseId);
+    ApiResponse<Void> deletePurchases (@RequestHeader("Member-Id") Long memberId, @PathVariable Long purchaseId);
 }

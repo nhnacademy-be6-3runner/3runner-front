@@ -1,9 +1,13 @@
 package com.nhnacademy.front.purchase.cart.controller;
 
 import com.nhnacademy.front.purchase.cart.dto.request.CreateBookCartRequest;
+import com.nhnacademy.front.purchase.cart.dto.request.ReadAllBookCartMemberRequest;
 import com.nhnacademy.front.purchase.cart.dto.request.UpdateBookCartRequest;
+import com.nhnacademy.front.purchase.cart.dto.response.ReadAllBookCartMemberResponse;
 import com.nhnacademy.front.purchase.cart.dto.response.ReadBookCartGuestResponse;
 import com.nhnacademy.front.purchase.cart.feign.BookCartControllerClient;
+import com.nhnacademy.front.purchase.cart.service.CartGuestService;
+import com.nhnacademy.front.purchase.cart.service.CartMemberService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -24,25 +28,11 @@ import java.util.Objects;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/api")
 public class CartController {
-    private final BookCartControllerClient bookCartGuestControllerClient;
+    private final BookCartControllerClient bookCartControllerClient;
+    private final CartMemberService cartMemberService;
+    private final CartGuestService cartGuestService;
 
-
-    /**
-     * 장바구니 테스트 담기.
-     *
-     * @param cartId 카트 아이디
-     * @param model 모델
-     * @return test-main 뷰
-     */
-    @GetMapping("/test-add-cart")
-    public String testMain(
-            @CookieValue(value = "cartId", required = false) Long cartId,
-            Model model){
-        model.addAttribute("cartId", cartId);
-        return "test-main";
-    }
 
     /**
      * 장바구니 UI
@@ -58,12 +48,24 @@ public class CartController {
             @RequestHeader(value = "Member-Id", required = false) Long memberId,
             Model model){
 
-        log.info("{}",cartId);
-        List<ReadBookCartGuestResponse> items = bookCartGuestControllerClient.readCart(cartId).getBody().getData();
+        model.addAttribute("memberId", memberId);
+        if (Objects.isNull(memberId)){
 
-        log.info("{}", items);
-        model.addAttribute("response", items);
-        model.addAttribute("cartId", cartId.toString());
+            List<ReadBookCartGuestResponse> items = bookCartControllerClient
+                    .readCart(cartId)
+                    .getBody().getData();
+
+            model.addAttribute("response", items);
+            model.addAttribute("cartId", cartId.toString());
+        } else {
+
+            List<ReadAllBookCartMemberResponse> items = bookCartControllerClient
+                    .readAllBookCartMember(memberId)
+                    .getBody().getData();
+
+            model.addAttribute("response", items);
+            model.addAttribute("cartId", memberId.toString());
+        }
 
         return "purchase/cart";
     }
@@ -88,34 +90,52 @@ public class CartController {
             HttpServletResponse response,
             Model model) throws IOException {
 
-        if(Objects.isNull(cartId)){
-            cartId = bookCartGuestControllerClient.createCart(
-                    CreateBookCartRequest.builder()
-                            .bookId(bookId)
-                            .quantity(quantity)
-                            .build(),
-                    memberId).getBody().getData();
+        if (Objects.nonNull(memberId)) {        //회원 카트
+            if(cartMemberService.checkBookCart(memberId, bookId)){
 
-            log.info("created : {}",cartId);
+                bookCartControllerClient.updateCart(UpdateBookCartRequest.builder().bookId(bookId).cartId(memberId).quantity(quantity).build(), memberId);
 
-            Cookie cartCookie = new Cookie("cartId", cartId.toString());
-            cartCookie.setHttpOnly(true);
-            cartCookie.setSecure(true);
-            cartCookie.setPath("/");
-            cartCookie.setMaxAge(60 * 60 * 24 * 7);
-            response.addCookie(cartCookie);
-            response.sendRedirect("/api/carts");
-        } else {
-            bookCartGuestControllerClient.updateCart(
-                    UpdateBookCartRequest.builder().
-                            bookId(bookId).
-                            cartId(cartId).
-                            quantity(quantity)
-                            .build(),
-                    memberId
-            );
+                response.sendRedirect("/carts");
+                return;
+            }
 
-            response.sendRedirect("/api/carts");
+            bookCartControllerClient.createCart(CreateBookCartRequest.builder().bookId(bookId).quantity(quantity).build(), memberId).getBody().getData();
+
+            response.sendRedirect("/carts");
+
+        } else {    //비회원 카트
+            if(Objects.isNull(cartId)){ //쿠키 없을시 쿠키 발급
+                cartId = bookCartControllerClient.createCart(CreateBookCartRequest.builder().bookId(bookId).quantity(quantity).build(), memberId).getBody().getData();
+
+                response.addCookie(cartGuestService.createNewCart(cartId));
+                response.sendRedirect("/carts");
+            }
+
+            if (cartGuestService.checkBookCart(cartId, bookId)) {
+                bookCartControllerClient.updateCart(UpdateBookCartRequest.builder().bookId(bookId).cartId(cartId).quantity(quantity).build(), memberId);
+
+                response.sendRedirect("/carts");
+                return;
+            }
+
+            bookCartControllerClient.createCart(CreateBookCartRequest.builder().bookId(bookId).quantity(quantity).build(), memberId).getBody().getData();
+
+            response.sendRedirect("/carts");
         }
+    }
+
+    /**
+     * 장바구니 테스트 담기.
+     *
+     * @param cartId 카트 아이디
+     * @param model 모델
+     * @return test-main 뷰
+     */
+    @GetMapping("/test")
+    public String testMain(
+            @CookieValue(value = "cartId", required = false) Long cartId,
+            Model model){
+        model.addAttribute("cartId", cartId);
+        return "test-main";
     }
 }

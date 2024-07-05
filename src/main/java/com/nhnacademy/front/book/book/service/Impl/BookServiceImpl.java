@@ -1,20 +1,5 @@
 package com.nhnacademy.front.book.book.service.Impl;
 
-import com.nhnacademy.front.book.book.controller.feign.ApiBookClient;
-import com.nhnacademy.front.book.book.controller.feign.BookClient;
-import com.nhnacademy.front.book.book.dto.request.CreateBookRequest;
-import com.nhnacademy.front.book.book.dto.request.UserCreateBookRequest;
-import com.nhnacademy.front.book.book.dto.response.BookListResponse;
-import com.nhnacademy.front.book.book.dto.response.UserReadBookResponse;
-import com.nhnacademy.front.book.book.exception.InvalidApiResponseException;
-import com.nhnacademy.front.book.book.exception.NotFindBookException;
-import com.nhnacademy.front.book.book.service.BookService;
-import com.nhnacademy.front.util.ApiResponse;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -22,6 +7,24 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Service;
+
+import com.nhnacademy.front.book.book.controller.feign.ApiBookClient;
+import com.nhnacademy.front.book.book.controller.feign.BookClient;
+import com.nhnacademy.front.book.book.dto.request.CreateBookRequest;
+import com.nhnacademy.front.book.book.dto.request.UserCreateBookRequest;
+import com.nhnacademy.front.book.book.dto.response.BookListResponse;
+import com.nhnacademy.front.book.book.dto.response.BookManagementResponse;
+import com.nhnacademy.front.book.book.dto.response.UserReadBookResponse;
+import com.nhnacademy.front.book.book.exception.InvalidApiResponseException;
+import com.nhnacademy.front.book.book.exception.NotFindBookException;
+import com.nhnacademy.front.book.book.service.BookService;
+import com.nhnacademy.front.util.ApiResponse;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
@@ -75,6 +78,34 @@ public class BookServiceImpl implements BookService {
 		return getResponse.getBody().getData();
 	}
 
+	@Override
+	public void updateBook(long bookId, UserCreateBookRequest userCreateBookRequest, String imageName) {
+
+		CreateBookRequest updateBookRequest = CreateBookRequest.builder()
+			.title(userCreateBookRequest.title())
+			.description(userCreateBookRequest.description())
+			.publishedDate(stringToZonedDateTime(userCreateBookRequest.publishedDate()))
+			.price(userCreateBookRequest.price())
+			.quantity(userCreateBookRequest.quantity())
+			.sellingPrice(userCreateBookRequest.sellingPrice())
+			.packing(userCreateBookRequest.packing())
+			.author(userCreateBookRequest.author())
+			.isbn(userCreateBookRequest.isbn())
+			.publisher(userCreateBookRequest.publisher())
+			.imageName(imageName)
+			.imageList(descriptionToImageList(userCreateBookRequest.description()))
+			.tagIds(stringIdToList(userCreateBookRequest.tagList()))
+			.categoryIds(stringIdToList(userCreateBookRequest.categoryList()))
+			.build();
+
+		bookClient.updateBook(bookId, updateBookRequest);
+	}
+
+	@Override
+	public void deleteBook(long bookId) {
+		bookClient.deleteBook(bookId);
+	}
+
 	/**
 	 *
 	 *  내용 에서 이미지 추출하는 코드
@@ -95,15 +126,15 @@ public class BookServiceImpl implements BookService {
 
 	/**
 	 * String 으로 되어있는 아이디 값들을 리스트로 변환
-	 * @param StringId id 가 하나의 String 으로 이어져있음 ex -> 1,2,3,4
+	 * @param stringId id 가 하나의 String 으로 이어져있음 ex -> 1,2,3,4
 	 * @return 리스트로 반환
 	 */
-	private List<Long> stringIdToList(String StringId) {
+	private List<Long> stringIdToList(String stringId) {
 		List<Long> idList = new ArrayList<>();
-		if (Objects.isNull(StringId)) {
+		if (Objects.isNull(stringId)) {
 			return idList;
 		}
-		String[] idSplit = StringId.split(",");
+		String[] idSplit = stringId.split(",");
 
 		for (String idStr : idSplit) {
 			idList.add(Long.parseLong(idStr));
@@ -111,7 +142,6 @@ public class BookServiceImpl implements BookService {
 		log.info("list {}", idList);
 		return idList;
 	}
-
 
 	/**
 	 * String -> ZoneDateTime 으로 변경
@@ -127,7 +157,6 @@ public class BookServiceImpl implements BookService {
 		return localDateStr.atStartOfDay(ZoneId.systemDefault());
 	}
 
-
 	/**
 	 *
 	 * 메인 페이지에 도서 리스트를 불러오는 메서드입니다.
@@ -135,15 +164,15 @@ public class BookServiceImpl implements BookService {
 	 * @return 도서 리스트
 	 */
 	@Override
-    public Page<BookListResponse> readLimitBooks(int limit) {
-        ApiResponse<Page<BookListResponse>> response = bookClient.readAllBooks(2, limit);
+	public Page<BookListResponse> readLimitBooks(int limit) {
+		ApiResponse<Page<BookListResponse>> response = bookClient.readAllBooks(2, limit);
 
-        if (response.getHeader().isSuccessful() && response.getBody() != null) {
-            return response.getBody().getData();
-        } else {
-            throw new InvalidApiResponseException("메인페이지 도서 리스트 조회 exception");
-        }
-    }
+		if (response.getHeader().isSuccessful() && response.getBody() != null) {
+			return response.getBody().getData();
+		} else {
+			throw new InvalidApiResponseException("메인페이지 도서 리스트 조회 exception");
+		}
+	}
 
 	/**
 	 * 도서 페이지 조회 메서드입니다.
@@ -154,6 +183,17 @@ public class BookServiceImpl implements BookService {
 	@Override
 	public Page<BookListResponse> readAllBooks(int page, int size) {
 		ApiResponse<Page<BookListResponse>> response = bookClient.readAllBooks(page, size);
+
+		if (response.getHeader().isSuccessful() && response.getBody() != null) {
+			return response.getBody().getData();
+		} else {
+			throw new InvalidApiResponseException("도서 페이지 조회 exception");
+		}
+	}
+
+	@Override
+	public Page<BookManagementResponse> readAllAdminBooks(int page, int size) {
+		ApiResponse<Page<BookManagementResponse>> response = bookClient.readAllAdminBooks(page, size);
 
 		if (response.getHeader().isSuccessful() && response.getBody() != null) {
 			return response.getBody().getData();
