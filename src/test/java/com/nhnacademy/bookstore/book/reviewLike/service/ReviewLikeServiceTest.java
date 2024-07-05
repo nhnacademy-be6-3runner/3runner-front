@@ -94,10 +94,10 @@ class ReviewLikeServiceTest {
                 ZonedDateTime.now(),
                 "road",
                 "password",
-                MemberType.MEMBER, member,
-                null,
-                null,
-                null);
+                ZonedDateTime.now(),
+                true,
+                MemberType.MEMBER,
+                member);
 
         PurchaseBook purchaseBook = new PurchaseBook(book, 1, 100, purchase);
 

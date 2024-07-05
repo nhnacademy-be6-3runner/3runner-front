@@ -94,10 +94,10 @@ class ReviewRepositoryTest {
                 ZonedDateTime.now(),
                 "road",
                 "password",
-                MemberType.MEMBER, member,
-                null,
-                null,
-                null);
+                ZonedDateTime.now(),
+                true,
+                MemberType.MEMBER,
+                member);
         entityManager.persist(purchase);
 
         Purchase purchase2 = new Purchase(
@@ -108,10 +108,10 @@ class ReviewRepositoryTest {
                 ZonedDateTime.now(),
                 "road",
                 "password",
-                MemberType.MEMBER, member2,
-                null,
-                null,
-                null);
+                ZonedDateTime.now(),
+                true,
+                MemberType.MEMBER,
+                member2);
         entityManager.persist(purchase2);
 
         purchaseBook = new PurchaseBook(book, 1, 100, purchase);

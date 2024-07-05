@@ -86,9 +86,9 @@ class CommentRepositoryTest {
                 ZonedDateTime.now(),
                 "road",
                 "password",
-                MemberType.MEMBER, member,
-                null,
-                null,
+                ZonedDateTime.now(),
+                true,
+                MemberType.MEMBER,
                 null);
         entityManager.persist(purchase);
 

@@ -76,9 +76,9 @@ class ReviewLikeRepositoryTest {
                 ZonedDateTime.now(),
                 "road",
                 "password",
-                MemberType.MEMBER, member,
-                null,
-                null,
+                ZonedDateTime.now(),
+                true,
+                MemberType.MEMBER,
                 null);
         entityManager.persist(purchase);
         PurchaseBook purchaseBook = new PurchaseBook(book, 1, 100, purchase);

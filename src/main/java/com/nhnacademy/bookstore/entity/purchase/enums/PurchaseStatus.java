@@ -1,8 +1,12 @@
 package com.nhnacademy.bookstore.entity.purchase.enums;
 
 public enum PurchaseStatus {
-    PROCESSING, SHIPPED, CONFIRMED, DELIVERY_START, DELIVERY_COMPLETED,
-    DELIVERY_PROGRESS, COMPLETED, REFUNDED_REQUEST, REFUNDED_COMPLETED;
+    /**
+     * 주문 확인중, 주문 완료, 출고, 배달 진행중,
+     * 배달 완료, 환불 요청, 환불 완료, 주문 확정
+     */
+    PROCESSING, COMPLETED, DELIVERY_START, DELIVERY_PROGRESS,
+    DELIVERY_COMPLETED, REFUNDED_REQUEST, REFUNDED_COMPLETED, CONFIRMATION;
 
     public static PurchaseStatus fromString(String status) {
         if (status == null) {
