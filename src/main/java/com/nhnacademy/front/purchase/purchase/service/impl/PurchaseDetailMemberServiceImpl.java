@@ -4,6 +4,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.nhnacademy.front.util.ApiResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
@@ -16,8 +17,6 @@ import com.nhnacademy.front.purchase.purchase.dto.purchase.response.ReadPurchase
 import com.nhnacademy.front.purchase.purchase.feign.PurchaseBookControllerClient;
 import com.nhnacademy.front.purchase.purchase.feign.PurchaseMemberControllerClient;
 import com.nhnacademy.front.purchase.purchase.service.PurchaseDetailMemberService;
-import com.nhnacademy.util.ApiResponse;
-
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -91,7 +90,7 @@ public class PurchaseDetailMemberServiceImpl implements PurchaseDetailMemberServ
 	 */
 	@Override
 	public void updatePurchaseStatus(long purchaseId){
-		purchaseMemberControllerClient.updatePurchaseStatus( UpdatePurchaseMemberRequest.builder().purchaseStatus(PurchaseStatus.CONFIRMED).build(),purchaseId);
+		purchaseMemberControllerClient.updatePurchaseStatus(UpdatePurchaseMemberRequest.builder().purchaseStatus(PurchaseStatus.CONFIRMED).build(),purchaseId);
 	}
 
 }

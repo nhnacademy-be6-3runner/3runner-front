@@ -2,12 +2,11 @@ package com.nhnacademy.front.purchase.cart.feign;
 
 import com.nhnacademy.front.purchase.cart.dto.request.CreateBookCartRequest;
 import com.nhnacademy.front.purchase.cart.dto.request.DeleteBookCartRequest;
-import com.nhnacademy.front.purchase.cart.dto.request.ReadAllBookCartMemberRequest;
 import com.nhnacademy.front.purchase.cart.dto.request.UpdateBookCartRequest;
 import com.nhnacademy.front.purchase.cart.dto.response.ReadAllBookCartMemberResponse;
 import com.nhnacademy.front.purchase.cart.dto.response.ReadBookCartGuestResponse;
+import com.nhnacademy.front.util.ApiResponse;
 import com.nhnacademy.global.config.FeignConfiguration;
-import com.nhnacademy.util.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;

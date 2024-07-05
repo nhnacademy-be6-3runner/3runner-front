@@ -3,7 +3,7 @@ package com.nhnacademy.front.purchase.purchase.service;
 import com.nhnacademy.front.purchase.cart.dto.response.ReadAllBookCartMemberResponse;
 import com.nhnacademy.front.purchase.purchase.dto.coupon.CouponDiscountPriceDto;
 import com.nhnacademy.front.purchase.purchase.dto.coupon.response.ReadCouponFormResponse;
-import com.nhnacademy.util.ApiResponse;
+import com.nhnacademy.front.util.ApiResponse;
 
 import java.util.List;
 

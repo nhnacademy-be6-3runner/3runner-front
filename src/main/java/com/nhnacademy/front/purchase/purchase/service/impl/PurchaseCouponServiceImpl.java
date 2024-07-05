@@ -6,7 +6,7 @@ import com.nhnacademy.front.purchase.purchase.dto.coupon.CouponDiscountPriceDto;
 import com.nhnacademy.front.purchase.purchase.dto.coupon.response.ReadCouponFormResponse;
 import com.nhnacademy.front.purchase.purchase.feign.BookCategoryControllerClient;
 import com.nhnacademy.front.purchase.purchase.service.PurchaseCouponService;
-import com.nhnacademy.util.ApiResponse;
+import com.nhnacademy.front.util.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

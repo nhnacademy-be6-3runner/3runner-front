@@ -3,9 +3,7 @@ package com.nhnacademy.front.purchase.purchase.controller;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import com.nhnacademy.front.purchase.purchase.dto.purchase.response.ReadPurchaseResponse;
 import com.nhnacademy.front.purchase.purchase.service.PurchaseDetailManagerService;
@@ -56,7 +54,7 @@ public class PurchaseDetailManagerController {
 	 * @return 관리자 주문조회 페이지로 리디렉트
 	 */
 	@PostMapping("/{orderNumber}")
-	public String purchaseDetailManager(@PathVariable String orderNumber,@RequestParam("dropdown") String status, Model model) {
+	public String purchaseDetailManager(@PathVariable String orderNumber, @RequestParam("dropdown") String status, Model model) {
 		purchaseDetailManagerService.updatePurchaseStatus(orderNumber,status);
 		return "redirect:/orders/managers";
 	}

@@ -1,7 +1,7 @@
 package com.nhnacademy.front.purchase.purchase.feign;
 
 import com.nhnacademy.front.purchase.purchase.dto.member.response.GetMemberResponse;
-import com.nhnacademy.util.ApiResponse;
+import com.nhnacademy.front.util.ApiResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;

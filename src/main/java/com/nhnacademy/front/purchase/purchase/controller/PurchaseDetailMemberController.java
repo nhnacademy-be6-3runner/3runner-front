@@ -7,8 +7,8 @@ import com.nhnacademy.front.entity.purchase.enums.PurchaseStatus;
 import com.nhnacademy.front.purchase.purchase.dto.purchase.response.ReadPurchase;
 import com.nhnacademy.front.purchase.purchase.dto.purchase.response.ReadPurchaseBookResponse;
 import com.nhnacademy.front.purchase.purchase.service.PurchaseDetailMemberService;
-import com.nhnacademy.util.ApiResponse;
 
+import com.nhnacademy.front.util.ApiResponse;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;

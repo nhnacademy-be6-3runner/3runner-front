@@ -3,7 +3,8 @@ package com.nhnacademy.front.purchase.purchase.feign;
 import com.nhnacademy.front.purchase.purchase.dto.member.request.CreateAddressRequest;
 import com.nhnacademy.front.purchase.purchase.dto.member.response.AddressResponse;
 import com.nhnacademy.front.purchase.purchase.dto.member.response.GetMemberResponse;
-import com.nhnacademy.util.ApiResponse;
+
+import com.nhnacademy.front.util.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;

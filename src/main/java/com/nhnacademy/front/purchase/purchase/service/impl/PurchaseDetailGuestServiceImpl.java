@@ -2,6 +2,7 @@ package com.nhnacademy.front.purchase.purchase.service.impl;
 
 import java.util.UUID;
 
+import com.nhnacademy.front.util.ApiResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +13,6 @@ import com.nhnacademy.front.purchase.purchase.dto.purchase.response.ReadPurchase
 import com.nhnacademy.front.purchase.purchase.feign.PurchaseBookControllerClient;
 import com.nhnacademy.front.purchase.purchase.feign.PurchaseGuestControllerClient;
 import com.nhnacademy.front.purchase.purchase.service.PurchaseDetailGuestService;
-import com.nhnacademy.util.ApiResponse;
 
 import lombok.RequiredArgsConstructor;
 

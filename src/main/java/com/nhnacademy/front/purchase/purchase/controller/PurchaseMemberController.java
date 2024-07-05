@@ -12,9 +12,7 @@ import com.nhnacademy.front.purchase.purchase.dto.member.response.AddressRespons
 import com.nhnacademy.front.purchase.purchase.dto.member.response.GetMemberResponse;
 import com.nhnacademy.front.purchase.purchase.feign.*;
 import com.nhnacademy.front.purchase.purchase.service.PurchaseCouponService;
-import com.nhnacademy.util.ApiResponse;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.Builder;
+import com.nhnacademy.front.util.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

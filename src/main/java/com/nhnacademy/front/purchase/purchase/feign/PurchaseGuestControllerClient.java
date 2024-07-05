@@ -4,7 +4,7 @@ import com.nhnacademy.front.purchase.purchase.dto.purchase.request.CreatePurchas
 import com.nhnacademy.front.purchase.purchase.dto.purchase.request.ReadDeletePurchaseGuestRequest;
 import com.nhnacademy.front.purchase.purchase.dto.purchase.request.UpdatePurchaseGuestRequest;
 import com.nhnacademy.front.purchase.purchase.dto.purchase.response.ReadPurchaseResponse;
-import com.nhnacademy.util.ApiResponse;
+import com.nhnacademy.front.util.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @FeignClient(name = "purchaseGuestControllerClient", url = "http://${feign.client.url}")
 public interface PurchaseGuestControllerClient {
     @GetMapping("/bookstore/guests/purchases")
-    ApiResponse<ReadPurchaseResponse> readPurchase (@RequestParam String orderNumber,@RequestParam String password);
+    ApiResponse<ReadPurchaseResponse> readPurchase (@RequestParam String orderNumber, @RequestParam String password);
 
     @PostMapping("/bookstore/guests/purchases")
     ApiResponse<Void> createPurchase (@Valid @RequestBody CreatePurchaseRequest createPurchaseRequest);
