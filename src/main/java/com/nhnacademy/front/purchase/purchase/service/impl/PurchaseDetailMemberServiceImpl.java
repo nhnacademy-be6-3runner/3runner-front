@@ -90,7 +90,7 @@ public class PurchaseDetailMemberServiceImpl implements PurchaseDetailMemberServ
 	 */
 	@Override
 	public void updatePurchaseStatus(long purchaseId){
-		purchaseMemberControllerClient.updatePurchaseStatus(UpdatePurchaseMemberRequest.builder().purchaseStatus(PurchaseStatus.CONFIRMED).build(),purchaseId);
+		purchaseMemberControllerClient.updatePurchaseStatus(UpdatePurchaseMemberRequest.builder().purchaseStatus(PurchaseStatus.CONFIRMATION).build(),purchaseId);
 	}
 
 }

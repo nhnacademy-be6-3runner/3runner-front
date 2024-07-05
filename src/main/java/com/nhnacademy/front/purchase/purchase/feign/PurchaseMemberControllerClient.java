@@ -40,5 +40,5 @@ public interface PurchaseMemberControllerClient {
 
     @DeleteMapping("/bookstore/members/purchases/{purchaseId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    ApiResponse<Void> deletePurchases (@RequestHeader("Member-Id") Long memberId, @PathVariable Long purchaseId);
+    ApiResponse<Void> deletePurchases (@PathVariable Long purchaseId);
 }

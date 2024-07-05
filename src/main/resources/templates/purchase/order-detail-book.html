@@ -20,7 +20,7 @@
                 <p>수량 : <span th:text="${book.quantity()}"></span></p>
                 <p>₩<span th:text="${book.price()}"></span></p>
             </div>
-            <button class="order-delivery" th:if="${purchaseStatus == 'CONFIRMED'}">리뷰</button>
+            <button class="order-delivery" th:if="${purchaseStatus == 'CONFIRMATION'}">리뷰</button>
         </li>
 
     </ul>

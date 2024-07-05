@@ -42,6 +42,6 @@ public class PurchaseDetailGuestServiceImpl implements PurchaseDetailGuestServic
 	@Override
 	public void updatePurchaseStatus(String purchaseId){
 		purchaseGuestControllerClient.updatePurchaseStatus( UpdatePurchaseGuestRequest.builder().purchaseStatus(
-			PurchaseStatus.CONFIRMED).orderNumber(UUID.fromString(purchaseId)).build());
+			PurchaseStatus.CONFIRMATION).orderNumber(UUID.fromString(purchaseId)).build());
 	}
 }
