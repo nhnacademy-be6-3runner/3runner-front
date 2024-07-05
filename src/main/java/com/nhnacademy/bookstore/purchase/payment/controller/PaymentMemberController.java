@@ -48,6 +48,7 @@ public class PaymentMemberController {
         String orderId;
         String amount;
         String paymentKey;
+        memberId = 1L;
 
         try {
             // 클라이언트에서 받은 JSON 요청 바디입니다.
@@ -89,7 +90,6 @@ public class PaymentMemberController {
 
         // 결제 성공 및 실패 비즈니스 로직을 구현하세요.
         if (isSuccess) {
-
             LocalDate localDate = LocalDate.parse(shipping, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             paymentMemberService.payment(CreatePaymentMemberRequest.builder()
                             .memberId(memberId)
