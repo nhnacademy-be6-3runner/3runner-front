@@ -5,12 +5,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.nhnacademy.front.book.categroy.service.CategoryService;
 
 import lombok.RequiredArgsConstructor;
 
+@RequestMapping
 @Controller
 @RequiredArgsConstructor
 public class CategoryManagementController {
@@ -18,7 +20,7 @@ public class CategoryManagementController {
 
 	@GetMapping("/admin/category/management")
 	public String categoryManagement(Model model) {
-		return "/admin/admin_category";
+		return "admin/admin_category";
 	}
 
 	@GetMapping("/admin/category/delete/{categoryId}")
