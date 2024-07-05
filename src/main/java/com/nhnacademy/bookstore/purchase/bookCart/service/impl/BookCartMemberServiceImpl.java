@@ -125,18 +125,18 @@ public class BookCartMemberServiceImpl implements BookCartMemberService {
     }
 
     @Override
-    public Long updateBookCartMember(UpdateBookCartRequest updateBookCartRequest) {
+    public Long updateBookCartMember(UpdateBookCartRequest updateBookCartRequest, Long memberId) {
         BookCart bookCart = bookCartRepository
                 .findBookCartByBookIdAndMemberId(
                         updateBookCartRequest.bookId(),
-                        updateBookCartRequest.cartId())
+                        memberId)
                 .orElseThrow(NotExistsBookCartException::new);
 
         Cart cart = cartRepository
-                .findByMemberId(updateBookCartRequest.cartId())
+                .findByMemberId(memberId)
                 .orElseThrow(NotExistsCartException::new);
 
-        bookCart.setQuantity(updateBookCartRequest.quantity());
+        bookCart.setQuantity(bookCart.getQuantity() + updateBookCartRequest.quantity());
 
         bookCart.setBook(
             bookRepository
@@ -156,24 +156,23 @@ public class BookCartMemberServiceImpl implements BookCartMemberService {
     }
 
     @Override
-    public Long deleteBookCartMember(DeleteBookCartRequest deleteBookCartMemberRequest) {
+    public Long deleteBookCartMember(DeleteBookCartRequest deleteBookCartMemberRequest, Long memberId) {
         bookCartRepository.delete(
             bookCartRepository
                     .findById(deleteBookCartMemberRequest.bookCartId())
                     .orElseThrow(NotExistsBookCartException::new)
         );
 
-        return deleteBookCartMemberRequest.cartId();
+        return memberId;
     }
 
     @Override
-    public Long deleteAllBookCart(Long cartId) {
-        Cart cart = cartRepository
-                .findById(cartId)
-                .orElseThrow(() -> new CartDoesNotExistException(cartId + "가 존재하지 않습니다"));
+    public Long deleteAllBookCart(Long memberId) {
+        Cart cart = cartRepository.findByMemberId(memberId)
+                .orElseThrow(() -> new CartDoesNotExistException("카트 없음"));
 
         bookCartRepository.deleteByCart(cart);
 
-        return cartId;
+        return memberId;
     }
 }

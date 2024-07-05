@@ -48,8 +48,6 @@ public class AddressController {
     @PostMapping("/bookstore/members/addresses")
     public ApiResponse<List<AddressResponse>> createAddress(@RequestBody @Valid CreateAddressRequest request,
                                                             @RequestHeader(value = "Member-Id", required = false) Long memberId) {
-        //TODO : 테스트용
-        memberId = 1L;
 
         Member member = memberService.readById(memberId);
         Address address = new Address(request, member);
@@ -73,8 +71,6 @@ public class AddressController {
 //주소를 추가한다.
     @GetMapping("/bookstore/members/addresses")
     public ApiResponse<List<AddressResponse>> readAllAddresses(@RequestHeader("Member-Id") Long memberId) {
-        //TODO : 테스트용
-        memberId = 1L;
 
         Member member = memberService.readById(memberId);
 

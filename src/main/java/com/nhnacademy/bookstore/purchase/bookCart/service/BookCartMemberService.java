@@ -10,9 +10,9 @@ public interface BookCartMemberService {
 
 	Long createBookCartMember(CreateBookCartRequest createBookCartRequest);
 
-	Long updateBookCartMember(UpdateBookCartRequest updateBookCartRequest);
+	Long updateBookCartMember(UpdateBookCartRequest updateBookCartRequest, Long memberId);
 
-	Long deleteBookCartMember(DeleteBookCartRequest deleteBookCartMemberRequest);
+	Long deleteBookCartMember(DeleteBookCartRequest deleteBookCartMemberRequest, Long memberId);
 
-	Long deleteAllBookCart(Long cartId);
+	Long deleteAllBookCart(Long memberId);
 }

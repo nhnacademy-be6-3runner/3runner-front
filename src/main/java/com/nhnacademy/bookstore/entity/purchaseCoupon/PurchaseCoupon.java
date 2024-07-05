@@ -5,10 +5,12 @@ import com.nhnacademy.bookstore.entity.purchase.Purchase;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Getter@Setter
+@NoArgsConstructor
 public class PurchaseCoupon {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
