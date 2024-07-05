@@ -53,7 +53,9 @@ public class PurchaseMemberController {
 	 * @return ApiResponse
 	 */
 	@GetMapping("/members/purchases/{purchaseId}")
-	public ApiResponse<ReadPurchaseResponse> readPurchase(@RequestHeader("Member-Id") Long memberId,
+	public ApiResponse<ReadPurchaseResponse> readPurchase(
+		@RequestHeader("Member-Id") Long memberId,
+
 		@PathVariable(value = "purchaseId", required = false) Long purchaseId) {
 		ReadPurchaseResponse response = purchaseMemberService.readPurchase(memberId, purchaseId);
 

@@ -110,7 +110,7 @@ public class BookCartController {
             );
             return ApiResponse.success(updateBookCartGuestRequest.cartId());
         } else {
-            return ApiResponse.success(bookCartMemberService.updateBookCartMember(updateBookCartGuestRequest));
+            return ApiResponse.success(bookCartMemberService.updateBookCartMember(updateBookCartGuestRequest, memberId));
         }
 
     }
@@ -133,13 +133,13 @@ public class BookCartController {
             return ApiResponse.deleteSuccess(deleteBookCartGuestRequest.cartId());
         } else {
 
-            return ApiResponse.deleteSuccess(bookCartMemberService.deleteBookCartMember(deleteBookCartGuestRequest));
+            return ApiResponse.deleteSuccess(bookCartMemberService.deleteBookCartMember(deleteBookCartGuestRequest, memberId));
         }
     }
 
     @DeleteMapping("/{cartId}")
     public ApiResponse<Long> deleteAllCart(
-            @PathVariable Long cartId,
+            @PathVariable(required = false) Long cartId,
             @RequestHeader(value = "Member-Id", required = false) Long memberId
     ) {
         if (Objects.isNull(memberId)) {
@@ -148,7 +148,7 @@ public class BookCartController {
             return ApiResponse.deleteSuccess(response);
         } else {
 
-            return ApiResponse.deleteSuccess(bookCartMemberService.deleteAllBookCart(cartId));
+            return ApiResponse.deleteSuccess(bookCartMemberService.deleteAllBookCart(memberId));
         }
     }
 }

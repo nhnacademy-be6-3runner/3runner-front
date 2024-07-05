@@ -160,30 +160,30 @@ public class WebControllerAdvice {
 		);
 	}
 
-//    @ExceptionHandler({})
-//    @ResponseStatus(HttpStatus.NOT_FOUND)
-//    public ApiResponse<ErrorResponseForm> notFoundHandler(Exception ex, Model model) {
-//        return new ApiResponse<>(
-//                new ApiResponse.Header(false, 404, "not found"),
-//                new ApiResponse.Body<>(ErrorResponseForm.builder()
-//                        .title(ex.getMessage())
-//                        .status(HttpStatus.NOT_FOUND.value())
-//                        .timestamp(ZonedDateTime.now().toString())
-//                        .build())
-//        );
-//    }
-//
-//
-//    @ExceptionHandler({})
-//    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-//    public ApiResponse<ErrorResponseForm> unauthorizedHandler(Exception ex, Model model) {
-//        return new ApiResponse<>(
-//                new ApiResponse.Header(false, 405, "unauthorized"),
-//                new ApiResponse.Body<>(ErrorResponseForm.builder()
-//                        .title(ex.getMessage())
-//                        .status(HttpStatus.UNAUTHORIZED.value())
-//                        .timestamp(ZonedDateTime.now().toString())
-//                        .build())
-//        );
-//    }
+	//    @ExceptionHandler({})
+	//    @ResponseStatus(HttpStatus.NOT_FOUND)
+	//    public ApiResponse<ErrorResponseForm> notFoundHandler(Exception ex, Model model) {
+	//        return new ApiResponse<>(
+	//                new ApiResponse.Header(false, 404, "not found"),
+	//                new ApiResponse.Body<>(ErrorResponseForm.builder()
+	//                        .title(ex.getMessage())
+	//                        .status(HttpStatus.NOT_FOUND.value())
+	//                        .timestamp(ZonedDateTime.now().toString())
+	//                        .build())
+	//        );
+	//    }
+	//
+	//
+	//    @ExceptionHandler({})
+	//    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+	//    public ApiResponse<ErrorResponseForm> unauthorizedHandler(Exception ex, Model model) {
+	//        return new ApiResponse<>(
+	//                new ApiResponse.Header(false, 405, "unauthorized"),
+	//                new ApiResponse.Body<>(ErrorResponseForm.builder()
+	//                        .title(ex.getMessage())
+	//                        .status(HttpStatus.UNAUTHORIZED.value())
+	//                        .timestamp(ZonedDateTime.now().toString())
+	//                        .build())
+	//        );
+	//    }
 }

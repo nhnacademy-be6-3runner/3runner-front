@@ -84,7 +84,7 @@ public class ReviewCustomRepositoryImpl implements ReviewCustomRepository {
                         qReview.rating,
                         qMember.email,
                         qReview.createdAt,
-                        qReview.updatedAt,
+                        qReview.updated,
                         qReview.updatedAt
                 ))
                 .from(qReview)
