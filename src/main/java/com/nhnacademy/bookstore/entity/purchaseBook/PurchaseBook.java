@@ -16,7 +16,7 @@ public class PurchaseBook {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @OneToOne
+    @ManyToOne
     @Setter
     private Book book;
 

@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.nhnacademy.bookstore.book.book.dto.request.CreateBookRequest;
 import com.nhnacademy.bookstore.book.book.dto.response.BookForCouponResponse;
 import com.nhnacademy.bookstore.book.book.dto.response.BookListResponse;
+import com.nhnacademy.bookstore.book.book.dto.response.BookManagementResponse;
 import com.nhnacademy.bookstore.book.book.dto.response.ReadBookResponse;
 import com.nhnacademy.bookstore.book.book.exception.BookDoesNotExistException;
 import com.nhnacademy.bookstore.book.book.repository.BookRepository;
@@ -88,7 +89,6 @@ public class BookServiceImpl implements BookService {
 	@Override
 	public ReadBookResponse readBookById(Long bookId) {
 		ReadBookResponse book = bookRepository.readDetailBook(bookId);
-		bookRepository.viewBook(bookId);
 		if (Objects.isNull(book)) {
 			throw new BookDoesNotExistException("요청하신 책이 존재하지 않습니다.");
 		}
@@ -138,6 +138,16 @@ public class BookServiceImpl implements BookService {
 	}
 
 	/**
+	 * 관리자 페이지에서 볼 책
+	 * @param pageable 책의 pageable
+	 * @return 책의 pageList
+	 */
+	@Override
+	public Page<BookManagementResponse> readAllAdminBooks(Pageable pageable) {
+		return bookRepository.readAdminBookList(pageable);
+	}
+
+	/**
 	 * 책 삭제
 	 * 연결된 테이블은 cascade all 설정으로 다 삭제 하도록 함
 	 * @param bookId 책 삭제 아이디
@@ -160,6 +170,5 @@ public class BookServiceImpl implements BookService {
 			responses.add(BookForCouponResponse.builder().id(book.getId()).title(book.getTitle()).build());
 		}
 		return responses;
-
 	}
 }

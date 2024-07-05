@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import com.nhnacademy.bookstore.book.book.dto.request.CreateBookRequest;
 import com.nhnacademy.bookstore.book.book.dto.response.BookForCouponResponse;
 import com.nhnacademy.bookstore.book.book.dto.response.BookListResponse;
+import com.nhnacademy.bookstore.book.book.dto.response.BookManagementResponse;
 import com.nhnacademy.bookstore.book.book.dto.response.ReadBookResponse;
 
 /**
@@ -34,6 +35,8 @@ public interface BookService {
 	void updateBook(Long bookId, CreateBookRequest createBookRequest);
 
 	Page<BookListResponse> readAllBooks(Pageable pageable);
+
+	Page<BookManagementResponse> readAllAdminBooks(Pageable pageable);
 
 	void deleteBook(Long bookId);
 
