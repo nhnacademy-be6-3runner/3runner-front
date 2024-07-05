@@ -2,10 +2,11 @@
 GET http://localhost:8081/bookstore/managers/purchases
 Member-Id: 1
 
+
 ###
 POST http://localhost:8081/bookstore/members/purchases
 Content-Type: application/json
-Member-Id: 1
+Member-Id: 4
 
 {
 
@@ -41,6 +42,17 @@ Content-Type: application/json
   "password": "1234",
   "totalPrice": 100000,
   "road": "동탄"
+}
+
+###
+PUT http://localhost:8081/bookstore/guests/purchases
+Content-Type: application/json
+Member-Id: 1
+
+{
+  "purchaseStatus": "COMPLETED",
+  "orderNumber": "fa1e07cc-aa1f-4ebf-8752-0c564f2cd90c",
+  "password": "1234"
 }
 
 

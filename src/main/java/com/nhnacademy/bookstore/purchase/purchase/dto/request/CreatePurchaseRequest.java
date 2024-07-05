@@ -1,11 +1,10 @@
 package com.nhnacademy.bookstore.purchase.purchase.dto.request;
 
+import java.time.ZonedDateTime;
+
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
-
-import java.time.ZonedDateTime;
 
 @Builder
 public record CreatePurchaseRequest(
@@ -14,6 +13,6 @@ public record CreatePurchaseRequest(
         @NotBlank(message = "road is mandatory") String road,
         @NotBlank String password,
         @NotBlank String orderId,
-        ZonedDateTime shippingDate,
-        boolean isPacking) {
+		ZonedDateTime shippingDate,
+		boolean isPacking) {
 }

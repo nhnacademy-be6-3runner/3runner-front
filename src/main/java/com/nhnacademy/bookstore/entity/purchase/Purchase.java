@@ -51,7 +51,7 @@ public class Purchase {
     private String password;
 
     private ZonedDateTime shippingDate;
-    private boolean isPacking;
+    private Boolean isPacking;
 
     @NotNull
     private MemberType memberType;
@@ -73,8 +73,7 @@ public class Purchase {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchase", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PointRecord> pointRecordList = new ArrayList<>();
 
-
-    public Purchase(UUID orderNumber, PurchaseStatus status, int deliveryPrice, int totalPrice, ZonedDateTime createdAt, String road, String password, ZonedDateTime shippingDate, boolean isPacking, MemberType memberType, Member member) {
+    public Purchase(UUID orderNumber, PurchaseStatus status, int deliveryPrice, int totalPrice, ZonedDateTime createdAt, String road, String password, ZonedDateTime shippingDate, Boolean isPacking, MemberType memberType, Member member) {
         this.orderNumber = orderNumber;
         this.status = status;
         this.deliveryPrice = deliveryPrice;
