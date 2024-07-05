@@ -250,32 +250,32 @@
     const editor = new toastui.Editor({
         el: document.querySelector('#edit'),
         height: '500px',
-        initialEditType: 'markdown', async addImageBlobHook(blob, callback) {
-            try {
-                const formData = new FormData();
-                formData.append('image', blob);
-                const type = 'review';
-                const url = `/api/images/${type}/upload`;
-
-                const response = await fetch(url, {
-                    method: 'POST',
-                    body: formData,
-                });
-
-                const filename = await response.text();
-                console.log('서버에 저장된 파일명 : ', filename);
-
-                const imageUrl = `/api/images/${type}/download?fileName=${filename}`;
-                callback(imageUrl, 'image alt attribute');
-
-            } catch (error) {
-                console.error('업로드 실패 : ', error);
-            }
-        }
+        initialEditType: 'markdown',
         initialValue: '',
         previewStyle: 'vertical',
         hooks: {
+            async addImageBlobHook(blob, callback) {
+                try {
+                    const formData = new FormData();
+                    formData.append('image', blob);
+                    const type = 'review';
+                    const url = `/api/images/${type}/upload`;
 
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        body: formData,
+                    });
+
+                    const filename = await response.text();
+                    console.log('서버에 저장된 파일명 : ', filename);
+
+                    const imageUrl = `/api/images/${type}/download?fileName=${filename}`;
+                    callback(imageUrl, 'image alt attribute');
+
+                } catch (error) {
+                    console.error('업로드 실패 : ', error);
+                }
+            }
         }
     });
 
