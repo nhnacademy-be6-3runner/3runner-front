@@ -2,6 +2,7 @@ package com.nhnacademy.bookstore.purchase.payment.service.impl;
 
 import com.nhnacademy.bookstore.purchase.bookCart.dto.response.ReadBookCartGuestResponse;
 import com.nhnacademy.bookstore.purchase.bookCart.service.BookCartGuestService;
+import com.nhnacademy.bookstore.purchase.payment.dto.CreatePaymentGuestRequest;
 import com.nhnacademy.bookstore.purchase.payment.service.PaymentGuestService;
 import com.nhnacademy.bookstore.purchase.purchase.dto.request.CreatePurchaseRequest;
 import com.nhnacademy.bookstore.purchase.purchase.service.PurchaseGuestService;
@@ -27,17 +28,19 @@ public class PaymentGuestServiceImpl implements PaymentGuestService {
     // 포인트, 쿠폰 사용여부
     //@Transactional(propagation = Propagation.MANDATORY) 서비스생성후 한번에 사용
     @Override
-    public Long payment(Long cartId, String address, String password, Integer totalPrice, String orderId) {
+    public Long payment(CreatePaymentGuestRequest createPaymentGuestRequest) {
         Long purchaseId = purchaseGuestService.createPurchase(
                 CreatePurchaseRequest.builder()
-                        .orderId(orderId)
-                        .road(address)
-                        .password(password)
-                        .totalPrice(totalPrice)
+                        .orderId(createPaymentGuestRequest.orderId())
+                        .road(createPaymentGuestRequest.road())
+                        .password(createPaymentGuestRequest.password())
+                        .isPacking(createPaymentGuestRequest.isPacking())
+                        .shippingDate(createPaymentGuestRequest.shippingDate())
+                        .totalPrice(createPaymentGuestRequest.amount())
                         .deliveryPrice(3000).build()
         );
 
-        List<ReadBookCartGuestResponse> bookCartGuestResponseList = bookCartGuestService.readAllBookCart(cartId);
+        List<ReadBookCartGuestResponse> bookCartGuestResponseList = bookCartGuestService.readAllBookCart(createPaymentGuestRequest.cartId());
 
         for (ReadBookCartGuestResponse bookCartGuestResponse : bookCartGuestResponseList) {
             purchaseBookService.createPurchaseBook(

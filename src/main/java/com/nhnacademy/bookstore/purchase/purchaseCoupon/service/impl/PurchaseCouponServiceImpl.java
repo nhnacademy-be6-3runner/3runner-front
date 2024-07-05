@@ -57,20 +57,20 @@ public class PurchaseCouponServiceImpl implements PurchaseCouponService {
      * 주문쿠폰 만들기.
      *
      * @param purchaseId 주문아이디
-     * @param couponId 쿠폰아이디
+     * @param couponFormId 쿠폰폼아이디
      * @param discountPrice 할인가격
      * @return 주문쿠폰 아이디
      */
     @Override
-    public Long create(Long purchaseId, Long couponId, int discountPrice) {
+    public Long create(Long purchaseId, Long couponFormId, int discountPrice) {
         Purchase purchase = purchaseRepository
                 .findById(purchaseId)
                 .orElseThrow(()->new PurchaseDoesNotExistException(purchaseId + "주문이 없습니다."));
 
 
         Coupon coupon = couponRepository
-                .findById(purchaseId)
-                .orElseThrow(()->new CouponDoesNotExistException(couponId + "쿠폰이 없습니다."));
+                .findCouponByCouponFormId(couponFormId)
+                .orElseThrow(()->new CouponDoesNotExistException(couponFormId + "쿠폰이 없습니다."));
 
 
         PurchaseCoupon purchaseCoupon = new PurchaseCoupon(discountPrice, "구매" , coupon, purchase);
