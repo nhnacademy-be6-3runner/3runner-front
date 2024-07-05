@@ -1,6 +1,5 @@
 package com.nhnacademy.bookstore.purchase.payment.service.impl;
 
-import com.nhnacademy.bookstore.entity.coupon.Coupon;
 import com.nhnacademy.bookstore.member.pointRecord.service.PointRecordService;
 import com.nhnacademy.bookstore.purchase.bookCart.dto.request.ReadAllBookCartMemberRequest;
 import com.nhnacademy.bookstore.purchase.bookCart.dto.response.ReadAllBookCartMemberResponse;
@@ -17,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.ZonedDateTime;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -38,6 +36,8 @@ public class PaymentMemberServiceImpl implements PaymentMemberService {
                         .orderId(createPaymentMemberRequest.orderId())
                         .road(createPaymentMemberRequest.road())
                         .totalPrice(createPaymentMemberRequest.amount())
+                        .shippingDate(createPaymentMemberRequest.shippingDate())
+                        .isPacking(createPaymentMemberRequest.isPacking())
                         .deliveryPrice(3000).build(),
                 createPaymentMemberRequest.memberId()
         );
@@ -63,27 +63,29 @@ public class PaymentMemberServiceImpl implements PaymentMemberService {
                 purchaseId
         );
 
-        //포인트 사용
-        pointRecordService.save(
-                -1L * createPaymentMemberRequest.discountedPoint(),
-                createPaymentMemberRequest.orderId() + ":주문 사용",
-                createPaymentMemberRequest.memberId(),
-                purchaseId
-        );
+        //포인트 사용 0
+        if (createPaymentMemberRequest.discountedPoint() != 0) {
+            pointRecordService.save(
+                    -1L * createPaymentMemberRequest.discountedPoint(),
+                    createPaymentMemberRequest.orderId() + ":주문 사용",
+                    createPaymentMemberRequest.memberId(),
+                    purchaseId
+            );
+        }
 
         //쿠폰 사용
         Long couponId = couponMemberService
                 .readCoupon(createPaymentMemberRequest.couponFormId());
 
         couponMemberService.useCoupons(
-                couponId,
+                createPaymentMemberRequest.couponFormId(),
                 createPaymentMemberRequest.memberId()
         );
 
         purchaseCouponService.create(
                 purchaseId,
-                couponId,
-                createPaymentMemberRequest.discountedPrice() - createPaymentMemberRequest.discountedPoint()
+                createPaymentMemberRequest.couponFormId(),
+                createPaymentMemberRequest.discountedPrice()
         );
 
         return purchaseId;

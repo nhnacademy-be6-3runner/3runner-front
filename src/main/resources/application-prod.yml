@@ -22,4 +22,4 @@ management:
 
 feign:
   coupon:
-    url: coupon:8083
+    url: gateway:8080

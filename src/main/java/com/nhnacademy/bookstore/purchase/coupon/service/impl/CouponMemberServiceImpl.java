@@ -66,23 +66,23 @@ public class CouponMemberServiceImpl implements CouponMemberService {
     /**
      * 쿠폰 사용.
      *
-     * @param couponId 쿠폰아이디
+     * @param couponFormId 쿠폰아이디
      * @param memberId 맴버아이디
      * @return 쿠폰아이디
      */
     @Override
-    public Long useCoupons(Long couponId, Long memberId) {
+    public Long useCoupons(Long couponFormId, Long memberId) {
         Coupon coupon = couponRepository
-                .findById(couponId)
-                .orElseThrow(()-> new CouponDoesNotExistException(couponId + "쿠폰이 존재하지않습니다."));
+                .findCouponByCouponFormId(couponFormId)
+                .orElseThrow(()-> new CouponDoesNotExistException(couponFormId + "쿠폰이 존재하지않습니다."));
 
-        if (Objects.equals(coupon.getMember().getId(), memberId)) {
-            throw new CouponNotAllowedException(couponId + "쿠폰이 권한이 없습니다.");
+        if (!Objects.equals(coupon.getMember().getId(), memberId)) {
+            throw new CouponNotAllowedException(couponFormId + "쿠폰이 권한이 없습니다.");
         }
 
-        couponRepository.updateCouponStatus(CouponStatus.USED, couponId);
+        couponRepository.updateCouponStatus(CouponStatus.USED, couponFormId);
 
-        return couponId;
+        return couponFormId;
     }
 
     //TODO : 환불 구현시 필요

@@ -22,7 +22,7 @@ public interface CouponRepository extends JpaRepository<Coupon, Long> {
 
     @Modifying
     @Transactional
-    @Query(value = "UPDATE coupon SET coupon_status = :couponStatus WHERE id = :id LIMIT 1", nativeQuery = true)
+    @Query(value = "UPDATE coupon SET coupon_status = :couponStatus WHERE coupon_form_id = :id LIMIT 1", nativeQuery = true)
     int updateCouponStatus(@Param("couponStatus") CouponStatus couponStatus, @Param("id") Long id);
 
     Optional<Coupon> findCouponByCouponFormId(long couponFormId);

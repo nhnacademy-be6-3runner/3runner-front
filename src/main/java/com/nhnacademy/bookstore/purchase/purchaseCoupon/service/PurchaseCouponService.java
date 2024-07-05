@@ -5,6 +5,6 @@ import com.nhnacademy.bookstore.purchase.purchaseCoupon.dto.ReadPurchaseCouponRe
 import java.util.List;
 
 public interface PurchaseCouponService {
-    Long create(Long purchaseId, Long couponId, int discountPrice);
+    Long create(Long purchaseId, Long couponFormId, int discountPrice);
     List<ReadPurchaseCouponResponse> read(Long purchaseId);
 }

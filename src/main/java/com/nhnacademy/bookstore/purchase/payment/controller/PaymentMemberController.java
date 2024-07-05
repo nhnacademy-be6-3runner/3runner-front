@@ -35,11 +35,11 @@ public class PaymentMemberController {
 
     @RequestMapping(value = "/bookstore/payments/members/confirm")
     public ResponseEntity<JSONObject> confirmPayment(
-            @RequestHeader(value = "Member-Id",required = false) Long memberId,
+            @RequestHeader(value = "Member-Id", required = false) Long memberId,
             @RequestParam(required = false) String discountedPrice,
             @RequestParam(required = false) String discountedPoint,
             @RequestParam(required = false) String isPacking,
-            @RequestParam(required = false) String shippingDate,
+            @RequestParam(required = false) String shipping,
             @RequestParam(required = false) String road,
             @RequestParam(required = false) Long couponFormId,
             @RequestBody String jsonBody) throws Exception {
@@ -90,8 +90,7 @@ public class PaymentMemberController {
 
         // 결제 성공 및 실패 비즈니스 로직을 구현하세요.
         if (isSuccess) {
-            LocalDate localDate = LocalDate.parse(shippingDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-
+            LocalDate localDate = LocalDate.parse(shipping, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             paymentMemberService.payment(CreatePaymentMemberRequest.builder()
                             .memberId(memberId)
                             .discountedPoint(Integer.parseInt(discountedPoint))
@@ -103,7 +102,6 @@ public class PaymentMemberController {
                             .amount(Integer.parseInt(amount))
                             .orderId(orderId)
                     .build());
-
 
         } else {
             throw new TossPaymentException("토스 최종 결제가 실패하였습니다.");
