@@ -67,7 +67,7 @@ public class PurchaseBookServiceImpl implements PurchaseBookService {
 	}
 
 	@Override
-	public Page<ReadPurchaseBookResponse> readGuestBookByPurchaseResponses(String purchaseId, Long memberId, Pageable pageable) {
+	public Page<ReadPurchaseBookResponse> readGuestBookByPurchaseResponses(String purchaseId, Pageable pageable) {
 
 
 		return  purchaseBookCustomRepository.readGuestBookPurchaseResponses(purchaseId, pageable);

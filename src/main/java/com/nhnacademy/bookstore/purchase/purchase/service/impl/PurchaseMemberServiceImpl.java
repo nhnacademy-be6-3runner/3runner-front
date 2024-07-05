@@ -4,6 +4,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +33,7 @@ import lombok.RequiredArgsConstructor;
 public class PurchaseMemberServiceImpl implements PurchaseMemberService {
 	private final PurchaseRepository purchaseRepository;
 	private final MemberService memberService;
+	private final PasswordEncoder passwordEncoder;
 
     /**
      * 주문 생성.
@@ -42,19 +44,20 @@ public class PurchaseMemberServiceImpl implements PurchaseMemberService {
      */
     @Override
     public Long createPurchase(CreatePurchaseRequest createPurchaseRequest, Long memberId) {
-        Purchase purchase = new Purchase(
-                UUID.randomUUID(),
-                PurchaseStatus.PROCESSING,
-                3000,
-                createPurchaseRequest.totalPrice(),
-                ZonedDateTime.now(),
-                createPurchaseRequest.road(),
-                createPurchaseRequest.password(),
-                createPurchaseRequest.shippingDate(),
-                createPurchaseRequest.isPacking(),
-                MemberType.MEMBER,
-                memberService.readById(memberId)
-        );
+		Purchase purchase = new Purchase(
+			UUID.fromString(createPurchaseRequest.orderId()),
+			PurchaseStatus.PROCESSING,
+			createPurchaseRequest.deliveryPrice(),
+			createPurchaseRequest.totalPrice(),
+			ZonedDateTime.now(),
+			createPurchaseRequest.road(),
+			passwordEncoder.encode(createPurchaseRequest.password()),
+			createPurchaseRequest.shippingDate(),
+			createPurchaseRequest.isPacking(),
+			MemberType.MEMBER,
+			memberService.readById(memberId)
+
+		);
 
         if(purchaseRepository.existsPurchaseByOrderNumber(purchase.getOrderNumber())) {
             throw new PurchaseAlreadyExistException("주문 번호가 중복되었습니다.");
@@ -64,29 +67,29 @@ public class PurchaseMemberServiceImpl implements PurchaseMemberService {
         return purchase.getId();
     }
 
-    /**
-     * 주문 상태 업데이트.
-     *
-     * @param updatePurchaseRequest 주문수정폼
-     * @param memberId 맴버아이디
-     * @param purchaseId 주문아이디
-     * @return purchaseId
-     */
-    @Override
-    public Long updatePurchase(UpdatePurchaseMemberRequest updatePurchaseRequest, Long memberId, Long purchaseId) {
-        List<Purchase> purchaseList = purchaseRepository.findByMember(memberService.readById(memberId));
-        Purchase purchase = purchaseRepository.findById(purchaseId).orElseThrow(()-> new PurchaseDoesNotExistException(""));
+	/**
+	 * 주문 상태 업데이트.
+	 *
+	 * @param updatePurchaseRequest 주문수정폼
+	 * @param memberId 맴버아이디
+	 * @param purchaseId 주문아이디
+	 * @return purchaseId
+	 */
+	@Override
+	public Long updatePurchase(UpdatePurchaseMemberRequest updatePurchaseRequest, Long memberId, Long purchaseId) {
+		Purchase purchase = purchaseRepository.findById(purchaseId)
+			.orElseThrow(() -> new PurchaseDoesNotExistException(""));
 
-        if (!purchaseList.contains(purchase)) {
-            throw new PurchaseNoAuthorizationException("권한이 없습니다");
-        }
+		if (!purchase.getMember().getId().equals(memberId)) {
+			throw new PurchaseNoAuthorizationException("권한이 없습니다");
+		}
 
-        purchase.setStatus(PurchaseStatus.valueOf(updatePurchaseRequest.purchaseStatus()));
+		purchase.setStatus(PurchaseStatus.fromString(updatePurchaseRequest.purchaseStatus()));
 
-        purchaseRepository.save(purchase);
+		purchaseRepository.save(purchase);
 
-        return purchase.getId();
-    }
+		return purchase.getId();
+	}
 
 
     /**
@@ -115,25 +118,25 @@ public class PurchaseMemberServiceImpl implements PurchaseMemberService {
                 .password(purchase.getPassword())
                 .memberType(purchase.getMemberType())
                 .shippingDate(purchase.getShippingDate())
-                .isPacking(purchase.isPacking())
+                .isPacking(purchase.getIsPacking())
                 .build();
     }
 
-    /**
-     * 회원 주문 삭제.
-     *
-     * @param MemberId 회원 아이디
-     * @param purchaseId 주문 아이디
-     */
-    @Override
-    public void deletePurchase(Long MemberId, Long purchaseId) {
-        List<Purchase> purchaseList = purchaseRepository.findByMember(memberService.readById(MemberId));
-        Purchase purchase = purchaseRepository.findById(purchaseId).orElseThrow(()-> new PurchaseDoesNotExistException(""));
+	/**
+	 * 회원 주문 삭제.
+	 *
+	 * @param MemberId 회원 아이디
+	 * @param purchaseId 주문 아이디
+	 */
+	@Override
+	public void deletePurchase(Long MemberId, Long purchaseId) {
+		Purchase purchase = purchaseRepository.findById(purchaseId)
+			.orElseThrow(() -> new PurchaseDoesNotExistException(""));
 
-        if (!purchaseList.contains(purchase)) {
-            throw new PurchaseNoAuthorizationException("권한이 없습니다");
-        }
+		if (!purchase.getMember().getId().equals(MemberId)) {
+			throw new PurchaseNoAuthorizationException("권한이 없습니다");
+		}
 
-        purchaseRepository.delete(purchase);
-    }
+		purchaseRepository.delete(purchase);
+	}
 }
