@@ -35,7 +35,7 @@ public class PurchaseGuestController {
         model.addAttribute("cartId", cartId);
         model.addAttribute("orderNumber", UUID.randomUUID());
 
-        return "/purchase/guest/purchase";
+        return "purchase/guest/purchase";
     }
 
     /**
@@ -49,6 +49,6 @@ public class PurchaseGuestController {
     public String address(String roadFullAddr, Model model){
 
         model.addAttribute("roadFullAddr", roadFullAddr);
-        return "/purchase/guest/address";
+        return "purchase/guest/address";
     }
 }

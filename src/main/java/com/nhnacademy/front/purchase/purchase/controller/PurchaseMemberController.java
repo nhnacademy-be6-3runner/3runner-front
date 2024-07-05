@@ -51,16 +51,15 @@ public class PurchaseMemberController {
 
         ApiResponse.Body<List<ReadCouponFormResponse>> response = couponControllerClient.readCoupons().getBody();
 
-        //List<CouponDiscountPriceDto> validCoupons = purchaseCouponService.getValidCoupons(items, response);
+        List<CouponDiscountPriceDto> validCoupons = purchaseCouponService.getValidCoupons(items, response);
 
-        model.addAttribute("coupons", null);
-        //model.addAttribute("coupons", validCoupons);
+        model.addAttribute("coupons", validCoupons);
         model.addAttribute("response", items);
         model.addAttribute("addresses", addresses);
         model.addAttribute("memberInfo", memberInfo);
         model.addAttribute("orderNumber", UUID.randomUUID());
 
-        return "/purchase/member/purchase";
+        return "purchase/member/purchase";
     }
 
     @PostMapping("/purchases/members/addresses")
@@ -76,6 +75,6 @@ public class PurchaseMemberController {
 
         model.addAttribute("roadFullAddr", roadFullAddr);
 
-        return "/purchase/member/address";
+        return "purchase/member/address";
     }
 }
