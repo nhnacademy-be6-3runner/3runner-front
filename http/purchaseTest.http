@@ -6,7 +6,7 @@ Member-Id: 1
 ###
 POST http://localhost:8081/bookstore/members/purchases
 Content-Type: application/json
-Member-Id: 1
+Member-Id: 4
 
 {
 

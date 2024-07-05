@@ -94,38 +94,39 @@ public class PurchaseGuestServiceImpl implements PurchaseGuestService {
 	@SuppressWarnings("checkstyle:WhitespaceAround")
 	@Override
 	public ReadPurchaseResponse readPurchase(UUID orderNumber, String password) {
-		if(Boolean.FALSE.equals(validateGuest(orderNumber,password))){
+		if (Boolean.FALSE.equals(validateGuest(orderNumber, password))) {
 			return null;
 		}
 		Optional<Purchase> purchaseOptional = purchaseRepository.findPurchaseByOrderNumber(orderNumber);
 		Purchase purchase = validateGuest(purchaseOptional, password);
 
-        return ReadPurchaseResponse.builder()
-                .id(purchase.getId())
-                .status(purchase.getStatus())
-                .deliveryPrice(purchase.getDeliveryPrice())
-                .totalPrice(purchase.getTotalPrice())
-                .createdAt(purchase.getCreatedAt())
-                .road(purchase.getRoad())
-                .password(purchase.getPassword())
-                .memberType(purchase.getMemberType())
-                .isPacking(purchase.getIsPacking())
-                .shippingDate(purchase.getShippingDate())
-                .build();
-    }
+		return ReadPurchaseResponse.builder()
+			.id(purchase.getId())
+			.orderNumber(orderNumber)
+			.status(purchase.getStatus())
+			.deliveryPrice(purchase.getDeliveryPrice())
+			.totalPrice(purchase.getTotalPrice())
+			.createdAt(purchase.getCreatedAt())
+			.road(purchase.getRoad())
+			.password(purchase.getPassword())
+			.memberType(purchase.getMemberType())
+			.isPacking(purchase.getIsPacking())
+			.shippingDate(purchase.getShippingDate())
+			.build();
+	}
 
-    /**
-     * 비회원 주문 삭제.
-     *
-     * @param orderNumber 주문번호
-     * @param password 주문 비밀번호
-     */
-    @Override
-    public void deletePurchase(UUID orderNumber, String password) {
-        Optional<Purchase> purchaseOptional = purchaseRepository.findPurchaseByOrderNumber(orderNumber);
-        Purchase purchase = validateGuest(purchaseOptional, password);
-        purchaseRepository.delete(purchase);
-    }
+	/**
+	 * 비회원 주문 삭제.
+	 *
+	 * @param orderNumber 주문번호
+	 * @param password 주문 비밀번호
+	 */
+	@Override
+	public void deletePurchase(UUID orderNumber, String password) {
+		Optional<Purchase> purchaseOptional = purchaseRepository.findPurchaseByOrderNumber(orderNumber);
+		Purchase purchase = validateGuest(purchaseOptional, password);
+		purchaseRepository.delete(purchase);
+	}
 
 	/**
 	 * 비회원 주문 번호, 비밀번호 검증
@@ -148,14 +149,14 @@ public class PurchaseGuestServiceImpl implements PurchaseGuestService {
 
 	/**
 	 * 비회원 주문 인증
-	 * 
+	 *
 	 * @author 정주혁
 	 *
 	 * @param orderNumber 주문
 	 * @param password 비밀 번호
 	 * @return 인증->완 boolean 불가-> false
 	 */
-    @Override
+	@Override
 	public Boolean validateGuest(UUID orderNumber, String password) {
 		Purchase purchase = purchaseRepository.findPurchaseByOrderNumber(orderNumber).orElse(null);
 		if (purchase == null) {
