@@ -5,7 +5,7 @@ import lombok.Builder;
 import java.time.ZonedDateTime;
 
 /**
- * 리뷰 상세 조회 dto 입니다.
+ * 사용자에게 보여줄 리뷰 response 입니다.
  *
  * @param bookId
  * @param bookTitle
@@ -17,10 +17,11 @@ import java.time.ZonedDateTime;
  * @param createdAt
  * @param updated
  * @param updatedAt
+ * @param reviewLike
  * @author 김은비
  */
 @Builder
-public record ReviewDetailResponse(
+public record UserReadReviewResponse(
         long bookId,
         String bookTitle,
         long reviewId,
@@ -29,7 +30,8 @@ public record ReviewDetailResponse(
         double ratings,
         String memberEmail,
         ZonedDateTime createdAt,
-        boolean updated, // 수정 여부
-        ZonedDateTime updatedAt // 수정 시간
+        boolean updated,
+        ZonedDateTime updatedAt,
+        long reviewLike
 ) {
 }
