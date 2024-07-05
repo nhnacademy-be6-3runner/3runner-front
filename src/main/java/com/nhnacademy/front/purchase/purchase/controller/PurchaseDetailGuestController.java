@@ -1,5 +1,7 @@
 package com.nhnacademy.front.purchase.purchase.controller;
 
+import java.util.Objects;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.nhnacademy.front.purchase.purchase.dto.response.ReadPurchaseResponse;
 import com.nhnacademy.front.purchase.purchase.service.PurchaseDetailGuestService;
 
 import lombok.RequiredArgsConstructor;
@@ -46,7 +49,11 @@ public class PurchaseDetailGuestController {
 		@RequestParam(defaultValue = "30", required = false) int size,
 		@RequestParam(required = false) String sort,
 		Model model) {
-		model.addAttribute("guestorder",purchaseGuestService.readGuestPurchases(orderNumber,password));
+		ReadPurchaseResponse response = purchaseGuestService.readGuestPurchases(orderNumber,password);
+		if(Objects.isNull(response)){
+			return "redirect:/orders/guests/login";
+		}
+		model.addAttribute("guestorder",response);
 		model.addAttribute("guestorderbooks",purchaseGuestService.readGuestPurchaseBooks(orderNumber,page,size,sort));
 		return "/purchase/guest/order-detail-guest";
 	}
@@ -83,7 +90,7 @@ public class PurchaseDetailGuestController {
 		}
 		else{
 			model.addAttribute("message", "주문번호 또는 비밀번호가 틀렸습니다.");
-			return "redirect:/guest/orders/login";
+			return "redirect:/orders/guests/login";
 		}
 
 

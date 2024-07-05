@@ -2,7 +2,7 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>개인화 섹션</title>
+    <title>주문</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/order-detail.css">
 </head>
@@ -37,7 +37,19 @@
                 <form method="post" th:action="@{'/orders/members/{purchaseId}' (purchaseId = ${order.id()})}">
                     <button type="submit" class="confirm-order-btn" th:if="${order.status.toString() != 'CONFIRMED'}"  >주문 확정</button>
                 </form>
-                <button class="refund-btn" th:if="${order.status.toString() == 'COMPLETED'}" th:attr="data-order-id=${order.orderNumber}">결제 취소</button>
+                <!-- 결제 취소 버튼 (COMPLETED 상태인 경우) -->
+                <button class="refund-btn"
+                        th:if="${guestorder.status.toString() == 'COMPLETED'}"
+                        th:attr="data-order-id=${guestorder.orderNumber}"
+                        th:text="'결제 취소'">
+                </button>
+
+                <!-- 환불 버튼 (COMPLETED가 아니고 CONFIRMED 상태가 아닌 경우) -->
+                <button class="refund-btn"
+                        th:if="${guestorder.status.toString() != 'COMPLETED' && guestorder.status.toString() != 'CONFIRMED'}"
+                        th:attr="data-order-id=${guestorder.orderNumber}"
+                        th:text="'환불'">
+                </button>
             </div>
         </li>
         <div class="text-center mt-4">
