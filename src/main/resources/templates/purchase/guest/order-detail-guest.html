@@ -19,17 +19,21 @@
     </div>
     <div>
         <p>상태:</p>
-        <p th:text="${guestorder.status.toString()}" >상태</p>
+        <p th:text="${guestorder.status.toString()}">상태</p>
     </div>
     <div>
         <p>총 금액:</p>
         <p th:text="${guestorder.totalPrice()}+' ₩'">총 금액</p>
     </div>
 </div>
-<form method="post" th:action="@{'/orders/guests/{purchaseId}' (purchaseId = ${guestorder.orderNumber().toString()})}">
-    <button type="submit" class="confirm-order-btn" th:if="${guestorder.status.toString() != 'CONFIRMED'}"  >주문 확정</button>
+
+<form method="post"
+      th:action="@{'/orders/guests/{purchaseId}' (purchaseId = ${guestorder.orderNumber().toString()})}">
+    <button type="submit" class="confirm-order-btn" th:if="${guestorder.status.toString() != 'CONFIRMED'}">주문 확정
+    </button>
 </form>
-<!-- 결제 취소 버튼 (COMPLETED 상태인 경우) -->
+
+<!-- 결제 취소 버튼 (COMPLETED 상태인 경우)-->
 <button class="refund-btn"
         th:if="${guestorder.status.toString() == 'COMPLETED'}"
         th:attr="data-order-id=${guestorder.orderNumber}"
@@ -42,7 +46,6 @@
         th:attr="data-order-id=${guestorder.orderNumber}"
         th:text="'환불'">
 </button>
-
 
 
 <div class="order-details">
@@ -90,7 +93,7 @@
     const purchaseId = document.body.getAttribute('data-purchase-id');
 
     function loadBooks(page, size) {
-        window.location.href = `/guest/orders/${orderNumber}?page=${page}&size=${size}`;
+        window.location.href = `/orders/guests/${orderNumber}?page=${page}&size=${size}`;
     }
 </script>
 
