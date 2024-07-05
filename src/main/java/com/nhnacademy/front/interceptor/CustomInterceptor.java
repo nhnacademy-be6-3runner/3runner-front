@@ -40,6 +40,11 @@ public class CustomInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws
 		Exception {
+
+		if(CorsUtils.isCorsRequest(request)){
+			return true;
+		}
+
 		Optional<Cookie[]> cookies = Optional.ofNullable(request.getCookies());
 
 		if (cookies.isPresent()) {
@@ -83,10 +88,6 @@ public class CustomInterceptor implements HandlerInterceptor {
 			}
 		}
 		log.warn("Interceptor, Access Token 확인 {}", TokenHolder.getAccessToken());
-
-		if(CorsUtils.isCorsRequest(request)){
-			return HandlerInterceptor.super.preHandle(request, response, handler);
-		}
 
 		return HandlerInterceptor.super.preHandle(request, response, handler);
 	}
