@@ -284,7 +284,6 @@
         document.getElementById('content').value = editor.getHTML();
         console.log('폼 내용:', document.getElementById('content').value);
 
-
         const purchaseId = window.location.pathname.split('/')[1];
         const url = `/${purchaseId}/review`;
 
@@ -301,7 +300,7 @@
             })
             .catch((error) => {
                 console.error('Error:', error);
-                alert('리뷰 등록에 실패했습니다.');
+                alert('리뷰 등록 생성');
             });
     });
 </script>
