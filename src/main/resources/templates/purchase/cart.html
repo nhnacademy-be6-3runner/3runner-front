@@ -134,8 +134,7 @@
         }
         quantityInput.value = newQuantity;
 
-        var url = 'http://localhost:8080/bookstore/carts';
-        //var url = 'http://133.186.143.40/bookstore/carts';
+        var url = 'http://133.186.143.40:8080/bookstore/carts';
         var method = 'PUT';
         var cartIdElement = document.getElementById('cartId').value;
 
@@ -207,7 +206,7 @@
     }
     function deleteItem(bookCartId, cartId) {
         $.ajax({
-            url: 'http://localhost:8080/bookstore/carts',
+            url: 'http://133.186.143.40:8080/bookstore/carts',
             type: 'DELETE',
             contentType: 'application/json',
             data: JSON.stringify({bookCartId:parseInt(bookCartId), cartId: parseInt(cartId)}),
@@ -225,7 +224,7 @@
 
     function deleteAll(cartId) {
         $.ajax({
-            url: 'http://localhost:8080/bookstore/carts/'+cartId,
+            url: 'http://133.186.143.40:8080/bookstore/carts/'+cartId,
             type: 'DELETE',
             success: function(response) {
                 console.log(response);
