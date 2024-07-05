@@ -26,73 +26,74 @@ import java.util.List;
 @Getter
 @Setter
 public class Member {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @NotNull
-    private String password;
+	@NotNull
+	@Size(min = 6, max = 255)
+	private String password;
 
-    @NotNull
-    private Long point;
+	@NotNull
+	private Long point;
 
-    @NotNull
-    @Size(min = 1, max = 10)
-    private String name;
+	@NotNull
+	@Size(min = 1, max = 255)
+	private String name;
 
-    private int age;
+	private int age;
 
-    @NotNull
-    @Size(min = 1, max = 11)
-    private String phone;
+	@NotNull
+	@Size(min = 1, max = 11)
+	private String phone;
 
-    @NotNull
-    @Column(unique = true)
-    private String email;
+	@NotNull
+	@Column(unique = true)
+	private String email;
 
-    private ZonedDateTime birthday;
+	private ZonedDateTime birthday;
 
-    @NotNull
-    private Grade grade;
+	@NotNull
+	private Grade grade;
 
-    @NotNull
-    private Status status;
+	@NotNull
+	private Status status;
 
-    private ZonedDateTime lastLoginDate;
+	private ZonedDateTime lastLoginDate;
 
-    @NotNull
-    private ZonedDateTime createdAt;
+	@NotNull
+	private ZonedDateTime createdAt;
 
-    private ZonedDateTime modifiedAt;
-    private ZonedDateTime deletedAt;
+	private ZonedDateTime modifiedAt;
+	private ZonedDateTime deletedAt;
 
-    private AuthProvider authProvider;
+	private AuthProvider authProvider;
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Address> addressList = new ArrayList<>();
+	@OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Address> addressList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MemberAuth> memberAuthList = new ArrayList<>();
+	@OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<MemberAuth> memberAuthList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PointRecord> pointRecordList = new ArrayList<>();
+	@OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<PointRecord> pointRecordList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Purchase> purchaseList = new ArrayList<>();
+	@OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Purchase> purchaseList = new ArrayList<>();
 
-    public Member(CreateMemberRequest request) {
-        this.setPassword(request.password());
-        this.setPoint(5000L);
-        this.setName(request.name());
-        this.setAge(request.age());
-        this.setStatus(Status.Active);
-        this.setPhone(request.phone());
-        this.setEmail(request.email());
-        this.setBirthday(request.birthday());
-        this.setGrade(Grade.General);
-        this.setCreatedAt(ZonedDateTime.now());
-        this.setAuthProvider(AuthProvider.GENERAL);
-    }
+	public Member(CreateMemberRequest request) {
+		this.setPassword(request.password());
+		this.setPoint(5000L);
+		this.setName(request.name());
+		this.setAge(request.age());
+		this.setStatus(Status.Active);
+		this.setPhone(request.phone());
+		this.setEmail(request.email());
+		this.setBirthday(request.birthday());
+		this.setGrade(Grade.General);
+		this.setCreatedAt(ZonedDateTime.now());
+		this.setAuthProvider(AuthProvider.GENERAL);
+	}
 
     /**
      * 멤버 권한 추가 메서드입니다.
