@@ -15,7 +15,7 @@ public class PointPolicyController {
     private final PointPolicyService pointPolicyService;
 
     @PostMapping("/bookstore/points/policies")
-    private ApiResponse<Long> saveOrUpdatePolicy(
+    public ApiResponse<Long> saveOrUpdatePolicy(
             @RequestBody PointPolicyResponseRequest pointPolicyResponseRequest) {
 
         return ApiResponse.success(pointPolicyService.update(pointPolicyResponseRequest.policyKey(), pointPolicyResponseRequest.policyValue()));
@@ -23,7 +23,7 @@ public class PointPolicyController {
 
 
     @GetMapping("/bookstore/points/policies")
-    private ApiResponse<List<PointPolicyResponseRequest>> readPolicy() {
+    public ApiResponse<List<PointPolicyResponseRequest>> readPolicy() {
         return ApiResponse.success(pointPolicyService.readAll());
     }
 
