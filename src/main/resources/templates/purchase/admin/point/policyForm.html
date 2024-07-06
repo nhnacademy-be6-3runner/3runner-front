@@ -1,0 +1,87 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!-- Custom styles for this template -->
+    <link href="/css/jumbotron-narrow.css" rel="stylesheet">
+
+    <title>쿠폰 폼</title>
+</head>
+<style>
+    .fieldError {
+        border-color: #bd2130;
+    }
+</style>
+<body>
+
+<div class="container">
+    <form role="form" method="post">
+        <div class="form-group">
+            <label>이름
+                <input type="text"  class="form-control" placeholder="이름을 입력하세요">
+            </label>
+            <!--            <p th:if="${#fields.hasErrors('form1.wooparooNameKr')}" th:errors="${form1.wooparooNameKr}">Incorrect date</p>-->
+        </div>
+        <div class="form-group">
+            <label>
+                <select class="form-control">
+                    <option value="">속성선택</option>
+                    <option value="fire">불</option>
+                    <option value="water">물</option>
+                    <option value="wind">바람</option>
+                    <option value="ice">얼음</option>
+                    <option value="earth">땅</option>
+                    <option value="grass">풀</option>
+                    <option value="thunder">번개</option>
+                    <option value="magic">매직</option>
+                </select>
+            </label>
+        </div>
+
+        <div class="form-group">
+            <label>
+                <select class="form-control">
+                    <option value="">속성선택</option>
+                    <option value="fire">불</option>
+                </select>
+            </label>
+        </div>
+        <div class="form-group">
+            <label>
+                <select class="form-control">
+                    <option value="">속성선택</option>
+                    <option value="fire">불</option>
+                    <option value="water">물</option>
+                </select>
+            </label>
+        </div>
+        <div class="form-group">
+            <label th:for="time">시간
+                <input type="text" class="form-control" placeholder="시간을 입력하세요">
+                <!--                       th:class="${#fields.hasErrors('form1.wooparooNameKr')}? 'form-control fieldError' : 'form-control'">-->
+            </label>
+            <!--            <p th:if="${#fields.hasErrors('form1.wooparooNameKr')}" th:errors="${form1.wooparooNameKr}">Incorrect date</p>-->
+        </div>
+        <div class="form-group">
+            <label th:for="status">상태
+                <input type="text" class="form-control" placeholder="상태를 입력하세요">
+                <!--                       th:class="${#fields.hasErrors('form1.wooparooNameKr')}? 'form-control fieldError' : 'form-control'">-->
+            </label>
+            <!--            <p th:if="${#fields.hasErrors('form1.wooparooNameKr')}" th:errors="${form1.wooparooNameKr}">Incorrect date</p>-->
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    <br/>
+</div> <!-- /container -->
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

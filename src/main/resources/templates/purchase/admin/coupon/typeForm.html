@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Coupon Types</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .table th, .table td {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .table th {
+            width: 150px;
+        }
+        .table td {
+            width: 200px;
+        }
+        .table th:last-child, .table td:last-child {
+            width: auto;
+        }
+        .fieldError {
+            border-color: #bd2130;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+<!--    <div th:if="${#fields.hasGlobalErrors()}">-->
+<!--        <p class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">글로벌 오류 메시지</p>-->
+<!--    </div>-->
+
+    <h1 class="mt-5">Create Fixed Coupon</h1>
+    <form action="/admin/coupons/types/fixes" method="post" class="mt-3">
+        <div class="form-group">
+            <label for="discountPrice">Discount Price</label>
+            <input type="number" class="form-control" id="discountPrice" name="discountPrice" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Create Fixed Coupon</button>
+    </form>
+
+
+    <h1 class="mt-5">Create Ratio Coupon</h1>
+    <form action="/admin/coupons/types/ratios" method="post" class="mt-3">
+        <div class="form-group">
+            <label for="discountRate">Discount Rate</label>
+            <input type="number" step="0.01" class="form-control" id="discountRate" name="discountRate" required>
+        </div>
+        <div class="form-group">
+            <label for="discountMaxPrice">Discount Max Price</label>
+            <input type="number" class="form-control" id="discountMaxPrice" name="discountMaxPrice" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Create Ratio Coupon</button>
+    </form>
+
+
+
+
+    <a class="btn btn-secondary" href="/purchase/admin">돌아가기</a>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
