@@ -84,8 +84,9 @@
                             <input type="number" class="form-control mx-2 quantity-input" th:value="${item.quantity}" th:id="'quantity-' + ${iter.index}" style="width: 80px;" readonly>
                         </label>
                         <button class="btn btn-outline-secondary" th:attr="onclick='updateQuantity(' + ${iter.index} + ', 1)'">+</button>
-                        <span th:if="${item.leftQuantity != null and item.quantity != null and item.leftQuantity - item.quantity < 0}">재고가 없습니다.</span>
                     </div>
+                    <p>책 잔여 수량 : <span th:text="${item.leftQuantity}"></span></p>
+                    <span th:if="${item.leftQuantity != null and item.quantity != null and item.leftQuantity - item.quantity < 0}">재고가 없습니다.</span>
                 </div>
             </div>
             <div class="cart-item-actions">
