@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -39,6 +40,12 @@ public class PointPolicyServiceImpl implements PointPolicyService {
                 .map(o->PointPolicyResponseRequest.builder()
                         .policyKey(o.getPolicyName()).policyValue(o.getPolicyValue()).build())
                 .toList();
+    }
+
+    @Override
+    public PointPolicyResponseRequest read(String key) {
+        PointPolicy pointPolicy = pointPolicyRepository.findByPolicyName(key).orElseThrow();
+        return PointPolicyResponseRequest.builder().policyValue(pointPolicy.getPolicyValue()).policyKey(pointPolicy.getPolicyName()).build();
     }
 
     private PointPolicy saveAndReturnPolicy(String key, Integer value) {

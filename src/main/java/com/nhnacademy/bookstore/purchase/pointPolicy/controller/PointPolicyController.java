@@ -27,4 +27,9 @@ public class PointPolicyController {
         return ApiResponse.success(pointPolicyService.readAll());
     }
 
+    @GetMapping("/bookstore/points/policies/{policyKey}")
+    public ApiResponse<PointPolicyResponseRequest> readOne(@PathVariable String policyKey) {
+        return ApiResponse.success(pointPolicyService.read(policyKey));
+    }
+
 }
