@@ -136,5 +136,4 @@ public class CategoryController {
 		categoryService.deleteCategory(categoryId);
 		return new ApiResponse<>(new ApiResponse.Header(true, 204));
 	}
-
 }

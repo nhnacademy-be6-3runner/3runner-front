@@ -149,6 +149,5 @@ public class CategoryServiceImpl implements CategoryService {
 			}
 		}
 		return rootList;
-
 	}
 }

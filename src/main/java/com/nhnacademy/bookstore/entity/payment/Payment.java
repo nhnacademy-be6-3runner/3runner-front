@@ -2,7 +2,6 @@ package com.nhnacademy.bookstore.entity.payment;
 
 import com.nhnacademy.bookstore.entity.purchase.Purchase;
 import com.nhnacademy.bookstore.entity.payment.enums.PaymentStatus;
-import com.nhnacademy.bookstore.entity.paymentType.PaymentType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
