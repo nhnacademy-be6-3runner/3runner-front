@@ -12,5 +12,6 @@ public record CreatePaymentGuestRequest(
         ZonedDateTime shippingDate,
         String road,
         String orderId,
-        String password) {
+        String password,
+        String paymentKey) {
     }
