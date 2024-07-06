@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!-- Custom styles for this template -->
+    <link href="/css/jumbotron-narrow.css" rel="stylesheet">
+
+    <title>쿠폰 리스트</title>
+</head>
+<style>
+    .fieldError {
+        border-color: #bd2130;
+    }
+</style>
+<body>
+
+<div class="container">
+    <div>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>우파루 이름</th>
+                <th>속성1</th>
+                <th>속성2</th>
+                <th>속성3</th>
+                <th>크로스 시간</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!--            <tr th:each="wooparoo : ${wooparoos}">-->
+            <!--                <td th:text="${wooparoo.wooparooNameKr}"></td>-->
+            <!--                <td th:text="${wooparoo.type1}"></td>-->
+            <!--                <td th:text="${wooparoo.type2}"></td>-->
+            <!--                <td th:text="${wooparoo.type3}"></td>-->
+            <!--                <td th:text="${wooparoo.time}"></td>-->
+            <!--                <td>-->
+            <!--                    <a href="#" th:href="@{/admin/{id}/edit (id=${wooparoo.id})}" class="btn btn-primary" role="button">수정</a>-->
+            <!--                </td>-->
+            <!--            </tr>-->
+            </tbody>
+        </table>
+    </div>
+
+    <a class="btn btn-lg btn-secondary" href="/admin">돌아가기</a>
+</div> <!-- /container -->
+
+</body>
+</html>
