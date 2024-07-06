@@ -93,6 +93,7 @@ public class PaymentGuestController {
                     .isPacking(Boolean.valueOf(isPacking))
                     .orderId(orderId)
                     .road(address)
+                            .paymentKey(paymentKey)
                     .build()
             );
 

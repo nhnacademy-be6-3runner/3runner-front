@@ -101,6 +101,7 @@ public class PaymentMemberController {
                             .couponFormId(couponFormId)
                             .amount(Integer.parseInt(amount))
                             .orderId(orderId)
+                            .paymentKey(paymentKey)
                     .build());
 
         } else {

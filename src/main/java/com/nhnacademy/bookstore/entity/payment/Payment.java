@@ -6,6 +6,7 @@ import com.nhnacademy.bookstore.entity.paymentType.PaymentType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.ZonedDateTime;
@@ -13,6 +14,7 @@ import java.time.ZonedDateTime;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,6 +42,12 @@ public class Payment {
     @OneToOne
     private Purchase purchase;
 
-    @ManyToOne
-    private PaymentType paymentType;
+    public Payment(String tossOrderId, int tossAmount, int tossAmountTasFree, String tossProductDesc, PaymentStatus paymentStatus, Purchase purchase) {
+        this.tossOrderId = tossOrderId;
+        this.tossAmount = tossAmount;
+        this.tossAmountTasFree = tossAmountTasFree;
+        this.tossProductDesc = tossProductDesc;
+        this.paymentStatus = paymentStatus;
+        this.purchase = purchase;
+    }
 }
