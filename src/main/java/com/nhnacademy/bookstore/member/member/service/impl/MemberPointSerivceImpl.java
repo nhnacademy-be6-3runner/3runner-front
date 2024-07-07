@@ -2,11 +2,13 @@ package com.nhnacademy.bookstore.member.member.service.impl;
 
 import com.nhnacademy.bookstore.entity.member.Member;
 import com.nhnacademy.bookstore.entity.pointPolicy.PointPolicy;
+import com.nhnacademy.bookstore.entity.pointRecord.PointRecord;
 import com.nhnacademy.bookstore.member.member.dto.response.GetMemberResponse;
 import com.nhnacademy.bookstore.member.member.dto.response.ReadMemberResponse;
 import com.nhnacademy.bookstore.member.member.exception.MemberNotExistsException;
 import com.nhnacademy.bookstore.member.member.repository.MemberRepository;
 import com.nhnacademy.bookstore.member.member.service.MemberPointService;
+import com.nhnacademy.bookstore.member.pointRecord.repository.PointRecordRepository;
 import com.nhnacademy.bookstore.member.pointRecord.service.PointRecordService;
 import com.nhnacademy.bookstore.purchase.pointPolicy.exception.PointPolicyDoesNotExistException;
 import com.nhnacademy.bookstore.purchase.pointPolicy.repository.PointPolicyRepository;
@@ -27,7 +29,7 @@ import java.util.List;
 public class MemberPointSerivceImpl implements MemberPointService {
     private final MemberRepository memberRepository;
     private final PointPolicyRepository pointPolicyRepository;
-    private final PointRecordService pointRecordService;
+    private final PointRecordRepository pointRecordRepository;
 
     /**
      * 맴버 포인트 업데이트.
@@ -63,16 +65,16 @@ public class MemberPointSerivceImpl implements MemberPointService {
     }
 
     @Override
-    public void welcomePoint(Long memberId) {
+    public void welcomePoint(Member member) {
         PointPolicy pointPolicy = pointPolicyRepository
                 .findByPolicyName("회원가입포인트").orElseThrow(()->new PointPolicyDoesNotExistException("포인트 정책이 없습니다"));
         final long POINT_RATE = pointPolicy.getPolicyValue();
         //포인트 적립
-        pointRecordService.save(
+        pointRecordRepository.save(new PointRecord(
                 POINT_RATE,
                 "회원가입 적립",
-                memberId,
-                null
+                member,
+                null)
         );
 
     }
