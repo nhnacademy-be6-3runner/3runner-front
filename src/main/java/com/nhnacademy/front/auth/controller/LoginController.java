@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.nhnacademy.front.auth.dto.request.LoginRequest;
 import com.nhnacademy.front.auth.dto.response.LoginResponse;
 import com.nhnacademy.front.auth.service.LoginService;
-import com.nhnacademy.front.threadlocal.TokenHolder;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -38,9 +37,9 @@ public class LoginController {
 		boolean loginStatus = loginService.checkLoginStatus();
 		log.warn("login status: {}", loginStatus);
 
-		if (loginStatus) {
-			return "redirect:/";
-		}
+		// if (loginStatus) {
+		// 	return "redirect:/";
+		// }
 		return "login-form";
 	}
 
@@ -57,9 +56,11 @@ public class LoginController {
 		HttpServletResponse response) {
 		LoginResponse loginResponse = loginService.getLoginResponse(new LoginRequest(email, password));
 
+		//TODO 나중에 삭제
+		log.info("loginResponse:뭐니 : {}", loginResponse);
 		// 쿠키로 저장
-		response.addCookie(new Cookie("Access", TokenHolder.getAccessToken()));
-		response.addCookie(new Cookie("Refresh", TokenHolder.getRefreshToken()));
+		// response.addCookie(new Cookie("Access", TokenHolder.getAccessToken()));
+		// response.addCookie(new Cookie("Refresh", TokenHolder.getRefreshToken()));
 
 		return "redirect:/";
 	}

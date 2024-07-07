@@ -12,4 +12,5 @@ import com.nhnacademy.front.util.ApiResponse;
 public interface LoginAdapter {
 	@PostMapping("/auth/login")
 	ApiResponse<LoginResponse> login(LoginRequest loginRequest);
+
 }
