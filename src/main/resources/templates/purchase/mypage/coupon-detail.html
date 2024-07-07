@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Coupon Details</title>
+    <link rel="stylesheet" href="/css/styles.css"> <!-- Link your CSS file if you have one -->
+</head>
+<body>
+<div class="container">
+    <h1>Coupon Details</h1>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Coupon ID</th>
+            <th>Purchase ID</th>
+            <th>Order Number</th>
+            <th>Discount Price</th>
+            <th>Status</th>
+            <th>Created At</th>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Usage</th>
+            <th>code</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="coupon : ${responses}">
+            <td th:text="${coupon.couponId()}"></td>
+            <td th:text="${coupon.purchaseId()}"></td>
+            <td th:text="${coupon.orderNumber()}"></td>
+            <td th:text="${coupon.discountPrice()}"></td>
+            <td th:text="${coupon.status()}"></td>
+            <td th:text="${coupon.createdAt()}"></td>
+            <td th:text="${coupon.name()}"></td>
+            <td th:text="${coupon.type()}"></td>
+            <td th:text="${coupon.usage()}"></td>
+            <td th:text="${coupon.code()}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="pagination">
+        <a th:if="${responses.hasPrevious()}" th:href="@{/orders/coupons(page=${responses.number - 1}, size=${responses.size})}">Previous</a>
+        <span th:text="${responses.number + 1}"></span> / <span th:text="${responses.totalPages}"></span>
+        <a th:if="${responses.hasNext()}" th:href="@{/orders/coupons(page=${responses.number + 1}, size=${responses.size})}">Next</a>
+    </div>
+</div>
+</body>
+</html>

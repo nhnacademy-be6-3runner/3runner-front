@@ -1,4 +1,4 @@
-package com.nhnacademy.front.purchase.purchase.dto.coupon.response;
+package com.nhnacademy.front.purchase.mypage.dto.response;
 
 import lombok.Builder;
 
@@ -14,10 +14,16 @@ import java.time.ZonedDateTime;
  * @param couponId 쿠폰아이디
  */
 @Builder
-public record ReadPurchaseCouponResponse(
+public record ReadPurchaseCouponDetailResponse(
         Long purchaseCouponId,
         int discountPrice,
         String status,
         Long purchaseId,
-        Long couponId) {
+        Long couponId,
+        String orderNumber,
+        ZonedDateTime createdAt,
+        String name,
+        String type,
+        String usage,
+        String code) {
     }
