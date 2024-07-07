@@ -67,6 +67,13 @@ body {
     width: 100%;
 }
 
+/* Add this to your existing CSS if you want to style the hr tag */
+hr {
+    border: 1px solid #ddd;
+    margin: 1rem 0;
+}
+
+
 .sidebar {
     height: 100vh;
     position: fixed;

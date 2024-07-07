@@ -32,8 +32,8 @@ public class AdminCouponPolicyServiceImpl implements AdminCouponPolicyService {
     }
 
     @Override
-    public Page<BookListResponse> getBookes(int size, int page) {
-        return bookControllerClient.readAllBooks(page, size).getBody().getData();
+    public Page<BookListResponse> getBookes(int size, int page, String sort) {
+        return bookControllerClient.readAllBooks(page, size, sort).getBody().getData();
     }
 
     @Override

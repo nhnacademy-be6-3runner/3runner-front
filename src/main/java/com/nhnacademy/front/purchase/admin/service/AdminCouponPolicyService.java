@@ -18,7 +18,7 @@ import java.util.List;
 
 public interface AdminCouponPolicyService {
     List<CategoryParentWithChildrenResponse> getCategories();
-    Page<BookListResponse> getBookes(int size, int page);
+    Page<BookListResponse> getBookes(int size, int page, String sort);
 
     List<ReadCouponUsageResponse> getUsages();
     List<ReadCouponTypeResponse> getTypes();
