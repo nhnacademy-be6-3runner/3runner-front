@@ -20,6 +20,7 @@ import com.nhnacademy.bookstore.entity.review.Review;
 import com.nhnacademy.bookstore.entity.review.enums.ReviewStatus;
 import com.nhnacademy.bookstore.member.member.dto.request.CreateMemberRequest;
 import com.nhnacademy.bookstore.member.member.repository.MemberRepository;
+import com.nhnacademy.bookstore.member.pointRecord.repository.PointRecordRepository;
 import com.nhnacademy.bookstore.purchase.purchaseBook.repository.PurchaseBookRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -61,6 +62,9 @@ class ReviewServiceTest {
 
     @Mock
     private PurchaseBookRepository purchaseBookRepository;
+
+    @Mock
+    private PointRecordRepository pointRecordRepository;
 
     @InjectMocks
     private ReviewServiceImpl reviewService;

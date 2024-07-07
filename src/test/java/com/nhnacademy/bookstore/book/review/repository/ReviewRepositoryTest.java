@@ -11,6 +11,7 @@ import com.nhnacademy.bookstore.entity.purchase.enums.PurchaseStatus;
 import com.nhnacademy.bookstore.entity.purchaseBook.PurchaseBook;
 import com.nhnacademy.bookstore.entity.review.Review;
 import com.nhnacademy.bookstore.member.member.dto.request.CreateMemberRequest;
+import com.nhnacademy.bookstore.member.pointRecord.repository.PointRecordRepository;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -40,6 +41,9 @@ class ReviewRepositoryTest {
 
     @Autowired
     private ReviewRepository reviewRepository;
+
+    @Autowired
+    private PointRecordRepository pointRecordRepository;
 
     private PurchaseBook purchaseBook;
     private Member member;
