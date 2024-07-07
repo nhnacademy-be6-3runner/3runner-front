@@ -13,4 +13,5 @@ import java.util.List;
 public interface MemberPointService {
     Long updatePoint(Long memberId, Long usePoint);
     List<ReadMemberResponse> readAll();
+    void welcomePoint(Long memberId);
 }

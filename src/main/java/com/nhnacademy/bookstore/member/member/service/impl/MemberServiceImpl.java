@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import com.nhnacademy.bookstore.member.auth.repository.AuthRepository;
 import com.nhnacademy.bookstore.member.member.dto.request.UpdatePasswordRequest;
 import com.nhnacademy.bookstore.member.member.exception.GeneralNotPayco;
+import com.nhnacademy.bookstore.member.member.service.MemberPointService;
 import com.nhnacademy.bookstore.member.memberAuth.repository.MemberAuthRepository;
 import com.nhnacademy.bookstore.purchase.coupon.service.CouponMemberService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -48,9 +49,12 @@ public class MemberServiceImpl implements MemberService {
 	private final AuthRepository authRepository;
 	private final MemberAuthRepository memberAuthRepository;
 	/**
-	 * 웰컴 쿠폰 구현 서비스.
+	 * 웰컴 쿠폰 구현 서비스, 포인트 서비스
 	 */
 	private final CouponMemberService couponMemberService;
+	private final MemberPointService memberPointService;
+
+
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	@Override
 	public Member saveOrGetPaycoMember(UserProfile userProfile) {
@@ -70,13 +74,15 @@ public class MemberServiceImpl implements MemberService {
 			member.setStatus(Status.Active);
 			member.setName(userProfile.getName()!=null? userProfile.getName() : "Payco");
 			member.setPhone(userProfile.getMobile()!=null? userProfile.getMobile() : "EmptyNumber");
-			member.setPoint(5000L);
+			member.setPoint(0L);
 			member.setCreatedAt(ZonedDateTime.now());
 			member.setLastLoginDate(ZonedDateTime.now());
 			member.setAuthProvider(AuthProvider.PAYCO);
 			memberRepository.save(member);
 			//없는경우 새로 가져온다.
-			couponMemberService.issueWelcomeCoupon(member);
+
+			//couponMemberService.issueWelcomeCoupon(member);
+			//memberPointService.welcomePoint(member.getId());
 		}
 		return null;
 	}
@@ -100,6 +106,7 @@ public class MemberServiceImpl implements MemberService {
 		}
 
 		//couponMemberService.issueWelcomeCoupon(member);
+		//memberPointService.welcomePoint(member.getId());
 		return memberRepository.save(member);
 	}
 

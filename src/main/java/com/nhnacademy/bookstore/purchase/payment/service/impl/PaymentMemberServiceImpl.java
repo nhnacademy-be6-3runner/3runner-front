@@ -5,6 +5,7 @@ import com.nhnacademy.bookstore.book.book.repository.BookRepository;
 import com.nhnacademy.bookstore.entity.book.Book;
 import com.nhnacademy.bookstore.entity.payment.Payment;
 import com.nhnacademy.bookstore.entity.payment.enums.PaymentStatus;
+import com.nhnacademy.bookstore.entity.pointPolicy.PointPolicy;
 import com.nhnacademy.bookstore.member.pointRecord.service.PointRecordService;
 import com.nhnacademy.bookstore.purchase.bookCart.dto.request.ReadAllBookCartMemberRequest;
 import com.nhnacademy.bookstore.purchase.bookCart.dto.response.ReadAllBookCartMemberResponse;
@@ -13,6 +14,8 @@ import com.nhnacademy.bookstore.purchase.coupon.service.CouponMemberService;
 import com.nhnacademy.bookstore.purchase.payment.dto.CreatePaymentMemberRequest;
 import com.nhnacademy.bookstore.purchase.payment.repository.PaymentRepository;
 import com.nhnacademy.bookstore.purchase.payment.service.PaymentMemberService;
+import com.nhnacademy.bookstore.purchase.pointPolicy.exception.PointPolicyDoesNotExistException;
+import com.nhnacademy.bookstore.purchase.pointPolicy.repository.PointPolicyRepository;
 import com.nhnacademy.bookstore.purchase.purchase.dto.request.CreatePurchaseRequest;
 import com.nhnacademy.bookstore.purchase.purchase.exception.PurchaseDoesNotExistException;
 import com.nhnacademy.bookstore.purchase.purchase.repository.PurchaseRepository;
@@ -39,9 +42,13 @@ public class PaymentMemberServiceImpl implements PaymentMemberService {
     private final PaymentRepository paymentRepository;
     private final PurchaseRepository purchaseRepository;
     private final BookRepository bookRepository;
+    private final PointPolicyRepository pointPolicyRepository;
 
     @Override
     public Long payment(CreatePaymentMemberRequest createPaymentMemberRequest) {
+        PointPolicy pointPolicy = pointPolicyRepository
+                .findByPolicyName("적립률").orElseThrow(()->new PointPolicyDoesNotExistException("포인트 정책이 없습니다"));
+        final double POINT_RATE = 0.01 * pointPolicy.getPolicyValue();
 
 
         Long purchaseId = purchaseMemberService.createPurchase(
@@ -94,7 +101,7 @@ public class PaymentMemberServiceImpl implements PaymentMemberService {
 
         //포인트 적립
         pointRecordService.save(
-                (long)(createPaymentMemberRequest.amount()*0.05),
+                (long)(createPaymentMemberRequest.amount() * POINT_RATE),
                 createPaymentMemberRequest.orderId() + " : 주문 적립",
                 createPaymentMemberRequest.memberId(),
                 purchaseId
@@ -111,19 +118,21 @@ public class PaymentMemberServiceImpl implements PaymentMemberService {
         }
 
         //쿠폰 사용
-        Long couponId = couponMemberService
-                .readCoupon(createPaymentMemberRequest.couponFormId());
+        if (createPaymentMemberRequest.couponFormId() != 0) {
+//            Long couponId = couponMemberService
+//                    .readCoupon(createPaymentMemberRequest.couponFormId());
 
-        couponMemberService.useCoupons(
-                createPaymentMemberRequest.couponFormId(),
-                createPaymentMemberRequest.memberId()
-        );
+            couponMemberService.useCoupons(
+                    createPaymentMemberRequest.couponFormId(),
+                    createPaymentMemberRequest.memberId()
+            );
 
-        purchaseCouponService.create(
-                purchaseId,
-                createPaymentMemberRequest.couponFormId(),
-                createPaymentMemberRequest.discountedPrice()
-        );
+            purchaseCouponService.create(
+                    purchaseId,
+                    createPaymentMemberRequest.couponFormId(),
+                    createPaymentMemberRequest.discountedPrice()
+            );
+        }
 
         return purchaseId;
     }
