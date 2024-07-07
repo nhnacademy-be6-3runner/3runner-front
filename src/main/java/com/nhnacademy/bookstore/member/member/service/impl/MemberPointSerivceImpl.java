@@ -1,11 +1,17 @@
 package com.nhnacademy.bookstore.member.member.service.impl;
 
 import com.nhnacademy.bookstore.entity.member.Member;
+import com.nhnacademy.bookstore.entity.pointPolicy.PointPolicy;
+import com.nhnacademy.bookstore.entity.pointRecord.PointRecord;
 import com.nhnacademy.bookstore.member.member.dto.response.GetMemberResponse;
 import com.nhnacademy.bookstore.member.member.dto.response.ReadMemberResponse;
 import com.nhnacademy.bookstore.member.member.exception.MemberNotExistsException;
 import com.nhnacademy.bookstore.member.member.repository.MemberRepository;
 import com.nhnacademy.bookstore.member.member.service.MemberPointService;
+import com.nhnacademy.bookstore.member.pointRecord.repository.PointRecordRepository;
+import com.nhnacademy.bookstore.member.pointRecord.service.PointRecordService;
+import com.nhnacademy.bookstore.purchase.pointPolicy.exception.PointPolicyDoesNotExistException;
+import com.nhnacademy.bookstore.purchase.pointPolicy.repository.PointPolicyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +28,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MemberPointSerivceImpl implements MemberPointService {
     private final MemberRepository memberRepository;
+    private final PointPolicyRepository pointPolicyRepository;
+    private final PointRecordRepository pointRecordRepository;
 
     /**
      * 맴버 포인트 업데이트.
@@ -54,5 +62,20 @@ public class MemberPointSerivceImpl implements MemberPointService {
                         .email(m.getEmail())
                         .build()
                 ).toList();
+    }
+
+    @Override
+    public void welcomePoint(Member member) {
+        PointPolicy pointPolicy = pointPolicyRepository
+                .findByPolicyName("회원가입포인트").orElseThrow(()->new PointPolicyDoesNotExistException("포인트 정책이 없습니다"));
+        final long POINT_RATE = pointPolicy.getPolicyValue();
+        //포인트 적립
+        pointRecordRepository.save(new PointRecord(
+                POINT_RATE,
+                "회원가입 적립",
+                member,
+                null)
+        );
+
     }
 }

@@ -34,7 +34,7 @@ public class PointRecord {
     @ManyToOne
     private Member member;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Purchase purchase;
 
     public PointRecord( Long usePoint, String content, Member member, Purchase purchase) {

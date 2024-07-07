@@ -1,6 +1,9 @@
-package com.nhnacademy.bookstore.purchase.purchaseCoupon.dto;
+package com.nhnacademy.bookstore.purchase.purchaseCoupon.dto.response;
 
 import lombok.Builder;
+
+import java.time.ZonedDateTime;
+import java.util.UUID;
 
 /**
  * 주무쿠폰Dto
@@ -12,10 +15,16 @@ import lombok.Builder;
  * @param couponId 쿠폰아이디
  */
 @Builder
-public record ReadPurchaseCouponResponse(
+public record ReadPurchaseCouponDetailResponse(
         Long purchaseCouponId,
         int discountPrice,
         String status,
         Long purchaseId,
-        Long couponId) {
+        Long couponId,
+        String orderNumber,
+        ZonedDateTime createdAt,
+        String name,
+        String type,
+        String usage,
+        String code) {
     }
