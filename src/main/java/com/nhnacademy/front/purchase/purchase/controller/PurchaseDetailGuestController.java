@@ -44,7 +44,7 @@ public class PurchaseDetailGuestController {
 	@GetMapping("/{orderNumber}")
 	public String orders(
 		@PathVariable(name = "orderNumber") String orderNumber,
-		@ModelAttribute(name = "password") String password,
+		@RequestParam(name = "password",required = false) String password,
 		@RequestParam(defaultValue = "0", required = false) int page,
 		@RequestParam(defaultValue = "30", required = false) int size,
 		@RequestParam(required = false) String sort,
@@ -55,7 +55,7 @@ public class PurchaseDetailGuestController {
 		}
 		model.addAttribute("guestorder",response);
 		model.addAttribute("guestorderbooks",purchaseGuestService.readGuestPurchaseBooks(orderNumber,page,size,sort));
-		return "/purchase/guest/order-detail-guest";
+		return "purchase/guest/order-detail-guest";
 	}
 
 	/**
@@ -74,18 +74,16 @@ public class PurchaseDetailGuestController {
 	 *
 	 * @param orderNumber 주문 번호
 	 * @param password 비밀 번호
-	 * @param redirectAttributes
 	 * @return
 	 */
 	@PostMapping
 	public String login(
 		@RequestParam String orderNumber,
-		@RequestParam String password,
-		RedirectAttributes redirectAttributes
+		@RequestParam String password
 		) {
 		if(purchaseGuestService.validatePurchase(orderNumber, password)){
-			redirectAttributes.addFlashAttribute("password", password);
-			return "redirect:/orders/guests/"+orderNumber;
+
+			return "redirect:/orders/guests/"+orderNumber+"?password="+password;
 		}
 		else{
 			return "redirect:/orders/guests/login";

@@ -12,6 +12,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 
 @FeignClient(name = "bookCartControllerClient", url = "http://${feign.client.url}" , configuration = FeignConfiguration.class)
@@ -20,27 +21,25 @@ public interface BookCartControllerClient {
         ApiResponse<List<ReadBookCartGuestResponse>> readCart(@PathVariable("cartId") Long cartId);
 
         @GetMapping("/bookstore/carts")
-        ApiResponse<List<ReadAllBookCartMemberResponse>> readAllBookCartMember(
-                @RequestHeader(value = "Member-Id", required = false) Long memberId);
+        ApiResponse<List<ReadAllBookCartMemberResponse>> readAllBookCartMember();
 
         @PostMapping("/bookstore/carts")
         ApiResponse<Long> createCart(
-                @Valid @RequestBody CreateBookCartRequest createBookCartGuestRequest,
-                @RequestHeader(value = "Member-Id", required = false) Long memberId
+                @Valid @RequestBody CreateBookCartRequest createBookCartGuestRequest
         );
 
         @PutMapping("/bookstore/carts")
         ApiResponse<Long> updateCart(
-                @Valid @RequestBody UpdateBookCartRequest updateBookCartGuestRequest,
-                @RequestHeader(value = "Member-Id", required = false) Long memberId
+                @Valid @RequestBody UpdateBookCartRequest updateBookCartGuestRequest
         );
 
-        @DeleteMapping()
-        ApiResponse<Long> deleteCart(
-                @Valid @RequestBody DeleteBookCartRequest deleteBookCartGuestRequest,
-                @RequestHeader(value = "Member-Id", required = false) Long memberId
-        );
+        @DeleteMapping("/bookstore/carts")
+        ApiResponse<Long> deleteCart(@Valid @RequestBody DeleteBookCartRequest deleteBookCartGuestRequest);
 
         @PostMapping("/bookstore/guests/carts")
         ApiResponse<Long> createGuestCart();
+
+
+        @DeleteMapping("/bookstore/carts/{cartId}")
+        ApiResponse<Long> deleteAllCart(@PathVariable(required = false) Long cartId);
 }

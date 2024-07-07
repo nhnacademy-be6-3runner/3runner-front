@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <title>취소 결과</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+</head>
+<body>
+<section>
+    <div th:if="${isSuccess}">
+        <h1>취소 성공</h1>
+        <p>결과 데이터: <span th:text="${jsonObject.toJSONString()}"></span></p>
+        <p>orderName: <span th:text="${jsonObject['orderName']}"></span></p>
+        <p>method: <span th:text="${jsonObject['method']}"></span></p>
+        <div th:if="${jsonObject['cancels'] != null}">
+            <p>cancels -> cancelReason:
+                <span th:text="${#lists.first((#arrays.toArray((java.util.List),jsonObject['cancels'])))['cancelReason']}"></span>
+            </p>
+        </div>
+    </div>
+    <div th:if="${!isSuccess}">
+        <h1>취소 실패</h1>
+        <p><span th:text="${jsonObject['message']}"></span></p>
+        <span>에러코드: <span th:text="${jsonObject['code']}"></span></span>
+    </div>
+</section>
+</body>
+</html>

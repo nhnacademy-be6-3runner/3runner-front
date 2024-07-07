@@ -14,12 +14,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * 회원 주문내역 조회 controller
@@ -99,13 +100,13 @@ public class PurchaseDetailMemberController {
     /**
      * 헤더가 있는지 없는지 판단하는 코드(member 확인, javaScript에서 사용되는 코드)
      *
-     * @param memberId 헤더에있는 member
      * @return key: isLoggedIn value : memberId헤더 존재 유무
      */
     @GetMapping("/check")
-    public ApiResponse<Map<String, Boolean>> checkMemberId(@RequestHeader(value = "member-id", required = false) Long memberId) {
+    @ResponseBody
+    public ApiResponse<Map<String, Boolean>> checkMemberId(@CookieValue(name = "Access", required = false) String access) {
         Map<String, Boolean> response = new HashMap<>();
-        if (memberId != null) {
+        if (access != null) {
             response.put("isLoggedIn", true);
         } else {
             response.put("isLoggedIn", false);

@@ -365,7 +365,7 @@
                 <input type="hidden" id="bookIdCart" name="bookIdCart" th:value="${book.id()}"/>
                 <button class="add-to-cart" onclick="submitCart()">장바구니 담기</button>
 
-                <form action="/api/purchases" method="POST">
+                <form action="/purchases" method="POST">
                     <input type="hidden" id="quantity" name="quantity" value="1">
                     <input type="hidden" id="bookId" name="bookId" th:value="${book.id()}"/>
                     <button type="submit" class="buy-now">바로 구매</button>
@@ -403,7 +403,7 @@
 <script>
     function addCart(bookId, quantity) {
         $.ajax({
-            url: window.location.origin+'/api/carts',
+            url: window.location.origin+'/carts',
             type: 'POST',
             contentType: 'application/x-www-form-urlencoded',
             data: $.param({bookId: bookId, quantity: quantity}),

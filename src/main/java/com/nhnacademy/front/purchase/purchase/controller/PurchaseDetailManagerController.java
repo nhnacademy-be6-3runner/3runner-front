@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
  */
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/orders/managers")
+@RequestMapping("/admin/orders")
 public class PurchaseDetailManagerController {
 
 	private final PurchaseDetailManagerService purchaseDetailManagerService;

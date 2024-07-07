@@ -9,6 +9,7 @@ import com.nhnacademy.front.purchase.purchase.service.PurchaseCouponService;
 import com.nhnacademy.front.util.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Set;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class PurchaseCouponServiceImpl implements PurchaseCouponService {
     private final BookCategoryControllerClient bookCategoryControllerClient;

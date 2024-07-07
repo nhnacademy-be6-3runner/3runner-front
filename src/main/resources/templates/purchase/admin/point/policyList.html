@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Point Policy List</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <h1 class="mt-5">Point Policy List</h1>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Key</th>
+            <th>Value</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="policy : ${policies}">
+            <td th:text="${policy.policyKey()}">Key</td>
+            <td th:text="${policy.policyValue()}">Value</td>
+            <td>
+                <a class="btn btn-primary" th:href="@{/admin/points/policies/edit/{policyKey}(policyKey=${policy.policyKey()})}">Edit</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <a class="btn btn-primary mt-3" href="/admin/points">Create New Policy</a>
+    <a class="btn btn-secondary mt-3" href="/purchase/admin">Back</a>
+</div>
+</body>
+</html>

@@ -29,7 +29,7 @@
 
 <form method="post"
       th:action="@{'/orders/guests/{purchaseId}' (purchaseId = ${guestorder.orderNumber().toString()})}">
-    <button type="submit" class="confirm-order-btn" th:if="${guestorder.status.toString() != 'CONFIRMED'}">주문 확정
+    <button type="submit" class="confirm-order-btn" th:if="${guestorder.status.toString() != 'CONFIRMATION'}">주문 확정
     </button>
 </form>
 
@@ -42,7 +42,7 @@
 
 <!-- 환불 버튼 (COMPLETED가 아니고 CONFIRMED 상태가 아닌 경우) -->
 <button class="refund-btn"
-        th:if="${guestorder.status.toString() != 'COMPLETED' && guestorder.status.toString() != 'CONFIRMED'}"
+        th:if="${guestorder.status.toString() != 'COMPLETED' && guestorder.status.toString() != 'CONFIRMATION'}"
         th:attr="data-order-id=${guestorder.orderNumber}"
         th:text="'환불'">
 </button>

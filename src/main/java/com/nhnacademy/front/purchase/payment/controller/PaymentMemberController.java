@@ -50,7 +50,7 @@ public class PaymentMemberController {
     ){
 
         if(Objects.nonNull(memberId)){
-            List<ReadAllBookCartMemberResponse> items = bookCartControllerClient.readAllBookCartMember(memberId).getBody().getData();
+            List<ReadAllBookCartMemberResponse> items = bookCartControllerClient.readAllBookCartMember().getBody().getData();
             model.addAttribute("response", items);
             model.addAttribute("memberId", memberId);
         }

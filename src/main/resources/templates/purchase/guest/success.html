@@ -145,7 +145,7 @@
                 amount: amount,
             };
 
-            const response = await fetch("http://133.186.143.40:8080/bookstore/payments/guests/confirm?cartId="+cartId+"&address="+address+"&password="+password+"&isPacking="+isPacking +"&shipping="+shipping ,{
+            const response = await fetch("http://" + window.location.hostname +":8080/bookstore/payments/guests/confirm?cartId="+cartId+"&address="+address+"&password="+password+"&isPacking="+isPacking +"&shipping="+shipping ,{
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

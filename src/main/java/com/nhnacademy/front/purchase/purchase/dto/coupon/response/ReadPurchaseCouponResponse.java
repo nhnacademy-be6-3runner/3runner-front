@@ -2,6 +2,8 @@ package com.nhnacademy.front.purchase.purchase.dto.coupon.response;
 
 import lombok.Builder;
 
+import java.time.ZonedDateTime;
+
 /**
  * 주무쿠폰Dto
  *

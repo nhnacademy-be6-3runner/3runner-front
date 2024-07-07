@@ -38,29 +38,28 @@ public class PurchaseMemberController {
     private final PurchaseCouponService purchaseCouponService;
 
     @GetMapping("/purchases/members")
-    public String purchase(@RequestHeader(required = false) Long memberId, Model model){
+    public String purchase(Model model){
 
         List<ReadAllBookCartMemberResponse> items = bookCartGuestControllerClient
-                .readAllBookCartMember(memberId).getBody().getData();
+                .readAllBookCartMember().getBody().getData();
 
         List<AddressResponse> addresses = memberAddressControllerClient
-                .readAllAddresses(memberId).getBody().getData();
+                .readAllAddresses().getBody().getData();
 
         GetMemberResponse memberInfo = memberControllerClient
-                .readById(memberId).getBody().getData();
+                .readById().getBody().getData();
 
-        ApiResponse.Body<List<ReadCouponFormResponse>> response = couponControllerClient.readCoupons(memberId).getBody();
+        ApiResponse.Body<List<ReadCouponFormResponse>> response = couponControllerClient.readCoupons().getBody();
 
         List<CouponDiscountPriceDto> validCoupons = purchaseCouponService.getValidCoupons(items, response);
 
         model.addAttribute("coupons", validCoupons);
         model.addAttribute("response", items);
-        model.addAttribute("memberId", memberId);
         model.addAttribute("addresses", addresses);
         model.addAttribute("memberInfo", memberInfo);
         model.addAttribute("orderNumber", UUID.randomUUID());
 
-        return "/purchase/member/purchase";
+        return "purchase/member/purchase";
     }
 
     @PostMapping("/purchases/members/addresses")
@@ -72,10 +71,10 @@ public class PurchaseMemberController {
                           String roadFullAddr,
                           Model model) {
 
-        memberAddressControllerClient.createAddress(CreateAddressRequest.builder().city(roadAddrPart1).state(roadAddrPart2).road(zipNo).name(addrDetail).country("대한민국").postalCode(zipNo).build(),memberId);
+        memberAddressControllerClient.createAddress(CreateAddressRequest.builder().city(roadAddrPart1).state(roadAddrPart2).road(zipNo).name(addrDetail).country("대한민국").postalCode(zipNo).build());
 
         model.addAttribute("roadFullAddr", roadFullAddr);
 
-        return "/purchase/member/address";
+        return "purchase/member/address";
     }
 }

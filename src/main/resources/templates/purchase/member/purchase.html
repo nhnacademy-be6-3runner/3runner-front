@@ -64,6 +64,10 @@
             line-height: 1.5;
             border-radius: .3rem;
         }
+
+        .fieldError {
+            border-color: #bd2130;
+        }
     </style>
 </head>
 <body>
@@ -181,17 +185,17 @@
             <div class="info-box">
                 <select class="form-control" id="coupon-box">
                     <option value="" data-final-discount-price="0">-- 쿠폰을 선택하세요 --</option>
-                    <option th:each="coupon : ${coupons}" th:value="${coupon.couponFormId()}" th:attr="data-final-discount-price=${coupon.finalDiscountPrice()}" th:text="'최종할인가 : ' + ${coupon.finalDiscountPrice()} +',  '+${coupon.name()} +',  '+ ${coupon.type()} +',  '+ ${coupon.usage()}"></option>
+                    <option th:each="coupon : ${coupons}" th:value="${coupon.couponFormId()}" th:attr="final-discount-price=${coupon.finalDiscountPrice()}" th:text="'최종할인가 : ' + ${coupon.finalDiscountPrice()} +',  '+${coupon.name()} +',  '+ ${coupon.type()} +',  '+ ${coupon.usage()}"></option>
                 </select>
             </div>
         </div>
-
 
         <!-- 결제 UI, 이용약관 UI 영역 -->
         <div id="payment-method" class="mb-3"></div>
         <div id="agreement" class="mb-3"></div>
 
     </form>
+
 
         <!-- 결제하기 버튼 -->
         <div class="form-group text-center">
@@ -209,7 +213,7 @@
 <script type="text/javascript">
     window.onload = function(){
         document.getElementById("newwin").onclick = function(){
-            window.open("https://business.juso.go.kr/addrlink/addrLinkUrl.do?confmKey=devU01TX0FVVEgyMDI0MDYyNzEwMTkxOTExNDg2OTc=&returnUrl=http://133.186.143.40:3000/purchases/members/addresses","","width=700px,height=500px,top=200px,left=200px;");
+            window.open("https://business.juso.go.kr/addrlink/addrLinkUrl.do?confmKey=U01TX0FVVEgyMDI0MDcwNjAwMTkyNjExNDg5NzI=&returnUrl="+ window.location.origin +"/purchases/members/addresses","","width=700px,height=500px,top=200px,left=200px;");
         }
     };
     function setCountyOffice(name){
@@ -302,8 +306,6 @@
 
         discountedPoint = parseInt(usedPoints);
         console.log("Used Points: ", usedPoints);
-
-        //paymentMethodWidget.updateAmount(amount-parseInt(usedPoints));
     });
 
     document.getElementById('address-box').addEventListener('change', function () {
@@ -319,7 +321,6 @@
         var selectedFinalDiscountPrice = selectedOption.getAttribute('final-discount-price');
 
 
-        //paymentMethodWidget.updateAmount(amount-parseInt(selectedFinalDiscountPrice));
         discountedPrice = parseInt(selectedFinalDiscountPrice);
         couponFormId = parseInt(selectedCouponId);
 
@@ -331,7 +332,7 @@
     button.addEventListener("click", function () {
         // 결제를 요청하기 전에 orderId, amount를 서버에 저장하세요.
         // 결제 과정에서 악의적으로 결제 금액이 바뀌는 것을 확인하는 용도입니다.
-        paymentMethodWidget.updateAmount(amount-parseInt(discountedPrice)-parseInt(discountedPoint));
+        paymentMethodWidget.updateAmount(parseInt(amount)-parseInt(discountedPrice)-parseInt(discountedPoint));
         paymentWidget.requestPayment({
             orderId: orderNumber,
             orderName: '3runner Store:'+orderNumber,
@@ -339,7 +340,7 @@
             failUrl: window.location.origin + "/payments/members/fail",
             customerEmail: [[${memberInfo.email()}]],
             customerName: [[${memberInfo.name()}]],
-            customerMobilePhone: [[${memberInfo.phone()}]],
+            customerMobilePhone: "01012345678"//[[${memberInfo.phone()}]],
         });
     });
 </script>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Point Records</title>
+    <link rel="stylesheet" href="/css/styles.css"> <!-- Link your CSS file if you have one -->
+</head>
+<body>
+<div class="container">
+    <h1>Point Records</h1>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Record ID</th>
+            <th>Use Point</th>
+            <th>Created At</th>
+            <th>Content</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="point : ${responses}">
+            <td th:text="${point.recordId()}"></td>
+            <td th:text="${point.usePoint()}"></td>
+            <td th:text="${point.createdAt()}"></td>
+            <td th:text="${point.content()}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="pagination">
+        <a th:if="${responses.hasPrevious()}" th:href="@{/orders/points(page=${responses.number - 1}, size=${responses.size})}">Previous</a>
+        <span th:text="${responses.number + 1}"></span> / <span th:text="${responses.totalPages}"></span>
+        <a th:if="${responses.hasNext()}" th:href="@{/orders/points(page=${responses.number + 1}, size=${responses.size})}">Next</a>
+    </div>
+</div>
+</body>
+</html>
