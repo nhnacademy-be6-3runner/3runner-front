@@ -35,14 +35,14 @@ public class PointPolicyController {
     public String createPointPolicy(@Valid @ModelAttribute PointPolicyResponseRequest pointPolicyResponseRequest,
                                     BindingResult bindingResult) {
         adminPointPolicyService.update(pointPolicyResponseRequest);
-        return "redirect:/purchase/admin/admin";
+        return "redirect:/purchase/admin";
     }
 
     @PostMapping("/admin/points/policies/edit")
     public String updatePointPolic(@Valid @ModelAttribute PointPolicyResponseRequest pointPolicyResponseRequest,
                                     BindingResult bindingResult) {
         adminPointPolicyService.update(pointPolicyResponseRequest);
-        return "redirect:/purchase/admin/admin";
+        return "redirect:/purchase/admin";
     }
 
     @GetMapping("/admin/points/policies/edit/{policyKey}")

@@ -8,7 +8,7 @@
 <body>
 <div class="container">
     <h1 class="mt-5">Edit Point Policy</h1>
-    <form action="/admin/points/policies/update" method="post" >
+    <form action="/admin/points/policies/edit" method="post" >
         <div class="form-group">
             <label for="key">Key</label>
             <input type="text" class="form-control" id="key" name="policyKey"  th:value="${pointPolicyResponseRequest.policyKey()}" readonly required>
