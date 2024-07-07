@@ -4,7 +4,20 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    overflow: hidden;
+    overflow: auto;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #2f3542;
+}
+
+::-webkit-scrollbar-track {
+    background-color: grey;
+    box-shadow: inset 0px 0px 5px white;
 }
 
 .header-custom,
@@ -13,6 +26,22 @@ body {
     color: white;
     width: calc(100% - 200px); /* 사이드바 너비만큼 빼기 */
     margin-left: 200px; /* 사이드바 너비만큼 이동 */
+}
+
+.header-custom .container {
+    justify-content: center; /* 컨테이너 가운데 정렬 */
+}
+
+.header-custom .container a {
+    font-size: 3.0rem; /* 텍스트 크기 조정 */
+}
+
+.header-custom svg {
+    margin-right: 8px; /* SVG와 텍스트 간격 */
+}
+
+.header-custom .form-control {
+    flex-grow: 1;
 }
 
 .header-custom .nav-link,
@@ -133,8 +162,104 @@ ul {
     content: "\25BC";
 }
 
+.book-item {
+    margin-bottom: 15px;
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center; /* 왼쪽 정렬 */
+    transition: box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.book-item:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.book-thumbnail {
+    width: 100%;
+    height: auto;
+    max-height: 300px; /* 최대 높이를 300px로 설정 */
+    object-fit: contain;
+    border-radius: 8px;
+    transition: transform 0.3s ease;
+}
+
+.card {
+    border: none;
+    box-shadow: none;
+}
+
+.card-body {
+    margin-top: 10px;
+}
+
+.card-title {
+    font-size: 1.0rem;
+    color: #353535;
+    font-weight: bold;
+}
+
+.card-text-author {
+    font-size: 0.7rem;
+    margin: 0.5rem 0;
+    color: #777;
+}
+
+.card-text-price, .card-text-selling {
+    font-size: 0.8rem;
+    margin: 0.5rem 0;
+    color: #353535;
+    font-weight: bold;
+}
+
+.book-actions {
+    display: flex;
+    justify-content: center; /* 가운데 정렬 */
+    align-items: center; /* 수직 가운데 정렬 */
+    gap: 10px; /* 버튼 간의 간격 추가 */
+    margin-top: 10px;
+}
+
+.book-actions .btn {
+    flex: none; /* 크기 조정 방지 */
+    margin: 0; /* 버튼 간의 기본 마진 제거 */
+    width: 100px; /* 리뷰 버튼의 너비를 고정 */
+}
+
+.like, .cart {
+    cursor: pointer;
+    transition: fill 0.3s ease;
+    width: 24px; /* SVG 아이콘의 너비 고정 */
+    height: 24px; /* SVG 아이콘의 높이 고정 */
+    flex-shrink: 0; /* 크기 변경 방지 */
+}
+
+.like path, .cart path {
+    fill: #777; /* 초기 색상 */
+    transition: fill 0.3s ease;
+}
+
+.like.active path {
+    fill: #e30d0d;
+}
+
+.cart.active path {
+    fill: #000080;
+}
+
+
+
 .footer {
     background-color: #353535; /* 푸터 배경색 #353535로 변경 */
+    color: white;
+    width: calc(100% - 200px); /* 사이드바 너비만큼 빼기 */
+    margin-left: 200px; /* 사이드바 너비만큼 이동 */
+    padding: 1rem;
+    text-align: center;
+    position: relative;
+    bottom: 0;
 }
 
 .footer .footer-link,

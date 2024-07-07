@@ -20,6 +20,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * 도서 컨트롤러입니다.
+ *
+ * @author 한민기, 김은비
+ *
+ */
 @Slf4j
 @Controller
 @RequestMapping("/book")
@@ -46,19 +52,6 @@ public class BookController {
 	}
 
 	/**
-	 * 메인 페이지에서 도서 조회하는 메서드입니다.
-	 * @param model 데이터를 전달하기 위한 모델 객체
-	 * @return 도서 리스트 화면
-	 */
-    @GetMapping
-    public String readLimitBooks(Model model) {
-        Page<BookListResponse> bookList = bookService.readLimitBooks(10);
-        model.addAttribute("bookList", bookList);
-
-        return "book/book-list";
-    }
-
-	/**
 	 * 도서 페이지 조회 메서드입니다.
 	 * @param page 페이지
 	 * @param size 사이즈
@@ -66,8 +59,11 @@ public class BookController {
 	 * @return 도서 리스트
 	 */
 	@GetMapping("/all")
-	public String readAllBooks(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size, Model model) {
-		Page<BookListResponse> bookList = bookService.readAllBooks(page, size);
+	public String readAllBooks(@RequestParam(defaultValue = "0") int page,
+							   @RequestParam(defaultValue = "12") int size,
+							   @RequestParam(defaultValue = "publishedDate,desc") String sort,
+							   Model model) {
+		Page<BookListResponse> bookList = bookService.readAllBooks(page, size, sort);
 		model.addAttribute("bookList", bookList);
 
 		return "book/list/book-page-list";
@@ -135,6 +131,13 @@ public class BookController {
 		return "book/book_update";
 	}
 
+	/**
+	 * 도서 수정 컨트롤러입니다.
+	 *
+	 * @param bookId 책 아이디
+	 * @param bookRequest 수정 요청 dto
+	 * @return 반환된 값
+	 */
 	@PostMapping(value = "/update/{bookId}", consumes = "multipart/form-data")
 	public String updateBook(@PathVariable Long bookId, UserCreateBookRequest bookRequest) {
 		UserReadBookResponse book = bookService.readBook(bookId);

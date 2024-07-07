@@ -5,10 +5,14 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.nhnacademy.front.book.book.controller.feign.ApiBookClient;
@@ -158,31 +162,15 @@ public class BookServiceImpl implements BookService {
 	}
 
 	/**
-	 *
-	 * 메인 페이지에 도서 리스트를 불러오는 메서드입니다.
-	 * @param limit 제한 갯수
-	 * @return 도서 리스트
-	 */
-	@Override
-	public Page<BookListResponse> readLimitBooks(int limit) {
-		ApiResponse<Page<BookListResponse>> response = bookClient.readAllBooks(2, limit);
-
-		if (response.getHeader().isSuccessful() && response.getBody() != null) {
-			return response.getBody().getData();
-		} else {
-			throw new InvalidApiResponseException("메인페이지 도서 리스트 조회 exception");
-		}
-	}
-
-	/**
 	 * 도서 페이지 조회 메서드입니다.
 	 * @param page 페이지
 	 * @param size 사이즈
 	 * @return 도서 리스트
 	 */
 	@Override
-	public Page<BookListResponse> readAllBooks(int page, int size) {
-		ApiResponse<Page<BookListResponse>> response = bookClient.readAllBooks(page, size);
+	public Page<BookListResponse> readAllBooks(int page, int size, String sort) {
+		ApiResponse<Page<BookListResponse>> response = bookClient.readAllBooks(page, size, sort);
+
 
 		if (response.getHeader().isSuccessful() && response.getBody() != null) {
 			return response.getBody().getData();

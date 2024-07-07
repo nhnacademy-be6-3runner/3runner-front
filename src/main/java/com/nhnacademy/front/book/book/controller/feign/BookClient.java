@@ -16,6 +16,11 @@ import com.nhnacademy.front.book.book.dto.response.BookManagementResponse;
 import com.nhnacademy.front.book.book.dto.response.UserReadBookResponse;
 import com.nhnacademy.front.util.ApiResponse;
 
+/**
+ * 도서 feign client 입니다.
+ *
+ * @author 한민기, 김은비
+ */
 @FeignClient(name = "BookClient", url = "http://${feign.client.url}/bookstore/books")
 public interface BookClient {
 	@PostMapping
@@ -29,7 +34,7 @@ public interface BookClient {
 	 * @author 김은비
 	 */
 	@GetMapping
-	ApiResponse<Page<BookListResponse>> readAllBooks(@RequestParam("page") int page, @RequestParam("size") int size);
+	ApiResponse<Page<BookListResponse>> readAllBooks(@RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("sort") String sort);
 
 	@GetMapping("/{bookId}")
 	ApiResponse<UserReadBookResponse> getDetailBookById(@PathVariable("bookId") Long bookId);
