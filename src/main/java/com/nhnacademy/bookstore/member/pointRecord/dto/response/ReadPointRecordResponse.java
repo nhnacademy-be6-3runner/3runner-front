@@ -16,6 +16,6 @@ import java.time.ZonedDateTime;
 public record ReadPointRecordResponse(
         Long recordId,
         Long usePoint,
-        ZonedDateTime createdAt,
+        String createdAt,
         String content) {
     }

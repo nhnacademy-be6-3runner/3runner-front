@@ -5,8 +5,8 @@ import jakarta.validation.constraints.Size;
 import lombok.Builder;
 
 @Builder
-public record AddressResponse (Long addressId,
-                                @Size(min = 1,max = 20) @NotNull String name,
+public record AddressResponse (Long id,
+							   @Size(min = 1,max = 20) @NotNull String name,
                                @Size(min = 1, max = 100) @NotNull String country,
                                @Size(min = 1,max = 100) @NotNull String city,
                                @Size(min =1,max = 100) @NotNull String state,

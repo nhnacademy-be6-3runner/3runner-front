@@ -9,10 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Objects;
@@ -33,9 +30,9 @@ public class PointRecordController {
      * @param memberId 맴버아이디
      * @return 포인트내역Dto리스트
      */
-    @GetMapping("/bookstore/members/points")
+    @PostMapping("/bookstore/members/points")
     public ApiResponse<Page<ReadPointRecordResponse>> readPointRecord(
-            @RequestHeader Long memberId,
+            @RequestHeader("Member-Id") Long memberId,
             @RequestBody ReadPointRecordRequest readPointRecordRequest
             ) {
 
@@ -43,7 +40,7 @@ public class PointRecordController {
         if (!Objects.isNull(readPointRecordRequest.sort())) {
             pageable = PageRequest.of(
                     readPointRecordRequest.page(),
-                    readPointRecordRequest.page(),
+                    readPointRecordRequest.size(),
                     Sort.by(readPointRecordRequest.sort())
             );
         } else {

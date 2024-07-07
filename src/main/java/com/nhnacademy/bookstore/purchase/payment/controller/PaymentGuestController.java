@@ -34,7 +34,7 @@ public class PaymentGuestController {
     public ResponseEntity<JSONObject> confirmPayment(
             @RequestHeader(value = "Member-Id", required = false) Long memberId,
             @RequestParam(required = false)  Long cartId,
-            @RequestParam(required = false)  String road,
+            @RequestParam(required = false)  String address,
             @RequestParam(required = false)  String password,
             @RequestParam(required = false) String isPacking,
             @RequestParam(required = false) String shipping,
@@ -92,7 +92,8 @@ public class PaymentGuestController {
                     .amount(Integer.valueOf(amount))
                     .isPacking(Boolean.valueOf(isPacking))
                     .orderId(orderId)
-                    .road(road)
+                    .road(address)
+                            .paymentKey(paymentKey)
                     .build()
             );
 

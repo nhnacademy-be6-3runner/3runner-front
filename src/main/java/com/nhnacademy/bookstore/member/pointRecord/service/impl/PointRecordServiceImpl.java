@@ -82,7 +82,7 @@ public class PointRecordServiceImpl implements PointRecordService {
                 .map(pointRecord -> ReadPointRecordResponse.builder()
                 .recordId(pointRecord.getId())
                 .usePoint(pointRecord.getUsePoint())
-                .createdAt(pointRecord.getCreatedAt())
+                .createdAt(pointRecord.getCreatedAt().toString())
                 .content(pointRecord.getContent())
                 .build());
     }

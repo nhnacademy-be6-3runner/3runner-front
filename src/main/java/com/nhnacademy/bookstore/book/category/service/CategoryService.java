@@ -78,4 +78,5 @@ public interface CategoryService {
 	 */
 
 	List<CategoryForCouponResponse> getCategoriesIds(List<Long> ids);
+
 }

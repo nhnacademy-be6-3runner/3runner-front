@@ -14,5 +14,6 @@ public record CreatePaymentMemberRequest(
         ZonedDateTime shippingDate,
         String road,
         Long couponFormId,
-        String orderId) {
+        String orderId,
+        String paymentKey) {
     }

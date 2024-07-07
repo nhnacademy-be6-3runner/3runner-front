@@ -72,18 +72,18 @@ public class BookCartGuestServiceImpl implements BookCartGuestService {
                 url = bookCart.getBook().getBookImageList().getFirst().getTotalImage().getUrl();
             }
 
-//            bookCartRedisRepository.create(
-//                    Long.toString(cartId),
-//                    bookCart.getId(),
-//                    ReadBookCartGuestResponse.builder()
-//                            .bookCartId(bookCart.getId())
-//                            .bookId(bookId)
-//                            .price(book.getPrice())
-//                            .url(url)
-//                            .title(book.getTitle())
-//                            .quantity(bookCart.getQuantity())
-//                            .build()
-//            );
+            bookCartRedisRepository.create(
+                    Long.toString(cartId),
+                    bookCart.getId(),
+                    ReadBookCartGuestResponse.builder()
+                            .bookCartId(bookCart.getId())
+                            .bookId(bookId)
+                            .price(book.getPrice())
+                            .url(url)
+                            .title(book.getTitle())
+                            .quantity(bookCart.getQuantity())
+                            .build()
+            );
         }
 
         return cartId;
@@ -122,10 +122,10 @@ public class BookCartGuestServiceImpl implements BookCartGuestService {
             bookCart.setQuantity(amount);
 
             bookCartRepository.save(bookCart);
-            //bookCartRedisRepository.update(cartId.toString(), bookCart.getId(), amount);
+            bookCartRedisRepository.update(cartId.toString(), bookCart.getId(), amount);
         } else {
             bookCartRepository.delete(bookCart);
-            //bookCartRedisRepository.delete(cartId.toString(), bookCart.getId());
+            bookCartRedisRepository.delete(cartId.toString(), bookCart.getId());
         }
 
         return cart.getId();
@@ -137,9 +137,9 @@ public class BookCartGuestServiceImpl implements BookCartGuestService {
                 .orElseThrow(() -> new BookCartDoesNotExistException("북카트 존재하지 않습니다."));
 
         bookCartRepository.delete(bookCart);
-        //bookCartRedisRepository.delete(cartId.toString(), bookCart.getId());
+        bookCartRedisRepository.delete(cartId.toString(), bookCart.getId());
 
-        return cartId;
+        return bookCartId;
     }
 
     /**
@@ -154,7 +154,7 @@ public class BookCartGuestServiceImpl implements BookCartGuestService {
                 .orElseThrow(() -> new CartDoesNotExistException(cartId + "가 존재하지 않습니다"));
 
         bookCartRepository.deleteByCart(cart);
-        //bookCartRedisRepository.deleteAll(cartId.toString());
+        bookCartRedisRepository.deleteAll(cartId.toString());
 
         return cartId;
     }
@@ -168,12 +168,12 @@ public class BookCartGuestServiceImpl implements BookCartGuestService {
     @Override
     public List<ReadBookCartGuestResponse> readAllBookCart(Long cartId) {
         List<ReadBookCartGuestResponse> bookCartGuestResponseList =  bookCartRedisRepository.readAllHashName(cartId.toString());
-//        if (!bookCartGuestResponseList.isEmpty()) {
-//            return  bookCartGuestResponseList;
-//        }
+        if (!bookCartGuestResponseList.isEmpty()) {
+            return  bookCartGuestResponseList;
+        }
 
-        //return  hasDataToLoad(cartId);
-        return readAllFromDb(cartId);
+        return  hasDataToLoad(cartId);
+        //return readAllFromDb(cartId);
     }
 
 

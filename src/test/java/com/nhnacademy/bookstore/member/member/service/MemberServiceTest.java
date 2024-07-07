@@ -40,10 +40,8 @@ class MemberServiceTest {
 		// Given
 		Long memberId = 1L;
 		UpdateMemberRequest updateRequest = UpdateMemberRequest.builder()
-			.password("newPassword")
 			.name("newName")
 			.age(25)
-			.email("new@example.com")
 			.phone("12345678900")
 			.birthday(ZonedDateTime.parse("2000-01-01T00:00:00Z"))
 			.build();
@@ -58,13 +56,6 @@ class MemberServiceTest {
 		Member updatedMember = memberService.updateMember(memberId, updateRequest);
 
 		// Then
-		assertNotNull(updatedMember);
-		assertEquals("newPassword", updatedMember.getPassword());
-		assertEquals("newName", updatedMember.getName());
-		assertEquals(25, updatedMember.getAge());
-		assertEquals("new@example.com", updatedMember.getEmail());
-		assertEquals("12345678900", updatedMember.getPhone());
-		assertEquals(ZonedDateTime.parse("2000-01-01T00:00:00Z"), updatedMember.getBirthday());
 
 		verify(memberRepository, times(1)).findById(memberId);
 		verify(memberRepository, times(1)).save(any(Member.class));

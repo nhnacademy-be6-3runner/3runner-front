@@ -1,5 +1,6 @@
 package com.nhnacademy.bookstore.member.member.service;
 
+import com.nhnacademy.bookstore.entity.member.Member;
 import com.nhnacademy.bookstore.member.member.dto.response.GetMemberResponse;
 import com.nhnacademy.bookstore.member.member.dto.response.ReadMemberResponse;
 
@@ -13,4 +14,5 @@ import java.util.List;
 public interface MemberPointService {
     Long updatePoint(Long memberId, Long usePoint);
     List<ReadMemberResponse> readAll();
+    void welcomePoint(Member member);
 }
