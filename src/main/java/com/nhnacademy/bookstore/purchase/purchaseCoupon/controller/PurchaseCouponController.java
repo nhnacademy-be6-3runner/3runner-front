@@ -1,9 +1,13 @@
 package com.nhnacademy.bookstore.purchase.purchaseCoupon.controller;
 
-import com.nhnacademy.bookstore.purchase.purchaseCoupon.dto.ReadPurchaseCouponResponse;
+import com.nhnacademy.bookstore.purchase.purchaseCoupon.dto.response.ReadPurchaseCouponDetailResponse;
+import com.nhnacademy.bookstore.purchase.purchaseCoupon.dto.response.ReadPurchaseCouponResponse;
 import com.nhnacademy.bookstore.purchase.purchaseCoupon.service.PurchaseCouponService;
 import com.nhnacademy.bookstore.util.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -46,5 +50,14 @@ public class PurchaseCouponController {
             @RequestBody Integer discountPrice) {
 
         return ApiResponse.createSuccess(purchaseCouponService.create(purchaseId, couponId, discountPrice));
+    }
+
+    @GetMapping("/coupons")
+    public ApiResponse<Page<ReadPurchaseCouponDetailResponse>> readPurchaseCoupons(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestHeader Long memberId) {
+        Pageable pageable = PageRequest.of(page, size);
+        return ApiResponse.success(purchaseCouponService.readByMemberId(memberId, pageable));
     }
 }
