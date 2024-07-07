@@ -19,6 +19,8 @@ import com.nhnacademy.bookstore.entity.review.Review;
 import com.nhnacademy.bookstore.entity.review.enums.ReviewStatus;
 import com.nhnacademy.bookstore.member.member.exception.MemberNotExistsException;
 import com.nhnacademy.bookstore.member.member.repository.MemberRepository;
+import com.nhnacademy.bookstore.member.pointRecord.service.PointRecordService;
+import com.nhnacademy.bookstore.purchase.pointPolicy.repository.PointPolicyRepository;
 import com.nhnacademy.bookstore.purchase.purchase.exception.PurchaseDoesNotExistException;
 import com.nhnacademy.bookstore.purchase.purchaseBook.repository.PurchaseBookRepository;
 import lombok.RequiredArgsConstructor;
@@ -45,6 +47,8 @@ public class ReviewServiceImpl implements ReviewService {
     private final BookRepository bookRepository;
     private final PurchaseBookRepository purchaseBookRepository;
     private final ReviewLikeRepository reviewLikeRepository;
+    private final PointPolicyRepository pointPolicyRepository;
+    private final PointRecordService pointRecordService;
 
     /**
      * 리뷰 생성 메서드입니다.
@@ -75,6 +79,18 @@ public class ReviewServiceImpl implements ReviewService {
         }
 
         reviewRepository.save(review);
+
+        // 포인트 적립 로직
+//        PointPolicy pointPolicy = pointPolicyRepository.findByPolicyName("리뷰적립포인트")
+//                .orElseThrow(() -> new PointPolicyDoesNotExistException("포인트 정책이 없습니다"));
+//        final double POINT_RATE = 0.01 * pointPolicy.getPolicyValue();
+//        pointRecordService.save(
+//                (long) (createReviewRequest.getAmount() * POINT_RATE),
+//                createReviewRequest.getOrderId() + " : 리뷰 적립",
+//                createReviewRequest.getMemberId(),
+//                createReviewRequest.getOrderId() // 구매한 책의 주문 아이디
+//        );
+
         return review.getId();
     }
 
