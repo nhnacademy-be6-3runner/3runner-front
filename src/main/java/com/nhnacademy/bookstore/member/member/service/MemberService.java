@@ -11,13 +11,12 @@ import com.nhnacademy.bookstore.entity.member.enums.Status;
 import com.nhnacademy.bookstore.member.member.dto.request.CreateMemberRequest;
 import com.nhnacademy.bookstore.member.member.dto.request.UpdateMemberRequest;
 import com.nhnacademy.bookstore.member.member.dto.request.UserProfile;
+import com.nhnacademy.bookstore.member.memberAuth.dto.response.MemberAuthResponse;
 import com.nhnacademy.bookstore.purchase.purchase.dto.response.ReadPurchaseResponse;
-
-import org.springframework.stereotype.Service;
 
 @Service
 public interface MemberService {
-    Member save(CreateMemberRequest createMemberRequest);
+	Member save(CreateMemberRequest createMemberRequest);
 
 	Member readById(Long id);
 
@@ -31,11 +30,13 @@ public interface MemberService {
 
 	Member updateStatus(Long memberId, Status status);
 
-    Member updateGrade(Long memberId, Grade grade);
+	Member updateGrade(Long memberId, Grade grade);
 
-    Member updateLastLogin(Long memberId, ZonedDateTime lastLogin);
+	Member updateLastLogin(Long memberId, ZonedDateTime lastLogin);
 
-    List<ReadPurchaseResponse> getPurchasesByMemberId(Long memberId);
+	List<ReadPurchaseResponse> getPurchasesByMemberId(Long memberId);
 
-    Member saveOrGetPaycoMember(UserProfile userProfile);
+	Member saveOrGetPaycoMember(UserProfile userProfile);
+
+	MemberAuthResponse readByIdForSecurity(Long id);
 }

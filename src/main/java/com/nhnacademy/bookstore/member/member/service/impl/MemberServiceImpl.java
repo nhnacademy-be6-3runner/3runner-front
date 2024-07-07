@@ -1,11 +1,11 @@
 package com.nhnacademy.bookstore.member.member.service.impl;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.nhnacademy.bookstore.purchase.coupon.service.CouponMemberService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -15,6 +15,7 @@ import com.nhnacademy.bookstore.entity.member.Member;
 import com.nhnacademy.bookstore.entity.member.enums.AuthProvider;
 import com.nhnacademy.bookstore.entity.member.enums.Grade;
 import com.nhnacademy.bookstore.entity.member.enums.Status;
+import com.nhnacademy.bookstore.entity.memberAuth.MemberAuth;
 import com.nhnacademy.bookstore.member.member.dto.request.CreateMemberRequest;
 import com.nhnacademy.bookstore.member.member.dto.request.UpdateMemberRequest;
 import com.nhnacademy.bookstore.member.member.dto.request.UserProfile;
@@ -24,6 +25,8 @@ import com.nhnacademy.bookstore.member.member.exception.LoginOauthEmailException
 import com.nhnacademy.bookstore.member.member.exception.MemberNotExistsException;
 import com.nhnacademy.bookstore.member.member.repository.MemberRepository;
 import com.nhnacademy.bookstore.member.member.service.MemberService;
+import com.nhnacademy.bookstore.member.memberAuth.dto.response.MemberAuthResponse;
+import com.nhnacademy.bookstore.purchase.coupon.service.CouponMemberService;
 import com.nhnacademy.bookstore.purchase.purchase.dto.response.ReadPurchaseResponse;
 import com.nhnacademy.bookstore.purchase.purchase.repository.PurchaseRepository;
 
@@ -46,7 +49,7 @@ public class MemberServiceImpl implements MemberService {
 	 * 웰컴 쿠폰 구현 서비스.
 	 */
 	private final CouponMemberService couponMemberService;
-  
+
 	@Override
 	public Member saveOrGetPaycoMember(UserProfile userProfile) {
 		Optional<Member> optionalMember = memberRepository.findByEmail(userProfile.getIdNo());
@@ -67,6 +70,28 @@ public class MemberServiceImpl implements MemberService {
 			couponMemberService.issueWelcomeCoupon(member);
 		}
 		return null;
+	}
+
+	/**
+	 * 멤버 아이디를 통해 멤버 찾기
+	 * @param id
+	 * @return
+	 */
+	@Override
+	public MemberAuthResponse readByIdForSecurity(Long id) {
+		Member member = memberRepository.findById(id).orElseThrow(() -> new MemberNotExistsException());
+		List<MemberAuth> memberAuthList = member.getMemberAuthList();
+		List<String> authList = new ArrayList<>();
+		for (MemberAuth memberAuth : memberAuthList) {
+			authList.add(memberAuth.getAuth().getName());
+		}
+
+		return MemberAuthResponse.builder()
+			.memberId(member.getId())
+			.email(member.getEmail())
+			.password(member.getPassword())
+			.auth(authList)
+			.build();
 	}
 
 	/**
