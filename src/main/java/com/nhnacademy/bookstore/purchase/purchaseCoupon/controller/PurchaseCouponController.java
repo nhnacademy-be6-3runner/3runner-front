@@ -56,7 +56,7 @@ public class PurchaseCouponController {
     public ApiResponse<Page<ReadPurchaseCouponDetailResponse>> readPurchaseCoupons(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestHeader Long memberId) {
+            @RequestHeader("Member-Id")  Long memberId) {
         Pageable pageable = PageRequest.of(page, size);
         return ApiResponse.success(purchaseCouponService.readByMemberId(memberId, pageable));
     }

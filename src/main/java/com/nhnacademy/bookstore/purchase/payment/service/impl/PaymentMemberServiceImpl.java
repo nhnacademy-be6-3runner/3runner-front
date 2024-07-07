@@ -95,7 +95,7 @@ public class PaymentMemberServiceImpl implements PaymentMemberService {
         //포인트 적립
         pointRecordService.save(
                 (long)(createPaymentMemberRequest.amount()*0.05),
-                createPaymentMemberRequest.orderId() + ":주문 적립",
+                createPaymentMemberRequest.orderId() + " : 주문 적립",
                 createPaymentMemberRequest.memberId(),
                 purchaseId
         );
@@ -104,7 +104,7 @@ public class PaymentMemberServiceImpl implements PaymentMemberService {
         if (createPaymentMemberRequest.discountedPoint() != 0) {
             pointRecordService.save(
                     -1L * createPaymentMemberRequest.discountedPoint(),
-                    createPaymentMemberRequest.orderId() + ":주문 사용",
+                    createPaymentMemberRequest.orderId() + " : 주문 사용",
                     createPaymentMemberRequest.memberId(),
                     purchaseId
             );
