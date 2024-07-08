@@ -1,6 +1,7 @@
 package com.nhnacademy.bookstore.member.member.service.impl;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -20,6 +21,7 @@ import com.nhnacademy.bookstore.entity.member.Member;
 import com.nhnacademy.bookstore.entity.member.enums.AuthProvider;
 import com.nhnacademy.bookstore.entity.member.enums.Grade;
 import com.nhnacademy.bookstore.entity.member.enums.Status;
+import com.nhnacademy.bookstore.entity.memberAuth.MemberAuth;
 import com.nhnacademy.bookstore.member.member.dto.request.CreateMemberRequest;
 import com.nhnacademy.bookstore.member.member.dto.request.UpdateMemberRequest;
 import com.nhnacademy.bookstore.member.member.dto.request.UserProfile;
@@ -29,6 +31,8 @@ import com.nhnacademy.bookstore.member.member.exception.LoginOauthEmailException
 import com.nhnacademy.bookstore.member.member.exception.MemberNotExistsException;
 import com.nhnacademy.bookstore.member.member.repository.MemberRepository;
 import com.nhnacademy.bookstore.member.member.service.MemberService;
+import com.nhnacademy.bookstore.member.memberAuth.dto.response.MemberAuthResponse;
+import com.nhnacademy.bookstore.purchase.coupon.service.CouponMemberService;
 import com.nhnacademy.bookstore.purchase.purchase.dto.response.ReadPurchaseResponse;
 import com.nhnacademy.bookstore.purchase.purchase.repository.PurchaseRepository;
 
@@ -85,6 +89,28 @@ public class MemberServiceImpl implements MemberService {
 			memberPointService.welcomePoint(member);
 		}
 		return null;
+	}
+
+	/**
+	 * 멤버 아이디를 통해 멤버 찾기
+	 * @param id
+	 * @return
+	 */
+	@Override
+	public MemberAuthResponse readByIdForSecurity(Long id) {
+		Member member = memberRepository.findById(id).orElseThrow(() -> new MemberNotExistsException());
+		List<MemberAuth> memberAuthList = member.getMemberAuthList();
+		List<String> authList = new ArrayList<>();
+		for (MemberAuth memberAuth : memberAuthList) {
+			authList.add(memberAuth.getAuth().getName());
+		}
+
+		return MemberAuthResponse.builder()
+			.memberId(member.getId())
+			.email(member.getEmail())
+			.password(member.getPassword())
+			.auth(authList)
+			.build();
 	}
 
 	/**

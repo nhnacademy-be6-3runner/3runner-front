@@ -3,8 +3,10 @@ package com.nhnacademy.bookstore.member.memberAuth.controller;
 import java.util.List;
 import java.util.Objects;
 
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nhnacademy.bookstore.entity.auth.Auth;
@@ -50,5 +52,14 @@ public class MemberAuthController {
 			// return new MemberAuthResponse(email, member.getPassword(), authStrList, member.getId());
 		}
 		return null;
+	}
+
+	@PostMapping("/bookstore/token/login/{token}")
+	public ApiResponse<MemberAuthResponse> login(@RequestHeader(name = "Member-Id") Long memberId,
+		@PathVariable String token) {
+
+		MemberAuthResponse member = memberService.readByIdForSecurity(memberId);
+
+		return ApiResponse.success(member);
 	}
 }
