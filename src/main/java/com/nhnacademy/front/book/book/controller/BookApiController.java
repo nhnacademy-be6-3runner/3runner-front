@@ -36,9 +36,8 @@ public class BookApiController {
 	}
 
 	@GetMapping("/main")
-	public ApiResponse<Page<BookListResponse>> readLimitBooks(@RequestParam(defaultValue = "publishedDate,desc") String sort) {
-		Page<BookListResponse> bookList = bookService.readAllBooks(0, 12, sort);
-		log.info("정렬 조회 컨트롤러 넘어옴");
+	public ApiResponse<Page<BookListResponse>> readAllBooks(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "12") int size, @RequestParam(defaultValue = "publishedDate,desc") String sort) {
+		Page<BookListResponse> bookList = bookService.readAllBooks(page, size, sort);
 		return ApiResponse.success(bookList);
 	}
 }
