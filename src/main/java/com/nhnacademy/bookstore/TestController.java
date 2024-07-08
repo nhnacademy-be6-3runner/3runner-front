@@ -14,7 +14,7 @@ public class TestController {
 	@GetMapping("/test")
 	public String test() {
 		Logger logger = LoggerFactory.getLogger("errorLogger");
-		logger.error("Hello world. error");
+		logger.error("3Runner 화이팅!");
 		return "test!";
 	}
 
