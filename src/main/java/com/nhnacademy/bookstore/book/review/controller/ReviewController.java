@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -105,8 +106,20 @@ public class ReviewController {
      * @return ApiResponse<reviewListResponse>
      */
     @GetMapping("/books/{bookId}/reviews")
-    public ApiResponse<Page<ReviewListResponse>> readReviewsByBookId(@PathVariable long bookId, @RequestParam int page, @RequestParam int size) {
-        Pageable pageable = PageRequest.of(page, size);
+    public ApiResponse<Page<ReviewListResponse>> readReviewsByBookId(@PathVariable long bookId,
+                                                                     @RequestParam(defaultValue = "0") int page,
+                                                                     @RequestParam(defaultValue = "5") int size,
+                                                                     @RequestParam(defaultValue = "likes, desc") String sort) {
+        String[] sortParams = sort.split(",");
+        String property = sortParams[0];
+        String direction = sortParams.length > 1 ? sortParams[1].toUpperCase() : "DESC";
+        Sort.Direction directionEnum = Sort.Direction.valueOf(direction);
+
+        Sort sortOrder = Sort.by(new Sort.Order(directionEnum, property));
+        Pageable pageable = PageRequest.of(page, size, sortOrder);
+
+        log.info("정렬 기준 : {}", pageable);
+
         Page<ReviewListResponse> reviewList = reviewService.readAllReviewsByBookId(bookId, pageable);
         return ApiResponse.success(reviewList);
     }

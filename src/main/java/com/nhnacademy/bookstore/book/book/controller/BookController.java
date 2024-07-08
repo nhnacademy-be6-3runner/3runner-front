@@ -72,8 +72,6 @@ public class BookController {
             @RequestParam(defaultValue = "12") int size,
             @RequestParam(defaultValue = "publishedDate,desc") String sort) {
 
-        log.info("sort : {}", sort);
-
         String[] sortParams = sort.split(",");
         String property = sortParams[0];
         String direction = sortParams.length > 1 ? sortParams[1].toUpperCase() : "DESC";
