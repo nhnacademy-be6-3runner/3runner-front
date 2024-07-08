@@ -25,6 +25,8 @@ import com.nhnacademy.front.util.security.provider.CustomAuthenticationProvider;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -50,7 +52,8 @@ public class SecurityConfig {
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
 		http
-			.csrf(AbstractHttpConfigurer::disable);
+			.csrf(AbstractHttpConfigurer::disable)
+        	.cors(withDefaults());
 		// http
 		// 	.formLogin(AbstractHttpConfigurer::disable);
 		// http
