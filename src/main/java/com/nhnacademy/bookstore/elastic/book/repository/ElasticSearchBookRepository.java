@@ -11,6 +11,16 @@ public interface ElasticSearchBookRepository extends ElasticsearchRepository<Boo
 
 	List<BookDocument> findByTitle(String title);
 
-	@Query("{\"query\": {\"function_score\": {\"query\": {\"multi_match\": {\"query\": \"?0\", \"minimum_should_match\": \"70%\", \"fields\": [\"title^100\", \"author^50\", \"publisher\"]}}}}}")
+	@Query("{"
+		+ "    \"function_score\": {"
+		+ "      \"query\": {"
+		+ "        \"multi_match\": {"
+		+ "          \"query\": \"불편\", "
+		+ "          \"minimum_should_match\": \"70%\","
+		+ "          \"fields\": [\"title^100\", \"author^50\", \"publisher\"]"
+		+ "        }"
+		+ "      }"
+		+ "    }"
+		+ "  }")
 	List<BookDocument> findByCustomQuery(String query);
 }

@@ -1,5 +1,6 @@
 package com.nhnacademy.bookstore.elastic.book.repository;
 
+import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.SearchHits;
 

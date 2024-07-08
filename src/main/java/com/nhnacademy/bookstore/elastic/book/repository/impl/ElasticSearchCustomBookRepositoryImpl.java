@@ -1,11 +1,14 @@
 package com.nhnacademy.bookstore.elastic.book.repository.impl;
 
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHits;
-import org.springframework.data.elasticsearch.core.query.Criteria;
-import org.springframework.data.elasticsearch.core.query.CriteriaQuery;
 import org.springframework.data.elasticsearch.core.query.Query;
+import org.springframework.data.elasticsearch.core.query.SearchTemplateQuery;
+import org.springframework.data.elasticsearch.core.query.SearchTemplateQueryBuilder;
 import org.springframework.stereotype.Repository;
 
 import com.nhnacademy.bookstore.elastic.book.repository.ElasticSearchCustomBookRepository;
@@ -40,15 +43,23 @@ public class ElasticSearchCustomBookRepositoryImpl implements ElasticSearchCusto
 
 	@Override
 	public SearchHits<BookDocument> searchProductsByProductName(String keyword, Pageable pageable) {
-		Query searchQuery = new CriteriaQuery(new Criteria()
-			.subCriteria(new Criteria("title").boost(100).matches(keyword))
-			.subCriteria(new Criteria("author").boost(50).matches(keyword))
-			.subCriteria(new Criteria("publisher").matches(keyword))
-			// .endsWith("70%")
-		);
+		// JSON 쿼리 작성
+		BoolQueryBuilder boolQuery = QueryBuilders.boolQuery()
+			.should(QueryBuilders.matchQuery("title", keyword).boost(2))
+			.should(QueryBuilders.matchQuery("author", keyword).boost(3))
+			.should(QueryBuilders.matchQuery("publisher", keyword).boost(1))
+			.should(QueryBuilders.matchQuery("categoryList", keyword).boost(199));
 
-		return elasticsearchOperations.search(searchQuery, BookDocument.class);
+		// // NativeSearchQuery 생성
+		// Query searchQuery = new NativeSearchQuery(boolQuery);
+		// searchQuery.setPageable(pageable);
 
+		QueryBuilder query = QueryBuilders.boolQuery();
+		SearchTemplateQueryBuilder searchTemplateQueryBuilder = new SearchTemplateQueryBuilder();
+		Query query1 = new SearchTemplateQuery(searchTemplateQueryBuilder);
+		// 검색 수행
+		SearchHits<BookDocument> searchHits = elasticsearchOperations.search(query1, BookDocument.class);
+		return searchHits;
 	}
 
 }
