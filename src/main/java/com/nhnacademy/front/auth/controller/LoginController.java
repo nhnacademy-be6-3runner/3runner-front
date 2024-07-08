@@ -5,7 +5,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.nhnacademy.front.auth.adapter.LoginAdapter;
 import com.nhnacademy.front.auth.dto.request.LoginRequest;
 import com.nhnacademy.front.auth.dto.response.LoginResponse;
 import com.nhnacademy.front.auth.service.LoginService;
@@ -102,11 +104,12 @@ public class LoginController {
 	//로그인할때 꼭 @이메일 되어잇는 인자 받아야한다.
 
 	@GetMapping("/oauth2/callback/payco")
-	public String paycoCallback(@RequestParam String code, HttpServletResponse response,RedirectAttributes redirectAttributes) {
+	public String paycoCallback(@RequestParam String code, HttpServletResponse response,
+		RedirectAttributes redirectAttributes) {
 		//코드까지는 들어온다.
 		try {
 			LoginResponse loginResponse = loginAdapter.handleOAuth2Redirect(code).getBody().getData();//여기까지됌
-			if(loginResponse.message().equals("일반 회원 이메일인데 페이코 접속")) {
+			if (loginResponse.message().equals("일반 회원 이메일인데 페이코 접속")) {
 				redirectAttributes.addFlashAttribute("errorMessage", "일반 회원 이메일로 페이코 접속을 시도하였습니다.");
 				return "redirect:/login";
 			}
@@ -116,10 +119,9 @@ public class LoginController {
 			cookie2.setPath("/");
 			response.addCookie(cookie1);//
 			response.addCookie(cookie2);
-		}catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 
 		return "redirect:/";//메인페이지 반환한다.
 	}

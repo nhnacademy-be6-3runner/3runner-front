@@ -60,7 +60,8 @@ public class SecurityConfig {
 			(authorizeRequests) -> {
 				authorizeRequests
 					.requestMatchers("/admin/**").hasAnyAuthority("ADMIN")
-					.requestMatchers("/publisher/**").authenticated()
+					.requestMatchers("/publisher/**").hasAnyAuthority("ADMIN", "PUBLISHER")
+					.requestMatchers("/member/mypageForm/**").authenticated()
 					.anyRequest().permitAll();
 			}
 		);
@@ -96,7 +97,7 @@ public class SecurityConfig {
 		http.addFilterAt(
 			new AlwaysAuthenticationFilter(authenticationManager(), loginService),
 			UsernamePasswordAuthenticationFilter.class);
-		
+
 		http
 			.sessionManagement(session -> session
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
