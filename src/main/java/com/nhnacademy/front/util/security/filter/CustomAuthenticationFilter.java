@@ -37,7 +37,6 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 		this.objectMapper = objectMapper;
 		this.loginService = loginService;
 		setFilterProcessesUrl("/login/process");
-		// setFilterProcessesUrl("/publisher/**");
 
 	}
 

@@ -46,10 +46,8 @@ public class AlwaysAuthenticationFilter extends UsernamePasswordAuthenticationFi
 				}
 			}
 		}
-		UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-			null, "1234"
-		);
-		return customAuthenticationManager.authenticate(authToken);
+
+		return null;
 	}
 
 	@Override
@@ -57,8 +55,28 @@ public class AlwaysAuthenticationFilter extends UsernamePasswordAuthenticationFi
 		Authentication authResult) throws IOException, ServletException {
 		log.info("기본 로그인 성공");
 		SecurityContextHolder.getContext().setAuthentication(authResult);
-		super.successfulAuthentication(request, response, chain, authResult);
+		chain.doFilter(request, response);
+	}
+
+	@Override
+	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+		AuthenticationException failed) throws IOException, ServletException {
+		log.info("기본 로그인 실패");
+		super.unsuccessfulAuthentication(request, response, failed);
 
 	}
 
+	@Override
+	protected boolean requiresAuthentication(HttpServletRequest request, HttpServletResponse response) {
+		// Access 쿠키가 없으면 인증을 시도하지 않고 다음 필터로 넘어감
+		Cookie[] cookies = request.getCookies();
+		if (cookies != null) {
+			for (Cookie c : cookies) {
+				if (c.getName().equals("Access")) {
+					return true; // Access 쿠키가 있으면 인증 시도
+				}
+			}
+		}
+		return false; // Access 쿠키가 없으면 인증 시도하지 않음
+	}
 }
