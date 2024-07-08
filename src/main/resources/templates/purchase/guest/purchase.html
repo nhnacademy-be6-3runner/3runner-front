@@ -88,6 +88,7 @@
                     <img th:src="@{/api/images/book/download(fileName=${item.url()})}"
                          src="/static/img/no-image.png" alt="Product Image" class="mr-3" style="width: 150px">
                 </div>
+
                 <div class="ml-3" style="margin-left: 20px">
                     <h4 th:text="${item.title()}">Product</h4>
                     <p>₩<span class="price-input" th:text="${item.price()}"></span></p>
