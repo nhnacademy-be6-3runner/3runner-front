@@ -56,4 +56,7 @@ public interface CouponControllerClient {
 
     @GetMapping("/coupon/usages/books/{couponTypeId}")
     ApiResponse<List<Long>> readBookUsages(@PathVariable Long couponTypeId);
+
+    @GetMapping("/coupon/forms")
+    ApiResponse<List<ReadCouponFormResponse>> readAllCouponForms();
 }

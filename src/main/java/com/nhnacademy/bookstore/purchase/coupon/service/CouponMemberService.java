@@ -19,4 +19,6 @@ public interface CouponMemberService {
     Long refundCoupons(Long couponFormId, Long memberId);
 
     Long readCoupon(Long couponFormId);
+
+    Long registorCoupon(String code, Long memberId);
 }

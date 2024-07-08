@@ -164,4 +164,24 @@ public class CouponMemberServiceImpl implements CouponMemberService {
         Coupon coupon = couponRepository.findCouponByCouponFormId(couponFormId).orElseThrow(()->new CouponDoesNotExistException(couponFormId+" 해당 쿠폰 폼 아이디가 없습니다."));
         return coupon.getId();
     }
+
+    @Override
+    public Long registorCoupon(String code, Long memberId) {
+        List<ReadCouponFormResponse> responses = couponControllerClient.readAllCouponForms().getBody().getData();
+
+        ReadCouponFormResponse matchingCoupon = responses.stream()
+                .filter(response -> code.equals(response.code().toString()))
+                .findFirst()
+                .orElseThrow(()-> new CouponDoesNotExistException("쿠폰이 없습니다."));
+
+        Coupon coupon = new Coupon(
+                matchingCoupon.couponFormId(),
+                CouponStatus.READY,
+                memberRepository.findById(memberId).orElseThrow(MemberNotExistsException::new)
+        );
+
+        couponRepository.save(coupon);
+
+        return coupon.getId();
+    }
 }
