@@ -109,6 +109,10 @@ public class BookCustomRepositoryImpl implements BookCustomRepository {
                             return new OrderSpecifier<>(
                                     isAscending ? Order.ASC : Order.DESC,
                                     qBook.price);
+                        case "title":
+                            return new OrderSpecifier<>(
+                                    isAscending ? Order.ASC : Order.DESC,
+                                    qBook.title);
                         default:
                             throw new IllegalArgumentException("정렬 기준이 잘못되었습니다!!: " + property);
                     }
