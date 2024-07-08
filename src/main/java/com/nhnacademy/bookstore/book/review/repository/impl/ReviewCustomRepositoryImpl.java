@@ -12,6 +12,8 @@ import com.nhnacademy.bookstore.entity.review.enums.ReviewStatus;
 import com.nhnacademy.bookstore.entity.reviewImage.QReviewImage;
 import com.nhnacademy.bookstore.entity.reviewLike.QReviewLike;
 import com.nhnacademy.bookstore.entity.totalImage.QTotalImage;
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -19,10 +21,12 @@ import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * 리뷰 커스텀 인터페이스 구현체입니다.
@@ -117,6 +121,7 @@ public class ReviewCustomRepositoryImpl implements ReviewCustomRepository {
                                 .from(qReviewLike)
                                 .where(qReviewLike.review.id.eq(qReview.id))
                 ))
+                .distinct()
                 .from(qReview)
                 .join(qReview.purchaseBook, qPurchaseBook)
                 .join(qPurchaseBook.book, qBook)
@@ -127,6 +132,9 @@ public class ReviewCustomRepositoryImpl implements ReviewCustomRepository {
                                 .from(qReviewImage)
                                 .where(qReviewImage.review.id.eq(qReview.id))
                 ))
+                .leftJoin(qReviewLike).on(qReviewLike.review.id.eq(qReview.id))
+                .groupBy(qReview.id, qReview.title, qTotalImage.url, qReview.rating, qMember.email, qReview.createdAt)
+                .orderBy(getSort(pageable.getSort()))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -161,6 +169,7 @@ public class ReviewCustomRepositoryImpl implements ReviewCustomRepository {
                                 .from(qReviewLike)
                                 .where(qReviewLike.review.id.eq(qReview.id))
                 ))
+                .distinct()
                 .from(qReview)
                 .join(qReview.purchaseBook, qPurchaseBook)
                 .join(qPurchaseBook.book, qBook)
@@ -171,6 +180,9 @@ public class ReviewCustomRepositoryImpl implements ReviewCustomRepository {
                                 .from(qReviewImage)
                                 .where(qReviewImage.review.id.eq(qReview.id))
                 ))
+                .leftJoin(qReviewLike).on(qReviewLike.review.id.eq(qReview.id))
+                .groupBy(qReview.id, qReview.title, qTotalImage.url, qReview.rating, qMember.email, qReview.createdAt)
+                .orderBy(getSort(pageable.getSort()))
                 .where(qPurchaseBook.book.id.eq(bookId)
                         .and(qReview.reviewStatus.eq(ReviewStatus.ON)))
                 .offset(pageable.getOffset())
@@ -185,6 +197,35 @@ public class ReviewCustomRepositoryImpl implements ReviewCustomRepository {
                 .fetchOne()).orElse(0L);
         return new PageImpl<>(reviewListResponses, pageable, total);
     }
+
+
+    private OrderSpecifier<?>[] getSort(Sort sort) {
+        List<OrderSpecifier<?>> orders = sort.stream()
+                .map(order -> {
+                    String property = order.getProperty();
+                    boolean isAscending = order.isAscending();
+
+                    return switch (property) {
+                        case "createdAt" -> new OrderSpecifier<>(
+                                isAscending ? Order.ASC : Order.DESC,
+                                qReview.createdAt);
+                        case "likes" -> new OrderSpecifier<>(
+                                isAscending ? Order.ASC : Order.DESC,
+                                qReviewLike.count());
+                        case "title" -> new OrderSpecifier<>(
+                                isAscending ? Order.ASC : Order.DESC,
+                                qReview.title);
+                        default -> throw new IllegalArgumentException("정렬 기준이 잘못되었습니다!!: " + property);
+                    };
+                })
+                .collect(Collectors.toList());
+
+        // 고유 정렬 키 추가
+        orders.add(new OrderSpecifier<>(Order.ASC, qReview.id));
+
+        return orders.toArray(new OrderSpecifier[0]);
+    }
+
 
     /**
      * 사용자 아이디로 리뷰 조회하는 쿼리입니다.
