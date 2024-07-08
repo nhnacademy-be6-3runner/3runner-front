@@ -61,16 +61,16 @@ public class PurchaseBookServiceImpl implements PurchaseBookService {
 	 * @return 해당 주문의 책 리스트를 반환
 	 */
 	@Override
-	public Page<ReadPurchaseBookResponse> readBookByPurchaseResponses(Long purchaseId, Pageable pageable) {
+	public List<ReadPurchaseBookResponse> readBookByPurchaseResponses(Long purchaseId) {
 
-		return  purchaseBookCustomRepository.readBookPurchaseResponses(purchaseId, pageable);
+		return  purchaseBookCustomRepository.readBookPurchaseResponses(purchaseId);
 	}
 
 	@Override
-	public Page<ReadPurchaseBookResponse> readGuestBookByPurchaseResponses(String purchaseId, Pageable pageable) {
+	public List<ReadPurchaseBookResponse> readGuestBookByPurchaseResponses(String purchaseId) {
 
 
-		return  purchaseBookCustomRepository.readGuestBookPurchaseResponses(purchaseId, pageable);
+		return  purchaseBookCustomRepository.readGuestBookPurchaseResponses(purchaseId);
 	}
 
 	/**

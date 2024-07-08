@@ -1,31 +1,31 @@
-<configuration>
-    <!-- Custom NHN Log Crash Appender 정의 -->
-    <appender name="NHN_LOG_CRASH_APPENDER" class="com.nhnacademy.bookstore.global.appender.NHNLogCrashAppender">
-        <url>https://api-logncrash.cloud.toast.com/v2/log</url>
-    </appender>
+<!--<configuration>-->
+<!--    &lt;!&ndash; Custom NHN Log Crash Appender 정의 &ndash;&gt;-->
+<!--    <appender name="NHN_LOG_CRASH_APPENDER" class="com.nhnacademy.bookstore.global.appender.NHNLogCrashAppender">-->
+<!--        <url>https://api-logncrash.cloud.toast.com/v2/log</url>-->
+<!--    </appender>-->
 
-    <!-- 비동기 NHN Log Crash Appender 정의 -->
-    <appender name="ASYNC_NHN_LOG_CRASH_APPENDER" class="ch.qos.logback.classic.AsyncAppender">
-        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>ERROR</level>
-        </filter>
-        <appender-ref ref="NHN_LOG_CRASH_APPENDER"/>
-    </appender>
+<!--    &lt;!&ndash; 비동기 NHN Log Crash Appender 정의 &ndash;&gt;-->
+<!--    <appender name="ASYNC_NHN_LOG_CRASH_APPENDER" class="ch.qos.logback.classic.AsyncAppender">-->
+<!--        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">-->
+<!--            <level>ERROR</level>-->
+<!--        </filter>-->
+<!--        <appender-ref ref="NHN_LOG_CRASH_APPENDER"/>-->
+<!--    </appender>-->
 
-    <!-- Racingcar Logger 정의 -->
-    <logger name="errorLogger" level="warn">
-        <appender-ref ref="ASYNC_NHN_LOG_CRASH_APPENDER"/>
-    </logger>
+<!--    &lt;!&ndash; Racingcar Logger 정의 &ndash;&gt;-->
+<!--    <logger name="errorLogger" level="warn">-->
+<!--        <appender-ref ref="ASYNC_NHN_LOG_CRASH_APPENDER"/>-->
+<!--    </logger>-->
 
-    <!-- Console Appender 정의 -->
-    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
-        </encoder>
-    </appender>
+<!--    &lt;!&ndash; Console Appender 정의 &ndash;&gt;-->
+<!--    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">-->
+<!--        <encoder>-->
+<!--            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>-->
+<!--        </encoder>-->
+<!--    </appender>-->
 
-    <!-- Root Logger 정의 -->
-    <root level="DEBUG">
-        <appender-ref ref="CONSOLE"/>
-    </root>
-</configuration>
+<!--    &lt;!&ndash; Root Logger 정의 &ndash;&gt;-->
+<!--    <root level="DEBUG">-->
+<!--        <appender-ref ref="CONSOLE"/>-->
+<!--    </root>-->
+<!--</configuration>-->

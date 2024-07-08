@@ -45,12 +45,11 @@ public class PurchaseBookCustomRepositoryImpl implements PurchaseBookCustomRepos
 	 * 주문 id(PurchaseID(Long)) 로 주문 책 dto로 변환해서 불러오기
 	 *
 	 * @param purchaseId 조회할 주문 id
-	 * @param pageable page
 	 * @return Page<ReadPurchaseBookResponse>(책dto와 주문 dto가 결합된 값)
 	 */
 	@Override
-	public Page<ReadPurchaseBookResponse> readBookPurchaseResponses(Long purchaseId, Pageable pageable) {
-		List<ReadPurchaseBookResponse> response = jpaQueryFactory.select(
+	public List<ReadPurchaseBookResponse> readBookPurchaseResponses(Long purchaseId) {
+		return jpaQueryFactory.select(
 				Projections.constructor(ReadPurchaseBookResponse.class,
 					Projections.constructor(ReadBookByPurchase.class,
 						qPurchaseBook.book.title
@@ -72,30 +71,18 @@ public class PurchaseBookCustomRepositoryImpl implements PurchaseBookCustomRepos
 			.leftJoin(qTotalImage)
 			.on(qTotalImage.bookImage.id.eq(qBookImage.id))
 			.where(qPurchaseBook.purchase.id.eq(purchaseId))
-			.offset(pageable.getOffset())
-			.limit(pageable.getPageSize())
 			.fetch();
-
-		Long total = (jpaQueryFactory.select(qPurchaseBook.count())
-			.from(qPurchaseBook)
-			.where(qPurchaseBook.purchase.id.eq(purchaseId))
-			.fetchOne());
-		if (total <= 0) {
-			total = 0L;
-		}
-
-		return new PageImpl<>(response, pageable, total);
 	}
+
 	/**
 	 * 주문 id(orderNumber(UUID)) 로 주문 책 dto로 변환해서 불러오기
 	 *
 	 * @param purchaseId 조회할 주문 id
-	 * @param pageable page
 	 * @return Page<ReadPurchaseBookResponse>(책dto와 주문 dto가 결합된 값)
 	 */
 	@Override
-	public Page<ReadPurchaseBookResponse> readGuestBookPurchaseResponses(String purchaseId, Pageable pageable) {
-		List<ReadPurchaseBookResponse> response = jpaQueryFactory.select(
+	public List<ReadPurchaseBookResponse> readGuestBookPurchaseResponses(String purchaseId) {
+		return jpaQueryFactory.select(
 				Projections.constructor(ReadPurchaseBookResponse.class,
 					Projections.constructor(ReadBookByPurchase.class,
 						qPurchaseBook.book.title
@@ -117,18 +104,6 @@ public class PurchaseBookCustomRepositoryImpl implements PurchaseBookCustomRepos
 			.leftJoin(qTotalImage)
 			.on(qTotalImage.bookImage.id.eq(qBookImage.id))
 			.where(qPurchaseBook.purchase.orderNumber.eq(UUID.fromString(purchaseId)))
-			.offset(pageable.getOffset())
-			.limit(pageable.getPageSize())
 			.fetch();
-
-		Long total = (jpaQueryFactory.select(qPurchaseBook.count())
-			.from(qPurchaseBook)
-			.where(qPurchaseBook.purchase.orderNumber.eq(UUID.fromString(purchaseId)))
-			.fetchOne());
-		if (total <= 0) {
-			total = 0L;
-		}
-
-		return new PageImpl<>(response, pageable, total);
 	}
 }
