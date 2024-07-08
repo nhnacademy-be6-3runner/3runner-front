@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html>
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
@@ -83,7 +83,7 @@
 <body>
 <div class="login-container">
     <h2>Login</h2>
-    <form th:action="@{/login}" method="post">
+    <form action="/login/process" method="post">
         <div class="form-group">
             <label for="email">Username:</label>
             <input type="text" id="email" name="email" required>

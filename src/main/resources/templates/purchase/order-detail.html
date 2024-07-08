@@ -38,7 +38,7 @@
                     <button type="submit" class="confirm-order-btn" th:if="${order.status.toString() != 'CONFIRMATION'}"  >주문 확정</button>
                 </form>
                 <!-- 결제 취소 버튼 (COMPLETED 상태인 경우) -->
-                <button class="refund-btn"
+                <button class="payment-cancel"
                         th:if="${order.status.toString() == 'COMPLETED'}"
                         th:attr="data-order-id=${order.orderNumber}"
                         th:text="'결제 취소'">
@@ -55,14 +55,18 @@
         <div class="text-center mt-4">
             <nav>
                 <ul class="pagination justify-content-center">
-                    <li class="page-item" th:classappend="${orders.hasPrevious()} ? '' : 'disabled'">
-                        <a class="page-link" href="#" th:onclick="'loadBooks(' + (${orders.number} - 1) + ', ' + ${orders.size} + '); return false;'">이전</a>
+
+                    <li class="page-item" th:if="${page > 0}">
+                        <a class="page-link" th:href="@{'/orders/members?page={page}' (page = ${page - 1})}">이전</a>
                     </li>
-                    <li class="page-item" th:each="i : ${#numbers.sequence(0, orders.totalPages - 1)}" th:classappend="${i} == ${orders.number} ? 'active' ">
-                        <a class="page-link" href="#" th:onclick="'loadBooks(' + ${i} + ', ' + ${orders.size} + '); return false;'" th:text="${i + 1}">1</a>
+                    <li class="page-item" th:each="i : ${#numbers.sequence(0, orders.totalPages - 1)}"
+                        th:if="${i >= (page / 5) * 5 and i < ((page / 5) + 1) * 5}">
+                        <a class="page-link" th:href="@{'/orders/members?page={page}' (page = ${i})}"
+                           th:text="${i + 1}"
+                           th:classappend="${i == page} ? 'active' : ''"></a>
                     </li>
-                    <li class="page-item" th:classappend="${orders.hasNext()} ? '' : 'disabled'">
-                        <a class="page-link" href="#" th:onclick="'loadBooks(' + (${orders.number} + 1) + ', ' + ${orders.size} + '); return false;'">다음</a>
+                    <li class="page-item" th:if="${page < orders.totalPages - 1 }">
+                        <a class="page-link" th:href="@{'/orders/members?page={page}' (page = ${page + 1})}">다음</a>
                     </li>
                 </ul>
             </nav>
@@ -116,7 +120,24 @@
         document.querySelectorAll('.refund-btn').forEach(button => {
             button.addEventListener('click', function () {
                 const orderId = this.getAttribute('data-order-id');
-                console.log(`Refund order ${orderId}`);
+                const url = `/refund/${orderId}`;
+                console.log(`Redirecting to ${url}`);
+                window.location.href = url; // Redirect to the constructed URL
+            });
+        });
+        document.querySelectorAll('.payment-cancel').forEach(button => {
+            button.addEventListener('click', function () {
+                const orderId = this.getAttribute('data-order-id');
+                const url = `/refund/cancelPayment/${orderId}`;
+
+                // 폼 생성
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = url;
+
+                // 폼을 문서에 추가하고 제출
+                document.body.appendChild(form);
+                form.submit();
             });
         });
     });
