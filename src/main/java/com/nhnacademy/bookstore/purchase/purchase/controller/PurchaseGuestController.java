@@ -42,7 +42,7 @@ public class PurchaseGuestController {
 	 */
 	@GetMapping("/guests/purchases")
 	public ApiResponse<ReadPurchaseResponse> readPurchase(@RequestParam String orderNumber,
-		@RequestParam String password) {
+		@RequestParam(required = false) String password) {
 
 		ReadPurchaseResponse response = purchaseGuestService.readPurchase(UUID.fromString(orderNumber), password);
 

@@ -29,6 +29,9 @@ import com.nhnacademy.bookstore.purchase.purchase.exception.PurchaseAlreadyExist
 import com.nhnacademy.bookstore.purchase.purchase.exception.PurchaseDoesNotExistException;
 import com.nhnacademy.bookstore.purchase.purchase.exception.PurchaseFormArgumentErrorException;
 import com.nhnacademy.bookstore.purchase.purchase.exception.PurchaseNoAuthorizationException;
+import com.nhnacademy.bookstore.purchase.refund.exception.CreateRefundRequestFormException;
+import com.nhnacademy.bookstore.purchase.refund.exception.NotExistsRefund;
+import com.nhnacademy.bookstore.purchase.refund.exception.NotExistsRefundRecord;
 import com.nhnacademy.bookstore.util.ApiResponse;
 
 /**
@@ -79,7 +82,8 @@ public class WebControllerAdvice {
 		BookCartArgumentErrorException.class,
 		TossPaymentException.class,
 		UpdateBookRequestFormException.class,
-		AlreadyHaveTagException.class
+		AlreadyHaveTagException.class,
+		CreateRefundRequestFormException.class
 	})
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ApiResponse<ErrorResponseForm> badRequestHandler(Exception ex, Model model) {
@@ -105,7 +109,9 @@ public class WebControllerAdvice {
 		PurchaseDoesNotExistException.class,
 		PurchaseDoesNotExistException.class,
 		NotFindImageException.class,
-		BookDoesNotExistException.class
+		BookDoesNotExistException.class,
+		NotExistsRefund.class,
+		NotExistsRefundRecord.class
 	})
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	public ApiResponse<ErrorResponseForm> notFoundHandler(Exception ex, Model model) {
