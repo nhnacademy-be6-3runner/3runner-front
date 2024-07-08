@@ -20,7 +20,7 @@ import com.nhnacademy.front.util.ApiResponse;
 
 import jakarta.validation.Valid;
 
-@FeignClient(name = "addressControllerClient",url = "http://localhost:8080")
+@FeignClient(name = "addressControllerClient",url = "http://${feign.client.url}")
 public interface AddressControllerClient {
 	@PostMapping("/bookstore/members/addresses")
 	ApiResponse<Void> createAddress(@Valid @RequestBody CreateAddressRequest request);
