@@ -24,6 +24,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * 도서 커스텀 레포지토리입니다.
@@ -43,13 +44,6 @@ public class BookCustomRepositoryImpl implements BookCustomRepository {
         this.jpaQueryFactory = new JPAQueryFactory(entityManager);
     }
 
-    /**
-     * 도서 리스트를 불러오는 쿼리입니다.
-     *
-     * @param pageable 페이지
-     * @return 도서 리스트
-     * @author 김은비
-     */
     @Override
     public Page<BookListResponse> readBookList(Pageable pageable) {
         List<BookListResponse> content = jpaQueryFactory.select(
@@ -60,6 +54,7 @@ public class BookCustomRepositoryImpl implements BookCustomRepository {
                                 qBook.sellingPrice,
                                 qBook.author,
                                 qTotalImage.url))
+                .distinct()
                 .from(qBook)
                 .leftJoin(qBookImage)
                 .on(qBookImage.book.id.eq(qBook.id).and(qBookImage.type.eq(BookImageType.MAIN)))
@@ -67,18 +62,19 @@ public class BookCustomRepositoryImpl implements BookCustomRepository {
                 .on(qTotalImage.bookImage.id.eq(qBookImage.id))
                 .leftJoin(qBookLike).on(qBookLike.book.id.eq(qBook.id))
                 .groupBy(qBook.id, qBook.title, qBook.price, qBook.sellingPrice, qBook.author, qTotalImage.url)
+                .orderBy(getSort(pageable.getSort()))  // getSort 메서드에서 기본적으로 고유 정렬 키를 포함하도록 변경
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .orderBy(getSort(pageable.getSort()))
                 .fetch();
+
         long total = Optional.ofNullable(
                 jpaQueryFactory.select(qBook.count())
                         .from(qBook)
                         .fetchOne()
         ).orElse(0L);
+
         return new PageImpl<>(content, pageable, total);
     }
-
 
     /**
      * Spring Data JPA Sort 객체를 OrderSpecifier 배열로 변환하는 메서드입니다.
@@ -87,10 +83,9 @@ public class BookCustomRepositoryImpl implements BookCustomRepository {
      * @param sort 정렬 기준을 나타내는 Sort 객체
      * @return 정렬 기준에 따라 정렬된 OrderSpecifier 배열
      * @throws IllegalArgumentException 정렬 기준이 잘못된 경우
-     * @author 김은비
      */
     private OrderSpecifier<?>[] getSort(Sort sort) {
-        return sort.stream()
+        List<OrderSpecifier<?>> orders = sort.stream()
                 .map(order -> {
                     String property = order.getProperty();
                     boolean isAscending = order.isAscending();
@@ -118,7 +113,12 @@ public class BookCustomRepositoryImpl implements BookCustomRepository {
                             throw new IllegalArgumentException("정렬 기준이 잘못되었습니다!!: " + property);
                     }
                 })
-                .toArray(OrderSpecifier[]::new);
+                .collect(Collectors.toList());
+
+        // 고유 정렬 키 추가
+        orders.add(new OrderSpecifier<>(Order.ASC, qBook.id));
+
+        return orders.toArray(new OrderSpecifier[0]);
     }
 
 
