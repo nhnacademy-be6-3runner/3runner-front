@@ -93,6 +93,7 @@ public class Member {
 		this.setGrade(Grade.General);
 		this.setCreatedAt(ZonedDateTime.now());
 		this.setAuthProvider(AuthProvider.GENERAL);
+		this.setLastLoginDate(ZonedDateTime.now());
 	}
 
     /**
