@@ -125,8 +125,21 @@
             <div th:utext="${book.description()}"></div>
         </div>
     </div>
-    <div class="review-list">
-        <h2>리뷰 목록</h2>
+    <div class="review-list additional-info">
+        <h2>리뷰</h2>
+        <div class="sorting-options mb-3">
+            <label for="reviewSort"></label>
+            <select id="reviewSort" class="form-select d-inline-block w-auto" onchange="changeReviewSorting()">
+                <option value="createdAt">최신순</option>
+                <option value="likes">좋아요순</option>
+            </select>
+
+            <label for="reviewSortOrder" class="ms-3"></label>
+            <select id="reviewSortOrder" class="form-select d-inline-block w-auto" onchange="changeReviewSorting()">
+                <option value="desc">내림차순</option>
+                <option value="asc">오름차순</option>
+            </select>
+        </div>
         <div id="review-list-items" class="list-group">
             <!--리뷰 목록-->
         </div>
@@ -135,7 +148,6 @@
         </div>
     </div>
 </div>
-<script th:src="@{/js/fragments/header.js}"></script>
 <script th:src="@{/js/detail/book-detail.js}"></script>
 <!-- Bootstrap Icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css">
