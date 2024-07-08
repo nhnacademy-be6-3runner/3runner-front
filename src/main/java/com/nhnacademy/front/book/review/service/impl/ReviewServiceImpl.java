@@ -1,12 +1,16 @@
 package com.nhnacademy.front.book.review.service.impl;
 
+import com.nhnacademy.front.book.book.exception.InvalidApiResponseException;
 import com.nhnacademy.front.book.review.controller.feign.ReviewClient;
 import com.nhnacademy.front.book.review.dto.request.CreateReviewRequest;
 import com.nhnacademy.front.book.review.dto.request.UserCreateReviewRequest;
+import com.nhnacademy.front.book.review.dto.response.ReviewListResponse;
 import com.nhnacademy.front.book.review.service.ReviewService;
 import com.nhnacademy.front.util.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +34,17 @@ public class ReviewServiceImpl implements ReviewService {
         log.info("리뷰 생성 : {}", createReviewRequest);
         ApiResponse<Long> response = reviewClient.createReview(purchaseBookId, memberId, createReviewRequest);
         return response.getBody().getData();
+    }
+
+    @Override
+    public Page<ReviewListResponse> readAllReviewsByBookId(Long bookId, int page, int size, String sort) {
+        ApiResponse<Page<ReviewListResponse>> response = reviewClient.readAllReviewsByBookId(bookId, page, size, sort);
+
+        if (response.getHeader().isSuccessful() && response.getBody() != null) {
+            return response.getBody().getData();
+        } else {
+            throw new InvalidApiResponseException("리뷰 페이지 조회 exception");
+        }
     }
 
     private List<String> contentToImageList(String content) {

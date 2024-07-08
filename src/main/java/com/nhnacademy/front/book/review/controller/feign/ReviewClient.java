@@ -1,13 +1,12 @@
 package com.nhnacademy.front.book.review.controller.feign;
 
 import com.nhnacademy.front.book.review.dto.request.CreateReviewRequest;
+import com.nhnacademy.front.book.review.dto.response.ReviewListResponse;
 import com.nhnacademy.front.util.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.*;
 
 @FeignClient(name = "ReviewClient", url = "http://${feign.client.url}/bookstore")
 public interface ReviewClient {
@@ -25,6 +24,13 @@ public interface ReviewClient {
     // TODO 리뷰 전체 조회
 
     // TODO 책 아이디로 리뷰 조회
+    @GetMapping("/books/{bookId}/reviews")
+    ApiResponse<Page<ReviewListResponse>> readAllReviewsByBookId(
+            @PathVariable long bookId,
+            @RequestParam int page,
+            @RequestParam int size,
+            @RequestParam String sort
+    );
 
     // TODO 사용자 아이디로 리뷰 조회
 }

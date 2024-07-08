@@ -33,22 +33,22 @@
         </div>
     </div>
 
+    <hr class="my-4">
+
     <div class="product-detail">
         <div class="product-images">
-            <table>
-                <tr>
-                    <th>
-                        <img th:src="@{/api/images/book/download(fileName=${book.imagePath()})}" alt="book main image">
-                    </th>
-                </tr>
-            </table>
+            <img th:src="@{/api/images/book/download(fileName=${book.imagePath()})}" alt="book main image">
         </div>
-
         <div class="product-info">
+            <svg id="like" class="like" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="30" height="30">
+                <path d="M47.6 300.4L228.3 469.1c7.5 7 17.4 10.9 27.7 10.9s20.2-3.9 27.7-10.9L464.4 300.4c30.4-28.3 47.6-68 47.6-109.5v-5.8c0-69.9-50.5-129.5-119.4-141C347 36.5 300.6 51.4 268 84L256 96 244 84c-32.6-32.6-79-47.5-124.6-39.9C50.5 55.6 0 115.2 0 185.1v5.8c0 41.5 17.2 81.2 47.6 109.5z"/>
+            </svg>
             <h1><span th:text="${book.title()}"></span></h1>
             <div class="price-container">
-                <span class="original-price"><span th:text="${book.price()}"></span></span>
-                <span class="selling-price"><span th:text="${book.sellingPrice()}"></span></span>
+                <span class="original-price" style="text-decoration: line-through; color: #999999;">
+                    <span th:text="${book.price()}"></span>원
+                </span>
+                <span class="selling-price"> → <span th:text="${book.sellingPrice()}"></span>원</span>
             </div>
             <div class="rating">
                 <span th:each="star : ${#numbers.sequence(1, rating)}">
@@ -62,22 +62,44 @@
                 </span>
             </div>
 
-            <div class="options">
-                <label for="quantity">수량</label>
-                <input type="number" id="quantityCart" name="quantityCart" value="1">
-            </div>
-            <div class="action-buttons">
-                <input type="hidden" id="bookIdCart" name="bookIdCart" th:value="${book.id()}"/>
-                <button class="add-to-cart" onclick="submitCart()">장바구니 담기</button>
+            <hr class="my-3">
 
-                <form action="/purchases" method="POST">
-                    <input type="hidden" id="quantity" name="quantity" value="1">
-                    <input type="hidden" id="bookId" name="bookId" th:value="${book.id()}"/>
-                    <button type="submit" class="buy-now">바로 구매</button>
-                </form>
+            <div class = "coupon">
+                <!--TODO 다운 받을 수 있는 쿠폰 조회 -->
+                <span>발급 가능한 쿠폰</span>
+                <div class="input-group mb-3">
+                    <select class="form-select" id="couponSelect">
+                        <option selected>쿠폰을 선택하세요</option>
+                    </select>
+                    <button class="btn btn-primary" onclick="downloadSelectedCoupon()">다운로드</button>
+                </div>
+            </div>
+
+            <div class="purchase-button">
+                <div class="options">
+                    <label for="quantity">수량</label>
+                    <div class="input-group">
+                        <button type="button" class="btn btn-outline-secondary" onclick="decreaseQuantity()">-</button>
+                        <input type="number" id="quantityCart" name="quantityCart" value="1" min="1" class="form-control text-center" onchange="updateTotalPrice()">
+                        <button type="button" class="btn btn-outline-secondary" onclick="increaseQuantity()">+</button>
+                    </div>
+                </div>
+                <div class="total-price">
+                    총 가격  <span id="totalPrice" th:text="${book.sellingPrice()}"></span>원
+                </div>
+                <div class="action-buttons">
+                    <button class="btn btn-outline-success" onclick="submitCart()">장바구니 담기</button>
+                    <form action="/purchases" method="POST" class="fixed-size-button">
+                        <input type="hidden" id="quantity" name="quantity" value="1">
+                        <input type="hidden" id="bookId" name="bookId" th:value="${book.id()}"/>
+                        <button type="submit" class="btn btn-outline-primary">바로 구매</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
+
+    <hr class="my-4">
 
     <div class="additional-info">
         <h2>책 정보</h2>
@@ -103,35 +125,20 @@
             <div th:utext="${book.description()}"></div>
         </div>
     </div>
-
+    <div class="review-list">
+        <h2>리뷰 목록</h2>
+        <div id="review-list-items" class="list-group">
+            <!--리뷰 목록-->
+        </div>
+        <div class="text-center mt-4">
+            <button class="btn btn-primary" onclick="loadMoreReviews()">리뷰 더보기</button>
+        </div>
+    </div>
 </div>
-<script>
-    function addCart(bookId, quantity) {
-        $.ajax({
-            url: window.location.origin+'/carts',
-            type: 'POST',
-            contentType: 'application/x-www-form-urlencoded',
-            data: $.param({bookId: bookId, quantity: quantity}),
-            success: function(response) {
-                console.log(response);
-                window.location.href = window.location.origin+'/api/carts';
-            },
-            error: function(xhr, status, error) {
-                console.error('Error:', error);
-                console.error('Status:', status);
-                console.error('XHR:', xhr);
-            }
-        });
-    }
-    function submitCart() {
-        const bookId = document.getElementById('bookIdCart').value;
-        const quantity = document.getElementById('quantityCart').value;
-        addCart(bookId, quantity);
-    }
-</script>
-
 <script th:src="@{/js/fragments/header.js}"></script>
+<script th:src="@{/js/detail/book-detail.js}"></script>
 <!-- Bootstrap Icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css">
+<div th:replace="fragments/footer :: footer"></div>
 </body>
 </html>

@@ -36,7 +36,10 @@ public class BookApiController {
 	}
 
 	@GetMapping("/main")
-	public ApiResponse<Page<BookListResponse>> readAllBooks(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "12") int size, @RequestParam(defaultValue = "publishedDate,desc") String sort) {
+	public ApiResponse<Page<BookListResponse>> readAllBooks(
+			@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "12") int size,
+			@RequestParam(defaultValue = "publishedDate,desc") String sort) {
 		Page<BookListResponse> bookList = bookService.readAllBooks(page, size, sort);
 		return ApiResponse.success(bookList);
 	}
