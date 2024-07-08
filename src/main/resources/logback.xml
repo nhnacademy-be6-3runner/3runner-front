@@ -13,12 +13,19 @@
     </appender>
 
     <!-- Racingcar Logger 정의 -->
-    <logger name="racingcar" level="INFO">
+    <logger name="errorLogger" level="warn">
         <appender-ref ref="ASYNC_NHN_LOG_CRASH_APPENDER"/>
     </logger>
 
+    <!-- Console Appender 정의 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
     <!-- Root Logger 정의 -->
     <root level="DEBUG">
-        <!-- 여기에 다른 Appender를 추가할 수 있습니다. 예를 들어, ConsoleAppender 또는 FileAppender -->
+        <appender-ref ref="CONSOLE"/>
     </root>
 </configuration>

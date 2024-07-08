@@ -13,15 +13,8 @@ public class TestController {
 
 	@GetMapping("/test")
 	public String test() {
-		Logger logger = LoggerFactory.getLogger("racingcar");
-		logger.debug("Hello world. debug");
-		logger.warn("Hello world. warn");
+		Logger logger = LoggerFactory.getLogger("errorLogger");
 		logger.error("Hello world. error");
-		logger.info("Hello world. info");
-
-		log.info("This is an info message");
-		log.error("This is an error message");
-		log.debug("This is a debug message");
 		return "test!";
 	}
 
