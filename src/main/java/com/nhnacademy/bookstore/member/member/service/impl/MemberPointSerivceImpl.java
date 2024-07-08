@@ -69,6 +69,7 @@ public class MemberPointSerivceImpl implements MemberPointService {
         PointPolicy pointPolicy = pointPolicyRepository
                 .findByPolicyName("회원가입포인트").orElseThrow(()->new PointPolicyDoesNotExistException("포인트 정책이 없습니다"));
         final long POINT_RATE = pointPolicy.getPolicyValue();
+
         //포인트 적립
         pointRecordRepository.save(new PointRecord(
                 POINT_RATE,

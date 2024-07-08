@@ -81,8 +81,8 @@ public class MemberServiceImpl implements MemberService {
 			memberRepository.save(member);
 			//없는경우 새로 가져온다.
 
-			//couponMemberService.issueWelcomeCoupon(member);
-			//memberPointService.welcomePoint(member.getId());
+			couponMemberService.issueWelcomeCoupon(member);
+			memberPointService.welcomePoint(member);
 		}
 		return null;
 	}
@@ -104,10 +104,12 @@ public class MemberServiceImpl implements MemberService {
 		if (findmember.isPresent()) {
 			throw new AlreadyExistsEmailException();
 		}
+		memberRepository.save(member);
 
-		//couponMemberService.issueWelcomeCoupon(member);
-		//memberPointService.welcomePoint(member.getId());
-		return memberRepository.save(member);
+		couponMemberService.issueWelcomeCoupon(member);
+		memberPointService.welcomePoint(member);
+
+		return member;
 	}
 
 	/**
