@@ -6,6 +6,7 @@ import com.nhnacademy.bookstore.entity.member.Member;
 import com.nhnacademy.bookstore.member.member.exception.MemberNotExistsException;
 import com.nhnacademy.bookstore.member.member.repository.MemberRepository;
 import com.nhnacademy.bookstore.purchase.coupon.exception.CouponDoesNotExistException;
+import com.nhnacademy.bookstore.purchase.coupon.exception.CouponDuplicatedRegisterException;
 import com.nhnacademy.bookstore.purchase.coupon.exception.CouponNotAllowedException;
 import com.nhnacademy.bookstore.purchase.coupon.feign.CouponControllerClient;
 import com.nhnacademy.bookstore.purchase.coupon.feign.dto.request.CreateCouponFormRequest;
@@ -173,6 +174,10 @@ public class CouponMemberServiceImpl implements CouponMemberService {
                 .filter(response -> code.equals(response.code().toString()))
                 .findFirst()
                 .orElseThrow(()-> new CouponDoesNotExistException("쿠폰이 없습니다."));
+
+        if (couponRepository.findCouponByCouponFormId(matchingCoupon.couponFormId()).isPresent()) {
+            throw new CouponDuplicatedRegisterException("한번 등록한 쿠폰은 두번 등록할수 없습니다.");
+        }
 
         Coupon coupon = new Coupon(
                 matchingCoupon.couponFormId(),
