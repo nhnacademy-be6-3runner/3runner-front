@@ -69,7 +69,7 @@ public class AddressController {
         Member member = memberService.readById(Long.valueOf(memberId));
         List<Address> addresses = addressServiceImpl.readAll(member);
         return new ApiResponse<List<AddressResponse>>(new ApiResponse.Header(true, 200),
-                new ApiResponse.Body<>(addresses.stream().map(a -> AddressResponse.builder().id(a.getId())
+                new ApiResponse.Body<>(addresses.stream().map(a -> AddressResponse.builder().addressId(a.getId())
                         .name(a.getName()).country(a.getCountry()).city(a.getCity()).state(a.getState()).road(a.getRoad()).postalCode(a.getPostalCode()).build()).collect(Collectors.toList())));
 
 
