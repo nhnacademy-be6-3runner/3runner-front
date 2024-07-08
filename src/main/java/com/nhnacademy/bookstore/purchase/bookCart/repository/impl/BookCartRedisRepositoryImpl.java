@@ -55,6 +55,7 @@ public class BookCartRedisRepositoryImpl implements BookCartRedisRepository {
                 .url(response.url())
                 .title(response.title())
                 .quantity(quantity)
+                .leftQuantity(response.leftQuantity())
                 .build();
 
         redisTemplate.opsForHash().put(hashName + ":", id.toString(), updatedResponse);
