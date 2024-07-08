@@ -1,5 +1,7 @@
 package com.nhnacademy.front.purchase.purchase.feign;
 
+import java.util.List;
+
 import com.nhnacademy.front.util.ApiResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.data.domain.Page;
@@ -28,9 +30,7 @@ public interface PurchaseMemberControllerClient {
     ApiResponse<ReadPurchaseResponse> readPurchase (@PathVariable(value = "purchaseId", required = false) Long purchaseId);
 
     @GetMapping("/bookstore/members/purchases")
-    ApiResponse<Page<ReadPurchaseResponse>> readPurchases (@RequestParam int page
-        , @RequestParam int size
-        , @RequestParam(required = false) String sort);
+    ApiResponse<List<ReadPurchaseResponse>> readPurchases ();
 
     @PostMapping("/bookstore/members/purchases")
     ApiResponse<Void> createPurchase (@Valid @RequestBody CreatePurchaseRequest createPurchaseRequest);
