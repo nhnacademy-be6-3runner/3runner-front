@@ -110,14 +110,14 @@ public class LoginController {
 	//로그인할때 꼭 @이메일 되어잇는 인자 받아야한다.
 
 	@GetMapping("/oauth2/callback/payco")
-	public String paycoCallback(@RequestParam String code, HttpServletResponse response) {
+	public String paycoCallback(@RequestParam String code, HttpServletResponse response,RedirectAttributes redirectAttributes) {
 		//코드까지는 들어온다.
 		try {
 			LoginResponse loginResponse = loginAdapter.handleOAuth2Redirect(code).getBody().getData();//여기까지됌
-			// if(loginResponse.message().equals("일반 회원 이메일인데 페이코 접속")) {
-			// 	redirectAttributes.addFlashAttribute("errorMessage", "아이디나 비밀번호가 틀립니다.");
-			// 	return "redirect:/login";
-			// }
+			if(loginResponse.message().equals("일반 회원 이메일인데 페이코 접속")) {
+				redirectAttributes.addFlashAttribute("errorMessage", "일반 회원 이메일로 페이코 접속을 시도하였습니다.");
+				return "redirect:/login";
+			}
 			response.addCookie(new Cookie("Access", TokenHolder.getAccessToken()));//
 			response.addCookie(new Cookie("Refresh", TokenHolder.getRefreshToken()));
 		}catch (Exception e) {
@@ -125,6 +125,6 @@ public class LoginController {
 		}
 
 
-		return "index";//메인페이지 반환한다.
+		return "redirect:/";//메인페이지 반환한다.
 	}
 }
