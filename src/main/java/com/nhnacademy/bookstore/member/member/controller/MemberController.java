@@ -79,7 +79,7 @@ public class MemberController {
 	 * @author 유지아
 	 */
 	@GetMapping("/bookstore/members")
-	public ApiResponse<GetMemberResponse> readById(@RequestHeader("member-id") Long memberId) {
+	public ApiResponse<GetMemberResponse> readById(@RequestHeader("Member-Id") Long memberId) {
 
 		Member member = memberService.readById(memberId);
 		GetMemberResponse getMemberResponse = GetMemberResponse.builder()
@@ -134,7 +134,7 @@ public class MemberController {
 	 * @author 유지아
 	 */
 	@GetMapping("/bookstore/members/auths")
-	public ApiResponse<List<AuthResponse>> readAuths(@RequestHeader("member-id") Long memberId) {
+	public ApiResponse<List<AuthResponse>> readAuths(@RequestHeader("Member-Id") Long memberId) {
 
 		return new ApiResponse<List<AuthResponse>>(new ApiResponse.Header(true, 200),
 			new ApiResponse.Body<>(memberAuthService.readAllAuths(memberId)
@@ -155,7 +155,7 @@ public class MemberController {
 	 */
 	@Transactional
 	@PutMapping("/bookstore/members")
-	public ApiResponse<UpdateMemberResponse> updateMember(@RequestHeader(name = "member-id") Long memberId,
+	public ApiResponse<UpdateMemberResponse> updateMember(@RequestHeader(name = "Member-Id") Long memberId,
 		@Valid @RequestBody UpdateMemberRequest updateMemberRequest) {
 		Member updatedMember = memberService.updateMember(memberId, updateMemberRequest);
 		UpdateMemberResponse updateMemberResponse = UpdateMemberResponse.builder()
@@ -173,7 +173,7 @@ public class MemberController {
 	 * @author 오연수
 	 */
 	@DeleteMapping("/bookstore/members")
-	public ApiResponse<Void> deleteMember(@RequestHeader(name = "member-id") Long memberId) {
+	public ApiResponse<Void> deleteMember(@RequestHeader(name = "Member-Id") Long memberId) {
 		memberService.deleteMember(memberId);
 
 		return new ApiResponse<>(new ApiResponse.Header(true, HttpStatus.NO_CONTENT.value()));
@@ -206,7 +206,7 @@ public class MemberController {
 		}
 	}
 	@PutMapping("/bookstore/members/password")
-	public ApiResponse<Void> updatePassword(@RequestHeader(name = "member-id") Long memberId, @RequestBody UpdatePasswordRequest updatePasswordRequest){
+	public ApiResponse<Void> updatePassword(@RequestHeader(name = "Member-Id") Long memberId, @RequestBody UpdatePasswordRequest updatePasswordRequest){
 		try{
 			memberService.updatePassword(memberId, updatePasswordRequest);
 			return  new ApiResponse<>(new ApiResponse.Header(true, HttpStatus.ACCEPTED.value()));
@@ -215,7 +215,7 @@ public class MemberController {
 		}
 	}
 	@PostMapping("/bookstore/members/password")
-	public ApiResponse<Void> isPasswordMatch(@RequestHeader(name = "member-id") Long memberId,@RequestBody PasswordCorrectRequest request){
+	public ApiResponse<Void> isPasswordMatch(@RequestHeader(name = "Member-Id") Long memberId,@RequestBody PasswordCorrectRequest request){
 		try{
 			if(memberService.isCorrectPassword(memberId,request.password())){
 				return new ApiResponse<>(new ApiResponse.Header(true, HttpStatus.ACCEPTED.value()));

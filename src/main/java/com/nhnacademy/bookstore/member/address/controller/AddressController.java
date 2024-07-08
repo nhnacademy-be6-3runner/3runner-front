@@ -47,7 +47,7 @@ public class AddressController {
      *
      */
     @PostMapping("/bookstore/members/addresses")
-    public ApiResponse<Void> createAddress(@RequestBody @Valid CreateAddressRequest request,@RequestHeader(value = "Member-id")Long memberId) {
+    public ApiResponse<Void> createAddress(@RequestBody @Valid CreateAddressRequest request,@RequestHeader(value = "Member-Id")Long memberId) {
         Member member = memberService.readById(memberId);
         Address address = new Address(request, member);
         addressServiceImpl.save(address,member);
@@ -64,7 +64,7 @@ public class AddressController {
      */
 //주소를 추가한다.
     @GetMapping("/bookstore/members/addresses")
-    public ApiResponse<List<AddressResponse>> readAllAddresses(@RequestHeader("member-id") Long memberId) {
+    public ApiResponse<List<AddressResponse>> readAllAddresses(@RequestHeader("Member-Id") Long memberId) {
 
         Member member = memberService.readById(Long.valueOf(memberId));
         List<Address> addresses = addressServiceImpl.readAll(member);
