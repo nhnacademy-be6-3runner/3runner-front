@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Member Details</title>
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%; /* Adjust size as needed */
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .button-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .button-container button {
+            margin: 0 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+<body>
+<h1>Member Details</h1>
+<div>
+    <h2>Member Information</h2>
+    <p>Email: <span th:text="${member.email()}"></span></p>
+    <p>Name: <span th:text="${member.name()}"></span></p>
+    <p>Age: <span th:text="${member.age()}"></span></p>
+    <p>Phone: <span th:text="${member.phone()}"></span></p>
+    <p>Birthday: <span th:text="${member.birthday()}"></span></p>
+    <p>Point: <span th:text="${member.point()}"></span></p>
+    <p>Greade: <span th:text="${member.grade()}"></span></p>
+    <p>Created_at: <span th:text="${member.createdAt()}"></span></p>
+    <button id="editMemberBtn">멤버 수정하기</button>
+</div>
+
+
+
+
+<div id="memberEditModal" class="modal hidden">
+    <div class="modal-content">
+        <span id="close">&times;</span>
+        <form id="editMemberForm">
+            <h2>멤버 정보 수정</h2>
+            <div>
+                <label for="membername">Name:</label>
+                <input type="text" id="membername" name="name"  th:value="${member.name}">
+            </div>
+            <div>
+                <label for="age">Age:</label>
+                <input type="number" id="age" name="age"  th:value="${member.age}">
+            </div>
+            <div>
+                <label for="phone">Phone:</label>
+                <input type="text" id="phone" name="phone"  th:value="${member.phone}">
+            </div>
+            <div>
+                <label for="birthday">Birthday:</label>
+                <input type="date" id="birthday" name="birthday"  th:value="${member.birthday}">
+            </div>
+            <!-- 추가 필드 작성 -->
+            <button type="submit">저장하기</button>
+        </form>
+    </div>
+</div>
+
+
+<div>
+    <h2>Addresses</h2>
+    <ul>
+        <!-- 주소 목록을 반복해서 표시 -->
+        <li th:each="address : ${addresses}" th:if="${not #lists.isEmpty(addresses)}">
+            <span th:text="${address.name()} + ', ' + ${address.country()} + ', ' + ${address.city()}
+                + ', ' + ${address.state()} + ', ' + ${address.road()}+ ', ' + ${address.postalCode()}"></span>
+            <!-- 삭제 버튼 추가, 'deleteAddress' 자바스크립트 함수에 주소 ID 전달 -->
+            <button type="button" th:onclick="'deleteAddress(' + ${address.id()} + ');'">Delete</button>
+        </li>
+    </ul>
+    <button id="createAddressBtn">새로운 주소 생성하기</button>
+    <div id="addressModal" class="modal hidden">
+        <div class="modal-content">
+            <span id="close-2">&times;</span>
+            <form id="addressForm">
+                <div id="modalBody">
+                    <h2>새 주소 추가</h2>
+                    <label for="name">이름:</label>
+                    <input type="text" id="name" name="name" required minlength="1" maxlength="20" placeholder="이름 입력">
+
+                    <label for="country">국가:</label>
+                    <input type="text" id="country" name="country" required minlength="1" maxlength="100" placeholder="국가 입력">
+
+                    <label for="city">도시:</label>
+                    <input type="text" id="city" name="city" required minlength="1" maxlength="100" placeholder="도시 입력">
+
+                    <label for="state">주/지역:</label>
+                    <input type="text" id="state" name="state" required minlength="1" maxlength="100" placeholder="주/지역 입력">
+
+                    <label for="road">도로명:</label>
+                    <input type="text" id="road" name="road" required minlength="1" maxlength="100" placeholder="도로명 입력">
+
+                    <label for="postalCode">우편번호:</label>
+                    <input type="text" id="postalCode" name="postalCode" required minlength="1" maxlength="20" placeholder="우편번호 입력">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" id="saveBtn">저장하기</button>
+                </div>
+            </form>
+        </div>
+    </div><!--모달 창 열고 닫는거-->
+
+</div>
+<!-- 비밀번호 변경 및 회원탈퇴 버튼 섹션 -->
+<div class="button-container">
+    <button id="changePasswordBtn">비밀번호 변경</button>
+    <button id="deleteAccountBtn">회원탈퇴</button>
+</div>
+
+<div id="changePasswordModal" class="modal hidden">
+    <div class="modal-content">
+        <span id="close-3" class="close">&times;</span>
+        <form id="changePasswordForm">
+            <h2>비밀번호 변경</h2>
+            <div>
+                <label for="currentPassword">현재 비밀번호:</label>
+                <input type="password" id="currentPassword" name="currentPassword" required>
+                <button type="button" id="verifyPasswordBtn">확인</button>
+            </div>
+            <p id="errorMessage1" class="error-message" style="color: red">비밀번호가 일치하지 않습니다.</p>
+            <div>
+                <label for="newPassword">새 비밀번호:</label>
+                <input type="password" id="newPassword" name="newPassword" required minlength="6" maxlength="50" disabled>
+            </div>
+            <div>
+                <label for="confirmNewPassword">새 비밀번호 재입력:</label>
+                <input type="password" id="confirmNewPassword" name="confirmNewPassword" required disabled>
+            </div>
+            <p id="errorMessage2" class="error-message" style="color: red">새 비밀번호와 재입력된 새 비밀번호가 일치하지 않습니다.</p>
+            <button type="submit" id="savePasswordBtn" disabled>저장하기</button>
+        </form>
+    </div>
+</div>
+
+
+
+
+
+
+
+</body>
+</html>

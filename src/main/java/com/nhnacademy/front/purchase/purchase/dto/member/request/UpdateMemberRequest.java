@@ -1,8 +1,8 @@
-package com.nhnacademy.front.purchase.purchase.dto.member.request;
-
-import lombok.Builder;
+package com.nhnacademy.front.member.member.dto.request;
 
 import java.time.ZonedDateTime;
+
+import lombok.Builder;
 
 /**
  * The type Update member request.
@@ -10,11 +10,9 @@ import java.time.ZonedDateTime;
  * @author 오연수
  */
 @Builder
-public record UpdateMemberRequest (
-    String password,
+public record UpdateMemberRequest(
     String name,
     int age,
     String phone,
-    String email,
     ZonedDateTime birthday
 ){}
