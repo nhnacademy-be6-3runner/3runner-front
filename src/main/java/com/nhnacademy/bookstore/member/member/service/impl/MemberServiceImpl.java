@@ -57,7 +57,7 @@ public class MemberServiceImpl implements MemberService {
 	 */
 	private final CouponMemberService couponMemberService;
 	private final MemberPointService memberPointService;
-
+	private final MemberService memberService;
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	@Override
@@ -65,6 +65,7 @@ public class MemberServiceImpl implements MemberService {
 		Optional<Member> optionalMember = memberRepository.findByEmail(userProfile.getEmail());
 		if (optionalMember.isPresent()) {
 			if(optionalMember.get().getAuthProvider() == AuthProvider.PAYCO) {
+				memberService.updateLastLogin(optionalMember.get().getId(), ZonedDateTime.now());
 				return optionalMember.get();//존재하는경우, 그냥 멤버를 가져온다.
 			}else{
 				throw new GeneralNotPayco();
