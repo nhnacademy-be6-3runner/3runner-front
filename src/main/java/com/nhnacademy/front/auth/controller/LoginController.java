@@ -118,8 +118,12 @@ public class LoginController {
 				redirectAttributes.addFlashAttribute("errorMessage", "일반 회원 이메일로 페이코 접속을 시도하였습니다.");
 				return "redirect:/login";
 			}
-			response.addCookie(new Cookie("Access", TokenHolder.getAccessToken()));//
-			response.addCookie(new Cookie("Refresh", TokenHolder.getRefreshToken()));
+			Cookie cookie1 = new Cookie("Access", TokenHolder.getAccessToken());
+			cookie1.setPath("/");
+			Cookie cookie2 = new Cookie("Refresh", TokenHolder.getRefreshToken());
+			cookie2.setPath("/");
+			response.addCookie(cookie1);//
+			response.addCookie(cookie2);
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
