@@ -41,7 +41,7 @@ public class CustomUserDetails implements UserDetails {
 
 	@Override
 	public String getUsername() {
-		return memberAuthResponse.email();
+		return "1234";
 	}
 
 	public Long getMemberId() {

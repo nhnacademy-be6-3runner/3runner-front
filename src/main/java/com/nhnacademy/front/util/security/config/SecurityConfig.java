@@ -18,6 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.front.auth.service.LoginService;
 import com.nhnacademy.front.util.security.CustomUserDetailService;
+import com.nhnacademy.front.util.security.filter.AlwaysAuthenticationFilter;
 import com.nhnacademy.front.util.security.filter.CustomAuthenticationFilter;
 import com.nhnacademy.front.util.security.provider.CustomAuthenticationProvider;
 
@@ -63,8 +64,6 @@ public class SecurityConfig {
 					.anyRequest().permitAll();
 			}
 		);
-		// .requestMatchers("/admin/**").hasRole("ADMIN")
-		// .requestMatchers("/publisher/**").hasAnyRole("ADMIN", "PUBLISHER")
 
 		http.formLogin((formLogin) -> {
 			formLogin.loginPage("/login");
@@ -94,9 +93,13 @@ public class SecurityConfig {
 			new CustomAuthenticationFilter(authenticationManager(), objectMapper, loginService),
 			UsernamePasswordAuthenticationFilter.class
 		);
+		http.addFilterAt(
+			new AlwaysAuthenticationFilter(authenticationManager(), loginService),
+			UsernamePasswordAuthenticationFilter.class);
+		
 		http
 			.sessionManagement(session -> session
-				.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
+				.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
 		// http.addFilterBefore(new OncePerRequestFilter() {
 		// 	@Override

@@ -36,7 +36,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 		this.customAuthenticationManager = customAuthenticationManager;
 		this.objectMapper = objectMapper;
 		this.loginService = loginService;
-		// setFilterProcessesUrl("/login/process");
+		setFilterProcessesUrl("/login/process");
 		// setFilterProcessesUrl("/publisher/**");
 
 	}
@@ -48,18 +48,18 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
 		LoginRequest loginRequest = null;
 
-		Cookie[] cookie = request.getCookies();
-		if (Objects.nonNull(cookie)) {
-			for (Cookie c : cookie) {
-				if (c.getName().equals("Access")) {
-					String token = c.getValue();
-					UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-						token, "1234"
-					);
-					return customAuthenticationManager.authenticate(authToken);
-				}
-			}
-		}
+		// Cookie[] cookie = request.getCookies();
+		// if (Objects.nonNull(cookie)) {
+		// 	for (Cookie c : cookie) {
+		// 		if (c.getName().equals("Access")) {
+		// 			String token = c.getValue();
+		// 			UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+		// 				token, "1234"
+		// 			);
+		// 			return customAuthenticationManager.authenticate(authToken);
+		// 		}
+		// 	}
+		// }
 		//TODO 여기 확인
 		if (Objects.isNull(TokenHolder.getAccessToken())) {
 
