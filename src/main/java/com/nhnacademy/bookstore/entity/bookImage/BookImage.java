@@ -39,7 +39,7 @@ public class BookImage {
 	private BookImageType type;
 
 	@Setter
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	private Book book;
 
 	@OneToOne(cascade = CascadeType.ALL)

@@ -6,6 +6,7 @@ import com.nhnacademy.bookstore.purchase.bookCart.dto.response.ReadBookCartGuest
 import com.nhnacademy.bookstore.purchase.bookCart.exception.BookCartArgumentErrorException;
 import com.nhnacademy.bookstore.purchase.bookCart.service.BookCartGuestService;
 import com.nhnacademy.bookstore.purchase.bookCart.service.BookCartMemberService;
+import com.nhnacademy.bookstore.purchase.cart.repository.CartRepository;
 import com.nhnacademy.bookstore.util.ApiResponse;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -37,7 +38,7 @@ public class BookCartController {
      */
     @GetMapping("/{cartId}")
     public ApiResponse<List<ReadBookCartGuestResponse>> readCart(
-            @PathVariable("cartId") Long cartId
+            @PathVariable(value = "cartId", required = false) Long cartId
     ) {
         List<ReadBookCartGuestResponse> responses = bookCartGuestService.readAllBookCart(cartId);
         return ApiResponse.success(responses);
@@ -68,6 +69,7 @@ public class BookCartController {
 
         if (Objects.isNull(memberId)) {
             Long cartId = bookCartGuestService.createBookCart(createBookCartGuestRequest.bookId(),
+                    createBookCartGuestRequest.userId(),
                     createBookCartGuestRequest.quantity());
 
             return ApiResponse.createSuccess(cartId);
@@ -108,7 +110,7 @@ public class BookCartController {
             );
             return ApiResponse.success(updateBookCartGuestRequest.cartId());
         } else {
-            return ApiResponse.success(bookCartMemberService.updateBookCartMember(updateBookCartGuestRequest));
+            return ApiResponse.success(bookCartMemberService.updateBookCartMember(updateBookCartGuestRequest, memberId));
         }
 
     }
@@ -131,7 +133,22 @@ public class BookCartController {
             return ApiResponse.deleteSuccess(deleteBookCartGuestRequest.cartId());
         } else {
 
-            return ApiResponse.deleteSuccess(bookCartMemberService.deleteBookCartMember(deleteBookCartGuestRequest));
+            return ApiResponse.deleteSuccess(bookCartMemberService.deleteBookCartMember(deleteBookCartGuestRequest, memberId));
+        }
+    }
+
+    @DeleteMapping("/{cartId}")
+    public ApiResponse<Long> deleteAllCart(
+            @PathVariable(required = false) Long cartId,
+            @RequestHeader(value = "Member-Id", required = false) Long memberId
+    ) {
+        if (Objects.isNull(memberId)) {
+            Long response = bookCartGuestService.deleteAllBookCart(cartId);
+
+            return ApiResponse.deleteSuccess(response);
+        } else {
+
+            return ApiResponse.deleteSuccess(bookCartMemberService.deleteAllBookCart(memberId));
         }
     }
 }

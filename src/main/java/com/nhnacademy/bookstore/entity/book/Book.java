@@ -154,4 +154,13 @@ public class Book {
 		this.bookImageList.add(bookImage);
 		bookImage.setBook(this);
 	}
+
+	public void addBookTag(BookTag bookTag) {
+		this.bookTagList.add(bookTag);
+		bookTag.setBook(this);
+	}
+
+	public void viewBook() {
+		viewCount++;
+	}
 }

@@ -34,7 +34,14 @@ import com.nhnacademy.bookstore.member.member.dto.request.UpdateMemberRequest;
 import com.nhnacademy.bookstore.member.member.dto.response.GetMemberResponse;
 import com.nhnacademy.bookstore.member.member.service.impl.MemberServiceImpl;
 import com.nhnacademy.bookstore.member.memberAuth.service.impl.MemberAuthServiceImpl;
-import com.nhnacademy.bookstore.member.pointRecord.service.impl.PointServiceImpl;
+import com.nhnacademy.bookstore.member.pointRecord.service.impl.PointRecordServiceImpl;
+import static org.mockito.ArgumentMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import java.time.ZonedDateTime;
+import java.util.Arrays;
 
 @SpringBootTest
 public class MemberControllerTest {
@@ -44,7 +51,7 @@ public class MemberControllerTest {
 	@MockBean
 	MemberServiceImpl memberService;
 	@MockBean
-	PointServiceImpl pointService;
+    PointRecordServiceImpl pointService;
 	@MockBean
 	MemberAuthServiceImpl memberAuthService;
 
@@ -173,10 +180,8 @@ public class MemberControllerTest {
 	@DisplayName("멤버 업데이트 테스트")
 	public void testMemberUpdate() throws Exception {
 		UpdateMemberRequest updateMemberRequest = UpdateMemberRequest.builder()
-			.password("newPassword")
 			.name("newName")
 			.age(25)
-			.email("new@example.com")
 			.phone("12345678900")
 			.birthday(ZonedDateTime.parse("2000-01-01T00:00:00Z"))
 			.build();

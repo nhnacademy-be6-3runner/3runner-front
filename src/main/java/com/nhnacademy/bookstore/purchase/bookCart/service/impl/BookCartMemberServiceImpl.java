@@ -1,7 +1,9 @@
 package com.nhnacademy.bookstore.purchase.bookCart.service.impl;
 
+import com.nhnacademy.bookstore.entity.member.Member;
 import com.nhnacademy.bookstore.member.member.exception.MemberNotExistsException;
-import com.nhnacademy.bookstore.purchase.bookCart.dto.request.DeleteBookCartRequest;
+import com.nhnacademy.bookstore.purchase.bookCart.dto.request.*;
+import com.nhnacademy.bookstore.purchase.bookCart.exception.BookCartDoesNotExistException;
 import com.nhnacademy.bookstore.purchase.bookCart.exception.NotExistsBookCartException;
 import com.nhnacademy.bookstore.purchase.bookCart.exception.NotExistsBookException;
 import com.nhnacademy.bookstore.purchase.bookCart.exception.NotExistsCartException;
@@ -9,8 +11,10 @@ import com.nhnacademy.bookstore.purchase.bookCart.exception.NotExistsCartExcepti
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.nhnacademy.bookstore.purchase.cart.exception.CartDoesNotExistException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,9 +22,6 @@ import com.nhnacademy.bookstore.book.book.repository.BookRepository;
 import com.nhnacademy.bookstore.entity.bookCart.BookCart;
 import com.nhnacademy.bookstore.entity.cart.Cart;
 import com.nhnacademy.bookstore.member.member.repository.MemberRepository;
-import com.nhnacademy.bookstore.purchase.bookCart.dto.request.CreateBookCartRequest;
-import com.nhnacademy.bookstore.purchase.bookCart.dto.request.ReadAllBookCartMemberRequest;
-import com.nhnacademy.bookstore.purchase.bookCart.dto.request.UpdateBookCartRequest;
 import com.nhnacademy.bookstore.purchase.bookCart.dto.response.ReadAllBookCartMemberResponse;
 import com.nhnacademy.bookstore.purchase.bookCart.dto.response.ReadBookCartBook;
 import com.nhnacademy.bookstore.purchase.bookCart.repository.BookCartRepository;
@@ -42,19 +43,32 @@ public class BookCartMemberServiceImpl implements BookCartMemberService {
     public List<ReadAllBookCartMemberResponse> readAllCartMember(
             ReadAllBookCartMemberRequest readAllCartMemberRequest) {
         List<ReadAllBookCartMemberResponse> responses = new ArrayList<>();
-        Cart cart = cartRepository.findByMemberId(readAllCartMemberRequest.userId()).orElse(null);
 
-        if (Objects.isNull(cart)) {
-            cart = new Cart(memberRepository.findById(readAllCartMemberRequest.userId()).orElseThrow(MemberNotExistsException::new));
+        Optional<Cart> cartOptional = cartRepository
+                .findByMemberId(readAllCartMemberRequest.userId());
+
+        Cart cart = null;
+
+        if (cartOptional.isEmpty()) {
+            cart = new Cart(memberRepository
+                    .findById(readAllCartMemberRequest.userId())
+                    .orElseThrow(MemberNotExistsException::new));
+        } else {
+            cart = cartOptional.get();
         }
 
-        List<BookCart> allBookCarts = bookCartRepository.findAllByCartId(Objects.requireNonNull(cart).getId());
+        cartRepository.save(cart);
 
-        for(BookCart bookCart : allBookCarts){
+
+        List<BookCart> allBookCarts = bookCartRepository.findAllByCart(cart);
+
+        for (BookCart bookCart : allBookCarts) {
             String url = "/img/no-image.png";
-            if (bookCart.getBook().getBookImageList()!=null && !bookCart.getBook().getBookImageList().isEmpty()) {
+
+            if (bookCart.getBook().getBookImageList() != null && !bookCart.getBook().getBookImageList().isEmpty()) {
                 url = bookCart.getBook().getBookImageList().getFirst().getTotalImage().getUrl();
             }
+
             responses.add(ReadAllBookCartMemberResponse.builder()
                     .quantity(bookCart.getQuantity())
                     .bookCartId(bookCart.getId())
@@ -62,6 +76,7 @@ public class BookCartMemberServiceImpl implements BookCartMemberService {
                     .price(bookCart.getBook().getPrice())
                     .url(url)
                     .title(bookCart.getBook().getTitle())
+                    .leftQuantity(bookCart.getBook().getQuantity())
                     .build());
         }
         return  responses;
@@ -69,36 +84,66 @@ public class BookCartMemberServiceImpl implements BookCartMemberService {
 
     @Override
     public Long createBookCartMember(CreateBookCartRequest createBookCartRequest) {
-        Cart cart = cartRepository.findByMemberId(createBookCartRequest.userId()).orElse(null);
+        Optional<Cart> optionalCart = cartRepository
+                .findByMemberId(createBookCartRequest.userId());
 
-        if (Objects.isNull(cart)) {
-            cart = new Cart(memberRepository.findById(createBookCartRequest.userId()).orElseThrow(
-                MemberNotExistsException::new));
+        Cart cart;
+
+        if (optionalCart.isEmpty()) {
+            Member member = memberRepository
+                    .findById(createBookCartRequest.userId())
+                    .orElseThrow(MemberNotExistsException::new);
+
+            cart = new Cart(member);
+
             cartRepository.save(cart);
-        }
-        BookCart bookCart = bookCartRepository.findBookCartByBookIdAndCartId(createBookCartRequest.bookId(), cart.getId()).orElse(null);
+        } else {
 
-        if (!Objects.isNull(bookCart)) {
+            cart = optionalCart.get();
+        }
+
+        Optional<BookCart> bookCartOptional = bookCartRepository
+                .findBookCartByBookIdAndCartId(createBookCartRequest.bookId(), cart.getId());
+
+        BookCart bookCart;
+
+        if (bookCartOptional.isPresent()) {
+            bookCart = bookCartOptional.get();
             bookCart.setQuantity(bookCart.getQuantity() + createBookCartRequest.quantity());
+
         } else {
             bookCart = new BookCart(
-                createBookCartRequest.quantity(), bookRepository.findById(createBookCartRequest.bookId()).orElseThrow(NotExistsBookException::new), cart);
+                    createBookCartRequest.quantity(),
+                    bookRepository.findById(createBookCartRequest.bookId()).orElseThrow(NotExistsBookException::new),
+                    cart
+            );
         }
+
         bookCartRepository.save(bookCart);
-
-
 
         return bookCart.getId();
     }
 
     @Override
-    public Long updateBookCartMember(UpdateBookCartRequest updateBookCartRequest) {
-        BookCart bookCart = bookCartRepository.findBookCartByBookIdAndCartId(updateBookCartRequest.bookId(), updateBookCartRequest.cartId())
-            .orElseThrow(NotExistsBookCartException::new);
-        Cart cart = cartRepository.findById(updateBookCartRequest.cartId()).orElseThrow(NotExistsCartException::new);
-        bookCart.setQuantity(updateBookCartRequest.quantity());
+    public Long updateBookCartMember(UpdateBookCartRequest updateBookCartRequest, Long memberId) {
+        BookCart bookCart = bookCartRepository
+                .findBookCartByBookIdAndMemberId(
+                        updateBookCartRequest.bookId(),
+                        memberId)
+                .orElseThrow(NotExistsBookCartException::new);
+
+        Cart cart = cartRepository
+                .findByMemberId(memberId)
+                .orElseThrow(NotExistsCartException::new);
+
+        bookCart.setQuantity(bookCart.getQuantity() + updateBookCartRequest.quantity());
+
         bookCart.setBook(
-            bookRepository.findById(updateBookCartRequest.bookId()).orElseThrow(NotExistsBookException::new));
+            bookRepository
+                    .findById(updateBookCartRequest.bookId())
+                    .orElseThrow(NotExistsBookException::new)
+        );
+
         bookCart.setCart(cart);
 
         if (bookCart.getQuantity() <= 0) {
@@ -108,13 +153,26 @@ public class BookCartMemberServiceImpl implements BookCartMemberService {
         }
 
         return bookCart.getId();
-
     }
 
     @Override
-    public Long deleteBookCartMember(DeleteBookCartRequest deleteBookCartMemberRequest) {
+    public Long deleteBookCartMember(DeleteBookCartRequest deleteBookCartMemberRequest, Long memberId) {
         bookCartRepository.delete(
-            bookCartRepository.findById(deleteBookCartMemberRequest.bookCartId()).orElseThrow(NotExistsBookCartException::new));
-        return deleteBookCartMemberRequest.cartId();
+            bookCartRepository
+                    .findById(deleteBookCartMemberRequest.bookCartId())
+                    .orElseThrow(NotExistsBookCartException::new)
+        );
+
+        return memberId;
+    }
+
+    @Override
+    public Long deleteAllBookCart(Long memberId) {
+        Cart cart = cartRepository.findByMemberId(memberId)
+                .orElseThrow(() -> new CartDoesNotExistException("카트 없음"));
+
+        bookCartRepository.deleteByCart(cart);
+
+        return memberId;
     }
 }

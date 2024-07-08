@@ -1,9 +1,5 @@
 package com.nhnacademy.bookstore.entity.member;
 
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.nhnacademy.bookstore.entity.address.Address;
 import com.nhnacademy.bookstore.entity.member.enums.AuthProvider;
 import com.nhnacademy.bookstore.entity.member.enums.Grade;
@@ -12,20 +8,17 @@ import com.nhnacademy.bookstore.entity.memberAuth.MemberAuth;
 import com.nhnacademy.bookstore.entity.pointRecord.PointRecord;
 import com.nhnacademy.bookstore.entity.purchase.Purchase;
 import com.nhnacademy.bookstore.member.member.dto.request.CreateMemberRequest;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -73,8 +66,9 @@ public class Member {
 
 	private ZonedDateTime modifiedAt;
 	private ZonedDateTime deletedAt;
-	@NotNull
+
 	private AuthProvider authProvider;
+
 	@OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Address> addressList = new ArrayList<>();
 
@@ -100,5 +94,15 @@ public class Member {
 		this.setCreatedAt(ZonedDateTime.now());
 		this.setAuthProvider(AuthProvider.GENERAL);
 	}
+
+    /**
+     * 멤버 권한 추가 메서드입니다.
+     *
+     * @param memberAuth 멤버 권한
+     * @author 김은비
+     */
+    public void addMemberAuth(MemberAuth memberAuth) {
+        memberAuthList.add(memberAuth);
+    }
 
 }

@@ -4,18 +4,21 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nhnacademy.bookstore.book.bookCartegory.service.BookCategoryService;
 import com.nhnacademy.bookstore.book.category.dto.request.CreateCategoryRequest;
 import com.nhnacademy.bookstore.book.category.dto.request.UpdateCategoryRequest;
+import com.nhnacademy.bookstore.book.category.dto.response.CategoryForCouponResponse;
 import com.nhnacademy.bookstore.book.category.dto.response.CategoryParentWithChildrenResponse;
 import com.nhnacademy.bookstore.book.category.dto.response.CategoryResponse;
 import com.nhnacademy.bookstore.book.category.exception.CreateCategoryRequestException;
@@ -110,5 +113,27 @@ public class CategoryController {
 	@GetMapping("/parents")
 	public ApiResponse<List<CategoryResponse>> readAllParentCategories() {
 		return ApiResponse.success(categoryService.getParentCategories());
+	}
+
+	/**
+	 * 카테고리 아이디들로 카테고리 리스트 만들기
+	 * @param ids 검색할 카테로기 아이디들
+	 * @return 카테고리
+	 */
+	@GetMapping("/list")
+	public ApiResponse<List<CategoryForCouponResponse>> readAllCategoriesList(@RequestParam List<Long> ids) {
+		List<CategoryForCouponResponse> response = categoryService.getCategoriesIds(ids);
+		return ApiResponse.success(response);
+	}
+
+	/**
+	 * 카테고리 삭제
+	 * @param categoryId 카테고리 아이디
+	 * @return 카테고리
+	 */
+	@DeleteMapping("/{categoryId}")
+	public ApiResponse<Void> deleteCategory(@PathVariable Long categoryId) {
+		categoryService.deleteCategory(categoryId);
+		return new ApiResponse<>(new ApiResponse.Header(true, 204));
 	}
 }

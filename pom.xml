@@ -184,6 +184,12 @@
         </dependency>
 
 
+        <!-- Spring RabbitMQ -->
+        <dependency>
+            <groupId>org.springframework.amqp</groupId>
+            <artifactId>spring-rabbit</artifactId>
+        </dependency>
+
     </dependencies>
     <dependencyManagement>
         <dependencies>

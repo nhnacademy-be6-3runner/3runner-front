@@ -48,13 +48,16 @@ public class BookCartGuestServiceImpl implements BookCartGuestService {
      * @return bookCartId
      */
     @Override
-    public Long createBookCart(Long bookId, int quantity) {
+    public Long createBookCart(Long bookId, Long cartId, int quantity) {
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new BookDoesNotExistException("도서가 존재하지 않습니다"));
-
-        Cart cart = new Cart();
-        cartRepository.save(cart);
-        long cartId = cart.getId();
+        Cart cart;
+        if (Objects.isNull(cartId) || cartId == 0) {
+            cart = new Cart();
+            cartRepository.save(cart);
+            cartId = cart.getId();
+        }
+        cart = cartRepository.findById(cartId).orElseThrow(()->new CartDoesNotExistException("카트가 존재하지 않습니다."));
 
         if (bookCartRepository.existsBookCartByBookAndCart(book, cart)) {
             updateBookCart(bookId, cartId, quantity);
@@ -65,7 +68,7 @@ public class BookCartGuestServiceImpl implements BookCartGuestService {
 
 
             String url = "/img/no-image.png";
-            if (bookCart.getBook().getBookImageList()!=null && !bookCart.getBook().getBookImageList().isEmpty()) {
+            if (bookCart.getBook().getBookImageList() != null && !bookCart.getBook().getBookImageList().isEmpty()) {
                 url = bookCart.getBook().getBookImageList().getFirst().getTotalImage().getUrl();
             }
 
@@ -74,6 +77,7 @@ public class BookCartGuestServiceImpl implements BookCartGuestService {
                     bookCart.getId(),
                     ReadBookCartGuestResponse.builder()
                             .bookCartId(bookCart.getId())
+                            .bookId(bookId)
                             .price(book.getPrice())
                             .url(url)
                             .title(book.getTitle())
@@ -135,7 +139,7 @@ public class BookCartGuestServiceImpl implements BookCartGuestService {
         bookCartRepository.delete(bookCart);
         bookCartRedisRepository.delete(cartId.toString(), bookCart.getId());
 
-        return cartId;
+        return bookCartId;
     }
 
     /**
@@ -210,6 +214,7 @@ public class BookCartGuestServiceImpl implements BookCartGuestService {
                     .url(url)
                     .title(bookCart.getBook().getTitle())
                     .quantity(bookCart.getQuantity())
+                    .leftQuantity(bookCart.getBook().getQuantity())
                     .build());
         }
 
