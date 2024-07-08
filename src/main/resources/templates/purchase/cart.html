@@ -8,7 +8,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-
+    <link rel="stylesheet" th:href="@{/css/main/default.css}">
+    <link rel="stylesheet" th:href="@{/css/detail/book-detail.css}">
     <style>
         .menu-desktop {
             background-color: white;
@@ -18,43 +19,7 @@
 </head>
 <body>
 <!-- Header -->
-<header class="header-v4">
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light menu-desktop">
-        <div class="container">
-            <!-- Logo -->
-            <a class="navbar-brand logo" href="#">
-                3runner
-            </a>
-
-            <!-- Toggler/collapsibe Button -->
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <!-- Navbar links -->
-            <div class="collapse navbar-collapse" id="collapsibleNavbar">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="login.html">login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="logout.html">logout</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="mypage.html">my page</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="register.html">register</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="cart.html">cart</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-</header>
+<header class="header-custom" th:replace="fragments/no-nav-header :: header"></header>
 
 <main class="container my-5">
     <div class="cart-header d-flex justify-content-between align-items-center">
@@ -100,16 +65,20 @@
     </div>
     <div class="cart-footer">
         <div th:if="${Access}==null">
-            <form action="/purchases" method="post">
-                <input type="hidden" name="cartId" id="cartId" th:value="${cartId}">
-                <button class="btn btn-primary">Guest Proceed to Checkout</button>
-            </form>
+            <div class="d-flex justify-content-end">
+                <form action="/purchases" method="post">
+                    <input type="hidden" name="cartId" id="cartId" th:value="${cartId}">
+                    <button class="btn btn-primary">비회원 주문하기</button>
+                </form>
+            </div>
         </div>
         <div th:if="${Access}!=null">
-            <form action="/purchases" method="post">
-                <input type="hidden" name="memberId" id="memberId" th:value="${memberId}">
-                <button class="btn btn-primary">Member Proceed to Checkout</button>
-            </form>
+            <div class="d-flex justify-content-end">
+                <form action="/purchases" method="post">
+                    <input type="hidden" name="memberId" id="memberId" th:value="${memberId}">
+                    <button class="btn btn-primary">회원 주문하기</button>
+                </form>
+            </div>
         </div>
     </div>
 </main>
@@ -124,21 +93,75 @@
         calculateTotal();
     });
 
+
     function updateQuantity(index, delta) {
+        const location = window.location;
+        const originWithoutPort = `${location.protocol}//${location.hostname}`;
+
         const quantityInput = document.getElementById('quantity-'+index);
         const bookId =  document.getElementById('bookId-'+index).value;
         const bookId1 =  document.getElementById('bookId1-'+index).value;
         const bookCartId = document.getElementById('bookCartId-'+index).value;
-        const deltaInt = parseInt(delta);
+        var newQuantity = parseInt(quantityInput.value) + delta;
+        if (newQuantity < 0) {
+            newQuantity = 0;
+        }
+        quantityInput.value = newQuantity;
 
-        var url = window.location.origin +'/carts/'+bookId+'/updates/'+deltaInt
-        const form = document.createElement('form');
-        form.method = 'GET';
-        form.action = url;
+        var url = originWithoutPort+':8080/bookstore/carts';
+        var method = 'PUT';
+        var cartIdElement = document.getElementById('cartId').value;
 
-        document.body.appendChild(form);
-        form.submit();
+        if(newQuantity === 0){
+            method = 'DELETE';
+            if (confirm("아이템을 삭제하하시겠습니까?")) {
+                $.ajax({
+                    url: url,
+                    type: method,
+                    contentType: 'application/json',
+                    data: JSON.stringify({ bookCartId: parseInt(bookCartId)}),
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"),
+                            $("meta[name='_csrf']").attr("content"));
+                    },
+                    success: function(response) {
+                        console.log(response);
+                        location.reload();
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
+                        console.error('Status:', status);
+                        console.error('XHR:', xhr);
+                    }
+                });
+                calculateTotal();
+                return;
+            } else {
+                quantityInput.value = parseInt(quantityInput.value) - delta;
+                return;
+            }
+        }
 
+        $.ajax({
+            url: url,
+            type: method,
+            contentType: 'application/json',
+            data: JSON.stringify({cartId : parseInt(cartIdElement) ,bookId: parseInt(bookId), quantity: parseInt(delta)}),
+            success: function(response) {
+                console.log(parseInt(newQuantity))
+                console.log(response);
+            },
+            error: function(xhr, status, error) {
+                console.log(parseInt(cartIdElement));
+                console.log(parseInt(bookId));
+                console.log(parseInt(bookId1))
+                console.log(parseInt(bookCartId))
+                console.log(parseInt(newQuantity));
+                console.error('Error:', error);
+                console.error('Status:', status);
+                console.error('XHR:', xhr);
+            }
+        });
         calculateTotal();
     }
 
@@ -159,30 +182,89 @@
         document.getElementById('total-price').innerText = total.toFixed(2);
     }
     function deleteItem(bookCartId, cartId) {
+        const location = window.location;
+        const originWithoutPort = `${location.protocol}//${location.hostname}`;
+        var url = originWithoutPort+':8080/bookstore/carts';
 
-        var url = window.location.origin + '/carts/deletes/books/' + bookCartId;
-        // if (cartId !== null) {
-        //     url += '/' + cartId;
-        // }
-
-        const form = document.createElement('form');
-        form.method = 'GET';
-        form.action = url;
-
-        document.body.appendChild(form);
-        form.submit();
+        $.ajax({
+            url: url,
+            type: 'DELETE',
+            contentType: 'application/json',
+            data: JSON.stringify({bookCartId:parseInt(bookCartId), cartId: parseInt(cartId)}),
+            success: function(response) {
+                console.log(response);
+                location.reload();
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);
+                console.error('Status:', status);
+                console.error('XHR:', xhr);
+            }
+        });
     }
 
     function deleteAll(cartId) {
-        var url = window.location.origin + '/carts/deletes';
+        const location = window.location;
+        const originWithoutPort = `${location.protocol}//${location.hostname}`;
+        var url = originWithoutPort+':8080/bookstore/carts/';
 
-        const form = document.createElement('form');
-        form.method = 'GET';
-        form.action = url;
-
-        document.body.appendChild(form);
-        form.submit();
+        $.ajax({
+            url: url+cartId,
+            type: 'DELETE',
+            success: function(response) {
+                console.log(response);
+                location.reload();
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);
+                console.error('Status:', status);
+                console.error('XHR:', xhr);
+            }
+        });
     }
+
+    // function updateQuantity(index, delta) {
+    //     const quantityInput = document.getElementById('quantity-'+index);
+    //     const bookId =  document.getElementById('bookId-'+index).value;
+    //     const bookId1 =  document.getElementById('bookId1-'+index).value;
+    //     const bookCartId = document.getElementById('bookCartId-'+index).value;
+    //     const deltaInt = parseInt(delta);
+    //
+    //     var url = window.location.origin +'/carts/'+bookId+'/updates/'+deltaInt
+    //     const form = document.createElement('form');
+    //     form.method = 'GET';
+    //     form.action = url;
+    //
+    //     document.body.appendChild(form);
+    //     form.submit();
+    //
+    //     calculateTotal();
+    // }
+    // function deleteItem(bookCartId, cartId) {
+    //
+    //     var url = window.location.origin + '/carts/deletes/books/' + bookCartId;
+    //     // if (cartId !== null) {
+    //     //     url += '/' + cartId;
+    //     // }
+    //
+    //     const form = document.createElement('form');
+    //     form.method = 'GET';
+    //     form.action = url;
+    //
+    //     document.body.appendChild(form);
+    //     form.submit();
+    // }
+    //
+    // function deleteAll(cartId) {
+    //     var url = window.location.origin + '/carts/deletes';
+    //
+    //     const form = document.createElement('form');
+    //     form.method = 'GET';
+    //     form.action = url;
+    //
+    //     document.body.appendChild(form);
+    //     form.submit();
+    // }
 </script>
 </body>
 </html>
