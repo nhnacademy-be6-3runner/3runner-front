@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @FeignClient(name = "purchaseGuestControllerClient", url = "http://${feign.client.url}")
 public interface PurchaseGuestControllerClient {
     @GetMapping("/bookstore/guests/purchases")
-    ApiResponse<ReadPurchaseResponse> readPurchase (@RequestParam String orderNumber, @RequestParam String password);
+    ApiResponse<ReadPurchaseResponse> readPurchase (@RequestParam String orderNumber, @RequestParam(required = false) String password);
 
     @PostMapping("/bookstore/guests/purchases")
     ApiResponse<Void> createPurchase (@Valid @RequestBody CreatePurchaseRequest createPurchaseRequest);

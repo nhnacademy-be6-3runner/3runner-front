@@ -58,6 +58,19 @@
         .toggle-btn.active {
             background-color: #28a745;
         }
+        .book-quantity-price {
+            display: flex;
+            align-items: center;
+        }
+        .quantity-input {
+            width: 50px;
+            text-align: center;
+            margin: 0 5px;
+        }
+        .quantity-btn {
+            padding: 5px 10px;
+            font-size: 12px;
+        }
     </style>
 </head>
 <body>
@@ -115,11 +128,13 @@
                         <p style="font-size: 18px" th:text="${book.readBookByPurchase().title()}">Product</p>
                         <p style="font-size: 16px" th:text="${book.readBookByPurchase().author()}">저자</p>
                         <p style="font-size: 14px" th:text="${book.readBookByPurchase().publisher()}">출판사</p>
+                        <p style="font-size: 14px" >구입수량: <p th:text="${book.quantity()}">구입수량</p>
+
                     </div>
                     <div class="book-quantity-price">
-                        <button class="btn btn-outline-secondary" type="button" th:onclick="updateQuantity(${iter.index}, -1)">-</button>
-                        <input type="number" class="form-control mx-2 quantity-input" th:value="${book.quantity}" th:id="'quantity-' + ${iter.index}" data-max="${book.maxQuantity}" style="width: 80px;" readonly>
-                        <button class="btn btn-outline-secondary" type="button" th:onclick="updateQuantity(${iter.index}, 1)" >+</button>
+                        <button class="btn btn-outline-secondary quantity-btn" type="button" th:onclick="'updateQuantity('${book.quantity}, -1')'">-</button>
+                        <input type="number" class="form-control mx-2 quantity-input" th:value="${book.quantity}" th:id="'quantity-' + ${iter.index}" th:data-max="${book.quantity()}" readonly>
+                        <button class="btn btn-outline-secondary quantity-btn" type="button" th:onclick = "'updateQuantity('${book.quantity}, 1')'">+</button>
                     </div>
                 </li>
             </ul>
@@ -129,14 +144,18 @@
             <div class="text-center mt-4">
                 <nav>
                     <ul class="pagination justify-content-center">
-                        <li class="page-item" th:classappend="${books.hasPrevious()} ? '' : 'disabled'">
-                            <a class="page-link" href="#" th:onclick="'loadBooks(' + (${books.number} - 1) + ', ' + ${books.size} + '); return false;'">이전</a>
+
+                        <li class="page-item" th:if="${books.pageable.getPageNumber() > 4}">
+                            <a class="page-link" th:href="@{'/orders/guests/{orderNumber}?page={page}' (orderNumber = ${orderNumber},page = ${books.pageable.getPageNumber() - 1})}">이전</a>
                         </li>
-                        <li class="page-item" th:each="i : ${#numbers.sequence(0, books.totalPages - 1)}" th:classappend="${i} == ${books.number} ? 'active' ">
-                            <a class="page-link" href="#" th:onclick="'loadBooks(' + ${i} + ', ' + ${books.size} + '); return false;'" th:text="${i + 1}">1</a>
+                        <li class="page-item" th:each="i : ${#numbers.sequence(0, books.totalPages - 1)}"
+                            th:if="${i >= (books.pageable.getPageNumber() / 5) * 5 and i < ((books.pageable.getPageNumber() / 5) + 1) * 5}">
+                            <a class="page-link" th:href="@{'/orders/members?page={page}' (page = ${i})}"
+                               th:text="${i + 1}"
+                               th:classappend="${i == books.pageable.getPageNumber()} ? 'active' : ''"></a>
                         </li>
-                        <li class="page-item" th:classappend="${books.hasNext()} ? '' : 'disabled'">
-                            <a class="page-link" href="#" th:onclick="'loadBooks(' + (${books.number} + 1) + ', ' + ${books.size} + '); return false;'">다음</a>
+                        <li class="page-item" th:if="${books.pageable.getPageNumber() < books.totalPages - 1 }">
+                            <a class="page-link" th:href="@{'/orders/guests/{orderNumber}?page={page}' (orderNumber = ${orderNumber},page = ${books.pageable.getPageNumber() - 1})}">다음</a>
                         </li>
                     </ul>
                 </nav>
@@ -173,7 +192,7 @@
         allMaxSet = false; // 토글 해제
         document.getElementById('toggle-max-btn').classList.remove('active');
         var quantityInput = document.getElementById('quantity-' + index);
-        var newQuantity = parseInt(quantityInput.value) + delta;
+        var newQuantity = quantityInput.value + delta;
         var maxQuantity = parseInt(quantityInput.getAttribute('data-max'));
 
         if (newQuantity < 0) {

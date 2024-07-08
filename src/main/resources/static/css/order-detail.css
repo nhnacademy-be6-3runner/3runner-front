@@ -184,7 +184,7 @@ body {
     }
 }
 
-.confirm-order-btn, .details-btn, .refund-btn {
+.confirm-order-btn, .details-btn, .refund-btn, .payment-cancel {
     background-color: #28a745;
     border: none;
     color: white;
@@ -200,7 +200,7 @@ body {
     width: 100px;
 }
 
-.confirm-order-btn:hover, .details-btn:hover, .refund-btn:hover {
+.confirm-order-btn:hover, .details-btn:hover :hover {
     background-color: #218838;
 }
 
@@ -212,10 +212,15 @@ body {
     background-color: #0056b3;
 }
 
-.refund-btn {
+.refund-btn, .payment-cancel {
     background-color: #dc3545;
 }
 
-.refund-btn:hover {
+.refund-btn, .payment-cancel :hover {
     background-color: #c82333;
+}
+.page-link.active {
+    background-color: #007bff; /* 원하는 색상으로 변경 가능 */
+    color: white; /* 글자 색상을 흰색으로 */
+    border-color: #007bff; /* 버튼 테두리 색상 */
 }

@@ -14,7 +14,7 @@ import com.nhnacademy.front.purchase.purchase.dto.purchase.response.ReadPurchase
  */
 public interface PurchaseDetailMemberService {
 
-	Page<ReadPurchase> readPurchases();
+	Page<ReadPurchase> readPurchases(int page);
 
 	Page<ReadPurchaseBookResponse> readPurchaseBookResponses(Long purchaseId, int page, int size, String sort);
 

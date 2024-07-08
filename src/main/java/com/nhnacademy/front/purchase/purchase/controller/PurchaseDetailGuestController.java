@@ -103,7 +103,7 @@ public class PurchaseDetailGuestController {
 	public String orderConfirmed(@PathVariable(name = "purchaseId") String purchaseId){
 		purchaseGuestService.updatePurchaseStatus(purchaseId);
 
-		return "redirect:/orders/guests/"+purchaseId;
+		return "redirect:/orders/guests/login";
 	}
 
 
