@@ -65,16 +65,20 @@
     </div>
     <div class="cart-footer">
         <div th:if="${Access}==null">
-            <form action="/purchases" method="post">
-                <input type="hidden" name="cartId" id="cartId" th:value="${cartId}">
-                <button class="btn btn-primary">Guest Proceed to Checkout</button>
-            </form>
+            <div class="d-flex justify-content-end">
+                <form action="/purchases" method="post">
+                    <input type="hidden" name="cartId" id="cartId" th:value="${cartId}">
+                    <button class="btn btn-primary">비회원 주문하기</button>
+                </form>
+            </div>
         </div>
         <div th:if="${Access}!=null">
-            <form action="/purchases" method="post">
-                <input type="hidden" name="memberId" id="memberId" th:value="${memberId}">
-                <button class="btn btn-primary">Member Proceed to Checkout</button>
-            </form>
+            <div class="d-flex justify-content-end">
+                <form action="/purchases" method="post">
+                    <input type="hidden" name="memberId" id="memberId" th:value="${memberId}">
+                    <button class="btn btn-primary">회원 주문하기</button>
+                </form>
+            </div>
         </div>
     </div>
 </main>
@@ -89,23 +93,7 @@
         calculateTotal();
     });
 
-    // function updateQuantity(index, delta) {
-    //     const quantityInput = document.getElementById('quantity-'+index);
-    //     const bookId =  document.getElementById('bookId-'+index).value;
-    //     const bookId1 =  document.getElementById('bookId1-'+index).value;
-    //     const bookCartId = document.getElementById('bookCartId-'+index).value;
-    //     const deltaInt = parseInt(delta);
-    //
-    //     var url = window.location.origin +'/carts/'+bookId+'/updates/'+deltaInt
-    //     const form = document.createElement('form');
-    //     form.method = 'GET';
-    //     form.action = url;
-    //
-    //     document.body.appendChild(form);
-    //     form.submit();
-    //
-    //     calculateTotal();
-    // }
+
     function updateQuantity(index, delta) {
         const location = window.location;
         const originWithoutPort = `${location.protocol}//${location.hostname}`;
@@ -120,7 +108,6 @@
         }
         quantityInput.value = newQuantity;
 
-        //var url = 'http://localhost:8081/bookstore/carts';
         var url = originWithoutPort+':8080/bookstore/carts';
         var method = 'PUT';
         var cartIdElement = document.getElementById('cartId').value;
@@ -128,7 +115,6 @@
         if(newQuantity === 0){
             method = 'DELETE';
             if (confirm("아이템을 삭제하하시겠습니까?")) {
-                // 사용자가 확인을 누르면 AJAX 요청을 보냅니다.
                 $.ajax({
                     url: url,
                     type: method,
@@ -236,6 +222,24 @@
             }
         });
     }
+
+    // function updateQuantity(index, delta) {
+    //     const quantityInput = document.getElementById('quantity-'+index);
+    //     const bookId =  document.getElementById('bookId-'+index).value;
+    //     const bookId1 =  document.getElementById('bookId1-'+index).value;
+    //     const bookCartId = document.getElementById('bookCartId-'+index).value;
+    //     const deltaInt = parseInt(delta);
+    //
+    //     var url = window.location.origin +'/carts/'+bookId+'/updates/'+deltaInt
+    //     const form = document.createElement('form');
+    //     form.method = 'GET';
+    //     form.action = url;
+    //
+    //     document.body.appendChild(form);
+    //     form.submit();
+    //
+    //     calculateTotal();
+    // }
     // function deleteItem(bookCartId, cartId) {
     //
     //     var url = window.location.origin + '/carts/deletes/books/' + bookCartId;
