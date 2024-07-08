@@ -9,6 +9,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.json.simple.JSONObject;
@@ -36,8 +37,8 @@ public class RefundServiceImpl implements RefundService {
 	private final PurchaseManagerControllerClient purchaseManagerControllerClient;
 
 	@Override
-	public Page<ReadPurchaseBookResponse> readGuestPurchaseBooks(String orderNumber,int page,int size,String sort) {
-		return purchaseBookControllerClient.readGuestPurchaseBook(orderNumber,page,size,sort).getBody().getData();
+	public List<ReadPurchaseBookResponse> readGuestPurchaseBooks(String orderNumber) {
+		return purchaseBookControllerClient.readGuestPurchaseBook(orderNumber).getBody().getData();
 	}
 
 

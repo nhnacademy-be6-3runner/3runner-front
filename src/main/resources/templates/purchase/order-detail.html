@@ -52,25 +52,7 @@
                 </button>
             </div>
         </li>
-        <div class="text-center mt-4">
-            <nav>
-                <ul class="pagination justify-content-center">
 
-                    <li class="page-item" th:if="${page > 0}">
-                        <a class="page-link" th:href="@{'/orders/members?page={page}' (page = ${page - 1})}">이전</a>
-                    </li>
-                    <li class="page-item" th:each="i : ${#numbers.sequence(0, orders.totalPages - 1)}"
-                        th:if="${i >= (page / 5) * 5 and i < ((page / 5) + 1) * 5}">
-                        <a class="page-link" th:href="@{'/orders/members?page={page}' (page = ${i})}"
-                           th:text="${i + 1}"
-                           th:classappend="${i == page} ? 'active' : ''"></a>
-                    </li>
-                    <li class="page-item" th:if="${page < orders.totalPages - 1 }">
-                        <a class="page-link" th:href="@{'/orders/members?page={page}' (page = ${page + 1})}">다음</a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
     </ul>
 
 </div>

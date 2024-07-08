@@ -141,25 +141,7 @@
             <div class="text-center mt-4">
                 <button type="button" class="toggle-btn" id="toggle-max-btn" onclick="toggleMaxQuantities()">모두 최대치로 설정</button>
             </div>
-            <div class="text-center mt-4">
-                <nav>
-                    <ul class="pagination justify-content-center">
 
-                        <li class="page-item" th:if="${books.pageable.getPageNumber() > 4}">
-                            <a class="page-link" th:href="@{'/orders/guests/{orderNumber}?page={page}' (orderNumber = ${orderNumber},page = ${books.pageable.getPageNumber() - 1})}">이전</a>
-                        </li>
-                        <li class="page-item" th:each="i : ${#numbers.sequence(0, books.totalPages - 1)}"
-                            th:if="${i >= (books.pageable.getPageNumber() / 5) * 5 and i < ((books.pageable.getPageNumber() / 5) + 1) * 5}">
-                            <a class="page-link" th:href="@{'/orders/members?page={page}' (page = ${i})}"
-                               th:text="${i + 1}"
-                               th:classappend="${i == books.pageable.getPageNumber()} ? 'active' : ''"></a>
-                        </li>
-                        <li class="page-item" th:if="${books.pageable.getPageNumber() < books.totalPages - 1 }">
-                            <a class="page-link" th:href="@{'/orders/guests/{orderNumber}?page={page}' (orderNumber = ${orderNumber},page = ${books.pageable.getPageNumber() - 1})}">다음</a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
         </div>
 
         <div class="d-flex justify-content-between align-items-center mb-3">

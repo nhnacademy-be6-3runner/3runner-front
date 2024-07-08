@@ -45,17 +45,14 @@ public class PurchaseDetailGuestController {
 	public String orders(
 		@PathVariable(name = "orderNumber") String orderNumber,
 		@RequestParam(name = "password",required = false) String password,
-		@RequestParam(defaultValue = "0", required = false) int page,
-		@RequestParam(defaultValue = "30", required = false) int size,
-		@RequestParam(required = false) String sort,
 		Model model) {
 		ReadPurchaseResponse response = purchaseGuestService.readGuestPurchases(orderNumber,password);
 		if(Objects.isNull(response)){
 			return "redirect:/orders/guests/login";
 		}
 		model.addAttribute("guestorder",response);
-		model.addAttribute("guestorderbooks",purchaseGuestService.readGuestPurchaseBooks(orderNumber,page,size,sort));
-		return "purchase/guest/order-detail-guest";
+		model.addAttribute("guestorderbooks",purchaseGuestService.readGuestPurchaseBooks(orderNumber));
+		return "/purchase/guest/order-detail-guest";
 	}
 
 	/**

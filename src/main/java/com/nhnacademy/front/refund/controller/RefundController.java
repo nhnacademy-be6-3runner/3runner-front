@@ -1,5 +1,6 @@
 package com.nhnacademy.front.refund.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import org.json.simple.JSONObject;
@@ -26,12 +27,9 @@ public class RefundController {
 
 	@GetMapping("/{orderNumber}")
 	public String refund(@PathVariable(name = "orderNumber") String purchaseId
-		,@RequestParam(defaultValue = "0") int page
-		,@RequestParam(defaultValue = "10") int pageSize
-		,@RequestParam(required = false) String sort
 		, Model model) {
 
-		Page<ReadPurchaseBookResponse> books = refundService.readGuestPurchaseBooks(purchaseId,page,pageSize,sort);
+		List<ReadPurchaseBookResponse> books = refundService.readGuestPurchaseBooks(purchaseId);
 		model.addAttribute("books", books);
 
 		return "refund";

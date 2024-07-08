@@ -76,8 +76,8 @@ public class PurchaseDetailMemberServiceImpl implements PurchaseDetailMemberServ
 	 * @return 해당 주문 - 책 page 리스트
 	 */
 	@Override
-	public Page<ReadPurchaseBookResponse> readPurchaseBookResponses(Long purchaseId, int page, int size, String sort){
-		return purchaseBookControllerClient.readPurchaseBook(purchaseId, page,size,null).getBody().getData();
+	public List<ReadPurchaseBookResponse> readPurchaseBookResponses(Long purchaseId){
+		return purchaseBookControllerClient.readPurchaseBook(purchaseId).getBody().getData();
 	}
 
 	/**
