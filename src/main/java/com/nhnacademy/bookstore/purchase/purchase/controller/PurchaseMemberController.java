@@ -72,21 +72,15 @@ public class PurchaseMemberController {
 	 * @return ApiResponse
 	 */
 	@GetMapping("/members/purchases")
-	public ApiResponse<Page<ReadPurchaseResponse>> readPurchases(
+	public ApiResponse<List<ReadPurchaseResponse>> readPurchases(
 		@RequestHeader(value = "Member-Id", required = false) Long memberId
-		, @RequestParam int page
-		, @RequestParam int size
-		, @RequestParam(required = false) String sort) {
-		Pageable pageable;
-
-		if (Objects.isNull(sort)) {
-			pageable = PageRequest.of(page, size);
-		} else {
-			pageable = PageRequest.of(page, size, Sort.by(sort));
-		}
+		) {
 
 		List<ReadPurchaseResponse> response = memberService.getPurchasesByMemberId(memberId);
-		ApiResponse<Page<ReadPurchaseResponse>> responses = ApiResponse.success(new PageImpl<>(response, pageable, response.size()));
+
+
+
+		ApiResponse<List<ReadPurchaseResponse>> responses = ApiResponse.success(response);
 		return responses;
 	}
 
