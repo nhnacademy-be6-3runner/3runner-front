@@ -40,6 +40,8 @@ public class PaymentGuestController {
             @RequestParam(required = false) String shipping,
             @RequestBody String jsonBody) throws Exception {
 
+        log.info("토스 페이 요청 컨트롤러 진입");
+
         JSONParser parser = new JSONParser();
         String orderId;
         String amount;
@@ -66,6 +68,8 @@ public class PaymentGuestController {
         byte[] encodedBytes = encoder.encode((widgetSecretKey + ":").getBytes(StandardCharsets.UTF_8));
         String authorizations = "Basic " + new String(encodedBytes);
 
+
+        log.info("토스 페이 요청 컨트롤러 진입");
         // 결제를 승인하면 결제수단에서 금액이 차감돼요.
         URL url = new URL("https://api.tosspayments.com/v1/payments/confirm");
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -73,6 +77,7 @@ public class PaymentGuestController {
         connection.setRequestProperty("Content-Type", "application/json");
         connection.setRequestMethod("POST");
         connection.setDoOutput(true);
+
 
         OutputStream outputStream = connection.getOutputStream();
         outputStream.write(obj.toString().getBytes("UTF-8"));
@@ -85,6 +90,7 @@ public class PaymentGuestController {
         // 결제 성공 및 실패 비즈니스 로직을 구현하세요.
         LocalDate localDate = LocalDate.parse(shipping, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         if (isSuccess) {
+            log.info("토스 페이 서비스");
             paymentGuestService.payment(CreatePaymentGuestRequest.builder()
                     .shippingDate(localDate.atStartOfDay(ZoneId.systemDefault()))
                     .password(password)
@@ -98,6 +104,7 @@ public class PaymentGuestController {
             );
 
         } else {
+            log.info("토스 페이 예외처리");
             throw new TossPaymentException("토스 최종 결제가 실패하였습니다.");
         }
 
