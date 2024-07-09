@@ -151,7 +151,7 @@
             <label for="coupon-box">쿠폰 적용</label>
             <div class="info-box">
                 <select class="form-control" id="coupon-box">
-                    <option value="" data-final-discount-price="0">-- 쿠폰을 선택하세요 --</option>
+                    <option value="0" data-final-discount-price="0">-- 쿠폰을 선택하세요 --</option>
                     <option th:each="coupon : ${coupons}" th:value="${coupon.couponFormId()}" th:attr="final-discount-price=${coupon.finalDiscountPrice()}" th:text="'최종할인가 : ' + ${coupon.finalDiscountPrice()} +',  '+${coupon.name()} +',  '+ ${coupon.type()} +',  '+ ${coupon.usage()}"></option>
                 </select>
             </div>
