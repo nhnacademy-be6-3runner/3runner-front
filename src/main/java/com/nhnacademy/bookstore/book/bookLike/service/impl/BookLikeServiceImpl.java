@@ -11,6 +11,7 @@ import com.nhnacademy.bookstore.entity.member.Member;
 import com.nhnacademy.bookstore.member.member.exception.MemberNotExistsException;
 import com.nhnacademy.bookstore.member.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -26,6 +28,16 @@ public class BookLikeServiceImpl implements BookLikeService {
     private final BookLikeRepository bookLikeRepository;
     private final MemberRepository memberRepository;
     private final BookRepository bookRepository;
+
+    @Override
+    public boolean isBookLikedByMember(Long bookId, Long memberId) {
+        try {
+            return bookLikeRepository.findByBookIdAndMemberId(bookId, memberId).isPresent();
+        } catch (Exception e) {
+            log.error("Error checking if book ID: " + bookId + " is liked by member ID: " + memberId, e);
+            throw e;
+        }
+    }
 
     @Override
     public BookLike findById(Long bookLikeId) {
@@ -37,7 +49,7 @@ public class BookLikeServiceImpl implements BookLikeService {
     }
 
     @Override
-    public void createBookLike(Long memberId, Long bookId) {
+    public void createBookLike(Long bookId, Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(MemberNotExistsException::new);
         Book book = bookRepository.findById(bookId).orElseThrow();
 
@@ -71,8 +83,4 @@ public class BookLikeServiceImpl implements BookLikeService {
         return bookLikeRepository.countLikeByBookId(bookId);
     }
 
-    @Override
-    public Page<BookListResponse> findBooksOrderByLikes(Pageable pageable) {
-        return bookLikeRepository.findBooksOrderByLikes(pageable);
-    }
 }
