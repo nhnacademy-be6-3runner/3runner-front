@@ -1,17 +1,12 @@
-package com.nhnacademy.bookstore.elastic.test;
+package com.nhnacademy.bookstore.elastic.controller;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.elasticsearch.core.SearchHits;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.nhnacademy.bookstore.book.book.dto.response.ReadBookResponse;
 import com.nhnacademy.bookstore.book.book.service.BookService;
@@ -26,26 +21,16 @@ import com.nhnacademy.bookstore.elastic.document.book.BookDocument;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@RestController
-public class ElasticTestController {
-
-	@Autowired
+@Controller
+@RequestMapping("/bookstore/search")
+public class ElasticController {
 	ElasticSearchBookRepository elasticSearchBookRepository;
-
-	@Autowired
-	ElasticSearchCustomBookRepository elasticSearchCustomBookRepository;
-
-	@Autowired
 	BookService bookService;
-	@Autowired
 	BookCategoryService bookCategoryService;
-
-	@Autowired
 	BookTagService bookTagService;
 
-	@GetMapping("/test/push")
+	@GetMapping("/push")
 	String push() {
-
 		for (long i = 1; i <= 713; i++) {
 			try {
 				ReadBookResponse book = bookService.readBookById(i);
@@ -80,19 +65,7 @@ public class ElasticTestController {
 		return "good";
 	}
 
-	@GetMapping("/test/search/{indexId}")
-	public BookDocument searchIndex(@PathVariable Long indexId) {
-		return elasticSearchBookRepository.findById(indexId).orElse(null);
-	}
+	@GetMapping("/")
 
-	@GetMapping("/test/search/title/{title}")
-	public Page<BookDocument> searchTitle(@PathVariable String title) {
-		return elasticSearchBookRepository.findByCustomQuery(title, PageRequest.of(0, 10));
-	}
 
-	@GetMapping("/test/search/keyword/{keyword}")
-	public SearchHits<BookDocument> searchKeyword(@PathVariable String keyword, @RequestParam int page) {
-		Pageable pageable = PageRequest.of(page - 1, 10);
-		return elasticSearchCustomBookRepository.searchProductsByProductName(keyword, pageable);
-	}
 }

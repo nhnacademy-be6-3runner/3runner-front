@@ -2,6 +2,8 @@ package com.nhnacademy.bookstore.elastic.book.repository;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.annotations.Query;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 
@@ -15,12 +17,12 @@ public interface ElasticSearchBookRepository extends ElasticsearchRepository<Boo
 		+ "    \"function_score\": {"
 		+ "      \"query\": {"
 		+ "        \"multi_match\": {"
-		+ "          \"query\": \"불편\", "
+		+ "          \"query\": \"?0\", "
 		+ "          \"minimum_should_match\": \"70%\","
-		+ "          \"fields\": [\"title^100\", \"author^50\", \"publisher\"]"
+		+ "          \"fields\": [\"title^100\", \"author^50\", \"publisher^50\", \"category^70\", \"tag^80\"]"
 		+ "        }"
 		+ "      }"
 		+ "    }"
 		+ "  }")
-	List<BookDocument> findByCustomQuery(String query);
+	Page<BookDocument> findByCustomQuery(String query, Pageable pageable);
 }

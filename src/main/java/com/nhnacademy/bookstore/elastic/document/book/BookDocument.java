@@ -41,17 +41,11 @@ public class BookDocument {
 	@Field(type = FieldType.Date, format = DateFormat.date_optional_time, copyTo = {"keywordText"})
 	private String publishedDate;
 
-	@Field(type = FieldType.Keyword, copyTo = {"keywordList", "keywordText"})
+	@Field(type = FieldType.Text, copyTo = {"keywordList", "keywordText"}, analyzer = "nori_analyzer")
 	private List<String> tagList;
 
 	@Field(type = FieldType.Keyword, copyTo = {"keywordList", "keywordText"})
 	private List<String> categoryList;
-
-	private long viewCount;
-
-	private long score;
-
-	private long reviewCount;
 
 	@Field(type = FieldType.Text, analyzer = "nori_analyzer")
 	// @Field(type = FieldType.Text)
