@@ -22,6 +22,7 @@ import com.nhnacademy.front.book.book.dto.response.UserReadBookResponse;
 import com.nhnacademy.front.book.book.exception.InvalidApiResponseException;
 import com.nhnacademy.front.book.book.exception.NotFindBookException;
 import com.nhnacademy.front.book.book.service.BookService;
+import com.nhnacademy.front.book.categroy.controller.feign.CategoryClient;
 import com.nhnacademy.front.util.ApiResponse;
 
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,7 @@ public class BookServiceImpl implements BookService {
 
 	private final BookClient bookClient;
 	private final ApiBookClient apiBookClient;
+	private final CategoryClient categoryClient;
 
 	/**
 	 * 입력 받은 항목을 Api 서버에게 보내주기 위한 형태로 변형
@@ -121,6 +123,26 @@ public class BookServiceImpl implements BookService {
 			throw new NotFindBookException();
 		}
 		return response.getBody().getData();
+	}
+
+	/**
+	 * 카테고리에 포함 된 도서 리스트 보기
+	 * @param page 페이지
+	 * @param size 사이즈
+	 * @param sort 정렬
+	 * @param categoryId 카테고리 넘버
+	 * @return 정보 리턴
+	 */
+	@Override
+	public Page<BookListResponse> readCategoryAllBooks(int page, int size, String sort, long categoryId) {
+		ApiResponse<Page<BookListResponse>> response = categoryClient.readCategoryAllBooks(page, size, sort,
+			categoryId);
+
+		if (response.getHeader().isSuccessful() && response.getBody() != null) {
+			return response.getBody().getData();
+		} else {
+			throw new InvalidApiResponseException("도서 페이지 조회 exception");
+		}
 	}
 
 	/**

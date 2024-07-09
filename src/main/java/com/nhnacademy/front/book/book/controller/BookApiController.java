@@ -50,4 +50,12 @@ public class BookApiController {
 		Page<BookDocumentResponse> bookPage = bookService.searchReadAllBooks(keyword, page, size);
 		return ApiResponse.success(bookPage);
 	}
+
+	@GetMapping("/category")
+	public ApiResponse<Page<BookListResponse>> readAllBooks(@RequestParam(defaultValue = "0") int page,
+		@RequestParam(defaultValue = "12") int size, @RequestParam(defaultValue = "publishedDate,desc") String sort,
+		@RequestParam(defaultValue = "1") int categoryId) {
+		Page<BookListResponse> bookList = bookService.readCategoryAllBooks(page, size, sort, categoryId);
+		return ApiResponse.success(bookList);
+	}
 }

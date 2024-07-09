@@ -40,4 +40,6 @@ public interface BookService {
 	void deleteBook(long bookId);
 
 	Page<BookDocumentResponse> searchReadAllBooks(String keyword, int page, int size);
+
+	Page<BookListResponse> readCategoryAllBooks(int page, int size, String sort, long categoryId);
 }

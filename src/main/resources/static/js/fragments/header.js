@@ -61,6 +61,6 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 
     function selectCategory(id, name) {
-        window.location.href = `/categories/${id}`;
+        window.location.href = `/categories/books?categoryId=${id}`;
     }
 });
