@@ -34,8 +34,8 @@ public class BookLikeController {
      * @param bookId 도서 아이디
      * @return 카운트
      */
-    @GetMapping("/{bookId}/like")
-    public ApiResponse<Long> CountLikeByBookId(@PathVariable Long bookId) {
+    @GetMapping("/{bookId}/likes")
+    public ApiResponse<Long> countLikeByBookId(@PathVariable Long bookId) {
         bookLikeService.countLikeByBookId(bookId);
         return new ApiResponse<>(new ApiResponse.Header(true, 200));
     }
