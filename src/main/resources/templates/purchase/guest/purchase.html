@@ -64,10 +64,6 @@
              line-height: 1.5;
              border-radius: .3rem;
         }
-
-         .fieldError {
-             border-color: #bd2130;
-         }
     </style>
 </head>
 <body>
@@ -107,8 +103,8 @@
         <div class="d-flex justify-content-end">
             <div class="checkout-summary text-left mb-3" style="text-align: right; margin-right: 20px">
                 <h4>배송비 추가금 : 3000원</h4>
-                <h4 class="total-book-price">도서 가격 : <span id="total-book-price"></span> 원</h4>
-                <h4 class="total-price">총 가격 : <span id="total-price"></span> 원</h4>
+                <h4>도서 가격 : <span id="total-book-price"></span> 원</h4>
+                <h4>총 가격 : <span id="total-price"></span> 원</h4>
             </div>
         </div>
 
@@ -118,6 +114,7 @@
             <label for="countyOfficeName">주소찾기</label>
             <div class="info-box">
                 <input type="text" id="countyOfficeName" class="form-control" placeholder="주소" value="주소없음" disabled>
+                <small id="address-error" class="text-danger text-center" style="display: none;">주소를 입력해 주세요.</small>
                 <p></p>
                 <div class="d-flex justify-content-end">
                     <button id="newwin" class="btn btn-success mb-2 btn-lg" type="button">주소찾기</button>
@@ -130,6 +127,7 @@
             <label for="password">비회원 비밀번호</label>
             <div class="info-box">
                 <input type="password" id="password" class="form-control" placeholder="비밀번호 입력">
+                <small id="password-error" class="text-danger text-center" style="display: none;">비밀번호를 입력해 주세요.</small>
             </div>
         </div>
 
@@ -187,11 +185,14 @@
     var amount = 0.0;
     const totalPrice = document.getElementById("total-price").textContent;
     const address = document.getElementById("countyOfficeName").value;
-    const password = document.getElementById("password").value;
     const orderNumber = document.getElementById("orderNumber").textContent;
     var orderForm = document.getElementById('order-form');
     var deliveryError = document.getElementById('delivery-error');
     var deliveryDate = document.getElementById('delivery-box').value;
+    var passwordError = document.getElementById('password-error');
+    var passwordInput = document.getElementById("password");
+    var addressInput = document.getElementById('newwin');
+    var addressError = document.getElementById('address-error');
 
     var isPacking = false;
     var shipping = null;
@@ -246,6 +247,19 @@
         { variantKey: "AGREEMENT" }
     );
 
+    addressInput.addEventListener('input', function () {
+        if (addressInput.value.trim()) {
+            addressError.style.display = 'none';
+        }
+    });
+
+    // 비밀번호 입력 필드 변경 이벤트 리스너
+    passwordInput.addEventListener('input', function () {
+        if (passwordInput.value.trim()) {
+            passwordError.style.display = 'none';
+        }
+    });
+
     // 포장 유무 체크 이벤트 리스너
     document.getElementById('gift-box').addEventListener('change', function () {
         var isGiftWrap = this.checked;
@@ -267,6 +281,7 @@
         var address = document.getElementById("countyOfficeName").value;
         var password = document.getElementById("password").value;
 
+
         console.log(amount);
         console.log(address);
         console.log(password);
@@ -274,6 +289,24 @@
         console.log(shipping);
         paymentMethodWidget.updateAmount(amount);
 
+        if (!password) {
+            event.preventDefault();
+            passwordError.style.display = 'block';
+            alert('비회원 비밀번호를 입력해 주세요.');
+            return;
+        } else {
+            passwordError.style.display = 'none';
+        }
+
+        if(address === "주소없음"){
+            event.preventDefault(); // 폼 제출 중단
+            addressError.style.display = 'block';
+            alert('주소를 입력해 주세요.');
+            paymentWidget.cancel;
+            return;
+        } else {
+            addressError.style.display = 'none';
+        }
         paymentWidget.requestPayment({
             orderId: orderNumber,
             orderName: '3runner Store:'+orderNumber,

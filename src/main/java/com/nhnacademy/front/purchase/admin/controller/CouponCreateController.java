@@ -67,7 +67,7 @@ public class CouponCreateController {
 
 
     //어드민 페이지
-    @GetMapping("/purchase/admin")
+    @GetMapping("/admin/purchases")
     public String admin(){
         return "purchase/admin/admin";
     }
