@@ -50,6 +50,7 @@ function updateTotalPrice() {
 document.addEventListener('DOMContentLoaded', function () {
     updateTotalPrice(); // 초기 총 가격 설정
     fetchCoupons(); // 쿠폰 조회 함수 호출
+    updateLikeCount(); // 초기 좋아요 수 설정
 });
 
 // 좋아요 버튼에 이벤트 리스너 추가
@@ -100,6 +101,7 @@ function updateLikeCount() {
         url: `/api/books/${bookId}/likes`,
         type: 'GET',
         success: function (response) {
+            console.log(`Received like count response: `, response);
             document.getElementById('likeCount').innerText = response.data;
         },
         error: function (xhr, status, error) {

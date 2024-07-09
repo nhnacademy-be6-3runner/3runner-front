@@ -106,7 +106,7 @@ public class BookController {
 		model.addAttribute("rating", 4.9);
 		model.addAttribute("reviewCount", 10);
 
-		return "book/book_detail";
+		return "book/detail/book_detail";
 	}
 
 	/**
