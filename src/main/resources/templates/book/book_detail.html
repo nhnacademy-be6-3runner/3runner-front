@@ -71,13 +71,12 @@
                         <label for="quantity">수량</label>
                         <input type="number" id="quantity" name="quantity" value="1"/>
                     </div>
-                    <button type="submit" class="btn btn-lg btn-primary btn-custom">TEST 장바구니 담기</button>
+                    <button type="submit" class="add-to-cart">장바구니 담기</button>
                 </form>
                 <form action="/purchases" method="POST">
                     <input type="hidden" id="quantity1" name="quantity" value="1">
-                    <label for="bookId1">bookId</label>
                     <input type="hidden" id="bookId1" name="bookId" value="1"/>
-                    <button type="submit" class="btn btn-lg btn-primary btn-custom">TEST 바로 구매</button>
+                    <button type="submit" class="buy-now">바로 구매</button>
                 </form>
             </div>
         </div>
