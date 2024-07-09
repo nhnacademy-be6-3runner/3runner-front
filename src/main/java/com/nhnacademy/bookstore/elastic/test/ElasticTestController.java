@@ -68,7 +68,9 @@ public class ElasticTestController {
 					book.publisher(),
 					book.publishedDate().toString(),
 					tagList,
-					categoryList
+					categoryList,
+					book.price(),
+					book.sellingPrice()
 				);
 
 				elasticSearchBookRepository.save(bookDocument);
