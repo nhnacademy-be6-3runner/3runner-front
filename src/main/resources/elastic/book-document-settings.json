@@ -7,12 +7,19 @@
         "filter": [
           "nori_part_of_speech"
         ]
+      },
+      "whitespace_analyzer": {
+        "type": "custom",
+        "tokenizer": "whitespace_tokenizer"
       }
     },
     "tokenizer": {
       "nori_tokenizer": {
         "type": "nori_tokenizer",
         "decompound_mode": "mixed"
+      },
+      "whitespace_tokenizer": {
+        "type": "whitespace"
       }
     },
     "filter": {
@@ -20,7 +27,9 @@
         "type": "nori_part_of_speech",
         "stoptags": [
           "E",
+          "IC",
           "J",
+          "MAG",
           "MAJ",
           "MM",
           "SP",

@@ -28,13 +28,13 @@ public class BookDocument {
 	@Field(type = FieldType.Text, copyTo = {"keywordText"}, analyzer = "nori_analyzer")
 	private String title;
 
-	@Field(type = FieldType.Keyword, copyTo = {"keywordList", "keywordText"})
+	@Field(type = FieldType.Text, copyTo = {"keywordList", "keywordText"}, analyzer = "whitespace_analyzer")
 	private String author;
 
 	@Field(type = FieldType.Keyword)
 	private String thumbnail;
 
-	@Field(type = FieldType.Keyword, copyTo = {"keywordList", "keywordText"})
+	@Field(type = FieldType.Text, copyTo = {"keywordList", "keywordText"}, analyzer = "whitespace_analyzer")
 	private String publisher;
 
 	@Field(type = FieldType.Date, format = DateFormat.date_optional_time, copyTo = {"keywordText"})

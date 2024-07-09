@@ -33,4 +33,6 @@ public interface BookCustomRepository {
 	ReadBookResponse readDetailBook(Long bookId);
 
 	Page<BookManagementResponse> readAdminBookList(Pageable pageable);
+
+	Page<BookListResponse> readCategoryAllBookList(Pageable pageable, Long categoryId);
 }
