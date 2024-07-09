@@ -1,5 +1,6 @@
 package com.nhnacademy.bookstore.member.member.service.impl;
 
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,13 +59,15 @@ public class MemberServiceImpl implements MemberService {
 	private final CouponMemberService couponMemberService;
 	private final MemberPointService memberPointService;
 
+
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	@Override
 	public Member saveOrGetPaycoMember(UserProfile userProfile) {
 		Optional<Member> optionalMember = memberRepository.findByEmail(userProfile.getEmail());
 		if (optionalMember.isPresent()) {
 			if(optionalMember.get().getAuthProvider() == AuthProvider.PAYCO) {
-				updateLastLogin(optionalMember.get().getId(), ZonedDateTime.now());
+				updateStatus(optionalMember.get().getId(),Status.Active);
+				updateLastLogin(optionalMember.get().getId(),ZonedDateTime.now(ZoneId.of("Asia/Seoul")));
 				return optionalMember.get();//존재하는경우, 그냥 멤버를 가져온다.
 			}else{
 				throw new GeneralNotPayco();
@@ -75,20 +78,20 @@ public class MemberServiceImpl implements MemberService {
 			member.setEmail(userProfile.getEmail());
 			member.setPassword(passwordEncoder.encode(userProfile.getId()));
 			member.setGrade(Grade.General);
-			member.setStatus(Status.Active);
 			member.setName(userProfile.getName()!=null? userProfile.getName() : "Payco");
 			member.setPhone(userProfile.getMobile()!=null? userProfile.getMobile() : "EmptyNumber");
 			member.setPoint(0L);
-			member.setCreatedAt(ZonedDateTime.now());
-			member.setLastLoginDate(ZonedDateTime.now());
+			member.setCreatedAt(ZonedDateTime.now(ZoneId.of("Asia/Seoul")));
 			member.setAuthProvider(AuthProvider.PAYCO);
+			member.setLastLoginDate(ZonedDateTime.now(ZoneId.of("Asia/Seoul")));
+			member.setStatus(Status.Active);
 			memberRepository.save(member);
 			//없는경우 새로 가져온다.
 
 			couponMemberService.issueWelcomeCoupon(member);
 			memberPointService.welcomePoint(member);
+			return member;
 		}
-		return null;
 	}
 
 	/**
@@ -200,7 +203,7 @@ public class MemberServiceImpl implements MemberService {
 		member.setAge(updateMemberRequest.age());
 		member.setPhone(updateMemberRequest.phone());
 		member.setBirthday(updateMemberRequest.birthday());
-		member.setModifiedAt(ZonedDateTime.now());
+		member.setModifiedAt(ZonedDateTime.now(ZoneId.of("Asia/Seoul")));
 
 		return memberRepository.save(member);
 	}
@@ -215,7 +218,7 @@ public class MemberServiceImpl implements MemberService {
 		Member member = memberRepository.findById(memberId).orElseThrow(MemberNotExistsException::new);
 
 		member.setStatus(Status.Withdrawn);
-		member.setDeletedAt(ZonedDateTime.now());
+		member.setDeletedAt(ZonedDateTime.now(ZoneId.of("Asia/Seoul")));
 		member.setPhone("EmptyNumber");
 		member.setName("EmptyName");
 		member.setPassword("EmptyPassword");
@@ -238,7 +241,7 @@ public class MemberServiceImpl implements MemberService {
 	public Member updateStatus(Long memberId, Status status) {
 		Member member = memberRepository.findById(memberId).orElseThrow(MemberNotExistsException::new);
 		member.setStatus(status);
-		member.setModifiedAt(ZonedDateTime.now());
+		member.setModifiedAt(ZonedDateTime.now(ZoneId.of("Asia/Seoul")));
 		return memberRepository.save(member);
 	}
 
@@ -253,7 +256,7 @@ public class MemberServiceImpl implements MemberService {
 	public Member updateGrade(Long memberId, Grade grade) {
 		Member member = memberRepository.findById(memberId).orElseThrow(MemberNotExistsException::new);
 		member.setGrade(grade);
-		member.setModifiedAt(ZonedDateTime.now());
+		member.setModifiedAt(ZonedDateTime.now(ZoneId.of("Asia/Seoul")));
 		return memberRepository.save(member);
 	}
 
@@ -293,10 +296,9 @@ public class MemberServiceImpl implements MemberService {
 	public Member updatePassword(Long memberId, UpdatePasswordRequest updatePasswordRequest) {
 		Member member = memberRepository.findById(memberId).orElseThrow(MemberNotExistsException::new);
 		member.setPassword(passwordEncoder.encode(updatePasswordRequest.password()));
-		member.setModifiedAt(ZonedDateTime.now());
+		member.setModifiedAt(ZonedDateTime.now(ZoneId.of("Asia/Seoul")));
 		return memberRepository.save(member);
 	}
-
 	public Boolean isCorrectPassword(Long memberId, String password){
 		Member member = memberRepository.findById(memberId).orElseThrow(MemberNotExistsException::new);
 		return passwordEncoder.matches(password, member.getPassword());
