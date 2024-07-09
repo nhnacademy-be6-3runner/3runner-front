@@ -30,7 +30,6 @@ public class PaymentMemberController {
     private final PaymentGuestService paymentGuestService;
     private final PaymentMemberService paymentMemberService;
 
-    @CrossOrigin(origins = "http://3runner.shop")
     @RequestMapping(value = "/bookstore/payments/members/confirm")
     public ResponseEntity<JSONObject> confirmPayment(
             @RequestHeader(value = "Member-Id", required = false) Long memberId,

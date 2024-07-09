@@ -27,7 +27,6 @@ import java.util.Base64;
 public class PaymentGuestController {
     private final PaymentGuestService paymentGuestService;
 
-    @CrossOrigin(origins = "http://3runner.shop")
     @RequestMapping(value = "/bookstore/payments/guests/confirm")
     public ResponseEntity<JSONObject> confirmPayment(
             @RequestHeader(value = "Member-Id", required = false) Long memberId,
