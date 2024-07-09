@@ -13,13 +13,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
 @Slf4j
-@Controller
+@RestController
 @RequiredArgsConstructor
 public class CartModifyController {
     private final BookCartControllerClient bookCartControllerClient;
@@ -37,7 +38,7 @@ public class CartModifyController {
         } else {
             bookCartControllerClient.updateCart(UpdateBookCartRequest.builder().bookId(bookId).cartId(0).quantity(quantity).build());
         }
-        return "redirect:/carts";
+        return "cart-update";
     }
 
 
@@ -53,7 +54,7 @@ public class CartModifyController {
             bookCartControllerClient.deleteCart(DeleteBookCartRequest.builder().bookCartId(bookCartId).cartId(0).build());
         }
 
-        return "redirect:/carts";
+        return "cart-delete";
     }
 
 
@@ -69,6 +70,6 @@ public class CartModifyController {
             cartId = 0L;
             bookCartControllerClient.deleteAllCart(cartId);
         }
-        return "redirect:/carts";
+        return "cart-delete-all";
     }
 }

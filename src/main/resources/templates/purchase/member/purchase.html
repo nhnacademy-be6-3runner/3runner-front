@@ -85,9 +85,12 @@
     <form>
         <div th:each="item : ${response}" class="cart-item d-flex justify-content-between align-items-center">
             <div class="cart-item-info d-flex align-items-center">
-                <img th:src="@{/api/images/book/download(fileName=${item.url()})}"
-                     src="/static/img/no-image.png" alt="Product Image" class="mr-3" style="width: 150px">
-                <div  class="ml-3">
+                <div class="ml-3">
+                    <img th:src="@{/api/images/book/download(fileName=${item.url()})}"
+                         src="/static/img/no-image.png" alt="Product Image" class="mr-3" style="width: 150px">
+                </div>
+
+                <div class="ml-3" style="margin-left: 20px">
                     <h4 th:text="${item.title()}">Product</h4>
                     <p>₩<span class="price-input" th:text="${item.price()}"></span></p>
                     <div class="d-flex align-items-center">
@@ -100,10 +103,13 @@
             </div>
         </div>
 
-        <div class="checkout-summary text-center mb-3">
-            <h4>배송비 추가금 : 3000원</h4>
-            <h4 class="total-book-price">도서 가격 : <span id="total-book-price"></span> 원</h4>
-            <h4 class="total-price">총 가격 : <span id="total-price"></span> 원</h4>
+        <br/>
+        <div class="d-flex justify-content-end">
+            <div class="checkout-summary text-left mb-3" style="text-align: right; margin-right: 20px">
+                <h4>배송비 추가금 : 3000원</h4>
+                <h4 class="total-book-price">도서 가격 : <span id="total-book-price"></span> 원</h4>
+                <h4 class="total-price">총 가격 : <span id="total-price"></span> 원</h4>
+            </div>
         </div>
 
         <!-- 포장 유무 체크 -->
@@ -117,7 +123,7 @@
 
         <!-- 배송 날짜 지정 -->
         <div class="form-group text-left mb-3">
-            <label for="delivery-box">배송 날짜 지정</label>
+            <label for="delivery-box">배송 희망 날짜 지정</label>
             <div class="info-box">
                 <input type="date" id="delivery-box" name="deliveryDate" class="form-control">
             </div>
@@ -202,6 +208,16 @@
     const orderNumber = document.getElementById("orderNumber").textContent;
     <!--총 가격-->
     document.addEventListener('DOMContentLoaded', function() {
+        var today = new Date();
+        var year = today.getFullYear();
+        var month = String(today.getMonth() + 1).padStart(2, '0');
+        var day = String(today.getDate()+1).padStart(2, '0');
+        var minDate = year + '-' + month + '-' + day;
+
+        var deliveryBox = document.getElementById('delivery-box');
+        deliveryBox.setAttribute('min', minDate);
+        deliveryBox.setAttribute('value', minDate);
+
         calculateTotal();
     });
 

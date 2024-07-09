@@ -144,9 +144,9 @@
 
         <!-- 배송 날짜 지정 -->
         <div class="form-group">
-            <label for="delivery-box">배송 날짜 지정</label>
+            <label for="delivery-box">배송 희망 날짜 지정</label>
             <div class="info-box">
-                <input type="date" id="delivery-box" name="deliveryDate" class="form-control">
+                <input type="date" id="delivery-box" name="deliveryDate" value="0" class="form-control">
             </div>
         </div>
 
@@ -189,12 +189,26 @@
     const address = document.getElementById("countyOfficeName").value;
     const password = document.getElementById("password").value;
     const orderNumber = document.getElementById("orderNumber").textContent;
+    var orderForm = document.getElementById('order-form');
+    var deliveryError = document.getElementById('delivery-error');
+    var deliveryDate = document.getElementById('delivery-box').value;
+
     var isPacking = false;
     var shipping = null;
     var road = null;
 
     <!--총 가격-->
     document.addEventListener('DOMContentLoaded', function() {
+        var today = new Date();
+        var year = today.getFullYear();
+        var month = String(today.getMonth() + 1).padStart(2, '0');
+        var day = String(today.getDate()+1).padStart(2, '0');
+        var minDate = year + '-' + month + '-' + day;
+
+        var deliveryBox = document.getElementById('delivery-box');
+        deliveryBox.setAttribute('min', minDate);
+        deliveryBox.setAttribute('value', minDate);
+
         calculateTotal();
     });
     function calculateTotal() {
@@ -241,7 +255,8 @@
 
     // 배송 날짜 지정 이벤트 리스너
     document.getElementById('delivery-box').addEventListener('change', function () {
-        var deliveryDate = this.value;
+        deliveryDate = this.value;
+
         console.log("Delivery Date: ", deliveryDate);
         shipping = deliveryDate;
     });
