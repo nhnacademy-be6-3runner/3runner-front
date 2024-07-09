@@ -14,6 +14,10 @@ public class CustomInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         if (CorsUtils.isPreFlightRequest(request)) {
             response.setStatus(HttpServletResponse.SC_OK);
+            response.setHeader("Access-Control-Allow-Origin", "*");
+            response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+            response.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type, X-CSRF-TOKEN");
+            response.setHeader("Access-Control-Allow-Credentials", "true");
             return true;
         }
         if (CorsUtils.isCorsRequest(request)) {
