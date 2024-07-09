@@ -5,20 +5,17 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.nhnacademy.front.book.book.controller.feign.ApiBookClient;
 import com.nhnacademy.front.book.book.controller.feign.BookClient;
 import com.nhnacademy.front.book.book.dto.request.CreateBookRequest;
 import com.nhnacademy.front.book.book.dto.request.UserCreateBookRequest;
+import com.nhnacademy.front.book.book.dto.response.BookDocumentResponse;
 import com.nhnacademy.front.book.book.dto.response.BookListResponse;
 import com.nhnacademy.front.book.book.dto.response.BookManagementResponse;
 import com.nhnacademy.front.book.book.dto.response.UserReadBookResponse;
@@ -111,6 +108,22 @@ public class BookServiceImpl implements BookService {
 	}
 
 	/**
+	 * 키워드를 통한 책 검색
+	 * @param keyword 책의 키워드
+	 * @param page 책의 페이지
+	 * @param size 책 사이즈
+	 * @return 정보 리턴
+	 */
+	@Override
+	public Page<BookDocumentResponse> searchReadAllBooks(String keyword, int page, int size) {
+		ApiResponse<Page<BookDocumentResponse>> response = bookClient.searchReadAllBooks(page, size, keyword);
+		if (!response.getHeader().isSuccessful()) {
+			throw new NotFindBookException();
+		}
+		return response.getBody().getData();
+	}
+
+	/**
 	 *
 	 *  내용 에서 이미지 추출하는 코드
 	 * @param description
@@ -170,7 +183,6 @@ public class BookServiceImpl implements BookService {
 	@Override
 	public Page<BookListResponse> readAllBooks(int page, int size, String sort) {
 		ApiResponse<Page<BookListResponse>> response = bookClient.readAllBooks(page, size, sort);
-
 
 		if (response.getHeader().isSuccessful() && response.getBody() != null) {
 			return response.getBody().getData();

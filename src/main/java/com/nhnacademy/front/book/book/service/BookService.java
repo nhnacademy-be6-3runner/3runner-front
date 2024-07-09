@@ -3,13 +3,13 @@ package com.nhnacademy.front.book.book.service;
 import org.springframework.data.domain.Page;
 
 import com.nhnacademy.front.book.book.dto.request.UserCreateBookRequest;
+import com.nhnacademy.front.book.book.dto.response.BookDocumentResponse;
 import com.nhnacademy.front.book.book.dto.response.BookListResponse;
 import com.nhnacademy.front.book.book.dto.response.BookManagementResponse;
 import com.nhnacademy.front.book.book.dto.response.UserReadBookResponse;
 
 public interface BookService {
 	void saveBook(UserCreateBookRequest createBookRequest, String imageName);
-
 
 	/**
 	 * 도서 페이지 조회 메서드입니다.
@@ -38,4 +38,6 @@ public interface BookService {
 	 * @param bookId 삭제할 책의 id
 	 */
 	void deleteBook(long bookId);
+
+	Page<BookDocumentResponse> searchReadAllBooks(String keyword, int page, int size);
 }
