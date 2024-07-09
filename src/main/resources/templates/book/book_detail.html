@@ -77,7 +77,7 @@
 
             <div class="purchase-button">
                 <div class="options">
-                    <label for="quantity">수량</label>
+                    <label for="quantityCart">수량</label>
                     <div class="input-group">
                         <button type="button" class="btn btn-outline-secondary" onclick="decreaseQuantity()">-</button>
                         <input type="number" id="quantityCart" name="quantityCart" value="1" min="1" class="form-control text-center" onchange="updateTotalPrice()">
@@ -85,13 +85,17 @@
                     </div>
                 </div>
                 <div class="total-price">
-                    총 가격  <span id="totalPrice" th:text="${book.sellingPrice()}"></span>원
+                    총 가격 <span id="totalPrice" th:text="${book.sellingPrice()}"></span>원
                 </div>
                 <div class="action-buttons">
-                    <button class="btn btn-outline-success" onclick="submitCart()">장바구니 담기</button>
-                    <form action="/purchases" method="POST" class="fixed-size-button">
-                        <input type="hidden" id="quantity" name="quantity" value="1">
+                    <form action="/carts" method="post" class="fixed-size-button">
                         <input type="hidden" id="bookId" name="bookId" th:value="${book.id()}"/>
+                        <input type="hidden" id="quantityCartForm" name="quantity" value="1"/>
+                        <button type="submit" class="btn btn-outline-success">장바구니 담기</button>
+                    </form>
+                    <form action="/purchases" method="POST" class="fixed-size-button">
+                        <input type="hidden" id="bookIdPurchase" name="bookId" th:value="${book.id()}"/>
+                        <input type="hidden" id="quantityPurchase" name="quantity" value="1">
                         <button type="submit" class="btn btn-outline-primary">바로 구매</button>
                     </form>
                 </div>

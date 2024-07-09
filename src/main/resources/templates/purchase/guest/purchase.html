@@ -9,6 +9,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <link rel="stylesheet" th:href="@{/css/main/default.css}">
+    <link rel="stylesheet" th:href="@{/css/detail/book-detail.css}">
     <style>
         body {
             background-color: #f8f9fa;
@@ -70,43 +72,8 @@
 </head>
 <body>
 <!-- Header -->
-<header class="header-v4">
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light menu-desktop">
-        <div class="container">
-            <!-- Logo -->
-            <a class="navbar-brand logo" href="#">
-                3runner
-            </a>
+<header class="header-custom" th:replace="fragments/no-nav-header :: header"></header>
 
-            <!-- Toggler/collapsibe Button -->
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <!-- Navbar links -->
-            <div class="collapse navbar-collapse" id="collapsibleNavbar">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="login.html">login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="logout.html">logout</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="mypage.html">my page</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="register.html">register</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="cart.html">cart</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-</header>
 
 <main class="container my-5">
     <div class="checkout-header text-center">
@@ -114,12 +81,16 @@
         <h4 id="orderNumber" th:text="${orderNumber}"></h4>
     </div>
 
+
     <form>
         <div th:each="item : ${response}" class="cart-item d-flex justify-content-between align-items-center">
             <div class="cart-item-info d-flex align-items-center">
-                <img th:src="@{/api/images/book/download(fileName=${item.url()})}"
-                     src="/static/img/no-image.png" alt="Product Image" class="mr-3" style="width: 150px">
                 <div class="ml-3">
+                    <img th:src="@{/api/images/book/download(fileName=${item.url()})}"
+                         src="/static/img/no-image.png" alt="Product Image" class="mr-3" style="width: 150px">
+                </div>
+
+                <div class="ml-3" style="margin-left: 20px">
                     <h4 th:text="${item.title()}">Product</h4>
                     <p>₩<span class="price-input" th:text="${item.price()}"></span></p>
                     <div class="d-flex align-items-center">
@@ -132,10 +103,13 @@
             </div>
         </div>
 
-        <div class="checkout-summary text-center mb-3">
-            <h4>배송비 추가금 : 3000원</h4>
-            <h4 class="total-book-price">도서 가격 : <span id="total-book-price"></span> 원</h4>
-            <h4 class="total-price">총 가격 : <span id="total-price"></span> 원</h4>
+        <br/>
+        <div class="d-flex justify-content-end">
+            <div class="checkout-summary text-left mb-3" style="text-align: right; margin-right: 20px">
+                <h4>배송비 추가금 : 3000원</h4>
+                <h4 class="total-book-price">도서 가격 : <span id="total-book-price"></span> 원</h4>
+                <h4 class="total-price">총 가격 : <span id="total-price"></span> 원</h4>
+            </div>
         </div>
 
 

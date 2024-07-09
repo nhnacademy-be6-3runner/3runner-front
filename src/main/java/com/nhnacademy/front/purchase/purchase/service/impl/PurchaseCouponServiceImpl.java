@@ -55,7 +55,7 @@ public class PurchaseCouponServiceImpl implements PurchaseCouponService {
             if ((readCouponFormResponse.books().stream().anyMatch(booksLong::contains)
                     || readCouponFormResponse.categorys().stream().anyMatch(categorysLong::contains))
                     && readCouponFormResponse.endDate().isAfter(ZonedDateTime.now())) {
-                if(readCouponFormResponse.discountPrice() != 0 && readCouponFormResponse.discountPrice() < readCouponFormResponse.discountMax()){
+                if(readCouponFormResponse.discountPrice() != 0){
                     validCoupons.add(CouponDiscountPriceDto.builder()
                             .couponFormId(readCouponFormResponse.couponFormId())
                             .startDate(readCouponFormResponse.startDate())
