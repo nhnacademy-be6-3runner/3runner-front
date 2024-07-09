@@ -91,23 +91,24 @@ public class PaymentGuestController {
         LocalDate localDate = LocalDate.parse(shipping, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         if (isSuccess) {
             log.info("토스 페이 서비스");
-            paymentGuestService.payment(CreatePaymentGuestRequest.builder()
-                    .shippingDate(localDate.atStartOfDay(ZoneId.systemDefault()))
-                    .password(password)
-                    .cartId(cartId)
-                    .amount(Integer.valueOf(amount))
-                    .isPacking(Boolean.valueOf(isPacking))
-                    .orderId(orderId)
-                    .road(address)
-                            .paymentKey(paymentKey)
-                    .build()
-            );
+//            paymentGuestService.payment(CreatePaymentGuestRequest.builder()
+//                    .shippingDate(localDate.atStartOfDay(ZoneId.systemDefault()))
+//                    .password(password)
+//                    .cartId(cartId)
+//                    .amount(Integer.valueOf(amount))
+//                    .isPacking(Boolean.valueOf(isPacking))
+//                    .orderId(orderId)
+//                    .road(address)
+//                            .paymentKey(paymentKey)
+//                    .build()
+//            );
 
         } else {
             log.info("토스 페이 예외처리");
             throw new TossPaymentException("토스 최종 결제가 실패하였습니다.");
         }
 
+        log.info("토스 페이 끝");
         Reader reader = new InputStreamReader(responseStream, StandardCharsets.UTF_8);
         JSONObject jsonObject = (JSONObject) parser.parse(reader);
         responseStream.close();
