@@ -36,8 +36,8 @@ public class BookLikeController {
      */
     @GetMapping("/{bookId}/likes")
     public ApiResponse<Long> countLikeByBookId(@PathVariable Long bookId) {
-        bookLikeService.countLikeByBookId(bookId);
-        return new ApiResponse<>(new ApiResponse.Header(true, 200));
+        long cnt = bookLikeService.countLikeByBookId(bookId);
+        return ApiResponse.success(cnt);
     }
 
     /**
