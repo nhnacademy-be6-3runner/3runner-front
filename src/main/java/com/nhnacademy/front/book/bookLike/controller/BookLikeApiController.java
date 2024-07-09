@@ -9,14 +9,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 public class BookLikeApiController {
     private final BookLikeService bookLikeService;
 
     @GetMapping("/api/books/{bookId}/likes")
     public ApiResponse<Long> countLikeByBookId(@PathVariable("bookId") Long bookId) {
-        return ApiResponse.success(bookLikeService.countLikeByBookId(bookId));
+        Long cnt = bookLikeService.countLikeByBookId(bookId);
+        return ApiResponse.success(cnt);
     }
 }

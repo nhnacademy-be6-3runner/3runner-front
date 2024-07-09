@@ -5,8 +5,10 @@ import com.nhnacademy.front.book.bookLike.controller.feign.BookLikeClient;
 import com.nhnacademy.front.book.bookLike.serviee.BookLikeService;
 import com.nhnacademy.front.util.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class BookLikeServiceImpl implements BookLikeService {
@@ -18,6 +20,7 @@ public class BookLikeServiceImpl implements BookLikeService {
         if (!response.getHeader().isSuccessful()) {
             throw new NotFindBookException();
         }
+        log.info("book Id, and Likes: {}, {}", bookId, response.getBody().getData());
         return response.getBody().getData();
     }
 }
