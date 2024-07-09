@@ -246,6 +246,12 @@
         "#agreement",
         { variantKey: "AGREEMENT" }
     );
+    // 배송 날짜 지정 이벤트 리스너
+    document.getElementById('delivery-box').addEventListener('change', function () {
+        var deliveryDate = this.value;
+        console.log("Delivery Date: ", deliveryDate);
+        shipping = deliveryDate;
+    });
 
     addressInput.addEventListener('input', function () {
         if (addressInput.value.trim()) {
