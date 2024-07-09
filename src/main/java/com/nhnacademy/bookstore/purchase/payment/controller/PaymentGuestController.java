@@ -85,6 +85,8 @@ public class PaymentGuestController {
 
         InputStream responseStream = isSuccess ? connection.getInputStream() : connection.getErrorStream();
 
+        log.info("Toss getInputStream: {}", connection.getInputStream());
+        log.info("Toss getErrorStream: {}", connection.getErrorStream());
         // 결제 성공 및 실패 비즈니스 로직을 구현하세요.
         LocalDate localDate = LocalDate.parse(shipping, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         if (isSuccess) {
