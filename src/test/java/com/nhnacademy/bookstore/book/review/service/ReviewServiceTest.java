@@ -20,6 +20,7 @@ import com.nhnacademy.bookstore.entity.review.Review;
 import com.nhnacademy.bookstore.entity.review.enums.ReviewStatus;
 import com.nhnacademy.bookstore.member.member.dto.request.CreateMemberRequest;
 import com.nhnacademy.bookstore.member.member.repository.MemberRepository;
+import com.nhnacademy.bookstore.member.member.service.MemberPointService;
 import com.nhnacademy.bookstore.member.pointRecord.repository.PointRecordRepository;
 import com.nhnacademy.bookstore.purchase.purchaseBook.repository.PurchaseBookRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +45,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
@@ -65,6 +67,9 @@ class ReviewServiceTest {
 
     @Mock
     private PointRecordRepository pointRecordRepository;
+
+    @Mock
+    private MemberPointService memberPointService;
 
     @InjectMocks
     private ReviewServiceImpl reviewService;
@@ -155,6 +160,7 @@ class ReviewServiceTest {
     void testCreateReview() {
         given(purchaseBookRepository.findById(1L)).willReturn(Optional.of(purchaseBook));
         given(reviewRepository.existByPurchaseBook(1L, 1L)).willReturn(true);
+        given(memberPointService.updatePoint(anyLong(), anyLong())).willReturn(1L);
 
         Long reviewId = reviewService.createReview(1L, 1L, createReviewRequest);
 

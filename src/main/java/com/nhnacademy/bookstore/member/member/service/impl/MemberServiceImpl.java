@@ -58,13 +58,13 @@ public class MemberServiceImpl implements MemberService {
 	private final CouponMemberService couponMemberService;
 	private final MemberPointService memberPointService;
 
-
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	@Override
 	public Member saveOrGetPaycoMember(UserProfile userProfile) {
 		Optional<Member> optionalMember = memberRepository.findByEmail(userProfile.getEmail());
 		if (optionalMember.isPresent()) {
 			if(optionalMember.get().getAuthProvider() == AuthProvider.PAYCO) {
+				updateLastLogin(optionalMember.get().getId(), ZonedDateTime.now());
 				return optionalMember.get();//존재하는경우, 그냥 멤버를 가져온다.
 			}else{
 				throw new GeneralNotPayco();
@@ -296,6 +296,7 @@ public class MemberServiceImpl implements MemberService {
 		member.setModifiedAt(ZonedDateTime.now());
 		return memberRepository.save(member);
 	}
+
 	public Boolean isCorrectPassword(Long memberId, String password){
 		Member member = memberRepository.findById(memberId).orElseThrow(MemberNotExistsException::new);
 		return passwordEncoder.matches(password, member.getPassword());

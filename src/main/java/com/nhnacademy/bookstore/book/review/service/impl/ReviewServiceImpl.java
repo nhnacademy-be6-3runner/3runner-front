@@ -20,6 +20,7 @@ import com.nhnacademy.bookstore.entity.review.Review;
 import com.nhnacademy.bookstore.entity.review.enums.ReviewStatus;
 import com.nhnacademy.bookstore.member.member.exception.MemberNotExistsException;
 import com.nhnacademy.bookstore.member.member.repository.MemberRepository;
+import com.nhnacademy.bookstore.member.member.service.MemberPointService;
 import com.nhnacademy.bookstore.member.pointRecord.repository.PointRecordRepository;
 import com.nhnacademy.bookstore.purchase.purchase.exception.PurchaseDoesNotExistException;
 import com.nhnacademy.bookstore.purchase.purchaseBook.repository.PurchaseBookRepository;
@@ -48,6 +49,7 @@ public class ReviewServiceImpl implements ReviewService {
     private final PurchaseBookRepository purchaseBookRepository;
     private final ReviewLikeRepository reviewLikeRepository;
     private final PointRecordRepository pointRecordRepository;
+    private final MemberPointService memberPointService;
 
     private static final long POINT_RATE = 500;
 
@@ -80,12 +82,16 @@ public class ReviewServiceImpl implements ReviewService {
         }
         reviewRepository.save(review);
 
+
+        memberPointService.updatePoint(memberId, POINT_RATE);
         pointRecordRepository.save(new PointRecord(
                 POINT_RATE,
                 "리뷰 적립",
                 review.getPurchaseBook().getPurchase().getMember(),
                 null)
         );
+
+
 
         return review.getId();
     }

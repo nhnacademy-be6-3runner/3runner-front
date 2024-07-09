@@ -82,6 +82,7 @@ public class BookCartGuestServiceImpl implements BookCartGuestService {
                             .url(url)
                             .title(book.getTitle())
                             .quantity(bookCart.getQuantity())
+                            .leftQuantity(book.getQuantity())
                             .build()
             );
         }
