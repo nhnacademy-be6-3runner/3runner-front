@@ -114,7 +114,6 @@
             };
 
             const response = await fetch("http://" + window.location.hostname +":8080/bookstore/payments/guests/confirm?cartId="+cartId+"&address="+address+"&password="+password+"&isPacking="+isPacking +"&shipping="+shipping ,{
-                mode : "no-cors",
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
