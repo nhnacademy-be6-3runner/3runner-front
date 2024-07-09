@@ -43,10 +43,14 @@ public class CustomInterceptor implements HandlerInterceptor {
 
 		if (CorsUtils.isPreFlightRequest(request)) {
 			response.setStatus(HttpServletResponse.SC_OK);
+			response.setHeader("Access-Control-Allow-Origin", "http://3runner.shop");
+			response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+			response.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type, X-CSRF-TOKEN");
+			response.setHeader("Access-Control-Allow-Credentials", "true");
 			return true;
 		}
 		if (CorsUtils.isCorsRequest(request)) {
-			response.setHeader("Access-Control-Allow-Origin", "http://133.186.143.40");
+			response.setHeader("Access-Control-Allow-Origin", "http://3runner.shop");
 			response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
 			response.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type, X-CSRF-TOKEN");
 			response.setHeader("Access-Control-Allow-Credentials", "true");
