@@ -134,6 +134,7 @@ public class BookController {
 			.categoryList(categoryList)
 			.tagList(tagList)
 			.build();
+		bookService.addView(bookId);
 		return ApiResponse.success(book);
 	}
 

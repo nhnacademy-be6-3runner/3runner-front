@@ -194,4 +194,12 @@ public class BookServiceImpl implements BookService {
 	public Page<BookListResponse> readCategoryAllBooks(Pageable pageable, Long categoryId) {
 		return bookRepository.readCategoryAllBookList(pageable, categoryId);
 	}
+
+	@Override
+	public void addView(Long bookId) {
+		Book book = bookRepository.findById(bookId)
+			.orElseThrow(() -> new BookDoesNotExistException("요청하신 책이 존재하지 않습니다."));
+		book.viewBook();
+		bookRepository.save(book);
+	}
 }
