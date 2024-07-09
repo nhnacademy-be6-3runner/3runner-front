@@ -1,3 +1,5 @@
+// like-feature.js
+
 document.addEventListener('DOMContentLoaded', function () {
     const likeButton = document.getElementById('like');
     if (likeButton) {
@@ -15,18 +17,21 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
     updateLikeCount();
+    updateLikeButtonStatus(); // 페이지 로드 시 좋아요 상태 초기화
 });
 
 function increaseLikeCount() {
     const bookId = getBookIdFromUrl();
     $.ajax({
-        url: `/api/book-likes/increase/${bookId}`,
+        url: `/api/books/${bookId}/likes`,
         type: 'POST',
         success: function () {
             updateLikeCount();
         },
         error: function (xhr, status, error) {
             console.error('Error increasing like count:', error);
+            console.error('Response Text:', xhr.responseText); // 응답 내용 출력
+            console.error('Status:', status);
         }
     });
 }
@@ -34,13 +39,15 @@ function increaseLikeCount() {
 function decreaseLikeCount() {
     const bookId = getBookIdFromUrl();
     $.ajax({
-        url: `/api/book-likes/decrease/${bookId}`,
-        type: 'POST',
+        url: `/api/books/${bookId}/likes`,
+        type: 'DELETE',
         success: function () {
             updateLikeCount();
         },
         error: function (xhr, status, error) {
             console.error('Error decreasing like count:', error);
+            console.error('Response Text:', xhr.responseText); // 응답 내용 출력
+            console.error('Status:', status);
         }
     });
 }
@@ -57,13 +64,48 @@ function updateLikeCount() {
         },
         error: function (xhr, status, error) {
             console.error('Error fetching like count:', error);
+            console.error('Response Text:', xhr.responseText); // 응답 내용 출력
+            console.error('Status:', status);
         }
     });
 }
 
+function updateLikeButtonStatus() {
+    const bookId = getBookIdFromUrl();
+    $.ajax({
+        url: `/api/books/${bookId}/likes/status`,
+        type: 'GET',
+        success: function (response) {
+            console.log(`Received like status response: `, response);
+            if (response.body.data) {
+                activateLikeButton();
+            } else {
+                deactivateLikeButton();
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('Error fetching like status:', error);
+            console.error('Response Text:', xhr.responseText); // 응답 내용 출력
+            console.error('Status:', status);
+        }
+    });
+}
+
+function activateLikeButton() {
+    const likeButton = document.getElementById('like');
+    likeButton.classList.add('active');
+    const path = likeButton.querySelector('path');
+    path.setAttribute('fill', '#e30d0d');
+}
+
+function deactivateLikeButton() {
+    const likeButton = document.getElementById('like');
+    likeButton.classList.remove('active');
+    const path = likeButton.querySelector('path');
+    path.setAttribute('fill', '#777');
+}
+
 function getBookIdFromUrl() {
     const pathSegments = window.location.pathname.split('/');
-    const bookId = pathSegments[pathSegments.length - 1];
-    console.log(`Book ID from URL: ${bookId}`); // 디버깅용 로그
-    return bookId;
+    return pathSegments[pathSegments.length - 1];
 }
