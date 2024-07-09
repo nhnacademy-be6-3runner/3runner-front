@@ -1,0 +1,87 @@
+/* Container for the review card */
+.container {
+    margin-top: 2rem;
+}
+
+/* Styling for the card */
+.card {
+    border: none;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    border-radius: 0.75rem;
+}
+
+/* Card header styling */
+.card-header {
+    background-color: #f8f9fa;
+    border-bottom: none;
+    padding: 1rem 1.5rem;
+    border-radius: 0.75rem 0.75rem 0 0;
+    text-align: center;
+}
+
+/* Title of the review */
+.card-header h3 {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: bold;
+}
+
+.card-title h5 {
+    font-size: 1.50rem;
+}
+
+/* Card body padding */
+.card-body {
+    padding: 1.5rem;
+}
+
+/* Title of the book */
+.card-body .card-title {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.card-body .card-title .book-link {
+    color: #007bff;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.card-body .card-title .book-link:hover {
+    color: #0056b3;
+}
+
+/* Content of the review */
+.card-body .card-text {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    text-align: justify;
+}
+
+/* Rating styling */
+.rating {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+/* Filled star color */
+.rating .bi-star-fill {
+    color: #ffc107;
+    font-size: 1.5rem;
+    margin-right: 0.2rem;
+}
+
+/* Empty star color */
+.rating .bi-star {
+    color: #ccc;
+    font-size: 1.5rem;
+    margin-right: 0.2rem;
+}
+
+/* Text for small elements */
+.card-body small.text-muted {
+    font-size: 0.875rem;
+}

@@ -65,6 +65,49 @@ likeButton.addEventListener('click', function (event) {
     }
 });
 
+// 좋아요 버튼
+function increaseLikeCount() {
+    const bookId = getBookIdFromUrl();
+    $.ajax({
+        url: `/api/book-likes/increase/${bookId}`,
+        type: 'POST',
+        success: function () {
+            updateLikeCount();
+        },
+        error: function (xhr, status, error) {
+            console.error('Error increasing like count:', error);
+        }
+    });
+}
+
+function decreaseLikeCount() {
+    const bookId = getBookIdFromUrl();
+    $.ajax({
+        url: `/api/book-likes/decrease/${bookId}`,
+        type: 'POST',
+        success: function () {
+            updateLikeCount();
+        },
+        error: function (xhr, status, error) {
+            console.error('Error decreasing like count:', error);
+        }
+    });
+}
+
+function updateLikeCount() {
+    const bookId = getBookIdFromUrl();
+    $.ajax({
+        url: `/api/books/${bookId}/likes`,
+        type: 'GET',
+        success: function (response) {
+            document.getElementById('likeCount').innerText = response.data;
+        },
+        error: function (xhr, status, error) {
+            console.error('Error fetching like count:', error);
+        }
+    });
+}
+
 // 쿠폰 조회 및 다운로드 기능
 function fetchCoupons() {
     const bookId = document.getElementById('bookIdCart').value;
