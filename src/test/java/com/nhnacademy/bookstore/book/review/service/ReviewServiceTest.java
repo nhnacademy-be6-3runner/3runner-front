@@ -230,7 +230,6 @@ class ReviewServiceTest {
 
         ReviewDetailResponse response = reviewService.readDetailReview(1L);
 
-        assertThat(response).isNotNull();
         assertThat(response).isEqualTo(expectedResponse);
         verify(reviewRepository).getReviewDetail(1L);
     }
