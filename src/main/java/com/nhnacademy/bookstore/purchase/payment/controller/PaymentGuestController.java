@@ -10,10 +10,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Controller;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -30,6 +27,7 @@ import java.util.Base64;
 public class PaymentGuestController {
     private final PaymentGuestService paymentGuestService;
 
+    @CrossOrigin(origins = "http://3runner.shop")
     @RequestMapping(value = "/bookstore/payments/guests/confirm")
     public ResponseEntity<JSONObject> confirmPayment(
             @RequestHeader(value = "Member-Id", required = false) Long memberId,
