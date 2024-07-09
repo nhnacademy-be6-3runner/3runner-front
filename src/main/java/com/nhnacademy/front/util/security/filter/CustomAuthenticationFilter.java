@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.front.auth.dto.request.LoginRequest;
@@ -98,6 +99,9 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 	@Override
 	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
 		AuthenticationException failed) throws IOException, ServletException {
-		log.info("실패 {}", failed.getMessage());
+			request.getSession().setAttribute("errorMessage","아이디나 비밀번호가 틀립니다.");
+			response.sendRedirect("/login");
+
+
 	}
 }

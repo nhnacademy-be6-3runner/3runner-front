@@ -2,6 +2,7 @@ package com.nhnacademy.front.auth.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,6 +17,7 @@ import com.nhnacademy.front.threadlocal.TokenHolder;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -39,12 +41,18 @@ public class LoginController {
 	 * @return login form view
 	 */
 	@GetMapping("/login")
-	public String loginForm() {
+	public String loginForm(Model model, HttpSession session) {
 		boolean loginStatus = loginService.checkLoginStatus();
 		log.warn("login status: {}", loginStatus);
 
 		if (loginStatus) {
 			return "redirect:/";
+		}else {
+			String errorMessage = (String) session.getAttribute("errorMessage");
+			if (errorMessage != null) {
+				model.addAttribute("errorMessage", errorMessage);
+				session.removeAttribute("errorMessage");
+			}
 		}
 		return "login-form";
 	}
@@ -59,9 +67,13 @@ public class LoginController {
 	 */
 	@PostMapping("/login")
 	public String login(@RequestParam String email, @RequestParam String password,
-		HttpServletResponse response) {
-		LoginResponse loginResponse = loginService.getLoginResponse(new LoginRequest(email, password));
+		HttpServletResponse response,RedirectAttributes redirectAttributes) {
 
+			LoginResponse loginResponse = loginService.getLoginResponse(new LoginRequest(email, password));
+		if(!loginService.checkLoginStatus()) {
+			redirectAttributes.addFlashAttribute("errorMessage", "아이디나 비밀번호가 틀립니다.");
+			return "redirect:/login";
+		}
 		// 쿠키로 저장
 		// response.addCookie(new Cookie("Access", TokenHolder.getAccessToken()));
 		// response.addCookie(new Cookie("Refresh", TokenHolder.getRefreshToken()));
@@ -105,12 +117,12 @@ public class LoginController {
 
 	@GetMapping("/oauth2/callback/payco")
 	public String paycoCallback(@RequestParam String code, HttpServletResponse response,
-		RedirectAttributes redirectAttributes) {
+		HttpServletRequest request) {
 		//코드까지는 들어온다.
 		try {
 			LoginResponse loginResponse = loginAdapter.handleOAuth2Redirect(code).getBody().getData();//여기까지됌
 			if (loginResponse.message().equals("일반 회원 이메일인데 페이코 접속")) {
-				redirectAttributes.addFlashAttribute("errorMessage", "일반 회원 이메일로 페이코 접속을 시도하였습니다.");
+				request.getSession().setAttribute("errorMessage", "일반 회원 이메일로 페이코 접속을 시도하였습니다.");
 				return "redirect:/login";
 			}
 			Cookie cookie1 = new Cookie("Access", TokenHolder.getAccessToken());
