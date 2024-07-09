@@ -40,8 +40,6 @@ public class CustomInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws
 		Exception {
-
-
 		Optional<Cookie[]> cookies = Optional.ofNullable(request.getCookies());
 
 		if (cookies.isPresent()) {
