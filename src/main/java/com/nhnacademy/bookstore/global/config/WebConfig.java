@@ -1,6 +1,4 @@
 package com.nhnacademy.bookstore.global.config;
-import com.nhnacademy.bookstore.global.interceptor.CustomInterceptor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -18,15 +16,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
-
-    @Autowired
-    @Lazy
-    private CustomInterceptor customInterceptor;
-
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(customInterceptor);
-    }
 
 
 }
