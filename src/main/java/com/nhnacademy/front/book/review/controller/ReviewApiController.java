@@ -5,7 +5,6 @@ import com.nhnacademy.front.book.review.service.ReviewService;
 import com.nhnacademy.front.util.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,10 +23,3 @@ public class ReviewApiController {
         return ApiResponse.success(reviewList);
     }
 }
-
-
-//@GetMapping("/main")
-//public ApiResponse<Page<BookListResponse>> readAllBooks(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "12") int size, @RequestParam(defaultValue = "publishedDate,desc") String sort) {
-//    Page<BookListResponse> bookList = bookService.readAllBooks(page, size, sort);
-//    return ApiResponse.success(bookList);
-//}

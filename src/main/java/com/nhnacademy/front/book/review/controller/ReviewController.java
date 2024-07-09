@@ -5,6 +5,7 @@ import com.nhnacademy.front.book.review.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -25,5 +26,12 @@ public class ReviewController {
         log.info(reviewRequest.toString());
         reviewService.createReview(purchaseBookId, memberId, reviewRequest);
         return "review/create-review";
+    }
+
+    @GetMapping("/review/{reviewId}")
+    public String readReviewDetail(@PathVariable long reviewId, Model model) {
+        reviewService.readReviewDetail(reviewId);
+        model.addAttribute("review", reviewService.readReviewDetail(reviewId));
+        return "review/review-detail";
     }
 }

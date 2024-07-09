@@ -4,6 +4,7 @@ import com.nhnacademy.front.book.book.exception.InvalidApiResponseException;
 import com.nhnacademy.front.book.review.controller.feign.ReviewClient;
 import com.nhnacademy.front.book.review.dto.request.CreateReviewRequest;
 import com.nhnacademy.front.book.review.dto.request.UserCreateReviewRequest;
+import com.nhnacademy.front.book.review.dto.response.ReviewDetailResponse;
 import com.nhnacademy.front.book.review.dto.response.ReviewListResponse;
 import com.nhnacademy.front.book.review.service.ReviewService;
 import com.nhnacademy.front.util.ApiResponse;
@@ -14,8 +15,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -47,6 +53,16 @@ public class ReviewServiceImpl implements ReviewService {
         }
     }
 
+    @Override
+    public ReviewDetailResponse readReviewDetail(long reviewId) {
+        ApiResponse<ReviewDetailResponse> response = reviewClient.readReviewDetail(reviewId);
+        if (response.getHeader().isSuccessful() && response.getBody() != null) {
+            return response.getBody().getData();
+        } else {
+            throw new InvalidApiResponseException("리뷰 상세 조회 exception");
+        }
+    }
+
     private List<String> contentToImageList(String content) {
         List<String> imageList = new ArrayList<>();
         String[] split = content.split("fileName=");
@@ -57,4 +73,5 @@ public class ReviewServiceImpl implements ReviewService {
         }
         return imageList;
     }
+
 }
