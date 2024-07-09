@@ -68,13 +68,15 @@ class ReviewServiceTest {
     @Mock
     private PointRecordRepository pointRecordRepository;
 
+    @Mock
+    private MemberPointService memberPointService;
+
     @InjectMocks
     private ReviewServiceImpl reviewService;
 
     private CreateReviewRequest createReviewRequest;
     private CreateReviewRequest updateReviewRequest;
     private DeleteReviewRequest deleteReviewRequest;
-    private MemberPointService memberPointService;
     private Review review;
     private PurchaseBook purchaseBook;
     private Member member1;
@@ -153,26 +155,26 @@ class ReviewServiceTest {
         );
     }
 
-//    @DisplayName("리뷰 생성 테스트")
-//    @Test
-//    void testCreateReview() {
-//        given(purchaseBookRepository.findById(1L)).willReturn(Optional.of(purchaseBook));
-//        given(reviewRepository.existByPurchaseBook(1L, 1L)).willReturn(true);
-//        given(memberPointService.updatePoint(anyLong(), anyLong())).willReturn(anyLong());
-//
-//        Long reviewId = reviewService.createReview(1L, 1L, createReviewRequest);
-//
-//        assertThat(reviewId).isNotNull();
-//
-//        ArgumentCaptor<Review> reviewCaptor = ArgumentCaptor.forClass(Review.class);
-//        verify(reviewRepository).save(reviewCaptor.capture());
-//        Review savedReview = reviewCaptor.getValue();
-//
-//        assertThat(savedReview).isNotNull();
-//        assertThat(savedReview.getTitle()).isEqualTo(createReviewRequest.title());
-//        assertThat(savedReview.getContent()).isEqualTo(createReviewRequest.content());
-//        assertThat(savedReview.getRating()).isEqualTo(createReviewRequest.ratings());
-//    }
+    @DisplayName("리뷰 생성 테스트")
+    @Test
+    void testCreateReview() {
+        given(purchaseBookRepository.findById(1L)).willReturn(Optional.of(purchaseBook));
+        given(reviewRepository.existByPurchaseBook(1L, 1L)).willReturn(true);
+        given(memberPointService.updatePoint(anyLong(), anyLong())).willReturn(1L);
+
+        Long reviewId = reviewService.createReview(1L, 1L, createReviewRequest);
+
+        assertThat(reviewId).isNotNull();
+
+        ArgumentCaptor<Review> reviewCaptor = ArgumentCaptor.forClass(Review.class);
+        verify(reviewRepository).save(reviewCaptor.capture());
+        Review savedReview = reviewCaptor.getValue();
+
+        assertThat(savedReview).isNotNull();
+        assertThat(savedReview.getTitle()).isEqualTo(createReviewRequest.title());
+        assertThat(savedReview.getContent()).isEqualTo(createReviewRequest.content());
+        assertThat(savedReview.getRating()).isEqualTo(createReviewRequest.ratings());
+    }
 
     @DisplayName("리뷰 수정 테스트")
     @Test
