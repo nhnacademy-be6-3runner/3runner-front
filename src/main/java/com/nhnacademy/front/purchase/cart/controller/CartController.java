@@ -70,6 +70,7 @@ public class CartController {
 
             model.addAttribute("response", items);
             model.addAttribute("Access", access);
+            model.addAttribute("cartId", 0);
         }
 
         return "purchase/cart";

@@ -29,11 +29,11 @@
     <br>
     <div class="cart-item-actions">
         <div class="d-flex justify-content-end">
-            <button class="btn btn-outline-danger" th:attr="onclick='deleteAll('+${cartId}+')'">Remove All</button>
+            <button class="btn btn-danger" th:attr="onclick='deleteAll('+${cartId}+')'">전체 삭제</button>
         </div>
     </div>
     <div class="cart-items">
-        <div th:each="item, iter: ${response}" class="cart-item d-flex justify-content-between align-items-center">
+        <div th:each="item, iter: ${response}" class="cart-item d-flex justify-content-between align-items-center" style="padding-bottom: 20px ">
             <div class="cart-item-info d-flex">
                 <img th:src="@{/api/images/book/download(fileName=${item.url()})}"
                      src="/static/img/no-image.png" alt="Product Image" class="mr-3" style="width: 150px">
@@ -42,7 +42,6 @@
                     <p>₩<span th:text="${item.price()}"></span></p>
                     <div class="d-flex">
                         <input type="hidden" th:id="'bookId-'+${iter.index}" th:value="${item.bookId()}">
-                        <input type="hidden" th:id="'bookId1-'+${iter.index}" th:value="${item.bookId()}">
                         <input type="hidden" th:id="'bookCartId-' + ${iter.index}" th:value="${item.bookCartId()}">
                         <button class="btn btn-outline-secondary" th:attr="onclick='updateQuantity(' + ${iter.index} + ', -1)'">-</button>
                         <label>
@@ -51,30 +50,34 @@
                         <button class="btn btn-outline-secondary" th:attr="onclick='updateQuantity(' + ${iter.index} + ', 1)'">+</button>
                     </div>
                     <p>책 잔여 수량 : <span th:text="${item.leftQuantity}"></span></p>
-                    <span th:if="${item.leftQuantity != null and item.quantity != null and item.leftQuantity - item.quantity < 0}">재고가 없습니다.</span>
+                    <span th:if="${item.leftQuantity != null and item.quantity != null and item.leftQuantity - item.quantity < 0}" style="color: red">재고가 없습니다.</span>
                 </div>
+
             </div>
             <div class="cart-item-actions">
-                <button class="btn btn-outline-danger" th:attr="onclick='deleteItem(' + ${item.bookCartId()} + ','+${cartId}+')'">Remove</button>
+                <button class="btn btn-outline-danger" th:attr="onclick='deleteItem(' + ${item.bookCartId()} + ','+${cartId}+')'">제품 삭제</button>
             </div>
         </div>
-        <hr th:each="item : ${response}" />
     </div>
     <div class="cart-total d-flex justify-content-end">
-        <h4>Total: ₩<span id="total-price">0.00</span></h4>
+        <h4>합계: <span id="total-price">0.00</span>원</h4>
     </div>
     <div class="cart-footer">
         <div th:if="${Access}==null">
-            <form action="/purchases" method="post">
-                <input type="hidden" name="cartId" id="cartId" th:value="${cartId}">
-                <button class="btn btn-primary">Guest Proceed to Checkout</button>
-            </form>
+            <div class="d-flex justify-content-end">
+                <form action="/purchases" method="post">
+                    <input type="hidden" name="cartId" id="cartId" th:value="${cartId}">
+                    <button class="btn btn-primary">결제하기</button>
+                </form>
+            </div>
         </div>
         <div th:if="${Access}!=null">
-            <form action="/purchases" method="post">
-                <input type="hidden" name="memberId" id="memberId" th:value="${memberId}">
-                <button class="btn btn-primary">Member Proceed to Checkout</button>
-            </form>
+            <div class="d-flex justify-content-end">
+                <form action="/purchases" method="post">
+                    <input type="hidden" name="memberId" id="memberId" th:value="${memberId}">
+                    <button class="btn btn-primary">결제하기</button>
+                </form>
+            </div>
         </div>
     </div>
 </main>
@@ -84,60 +87,36 @@
     </div>
 </footer>
 
-<script>
+<script th:inline="javascript">
     document.addEventListener('DOMContentLoaded', function() {
         calculateTotal();
     });
 
-    // function updateQuantity(index, delta) {
-    //     const quantityInput = document.getElementById('quantity-'+index);
-    //     const bookId =  document.getElementById('bookId-'+index).value;
-    //     const bookId1 =  document.getElementById('bookId1-'+index).value;
-    //     const bookCartId = document.getElementById('bookCartId-'+index).value;
-    //     const deltaInt = parseInt(delta);
-    //
-    //     var url = window.location.origin +'/carts/'+bookId+'/updates/'+deltaInt
-    //     const form = document.createElement('form');
-    //     form.method = 'GET';
-    //     form.action = url;
-    //
-    //     document.body.appendChild(form);
-    //     form.submit();
-    //
-    //     calculateTotal();
-    // }
+
     function updateQuantity(index, delta) {
         const location = window.location;
-        const originWithoutPort = `${location.protocol}//${location.hostname}`;
 
         const quantityInput = document.getElementById('quantity-'+index);
         const bookId =  document.getElementById('bookId-'+index).value;
-        const bookId1 =  document.getElementById('bookId1-'+index).value;
         const bookCartId = document.getElementById('bookCartId-'+index).value;
+        const deltaInt = parseInt(delta);
+
         var newQuantity = parseInt(quantityInput.value) + delta;
         if (newQuantity < 0) {
             newQuantity = 0;
         }
         quantityInput.value = newQuantity;
 
-        //var url = 'http://localhost:8081/bookstore/carts';
-        var url = originWithoutPort+':8080/bookstore/carts';
-        var method = 'PUT';
-        var cartIdElement = document.getElementById('cartId').value;
+        var url = window.location.origin +'/carts/'+bookId+'/updates/'+deltaInt
+        var method = 'GET';
+        var cartIdElement = [[${cartId}]];
 
         if(newQuantity === 0){
-            method = 'DELETE';
-            if (confirm("아이템을 삭제하하시겠습니까?")) {
-                // 사용자가 확인을 누르면 AJAX 요청을 보냅니다.
+            if (confirm("아이템을 삭제하시겠습니까?")) {
+                url = window.location.origin + '/carts/deletes/books/' + bookCartId;
                 $.ajax({
                     url: url,
                     type: method,
-                    contentType: 'application/json',
-                    data: JSON.stringify({ bookCartId: parseInt(bookCartId)}),
-                    beforeSend: function (xhr) {
-                        xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"),
-                            $("meta[name='_csrf']").attr("content"));
-                    },
                     success: function(response) {
                         console.log(response);
                         location.reload();
@@ -159,8 +138,6 @@
         $.ajax({
             url: url,
             type: method,
-            contentType: 'application/json',
-            data: JSON.stringify({cartId : parseInt(cartIdElement) ,bookId: parseInt(bookId), quantity: parseInt(delta)}),
             success: function(response) {
                 console.log(parseInt(newQuantity))
                 console.log(response);
@@ -168,7 +145,6 @@
             error: function(xhr, status, error) {
                 console.log(parseInt(cartIdElement));
                 console.log(parseInt(bookId));
-                console.log(parseInt(bookId1))
                 console.log(parseInt(bookCartId))
                 console.log(parseInt(newQuantity));
                 console.error('Error:', error);
@@ -193,18 +169,15 @@
             total = 0.0;
         }
 
-        document.getElementById('total-price').innerText = total.toFixed(2);
+        document.getElementById('total-price').innerText = total.toFixed(0);
     }
     function deleteItem(bookCartId, cartId) {
         const location = window.location;
-        const originWithoutPort = `${location.protocol}//${location.hostname}`;
-        var url = originWithoutPort+':8080/bookstore/carts';
+        var url = window.location.origin + '/carts/deletes/books/' + bookCartId;
 
         $.ajax({
             url: url,
-            type: 'DELETE',
-            contentType: 'application/json',
-            data: JSON.stringify({bookCartId:parseInt(bookCartId), cartId: parseInt(cartId)}),
+            type: 'GET',
             success: function(response) {
                 console.log(response);
                 location.reload();
@@ -219,12 +192,11 @@
 
     function deleteAll(cartId) {
         const location = window.location;
-        const originWithoutPort = `${location.protocol}//${location.hostname}`;
-        var url = originWithoutPort+':8080/bookstore/carts/';
+        var url = window.location.origin + '/carts/deletes';
 
         $.ajax({
-            url: url+cartId,
-            type: 'DELETE',
+            url: url,
+            type: 'GET',
             success: function(response) {
                 console.log(response);
                 location.reload();
@@ -236,12 +208,26 @@
             }
         });
     }
+
+    // function updateQuantity(index, delta) {
+    //     const quantityInput = document.getElementById('quantity-'+index);
+    //     const bookId =  document.getElementById('bookId-'+index).value;
+    //     const bookCartId = document.getElementById('bookCartId-'+index).value;
+    //     const deltaInt = parseInt(delta);
+    //
+    //     var url = window.location.origin +'/carts/'+bookId+'/updates/'+deltaInt
+    //     const form = document.createElement('form');
+    //     form.method = 'GET';
+    //     form.action = url;
+    //
+    //     document.body.appendChild(form);
+    //     form.submit();
+    //
+    //     calculateTotal();
+    // }
     // function deleteItem(bookCartId, cartId) {
     //
     //     var url = window.location.origin + '/carts/deletes/books/' + bookCartId;
-    //     // if (cartId !== null) {
-    //     //     url += '/' + cartId;
-    //     // }
     //
     //     const form = document.createElement('form');
     //     form.method = 'GET';
