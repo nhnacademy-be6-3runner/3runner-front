@@ -81,6 +81,7 @@ public class PaymentGuestController {
 
         int code = connection.getResponseCode();
         boolean isSuccess = code == 200;
+        log.info("Response code from Toss Payments: {}", code);
 
         InputStream responseStream = isSuccess ? connection.getInputStream() : connection.getErrorStream();
 
