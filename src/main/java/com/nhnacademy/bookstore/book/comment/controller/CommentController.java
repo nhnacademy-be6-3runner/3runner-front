@@ -79,7 +79,9 @@ public class CommentController {
      * @return 댓글 리스트
      */
     @GetMapping("/{reviewId}/comments")
-    public ApiResponse<Page<CommentResponse>> readAllCommentsByReviewId(@PathVariable long reviewId, @RequestParam int page, @RequestParam int size) {
+    public ApiResponse<Page<CommentResponse>> readAllCommentsByReviewId(@PathVariable long reviewId,
+                                                                        @RequestParam(defaultValue = "0") int page,
+                                                                        @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<CommentResponse> commentList = commentService.readAllCommentsByReviewId(reviewId, pageable);
         return new ApiResponse<>(

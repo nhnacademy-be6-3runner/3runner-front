@@ -3,9 +3,7 @@ package com.nhnacademy.bookstore.book.reviewLike.service.impl;
 import com.nhnacademy.bookstore.book.bookLike.exception.CannotLikeOwnReviewLikeException;
 import com.nhnacademy.bookstore.book.review.exception.ReviewNotExistsException;
 import com.nhnacademy.bookstore.book.review.repository.ReviewRepository;
-import com.nhnacademy.bookstore.book.reviewLike.exception.DeleteReviewLikeException;
 import com.nhnacademy.bookstore.book.reviewLike.exception.ReviewLikeAlreadyExistsException;
-import com.nhnacademy.bookstore.book.reviewLike.exception.ReviewLikeNotExistsException;
 import com.nhnacademy.bookstore.book.reviewLike.repository.ReviewLikeRepository;
 import com.nhnacademy.bookstore.book.reviewLike.service.ReviewLikeService;
 import com.nhnacademy.bookstore.entity.member.Member;
@@ -37,7 +35,7 @@ public class ReviewLikeServiceImpl implements ReviewLikeService {
      */
     @Override
     @Transactional
-    public void createReviewLike(long reviewId, long memberId) {
+    public void createReviewLike(Long reviewId, Long memberId) {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(ReviewNotExistsException::new);
         Member member = memberRepository.findById(memberId)
@@ -59,18 +57,19 @@ public class ReviewLikeServiceImpl implements ReviewLikeService {
     /**
      * 리뷰 좋아요 삭제 메서드입니다.
      *
-     * @param reviewLikeId 리뷰 좋아요 아이디
-     * @param memberId     멤버 아이디
+     * @param reviewId 리뷰 아이디
+     * @param memberId 멤버 아이디
      */
     @Override
     @Transactional
-    public void deleteReviewLike(long reviewLikeId, long memberId) {
-        ReviewLike reviewLike = reviewLikeRepository.findById(reviewLikeId)
-                .orElseThrow(ReviewLikeNotExistsException::new);
-        if (!reviewLike.getMember().getId().equals(memberId)) {
-            throw new DeleteReviewLikeException();
+    public void deleteReviewLike(Long reviewId, Long memberId) {
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(ReviewNotExistsException::new);
+        if (review.getPurchaseBook().getPurchase().getMember().getId().equals(memberId)) {
+            throw new CannotLikeOwnReviewLikeException();
         }
-        reviewLikeRepository.delete(reviewLike);
+
+        reviewLikeRepository.deleteByReviewIdAndMemberId(reviewId, memberId);
     }
 
     /**
@@ -81,7 +80,7 @@ public class ReviewLikeServiceImpl implements ReviewLikeService {
      */
     @Override
     @Transactional(readOnly = true)
-    public Long countReviewLike(long reviewId) {
+    public Long countReviewLike(Long reviewId) {
         return reviewLikeRepository.countByReviewId(reviewId);
     }
 }

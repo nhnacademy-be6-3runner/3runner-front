@@ -27,4 +27,12 @@ public interface ReviewLikeRepository extends JpaRepository<ReviewLike, Long> {
      * @return 좋아요 갯수
      */
     long countByReviewId(Long reviewId);
+
+    /**
+     * 리뷰 삭제 메서드입니다.
+     *
+     * @param reviewId 리뷰 아이디
+     * @param memberId 멤버 아이디
+     */
+    void deleteByReviewIdAndMemberId(Long reviewId, Long memberId);
 }
