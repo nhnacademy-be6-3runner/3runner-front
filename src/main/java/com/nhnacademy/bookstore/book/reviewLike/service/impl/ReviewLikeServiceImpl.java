@@ -45,7 +45,7 @@ public class ReviewLikeServiceImpl implements ReviewLikeService {
             throw new CannotLikeOwnReviewLikeException();
         }
 
-        if (reviewLikeRepository.existsByReviewAndMember(review, member)) {
+        if (reviewLikeRepository.existsByReviewIdAndMemberId(reviewId, memberId)) {
             throw new ReviewLikeAlreadyExistsException();
         }
 
@@ -82,5 +82,17 @@ public class ReviewLikeServiceImpl implements ReviewLikeService {
     @Transactional(readOnly = true)
     public Long countReviewLike(Long reviewId) {
         return reviewLikeRepository.countByReviewId(reviewId);
+    }
+
+    /**
+     * 리뷰 상세 페이지에서 좋아요 여부를 판단하기 위한 메서드입니다.
+     *
+     * @param reviewId 리뷰 아이디
+     * @param memberId 멤버 아이디
+     * @return 좋아요 여부
+     */
+    @Override
+    public boolean isReviewLikedByMember(Long reviewId, Long memberId) {
+        return reviewLikeRepository.existsByReviewIdAndMemberId(reviewId, memberId);
     }
 }

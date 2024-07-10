@@ -11,4 +11,6 @@ public interface ReviewLikeService {
     void deleteReviewLike(Long reviewId, Long memberId);
 
     Long countReviewLike(Long reviewId);
+
+    boolean isReviewLikedByMember(Long reviewId, Long memberId);
 }

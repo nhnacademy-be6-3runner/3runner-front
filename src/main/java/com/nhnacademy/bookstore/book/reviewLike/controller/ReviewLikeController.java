@@ -41,4 +41,10 @@ public class ReviewLikeController {
         reviewLikeService.deleteReviewLike(reviewId, memberId);
         return new ApiResponse<>(new ApiResponse.Header(true, 200));
     }
+
+    @GetMapping("/{reviewId}/like/status")
+    public ApiResponse<Boolean> isReviewLikedByMember(@PathVariable Long reviewId, @RequestHeader("Member-Id") Long memberId) {
+        boolean isReviewLiked = reviewLikeService.isReviewLikedByMember(reviewId, memberId);
+        return ApiResponse.success(isReviewLiked);
+    }
 }
