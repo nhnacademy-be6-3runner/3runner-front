@@ -66,18 +66,24 @@ public class BookCartMemberServiceImpl implements BookCartMemberService {
         if (redisResponses.size() == 0 ) {
             List<BookCart> allBookCarts = bookCartRepository.findAllByCart(cart);
             for (BookCart bookCart : allBookCarts) {
-                String url = "/img/no-image.png";
 
-                if (bookCart.getBook().getBookImageList() != null && !bookCart.getBook().getBookImageList().isEmpty()) {
-                    url = bookCart.getBook().getBookImageList().getFirst().getTotalImage().getUrl();
-                }
+                bookCartRedisRepository.create("Member" + readAllCartMemberRequest.userId(), bookCart.getId(),
+                        ReadBookCartGuestResponse.builder()
+                                .bookCartId(bookCart.getId())
+                                .bookId(bookCart.getBook().getId())
+                                .price(bookCart.getBook().getPrice())
+                                .url(bookCart.getBook().getBookImageList().getFirst().getTotalImage().getUrl())
+                                .quantity(bookCart.getQuantity())
+                                .leftQuantity(bookCart.getBook().getQuantity())
+                                .build()
+                );
 
                 responses.add(ReadAllBookCartMemberResponse.builder()
                         .quantity(bookCart.getQuantity())
                         .bookCartId(bookCart.getId())
                         .bookId(bookCart.getBook().getId())
                         .price(bookCart.getBook().getPrice())
-                        .url(url)
+                        .url(bookCart.getBook().getBookImageList().getFirst().getTotalImage().getUrl())
                         .title(bookCart.getBook().getTitle())
                         .leftQuantity(bookCart.getBook().getQuantity())
                         .build());
