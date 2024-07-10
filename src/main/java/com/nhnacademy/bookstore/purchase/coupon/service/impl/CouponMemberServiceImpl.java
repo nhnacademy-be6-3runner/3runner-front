@@ -1,5 +1,6 @@
 package com.nhnacademy.bookstore.purchase.coupon.service.impl;
 
+import com.nhnacademy.bookstore.entity.book.Book;
 import com.nhnacademy.bookstore.entity.coupon.Coupon;
 import com.nhnacademy.bookstore.entity.coupon.enums.CouponStatus;
 import com.nhnacademy.bookstore.entity.member.Member;
@@ -188,5 +189,25 @@ public class CouponMemberServiceImpl implements CouponMemberService {
         couponRepository.save(coupon);
 
         return coupon.getId();
+    }
+
+    @Override
+    public Boolean registorCouponForBook(Long bookId, Long memberId) {
+        List<ReadCouponFormResponse> responses = couponControllerClient.readAllCouponForms().getBody().getData();
+        ReadCouponFormResponse foundResponse;
+
+        for (ReadCouponFormResponse response : responses) {
+            if (response.books().size() == 1 && response.books().contains(bookId)) {
+                Coupon coupon = new Coupon(
+                    response.couponFormId(),
+                    CouponStatus.READY,
+                    memberRepository.findById(memberId).orElseThrow(MemberNotExistsException::new)
+                );
+
+                couponRepository.save(coupon);
+                return true;
+            }
+        }
+        return false;
     }
 }

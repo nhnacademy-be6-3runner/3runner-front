@@ -1,6 +1,7 @@
 package com.nhnacademy.bookstore.purchase.coupon.controller;
 
 import com.nhnacademy.bookstore.purchase.coupon.dto.CouponRegistorRequest;
+import com.nhnacademy.bookstore.purchase.coupon.dto.ReadCouponResponseForMember;
 import com.nhnacademy.bookstore.purchase.coupon.feign.dto.response.ReadCouponFormResponse;
 import com.nhnacademy.bookstore.purchase.coupon.service.CouponMemberService;
 import com.nhnacademy.bookstore.util.ApiResponse;
@@ -48,5 +49,12 @@ public class CouponMemberController {
         return ApiResponse.success(couponMemberService.registorCoupon(couponRegistorRequest.code(), memberId));
     }
 
+    @PostMapping("/coupons/books/{bookId}")
+    private ApiResponse<Boolean> registerCouponBook(
+            @PathVariable Long bookId,
+            @RequestHeader("Member-Id") Long memberId) {
+
+        return ApiResponse.success(couponMemberService.registorCouponForBook(bookId, memberId));
+    }
 
 }
