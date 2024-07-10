@@ -1,6 +1,7 @@
 package com.nhnacademy.bookstore.book.bookLike.service.impl;
 
 import com.nhnacademy.bookstore.book.book.dto.response.BookListResponse;
+import com.nhnacademy.bookstore.book.book.exception.BookDoesNotExistException;
 import com.nhnacademy.bookstore.book.book.repository.BookRepository;
 import com.nhnacademy.bookstore.book.bookLike.exception.BookLikeNotExistsException;
 import com.nhnacademy.bookstore.book.bookLike.repository.BookLikeRepository;
@@ -55,7 +56,7 @@ public class BookLikeServiceImpl implements BookLikeService {
 
         boolean alreadyLiked = bookLikeRepository.existsByMemberAndBook(member, book);
         if (alreadyLiked) {
-            // 누른 적이 있으면 어떻게 ? delete?
+            bookLikeRepository.deleteByBookIdAndMemberId(bookId, memberId);
         }
 
         BookLike bookLike = new BookLike();
@@ -66,11 +67,11 @@ public class BookLikeServiceImpl implements BookLikeService {
     }
 
     @Override
-    public void deleteBookLike(Long bookLikeId, Long memberId) {
-        if (!bookLikeRepository.existsById(bookLikeId)) {
-            throw new BookLikeNotExistsException("존재하지 않는 도서-좋아요입니다.");
+    public void deleteBookLike(Long bookId, Long memberId) {
+        if (!bookRepository.existsById(bookId)) {
+            throw new BookDoesNotExistException("존재하지 않는 책입니다.");
         }
-        bookLikeRepository.deleteById(bookLikeId);
+        bookLikeRepository.deleteByBookIdAndMemberId(bookId, memberId);
     }
 
     @Override

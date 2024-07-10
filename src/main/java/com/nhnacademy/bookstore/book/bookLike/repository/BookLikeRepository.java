@@ -15,5 +15,7 @@ import java.util.Optional;
 public interface BookLikeRepository extends JpaRepository<BookLike, Long>, BookLikeCustomRepository {
     boolean existsByMemberAndBook(Member member, Book book);
 
+    void deleteByBookIdAndMemberId(Long bookId, Long memberId);
+
     Optional<BookLike> findByBookIdAndMemberId(Long memberId, Long bookId);
 }
