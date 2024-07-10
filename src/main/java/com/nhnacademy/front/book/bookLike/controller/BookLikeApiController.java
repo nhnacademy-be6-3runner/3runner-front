@@ -25,7 +25,7 @@ public class BookLikeApiController {
         return new ApiResponse<>(new ApiResponse.Header(true, 200));
     }
 
-    @DeleteMapping("/api/books/{bookId}/likes")
+    @DeleteMapping("/api/books/{bookId}/likes/delete")
     public ApiResponse<Void> deleteBookLike(@PathVariable("bookId") Long bookId, @RequestHeader(value = "Member-Id", required = false) Long memberId) {
         bookLikeService.deleteLikeBook(bookId, memberId);
         return new ApiResponse<>(new ApiResponse.Header(true, 200));

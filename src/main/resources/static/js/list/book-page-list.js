@@ -22,6 +22,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // 저장된 책 목록이 있으면 복원, 없으면 책 목록 로드
     if (savedBooks) {
         document.getElementById('book-list-items').innerHTML = savedBooks;
+
     } else {
         loadBooks(currentSort, 0);
     }
@@ -131,6 +132,58 @@ function setupEventDelegation() {
 
 function addToLike(bookId) {
     console.log(`Book with ID ${bookId} added to like.`);
+    // 좋아요 추가 API 호출
+    $.ajax({
+        url: `/api/books/${bookId}/likes`,
+        type: 'POST',
+        success: function () {
+            console.log(`Book with ID ${bookId} liked successfully.`);
+        },
+        error: function (xhr, status, error) {
+            console.error(`Error liking book with ID ${bookId}:`, error);
+            console.error('Response Text:', xhr.responseText); // 응답 내용 출력
+            console.error('Status:', status);
+        }
+    });
+}
+
+function removeFromLike(bookId) {
+    console.log(`Book with ID ${bookId} removed from like.`);
+    // 좋아요 삭제 API 호출
+    $.ajax({
+        url: `/api/books/${bookId}/likes`,
+        type: 'DELETE',
+        success: function () {
+            console.log(`Book with ID ${bookId} unliked successfully.`);
+        },
+        error: function (xhr, status, error) {
+            console.error(`Error unliking book with ID ${bookId}:`, error);
+            console.error('Response Text:', xhr.responseText); // 응답 내용 출력
+            console.error('Status:', status);
+        }
+    });
+}
+
+function updateLikeButtonStatus(bookId, likeButton) {
+    $.ajax({
+        url: `/api/books/${bookId}/likes/status`,
+        type: 'GET',
+        success: function (response) {
+            console.log(`Received like status for book ID ${bookId}: `, response);
+            if (response.body.data) {
+                likeButton.classList.add('active');
+                likeButton.querySelector('path').setAttribute('fill', '#e30d0d');
+            } else {
+                likeButton.classList.remove('active');
+                likeButton.querySelector('path').setAttribute('fill', '#777');
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error(`Error fetching like status for book ID ${bookId}:`, error);
+            console.error('Response Text:', xhr.responseText); // 응답 내용 출력
+            console.error('Status:', status);
+        }
+    });
 }
 
 function addToCart(bookId) {

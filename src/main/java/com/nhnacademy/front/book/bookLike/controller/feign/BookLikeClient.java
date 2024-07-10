@@ -16,5 +16,5 @@ public interface BookLikeClient {
     ApiResponse<Void> deleteBookLike(@PathVariable("bookId") Long bookId, @RequestHeader(value = "Member-Id", required = false) Long memberId);
 
     @GetMapping("/{bookId}/likes/status")
-    ApiResponse<Boolean> isLikedByMember(@PathVariable("bookId") Long BookId, @RequestHeader(value = "Member-Id", required = false) Long memberId);
+    ApiResponse<Boolean> isLikedByMember(@PathVariable("bookId") Long bookId, @RequestHeader(value = "Member-Id", required = false) Long memberId);
 }

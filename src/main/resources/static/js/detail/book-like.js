@@ -26,6 +26,7 @@ function increaseLikeCount() {
         url: `/api/books/${bookId}/likes`,
         type: 'POST',
         success: function () {
+            console.log('Successfully increased like count');
             updateLikeCount();
         },
         error: function (xhr, status, error) {
@@ -38,8 +39,9 @@ function increaseLikeCount() {
 
 function decreaseLikeCount() {
     const bookId = getBookIdFromUrl();
+    console.log(`Decreasing like count for book ID: ${bookId}`);
     $.ajax({
-        url: `/api/books/${bookId}/likes`,
+        url: `/api/books/${bookId}/likes/delete`,
         type: 'DELETE',
         success: function () {
             updateLikeCount();
