@@ -1,6 +1,7 @@
 package com.nhnacademy.bookstore.book.bookLike.service.impl;
 
 import com.nhnacademy.bookstore.book.book.dto.response.BookListResponse;
+import com.nhnacademy.bookstore.book.book.exception.BookDoesNotExistException;
 import com.nhnacademy.bookstore.book.book.repository.BookRepository;
 import com.nhnacademy.bookstore.book.bookLike.exception.BookLikeNotExistsException;
 import com.nhnacademy.bookstore.book.bookLike.repository.BookLikeRepository;
@@ -11,6 +12,7 @@ import com.nhnacademy.bookstore.entity.member.Member;
 import com.nhnacademy.bookstore.member.member.exception.MemberNotExistsException;
 import com.nhnacademy.bookstore.member.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -26,6 +29,16 @@ public class BookLikeServiceImpl implements BookLikeService {
     private final BookLikeRepository bookLikeRepository;
     private final MemberRepository memberRepository;
     private final BookRepository bookRepository;
+
+    @Override
+    public boolean isBookLikedByMember(Long bookId, Long memberId) {
+        try {
+            return bookLikeRepository.findByBookIdAndMemberId(bookId, memberId).isPresent();
+        } catch (Exception e) {
+            log.error("Error checking if book ID: " + bookId + " is liked by member ID: " + memberId, e);
+            throw e;
+        }
+    }
 
     @Override
     public BookLike findById(Long bookLikeId) {
@@ -37,28 +50,28 @@ public class BookLikeServiceImpl implements BookLikeService {
     }
 
     @Override
-    public void createBookLike(Long memberId, Long bookId) {
+    public void createBookLike(Long bookId, Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(MemberNotExistsException::new);
         Book book = bookRepository.findById(bookId).orElseThrow();
 
         boolean alreadyLiked = bookLikeRepository.existsByMemberAndBook(member, book);
         if (alreadyLiked) {
-            // 누른 적이 있으면 어떻게 ? delete?
+            bookLikeRepository.deleteByBookIdAndMemberId(bookId, memberId);
+        } else {
+            BookLike bookLike = new BookLike();
+            bookLike.setMember(member);
+            bookLike.setBook(book);
+
+            bookLikeRepository.save(bookLike);
         }
-
-        BookLike bookLike = new BookLike();
-        bookLike.setMember(member);
-        bookLike.setBook(book);
-
-        bookLikeRepository.save(bookLike);
     }
 
     @Override
-    public void deleteBookLike(Long bookLikeId, Long memberId) {
-        if (!bookLikeRepository.existsById(bookLikeId)) {
-            throw new BookLikeNotExistsException("존재하지 않는 도서-좋아요입니다.");
+    public void deleteBookLike(Long bookId, Long memberId) {
+        if (!bookRepository.existsById(bookId)) {
+            throw new BookDoesNotExistException("존재하지 않는 책입니다.");
         }
-        bookLikeRepository.deleteById(bookLikeId);
+        bookLikeRepository.deleteByBookIdAndMemberId(bookId, memberId);
     }
 
     @Override
@@ -71,8 +84,4 @@ public class BookLikeServiceImpl implements BookLikeService {
         return bookLikeRepository.countLikeByBookId(bookId);
     }
 
-    @Override
-    public Page<BookListResponse> findBooksOrderByLikes(Pageable pageable) {
-        return bookLikeRepository.findBooksOrderByLikes(pageable);
-    }
 }

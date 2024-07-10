@@ -3,6 +3,7 @@ package com.nhnacademy.bookstore.book.bookLike.controller;
 import com.nhnacademy.bookstore.book.bookLike.service.BookLikeService;
 import com.nhnacademy.bookstore.util.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -10,11 +11,23 @@ import org.springframework.web.bind.annotation.*;
  *
  * @author 김은비
  */
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/bookstore")
 public class BookLikeController {
     private final BookLikeService bookLikeService;
+
+    @GetMapping("/{bookId}/likes/status")
+    public ApiResponse<Boolean> isBookLikedByMember(@PathVariable("bookId") Long bookId, @RequestHeader("Member-Id") Long memberId) {
+        try {
+            boolean isLiked = bookLikeService.isBookLikedByMember(bookId, memberId);
+            return ApiResponse.success(isLiked);
+        } catch (Exception e) {
+            log.error("Error checking like status for book ID: " + bookId + " and member ID: " + memberId, e);
+            return ApiResponse.fail(500, new ApiResponse.Body<>(false));
+        }
+    }
 
     /**
      * 좋아요 생성 메서드입니다.
@@ -24,6 +37,7 @@ public class BookLikeController {
      */
     @PostMapping("/{bookId}/like")
     public ApiResponse<Void> createBookLike(@PathVariable Long bookId, @RequestHeader("Member-Id") Long memberId) {
+        log.info("deleteBookLike: bookId={}, memberId={}", bookId, memberId);
         bookLikeService.createBookLike(bookId, memberId);
         return new ApiResponse<>(new ApiResponse.Header(true, 200));
     }
@@ -36,8 +50,8 @@ public class BookLikeController {
      */
     @GetMapping("/{bookId}/likes")
     public ApiResponse<Long> countLikeByBookId(@PathVariable Long bookId) {
-        bookLikeService.countLikeByBookId(bookId);
-        return new ApiResponse<>(new ApiResponse.Header(true, 200));
+        long cnt = bookLikeService.countLikeByBookId(bookId);
+        return ApiResponse.success(cnt);
     }
 
     /**

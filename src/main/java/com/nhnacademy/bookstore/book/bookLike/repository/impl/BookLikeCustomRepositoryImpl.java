@@ -42,7 +42,7 @@ public class BookLikeCustomRepositoryImpl implements BookLikeCustomRepository {
      * @return 도서 리스트
      */
     @Override
-    public Page<BookListResponse> findBookLikeByMemberId(long memberId, Pageable pageable) {
+    public Page<BookListResponse> findBookLikeByMemberId(Long memberId, Pageable pageable) {
         List<BookListResponse> content = jpaQueryFactory.select(
                         Projections.constructor(BookListResponse.class,
                                 qBook.id,
@@ -82,39 +82,5 @@ public class BookLikeCustomRepositoryImpl implements BookLikeCustomRepository {
                         .where(qBookLike.book.id.eq(bookId))
                         .fetchOne())
                 .orElse(0L);
-    }
-
-    /**
-     * 곧 삭제될 메서드입니다.
-     *
-     * @param pageable 페이지
-     * @return 카운트 정렬
-     */
-    @Override
-    public Page<BookListResponse> findBooksOrderByLikes(Pageable pageable) {
-        List<BookListResponse> content = jpaQueryFactory.select(
-                        Projections.constructor(BookListResponse.class,
-                                qBook.id,
-                                qBook.title,
-                                qBook.price,
-                                qBook.sellingPrice,
-                                qBook.author,
-                                qTotalImage.url))
-                .from(qBook)
-                .leftJoin(qBookLike).on(qBook.id.eq(qBookLike.book.id))
-                .leftJoin(qBookImage)
-                .on(qBookImage.book.id.eq(qBook.id).and(qBookImage.type.eq(BookImageType.MAIN)))
-                .leftJoin(qTotalImage)
-                .on(qBookImage.id.eq(qTotalImage.bookImage.id))
-                .groupBy(qBook.id)
-                .orderBy(qBookLike.count().desc())
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
-        Long totalCount = jpaQueryFactory.select(qBookLike.count())
-                .from(qBookLike)
-                .fetchOne();
-        totalCount = totalCount != null ? totalCount : 0L;
-        return new PageImpl<>(content, pageable, totalCount);
     }
 }

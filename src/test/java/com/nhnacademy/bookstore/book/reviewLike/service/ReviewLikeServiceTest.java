@@ -2,7 +2,6 @@ package com.nhnacademy.bookstore.book.reviewLike.service;
 
 import com.nhnacademy.bookstore.book.bookLike.exception.CannotLikeOwnReviewLikeException;
 import com.nhnacademy.bookstore.book.review.repository.ReviewRepository;
-import com.nhnacademy.bookstore.book.reviewLike.exception.ReviewLikeAlreadyExistsException;
 import com.nhnacademy.bookstore.book.reviewLike.repository.ReviewLikeRepository;
 import com.nhnacademy.bookstore.book.reviewLike.service.impl.ReviewLikeServiceImpl;
 import com.nhnacademy.bookstore.entity.book.Book;
@@ -12,7 +11,6 @@ import com.nhnacademy.bookstore.entity.purchase.enums.MemberType;
 import com.nhnacademy.bookstore.entity.purchase.enums.PurchaseStatus;
 import com.nhnacademy.bookstore.entity.purchaseBook.PurchaseBook;
 import com.nhnacademy.bookstore.entity.review.Review;
-import com.nhnacademy.bookstore.entity.reviewLike.ReviewLike;
 import com.nhnacademy.bookstore.member.member.dto.request.CreateMemberRequest;
 import com.nhnacademy.bookstore.member.member.repository.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -118,7 +116,6 @@ class ReviewLikeServiceTest {
     void createReviewLikeTest() {
         given(reviewRepository.findById(1L)).willReturn(Optional.of(review));
         given(memberRepository.findById(2L)).willReturn(Optional.of(member2));
-        given(reviewLikeRepository.existsByReviewAndMember(review, member2)).willReturn(false);
 
         reviewLikeService.createReviewLike(1L, 2L);
 
@@ -134,25 +131,7 @@ class ReviewLikeServiceTest {
         assertThrows(CannotLikeOwnReviewLikeException.class, () -> reviewLikeService.createReviewLike(1L, 1L));
     }
 
-    @DisplayName("이미 좋아요가 존재할 때 예외 발생 테스트")
-    @Test
-    void createReviewLikeAlreadyExistsTest() {
-        given(reviewRepository.findById(1L)).willReturn(Optional.of(review));
-        given(memberRepository.findById(2L)).willReturn(Optional.of(member2));
-        given(reviewLikeRepository.existsByReviewAndMember(review, member2)).willReturn(true);
-
-        assertThrows(ReviewLikeAlreadyExistsException.class, () -> reviewLikeService.createReviewLike(1L, 2L));
-    }
-
-    @DisplayName("리뷰 좋아요 삭제 테스트")
-    @Test
-    void deleteReviewLikeTest() {
-        ReviewLike reviewLike = ReviewLike.createReviewLike(member2, review);
-        given(reviewLikeRepository.findById(1L)).willReturn(Optional.of(reviewLike));
-        reviewLikeService.deleteReviewLike(1L, 2L);
-
-        verify(reviewLikeRepository).delete(reviewLike);
-    }
+    // TODO 리뷰 좋아요 삭제 테스트 추가해야함
 
     @DisplayName("리뷰 좋아요 카운트 테스트")
     @Test

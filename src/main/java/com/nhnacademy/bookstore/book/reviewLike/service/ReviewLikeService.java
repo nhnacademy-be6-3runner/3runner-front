@@ -6,9 +6,11 @@ package com.nhnacademy.bookstore.book.reviewLike.service;
  * @author 김은비
  */
 public interface ReviewLikeService {
-    void createReviewLike(long reviewId, long memberId);
+    void createReviewLike(Long reviewId, Long memberId);
 
-    void deleteReviewLike(long reviewId, long memberId);
+    void deleteReviewLike(Long reviewId, Long memberId);
 
-    Long countReviewLike(long reviewId);
+    Long countReviewLike(Long reviewId);
+
+    boolean isReviewLikedByMember(Long reviewId, Long memberId);
 }

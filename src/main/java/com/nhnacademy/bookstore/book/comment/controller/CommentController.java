@@ -2,12 +2,16 @@ package com.nhnacademy.bookstore.book.comment.controller;
 
 import com.nhnacademy.bookstore.book.comment.dto.request.CreateCommentRequest;
 import com.nhnacademy.bookstore.book.comment.dto.response.CommentResponse;
+import com.nhnacademy.bookstore.book.comment.exception.CreateCommentFromException;
 import com.nhnacademy.bookstore.book.comment.service.CommentService;
 import com.nhnacademy.bookstore.util.ApiResponse;
+import com.nhnacademy.bookstore.util.ValidationUtils;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -15,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
  *
  * @author 김은비
  */
-// TODO requestMapping 은 수정할 예정입니다.
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/bookstore/books/reviews")
@@ -31,9 +34,12 @@ public class CommentController {
      * @return ApiResponse<>
      */
     @PostMapping("/{reviewId}")
-    public ApiResponse<Void> createComment(@PathVariable long reviewId, @RequestHeader("Member-id") Long memberId, @RequestBody CreateCommentRequest request) {
+    public ApiResponse<Void> createComment(@PathVariable Long reviewId, @RequestHeader("Member-id") Long memberId,
+                                           @Valid @RequestBody CreateCommentRequest request,
+                                           BindingResult bindingResult) {
+        ValidationUtils.validateBindingResult(bindingResult, new CreateCommentFromException());
         commentService.createComment(reviewId, memberId, request);
-        return new ApiResponse<>(new ApiResponse.Header(true, 201));
+        return new ApiResponse<>(new ApiResponse.Header(true, 200));
     }
 
     /**
@@ -73,7 +79,9 @@ public class CommentController {
      * @return 댓글 리스트
      */
     @GetMapping("/{reviewId}/comments")
-    public ApiResponse<Page<CommentResponse>> readAllCommentsByReviewId(@PathVariable long reviewId, @RequestParam int page, @RequestParam int size) {
+    public ApiResponse<Page<CommentResponse>> readAllCommentsByReviewId(@PathVariable long reviewId,
+                                                                        @RequestParam(defaultValue = "0") int page,
+                                                                        @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<CommentResponse> commentList = commentService.readAllCommentsByReviewId(reviewId, pageable);
         return new ApiResponse<>(

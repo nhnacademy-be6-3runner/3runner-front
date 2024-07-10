@@ -5,6 +5,6 @@ import lombok.Builder;
 
 @Builder
 public record CreateCommentRequest(
-        @Size(min = 1, max = 100) String content
+        @Size(min = 5, max = 100) String content
 ) {
 }

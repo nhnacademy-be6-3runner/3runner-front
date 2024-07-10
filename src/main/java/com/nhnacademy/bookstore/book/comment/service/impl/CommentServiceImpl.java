@@ -14,6 +14,7 @@ import com.nhnacademy.bookstore.entity.review.Review;
 import com.nhnacademy.bookstore.member.member.exception.MemberNotExistsException;
 import com.nhnacademy.bookstore.member.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author 김은비
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
@@ -37,16 +39,15 @@ public class CommentServiceImpl implements CommentService {
      * @param reviewId             리뷰 아이디
      * @param memberId             멤버 아이디
      * @param createCommentRequest 생성 요청 dto
-     * @return 생성된 댓글 아이디
      */
     @Override
     @Transactional
-    public Long createComment(long reviewId, long memberId, CreateCommentRequest createCommentRequest) {
+    public void createComment(long reviewId, long memberId, CreateCommentRequest createCommentRequest) {
         Member member = memberRepository.findById(memberId).orElseThrow(MemberNotExistsException::new);
         Review review = reviewRepository.findById(reviewId).orElseThrow(ReviewNotExistsException::new);
         Comment comment = Comment.createComment(createCommentRequest.content(), review, member);
+        log.info("Created comment {}", comment);
         commentRepository.save(comment);
-        return comment.getId();
     }
 
     /**
@@ -55,18 +56,15 @@ public class CommentServiceImpl implements CommentService {
      * @param commentId            댓글 아이디
      * @param memberId             멤버 아이디
      * @param createCommentRequest 수정 요청 dto
-     * @return 수정된 댓글 아이디
      */
     @Override
     @Transactional
-    public Long updateComment(long commentId, long memberId, CreateCommentRequest createCommentRequest) {
+    public void updateComment(long commentId, long memberId, CreateCommentRequest createCommentRequest) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(CommentNotExistsException::new);
         if (comment.getMember().getId() != memberId) {
             throw new UnauthorizedCommentAccessException();
         }
         comment.setContent(createCommentRequest.content());
-
-        return comment.getId();
     }
 
 

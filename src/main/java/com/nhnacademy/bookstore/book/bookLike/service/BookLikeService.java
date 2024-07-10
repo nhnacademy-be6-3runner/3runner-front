@@ -11,6 +11,8 @@ import org.springframework.data.domain.Pageable;
  * @author 김은비
  */
 public interface BookLikeService {
+    boolean isBookLikedByMember(Long bookId, Long memberId);
+
     BookLike findById(Long bookLikeId);
 
     /**
@@ -18,14 +20,14 @@ public interface BookLikeService {
      *
      * @param memberId 회원
      */
-    void createBookLike(Long memberId, Long bookId);
+    void createBookLike(Long bookId, Long memberId);
 
     /**
      * 도서-좋아요 삭제 메서드입니다.
      *
-     * @param bookLikeId bookLike id
+     * @param bookId bookLike id
      */
-    void deleteBookLike(Long bookLikeId, Long memberId);
+    void deleteBookLike(Long bookId, Long memberId);
 
     /**
      * 회원이 자신이 좋아요한 도서 목록을 조회하는 메서드입니다.
@@ -43,12 +45,4 @@ public interface BookLikeService {
      * @return 좋아요 갯수
      */
     Long countLikeByBookId(Long bookId);
-
-    /**
-     * 좋아요가 많은 순으로 조회하는 메서드입니다.
-     *
-     * @param pageable 페이지
-     * @return 도서 리스트
-     */
-    Page<BookListResponse> findBooksOrderByLikes(Pageable pageable);
 }
