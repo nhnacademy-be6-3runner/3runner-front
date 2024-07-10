@@ -1,4 +1,4 @@
-package com.nhnacademy.bookstore.elastic.document.book;
+package com.nhnacademy.bookstore.global.elastic.document.book;
 
 import java.util.List;
 

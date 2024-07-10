@@ -1,10 +1,9 @@
-package com.nhnacademy.bookstore.elastic.book.repository;
+package com.nhnacademy.bookstore.global.elastic.book.repository;
 
-import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.SearchHits;
 
-import com.nhnacademy.bookstore.elastic.document.book.BookDocument;
+import com.nhnacademy.bookstore.global.elastic.document.book.BookDocument;
 
 public interface ElasticSearchCustomBookRepository {
 	// List<BookDocument> searchBooks(String keyword);

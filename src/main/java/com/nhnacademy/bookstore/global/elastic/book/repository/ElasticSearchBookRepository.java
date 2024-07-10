@@ -1,4 +1,4 @@
-package com.nhnacademy.bookstore.elastic.book.repository;
+package com.nhnacademy.bookstore.global.elastic.book.repository;
 
 import java.util.List;
 
@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.annotations.Query;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 
-import com.nhnacademy.bookstore.elastic.document.book.BookDocument;
+import com.nhnacademy.bookstore.global.elastic.document.book.BookDocument;
 
 public interface ElasticSearchBookRepository extends ElasticsearchRepository<BookDocument, Long> {
 

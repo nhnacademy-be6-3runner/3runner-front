@@ -1,4 +1,4 @@
-package com.nhnacademy.bookstore.elastic.book.repository.impl;
+package com.nhnacademy.bookstore.global.elastic.book.repository.impl;
 
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
@@ -11,8 +11,8 @@ import org.springframework.data.elasticsearch.core.query.SearchTemplateQuery;
 import org.springframework.data.elasticsearch.core.query.SearchTemplateQueryBuilder;
 import org.springframework.stereotype.Repository;
 
-import com.nhnacademy.bookstore.elastic.book.repository.ElasticSearchCustomBookRepository;
-import com.nhnacademy.bookstore.elastic.document.book.BookDocument;
+import com.nhnacademy.bookstore.global.elastic.book.repository.ElasticSearchCustomBookRepository;
+import com.nhnacademy.bookstore.global.elastic.document.book.BookDocument;
 
 import lombok.RequiredArgsConstructor;
 
