@@ -11,9 +11,8 @@
     <link rel="stylesheet" th:href="@{/css/main/default.css}">
     <link rel="stylesheet" th:href="@{/css/detail/book-detail.css}">
     <style>
-        .menu-desktop {
-            background-color: white;
-            padding: 15px 0;
+        body{
+            background-color: #f9f9f9;
         }
     </style>
 </head>
@@ -81,11 +80,9 @@
         </div>
     </div>
 </main>
-<footer class="bg-white text-dark p-3">
-    <div class="container text-center">
-        &copy; 2024 3runner
-    </div>
-</footer>
+
+<!-- footer -->
+<footer class="header-custom" th:replace="fragments/footer :: footer"></footer>
 
 <script th:inline="javascript">
     document.addEventListener('DOMContentLoaded', function() {

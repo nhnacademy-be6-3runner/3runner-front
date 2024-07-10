@@ -1,6 +1,7 @@
 package com.nhnacademy.front.purchase.admin.controller;
 
 import com.nhnacademy.front.purchase.admin.dto.CreateCouponFormFrontRequest;
+import com.nhnacademy.front.purchase.admin.dto.CreateCouponFormFrontRequestWithMq;
 import com.nhnacademy.front.purchase.admin.service.AdminCouponCreateService;
 import com.nhnacademy.front.purchase.purchase.dto.coupon.request.CreateCouponFormRequest;
 import jakarta.validation.Valid;
@@ -19,7 +20,7 @@ import java.time.format.DateTimeFormatter;
 public class CouponCreateController {
     private final AdminCouponCreateService adminCouponCreateService;
 
-    @GetMapping("/admin/coupons/create")
+    @GetMapping("/admin/coupons")
     public String createCouponForm(Model model){
         model.addAttribute("types", adminCouponCreateService.getTypes());
         model.addAttribute("usages", adminCouponCreateService.getUsages());
@@ -27,8 +28,15 @@ public class CouponCreateController {
         model.addAttribute("createCouponFormFrontRequest", new CreateCouponFormFrontRequest());
         return "purchase/admin/coupon/couponForm";
     }
+    @GetMapping("/admin/coupons/mqs")
+    public String createCouponFormMq(Model model){
+        model.addAttribute("types", adminCouponCreateService.getTypes());
+        model.addAttribute("usages", adminCouponCreateService.getUsages());
+        model.addAttribute("createCouponFormFrontRequest", new CreateCouponFormFrontRequest());
+        return "purchase/admin/coupon/couponFormMq";
+    }
 
-    @GetMapping("/admin/coupons/list")
+    @GetMapping("/admin/coupons/all")
     public String getCouponList(Model model){
 
         model.addAttribute("coupons", adminCouponCreateService.getAllCouponForm());
@@ -36,7 +44,7 @@ public class CouponCreateController {
         return "purchase/admin/coupon/couponList";
     }
 
-    @PostMapping("/admin/coupons/create")
+    @PostMapping("/admin/coupons")
     public String createCoupon(@Valid @ModelAttribute CreateCouponFormFrontRequest createCouponFormFrontRequest,
                                BindingResult bindingResult,
                                Model model){
@@ -63,6 +71,35 @@ public class CouponCreateController {
         );
 
         return "redirect:/admin/coupons/list";
+    }
+
+    @PostMapping("/admin/coupons/mqs")
+    public String createCouponMq(@Valid @ModelAttribute CreateCouponFormFrontRequestWithMq createCouponFormFrontRequest,
+                               BindingResult bindingResult,
+                               Model model){
+        if(bindingResult.hasErrors()){
+            model.addAttribute("types", adminCouponCreateService.getTypes());
+            model.addAttribute("usages", adminCouponCreateService.getUsages());
+
+            return "purchase/admin/coupon/couponFormMq";
+        }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        ZonedDateTime startDate = ZonedDateTime.parse(createCouponFormFrontRequest.getStartDate(), formatter.withZone(java.time.ZoneId.systemDefault()));
+        ZonedDateTime endDate = ZonedDateTime.parse(createCouponFormFrontRequest.getEndDate(), formatter.withZone(java.time.ZoneId.systemDefault()));
+
+        //mq 사용
+         adminCouponCreateService.createCouponFormWithMq(CreateCouponFormRequest.builder()
+                        .startDate(startDate)
+                        .endDate(endDate)
+                        .name(createCouponFormFrontRequest.getName())
+                        .maxPrice(createCouponFormFrontRequest.getMaxPrice())
+                        .minPrice(createCouponFormFrontRequest.getMinPrice())
+                        .couponTypeId(createCouponFormFrontRequest.getCouponTypeId())
+                        .couponUsageId(createCouponFormFrontRequest.getCouponUsageId()).build(),
+                        createCouponFormFrontRequest.getQuantity()
+         );
+
+        return "redirect:/admin/purchases";
     }
 
 

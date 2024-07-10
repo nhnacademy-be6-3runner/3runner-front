@@ -138,23 +138,22 @@ function displayCoupons(coupons) {
 }
 
 function downloadSelectedCoupon() {
-    const couponSelect = document.getElementById('couponSelect');
-    const couponId = couponSelect.value;
+    const bookId = document.getElementById('bookId').value;
 
-    if (couponId && couponId !== '쿠폰을 선택하세요') {
-        $.ajax({
-            url: `/api/coupons/download/${couponId}`,
-            type: 'POST',
-            success: function (response) {
+    $.ajax({
+        url: `/coupons/books/${bookId}`,
+        type: 'POST',
+        success: function (response) {
+            if(response === 'true'){
                 alert('쿠폰이 다운로드되었습니다!');
-            },
-            error: function (xhr, status, error) {
-                console.error('Error downloading coupon:', error);
+            } else {
+                alert('발급 받을 수 있는 쿠폰이 없습니다');
             }
-        });
-    } else {
-        alert('다운로드할 쿠폰을 선택하세요.');
-    }
+        },
+        error: function (xhr, status, error) {
+            console.error('Error downloading coupon:', error);
+        }
+    });
 }
 
 function getBookIdFromUrl() {

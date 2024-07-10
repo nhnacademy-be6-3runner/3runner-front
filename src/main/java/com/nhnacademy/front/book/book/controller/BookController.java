@@ -9,6 +9,8 @@ import com.nhnacademy.front.book.categroy.dto.response.CategoryParentWithChildre
 import com.nhnacademy.front.book.image.service.ImageService;
 import com.nhnacademy.front.book.tag.dto.response.ReadTagByBookResponse;
 import com.nhnacademy.front.book.tag.dto.response.TagResponse;
+import com.nhnacademy.front.purchase.mypage.feign.CouponRegisterControllerClient;
+import com.nhnacademy.front.purchase.mypage.service.PurchaseCouponDetailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -33,6 +35,7 @@ import java.util.Objects;
 public class BookController {
 	private final BookService bookService;
 	private final ImageService imageService;
+	private final PurchaseCouponDetailService purchaseCouponDetailService;
 
 	@GetMapping("/create")
 	public String createBook() {

@@ -15,4 +15,5 @@ public interface AdminCouponCreateService {
     Long createCouponForm(CreateCouponFormRequest createCouponFormRequest, Long targetMemberId);
     List<ReadCouponFormResponse> getAllCouponForm();
     List<ReadMemberResponse> getMembers();
+    void createCouponFormWithMq(CreateCouponFormRequest createCouponFormRequest, Long quantity);
 }

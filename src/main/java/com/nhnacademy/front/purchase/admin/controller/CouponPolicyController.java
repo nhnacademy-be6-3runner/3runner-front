@@ -37,14 +37,12 @@ public class CouponPolicyController {
     }
     @GetMapping("/admin/coupons/usages/form")
     public String usageForm(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size,
-                            @RequestParam(defaultValue = "publishedDate,desc") String sort,
                             Model model) {
-        Page<BookListResponse> bookPage = adminCouponPolicyService.getBookes(size, page, sort);
+        Page<BookListResponse> bookPage = adminCouponPolicyService.getBookes(size, page, null);
         model.addAttribute("categories", adminCouponPolicyService.getCategories());
         model.addAttribute("books", bookPage);
         model.addAttribute("page", page);
         model.addAttribute("size", size);
-        model.addAttribute("size", sort);
         model.addAttribute("totalPages", bookPage.getTotalPages());
 
         return "purchase/admin/coupon/usageForm";
@@ -65,7 +63,7 @@ public class CouponPolicyController {
         }
         adminCouponPolicyService.createCategoryUsages(createCategoryCouponRequest);
 
-        return "redirect:/purchase/admin";
+        return "redirect:/admin/purchases";
     }
 
     @PostMapping("/admin/coupons/usages/books")
@@ -77,7 +75,7 @@ public class CouponPolicyController {
         }
         adminCouponPolicyService.createBookUsages(createBookCouponRequest);
 
-        return "redirect:/purchase/admin";
+        return "redirect:/admin/purchases";
     }
 
     @PostMapping("/admin/coupons/types/ratios")
@@ -101,6 +99,6 @@ public class CouponPolicyController {
         }
         adminCouponPolicyService.createFixedTypes(createFixedCouponRequest);
 
-        return "redirect:/purchase/admin";
+        return "redirect:/admin/purchases";
     }
 }
