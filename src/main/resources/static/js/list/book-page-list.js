@@ -3,11 +3,40 @@ let currentPage = 0;
 let currentSort = 'publishedDate,desc';
 
 document.addEventListener("DOMContentLoaded", function() {
-    loadBooks(currentSort, currentPage);
+    const savedSort = localStorage.getItem('currentSort');
+    const savedPage = localStorage.getItem('currentPage');
+    const savedBooks = localStorage.getItem('loadedBooks');
+
+    if (savedSort) {
+        currentSort = savedSort;
+    }
+    if (savedPage) {
+        currentPage = parseInt(savedPage, 10);
+    }
+
+    // 정렬 옵션을 설정
+    const [primarySort, sortOrder] = currentSort.split(',');
+    document.getElementById('primarySort').value = primarySort;
+    document.getElementById('sortOrder').value = sortOrder;
+
+    // 저장된 책 목록이 있으면 복원, 없으면 책 목록 로드
+    if (savedBooks) {
+        document.getElementById('book-list-items').innerHTML = savedBooks;
+
+    } else {
+        loadBooks(currentSort, 0);
+    }
+
+    // 이벤트 위임 설정
+    setupEventDelegation();
+});
+
+// "더 보기" 버튼 클릭 시 이벤트 리스너 추가
+document.getElementById('load-more-btn').addEventListener('click', function() {
+    loadMoreBooks();
 });
 
 function loadBooks(sort = 'publishedDate,desc', page = 0) {
-
     const url = `/api/books/main?sort=${sort}&page=${page}`;
     console.log("Request URL:", url);
 
@@ -20,6 +49,7 @@ function loadBooks(sort = 'publishedDate,desc', page = 0) {
         })
         .then(data => {
             const bookListItems = document.getElementById('book-list-items');
+
             if (page === 0) {
                 bookListItems.innerHTML = ""; // 기존 목록 초기화 (첫 페이지 로드 시)
                 currentPage = 0; // 페이지 번호 초기화
@@ -47,48 +77,115 @@ function loadBooks(sort = 'publishedDate,desc', page = 0) {
                         </div>
                     </div>
                 `;
-                bookItem.addEventListener('click', () => {
-                    window.location.href = `/book/${book.id}`;
-                });
                 bookListItems.appendChild(bookItem);
-
-                // 좋아요 버튼에 이벤트 리스너 추가
-                const likeButton = document.getElementById(`like-${book.id}`);
-                likeButton.addEventListener('click', function(event) {
-                    event.stopPropagation(); // 부모 요소로의 클릭 이벤트 전파 방지
-                    likeButton.classList.toggle('active');
-                    const path = likeButton.querySelector('path');
-                    if (likeButton.classList.contains('active')) {
-                        path.setAttribute('fill', '#e30d0d');
-                    } else {
-                        path.setAttribute('fill', '#777');
-                    }
-                });
-
-                // 장바구니 버튼에 이벤트 리스너 추가
-                const cartButton = document.getElementById(`cart-${book.id}`);
-                cartButton.addEventListener('click', function(event) {
-                    event.stopPropagation(); // 부모 요소로의 클릭 이벤트 전파 방지
-                    cartButton.classList.toggle('active');
-                    const path = cartButton.querySelector('path');
-                    if (cartButton.classList.contains('active')) {
-                        path.setAttribute('fill', '#000080'); // 네이비 색상
-                        addToCart(book.id); // 장바구니에 담는 함수 호출
-                    } else {
-                        path.setAttribute('fill', '#777'); // 기본 색상
-                    }
-                });
             });
+
+            // 현재 상태를 localStorage에 저장
+            localStorage.setItem('currentSort', currentSort);
+            localStorage.setItem('currentPage', currentPage);
+            localStorage.setItem('loadedBooks', bookListItems.innerHTML);
         })
         .catch(error => console.error('Error loading books:', error));
 }
 
-// 좋아요 기능
-function addToLike(bookId) {
-    console.log(`Book with ID ${bookId} added to like.`);
+// 이벤트 위임을 통해 동적으로 추가된 요소에 이벤트 리스너 추가
+function setupEventDelegation() {
+    const bookListItems = document.getElementById('book-list-items');
+
+    // 좋아요 버튼에 이벤트 위임
+    bookListItems.addEventListener('click', function(event) {
+        const likeButton = event.target.closest('.like');
+        if (likeButton) {
+            event.stopPropagation(); // 부모 요소로의 클릭 이벤트 전파 방지
+            likeButton.classList.toggle('active');
+            const path = likeButton.querySelector('path');
+            if (likeButton.classList.contains('active')) {
+                path.setAttribute('fill', '#e30d0d');
+            } else {
+                path.setAttribute('fill', '#777');
+            }
+            return; // 다른 이벤트 전파 방지
+        }
+
+        const cartButton = event.target.closest('.cart');
+        if (cartButton) {
+            event.stopPropagation(); // 부모 요소로의 클릭 이벤트 전파 방지
+            cartButton.classList.toggle('active');
+            const path = cartButton.querySelector('path');
+            if (cartButton.classList.contains('active')) {
+                path.setAttribute('fill', '#000080'); // 네이비 색상
+                addToCart(cartButton.id.split('-')[1]); // 장바구니에 담는 함수 호출
+            } else {
+                path.setAttribute('fill', '#777'); // 기본 색상
+            }
+            return; // 다른 이벤트 전파 방지
+        }
+
+        const bookItem = event.target.closest('.book-item');
+        if (bookItem) {
+            const bookId = bookItem.querySelector('svg').id.split('-')[1];
+            window.location.href = `/book/${bookId}`;
+        }
+    });
 }
 
-// 장바구니에 담는 기능
+
+function addToLike(bookId) {
+    console.log(`Book with ID ${bookId} added to like.`);
+    // 좋아요 추가 API 호출
+    $.ajax({
+        url: `/api/books/${bookId}/likes`,
+        type: 'POST',
+        success: function () {
+            console.log(`Book with ID ${bookId} liked successfully.`);
+        },
+        error: function (xhr, status, error) {
+            console.error(`Error liking book with ID ${bookId}:`, error);
+            console.error('Response Text:', xhr.responseText); // 응답 내용 출력
+            console.error('Status:', status);
+        }
+    });
+}
+
+function removeFromLike(bookId) {
+    console.log(`Book with ID ${bookId} removed from like.`);
+    // 좋아요 삭제 API 호출
+    $.ajax({
+        url: `/api/books/${bookId}/likes`,
+        type: 'DELETE',
+        success: function () {
+            console.log(`Book with ID ${bookId} unliked successfully.`);
+        },
+        error: function (xhr, status, error) {
+            console.error(`Error unliking book with ID ${bookId}:`, error);
+            console.error('Response Text:', xhr.responseText); // 응답 내용 출력
+            console.error('Status:', status);
+        }
+    });
+}
+
+function updateLikeButtonStatus(bookId, likeButton) {
+    $.ajax({
+        url: `/api/books/${bookId}/likes/status`,
+        type: 'GET',
+        success: function (response) {
+            console.log(`Received like status for book ID ${bookId}: `, response);
+            if (response.body.data) {
+                likeButton.classList.add('active');
+                likeButton.querySelector('path').setAttribute('fill', '#e30d0d');
+            } else {
+                likeButton.classList.remove('active');
+                likeButton.querySelector('path').setAttribute('fill', '#777');
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error(`Error fetching like status for book ID ${bookId}:`, error);
+            console.error('Response Text:', xhr.responseText); // 응답 내용 출력
+            console.error('Status:', status);
+        }
+    });
+}
+
 function addToCart(bookId) {
     console.log(`Book with ID ${bookId} added to cart.`);
 }
@@ -96,17 +193,20 @@ function addToCart(bookId) {
 function changeSorting() {
     const primarySort = document.getElementById('primarySort').value;
     const sortOrder = document.getElementById('sortOrder').value;
-
-    const sortArray = [`${primarySort},${sortOrder}`];
-    const sort = sortArray.join('&sort=');
-
-    currentSort = sort; // 현재 정렬 상태 업데이트
+    currentSort = `${primarySort},${sortOrder}`; // 현재 정렬 상태 업데이트
     currentPage = 0; // 페이지 번호 초기화
-    loadBooks(currentSort, currentPage); // 새로 정렬된 책 목록 로드
+
+    // 정렬 상태와 페이지 번호를 localStorage에 저장
+    localStorage.setItem('currentSort', currentSort);
+    localStorage.setItem('currentPage', currentPage);
+
+    loadBooks(currentSort, 0); // 새로 정렬된 책 목록 로드
 }
 
 function loadMoreBooks() {
     currentPage++; // 페이지 번호 증가
-    console.log("Current Page:", currentPage);
+    // 페이지 번호를 localStorage에 저장
+    localStorage.setItem('currentPage', currentPage);
+
     loadBooks(currentSort, currentPage); // 기존 정렬 기준 유지하며 다음 페이지 로드
 }

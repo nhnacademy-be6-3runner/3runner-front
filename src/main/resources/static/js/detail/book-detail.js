@@ -1,5 +1,10 @@
 // product-detail.js
 
+document.addEventListener('DOMContentLoaded', function () {
+    updateTotalPrice();
+    fetchCoupons();
+});
+
 function addCart(bookId, quantity) {
     $.ajax({
         url: window.location.origin + '/carts',
@@ -45,69 +50,6 @@ function updateTotalPrice() {
     const price = parseInt(document.querySelector('.selling-price span').innerText);
     const totalPrice = quantity * price;
     document.getElementById('totalPrice').innerText = totalPrice;
-}
-
-document.addEventListener('DOMContentLoaded', function () {
-    updateTotalPrice(); // 초기 총 가격 설정
-    fetchCoupons(); // 쿠폰 조회 함수 호출
-    updateLikeCount(); // 초기 좋아요 수 설정
-});
-
-// 좋아요 버튼에 이벤트 리스너 추가
-const likeButton = document.getElementById('like');
-likeButton.addEventListener('click', function (event) {
-    event.stopPropagation(); // 부모 요소로의 클릭 이벤트 전파 방지
-    likeButton.classList.toggle('active');
-    const path = likeButton.querySelector('path');
-    if (likeButton.classList.contains('active')) {
-        path.setAttribute('fill', '#e30d0d');
-    } else {
-        path.setAttribute('fill', '#777');
-    }
-});
-
-// 좋아요 버튼
-function increaseLikeCount() {
-    const bookId = getBookIdFromUrl();
-    $.ajax({
-        url: `/api/book-likes/increase/${bookId}`,
-        type: 'POST',
-        success: function () {
-            updateLikeCount();
-        },
-        error: function (xhr, status, error) {
-            console.error('Error increasing like count:', error);
-        }
-    });
-}
-
-function decreaseLikeCount() {
-    const bookId = getBookIdFromUrl();
-    $.ajax({
-        url: `/api/book-likes/decrease/${bookId}`,
-        type: 'POST',
-        success: function () {
-            updateLikeCount();
-        },
-        error: function (xhr, status, error) {
-            console.error('Error decreasing like count:', error);
-        }
-    });
-}
-
-function updateLikeCount() {
-    const bookId = getBookIdFromUrl();
-    $.ajax({
-        url: `/api/books/${bookId}/likes`,
-        type: 'GET',
-        success: function (response) {
-            console.log(`Received like count response: `, response);
-            document.getElementById('likeCount').innerText = response.data;
-        },
-        error: function (xhr, status, error) {
-            console.error('Error fetching like count:', error);
-        }
-    });
 }
 
 // 쿠폰 조회 및 다운로드 기능
