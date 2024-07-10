@@ -20,37 +20,55 @@
 <div class="container mt-5">
     <div class="row">
         <div class="col-md-8 offset-md-2">
-            <div class="card">
-                <div class="card-header">
-                    <h3 th:text="${review.reviewTitle}">Review Title</h3>
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title">
-                        <a th:href="@{/book/{bookId}(bookId=${review.bookId})}" th:text="${review.bookTitle}" class="book-link">Book Title</a>
-                    </h5>
-                    <hr class="my-4">
-                    <div class="rating mb-3">
-                        <span th:each="i : ${#numbers.sequence(1, 5)}">
-                            <i class="bi" th:classappend="${i <= review.ratings} ? 'bi-star-fill' : 'bi-star'"></i>
-                        </span>
+            <div class = "cards">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 th:text="${review.reviewTitle}">Review Title</h3>
                     </div>
-                    <hr class="my-4">
-                    <p class="card-text" th:utext="${review.reviewContent}">Review Content</p>
-                    <p class="card-text"><small class="text-muted">작성자: <span th:text="${review.memberEmail}">작성자 이메일</span></small></p>
-                    <p class="card-text">
-                        <small class="text-muted">작성일 : <span th:text="${review.createdAt()}">작성일</span></small>
-                    </p>
-                    <div th:if="${review.updated}">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <a th:href="@{/book/{bookId}(bookId=${review.bookId})}" th:text="${review.bookTitle}" class="book-link">Book Title</a>
+                        </h5>
+                        <hr class="my-4">
+                        <div class="rating mb-3">
+                            <span th:each="i : ${#numbers.sequence(1, 5)}">
+                                <i class="bi" th:classappend="${i <= review.ratings} ? 'bi-star-fill' : 'bi-star'"></i>
+                            </span>
+                        </div>
+                        <hr class="my-4">
+                        <p class="card-text" th:utext="${review.reviewContent}">Review Content</p>
+                        <hr>
+                        <p class="card-text"><small class="text-muted">작성자: <span id="memberEmail" th:text="${review.memberEmail}">작성자 이메일</span></small></p>
                         <p class="card-text">
-                            <small class="text-muted">수정일 : <span th:text="${review.updatedAt()}">수정일</span></small>
+                            <small class="text-muted">작성일 : <span th:text="${review.createdAt()}">작성일</span></small>
                         </p>
+                        <div th:if="${review.updated}">
+                            <p class="card-text">
+                                <small class="text-muted">수정일 : <span th:text="${review.updatedAt()}">수정일</span></small>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class = "card-comment">
+                    <form id="commentForm" method="POST" enctype="multipart/form-data">
+                        <input type="hidden" id="reviewId" th:value="${review.reviewId()}">
+                        <div class="mb-3">
+                            <label for="content">댓글</label>
+                            <textarea id="content" class="form-control" rows="3" placeholder="댓글을 작성하세요" required></textarea>
+                        </div>
+                        <div class="button">
+                            <button type="submit" class="btn btn-secondary">댓글 작성</button>
+                        </div>
+                    </form>
+                    <div class = "comment-list" id = "commentList">
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
+<script th:src="@{/js/detail/review-detail.js}"></script>
 <footer th:replace="fragments/footer :: footer"></footer>
 </body>
 </html>
