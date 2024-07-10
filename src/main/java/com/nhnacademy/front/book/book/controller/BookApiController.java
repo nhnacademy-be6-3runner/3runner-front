@@ -36,11 +36,31 @@ public class BookApiController {
 	}
 
 	@GetMapping("/main")
-	public ApiResponse<Page<BookListResponse>> readAllBooks(
-			@RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "12") int size,
-			@RequestParam(defaultValue = "publishedDate,desc") String sort) {
+	public ApiResponse<Page<BookListResponse>> readAllBooks(@RequestParam(defaultValue = "0") int page,
+		@RequestParam(defaultValue = "12") int size, @RequestParam(defaultValue = "publishedDate,desc") String sort) {
 		Page<BookListResponse> bookList = bookService.readAllBooks(page, size, sort);
+		return ApiResponse.success(bookList);
+	}
+
+	/**
+	 * 검색 불러오기
+	 * @param page 페이지
+	 * @param size 페이지 사이즈
+	 * @param keyword 검색 키워드
+	 * @return 검색 결과 내용을 page 로
+	 */
+	@GetMapping("/search")
+	public ApiResponse<Page<BookDocumentResponse>> readSearchBooks(@RequestParam(defaultValue = "0") int page,
+		@RequestParam(defaultValue = "12") int size, @RequestParam(name = "keyword") String keyword) {
+		Page<BookDocumentResponse> bookPage = bookService.searchReadAllBooks(keyword, page, size);
+		return ApiResponse.success(bookPage);
+	}
+
+	@GetMapping("/category")
+	public ApiResponse<Page<BookListResponse>> readAllBooks(@RequestParam(defaultValue = "0") int page,
+		@RequestParam(defaultValue = "12") int size, @RequestParam(defaultValue = "publishedDate,desc") String sort,
+		@RequestParam(defaultValue = "1") int categoryId) {
+		Page<BookListResponse> bookList = bookService.readCategoryAllBooks(page, size, sort, categoryId);
 		return ApiResponse.success(bookList);
 	}
 }

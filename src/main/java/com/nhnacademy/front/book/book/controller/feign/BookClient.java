@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.nhnacademy.front.book.book.dto.request.CreateBookRequest;
+import com.nhnacademy.front.book.book.dto.response.BookDocumentResponse;
 import com.nhnacademy.front.book.book.dto.response.BookListResponse;
 import com.nhnacademy.front.book.book.dto.response.BookManagementResponse;
 import com.nhnacademy.front.book.book.dto.response.UserReadBookResponse;
@@ -21,7 +22,7 @@ import com.nhnacademy.front.util.ApiResponse;
  *
  * @author 한민기, 김은비
  */
-@FeignClient(name = "BookClient", url = "http://${feign.client.url}/bookstore/books")
+@FeignClient(name = "BookClient", url = "${feign.client.url}/bookstore/books")
 public interface BookClient {
 	@PostMapping
 	ApiResponse<Void> createBook(@RequestBody CreateBookRequest createBookRequest);
@@ -34,7 +35,8 @@ public interface BookClient {
 	 * @author 김은비
 	 */
 	@GetMapping
-	ApiResponse<Page<BookListResponse>> readAllBooks(@RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("sort") String sort);
+	ApiResponse<Page<BookListResponse>> readAllBooks(@RequestParam("page") int page, @RequestParam("size") int size,
+		@RequestParam("sort") String sort);
 
 	@GetMapping("/{bookId}")
 	ApiResponse<UserReadBookResponse> getDetailBookById(@PathVariable("bookId") Long bookId);
@@ -48,4 +50,8 @@ public interface BookClient {
 
 	@DeleteMapping("/{bookId}")
 	ApiResponse<Void> deleteBook(@PathVariable("bookId") Long bookId);
+
+	@GetMapping("/search")
+	ApiResponse<Page<BookDocumentResponse>> searchReadAllBooks(@RequestParam("page") int page,
+		@RequestParam("size") int size, @RequestParam("keyword") String keyword);
 }
