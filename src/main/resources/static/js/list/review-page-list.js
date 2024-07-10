@@ -23,7 +23,9 @@ function loadReviews(sort = 'createdAt,desc', page = 0) {
     const url = `/api/books/${bookId}/reviews?sort=${sort}&page=${page}`;
     console.log("Request URL:", url);
 
-    fetch(url)
+    fetch(url, {
+        method: 'GET'
+    })
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
