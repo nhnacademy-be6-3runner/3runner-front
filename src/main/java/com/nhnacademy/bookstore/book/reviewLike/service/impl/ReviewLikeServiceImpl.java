@@ -3,7 +3,6 @@ package com.nhnacademy.bookstore.book.reviewLike.service.impl;
 import com.nhnacademy.bookstore.book.bookLike.exception.CannotLikeOwnReviewLikeException;
 import com.nhnacademy.bookstore.book.review.exception.ReviewNotExistsException;
 import com.nhnacademy.bookstore.book.review.repository.ReviewRepository;
-import com.nhnacademy.bookstore.book.reviewLike.exception.ReviewLikeAlreadyExistsException;
 import com.nhnacademy.bookstore.book.reviewLike.repository.ReviewLikeRepository;
 import com.nhnacademy.bookstore.book.reviewLike.service.ReviewLikeService;
 import com.nhnacademy.bookstore.entity.member.Member;
@@ -46,12 +45,12 @@ public class ReviewLikeServiceImpl implements ReviewLikeService {
         }
 
         if (reviewLikeRepository.existsByReviewIdAndMemberId(reviewId, memberId)) {
-            throw new ReviewLikeAlreadyExistsException();
+            reviewLikeRepository.deleteByReviewIdAndMemberId(reviewId, memberId);
+        } else {
+            ReviewLike reviewLike = ReviewLike.createReviewLike(member, review);
+            review.addReviewLike(reviewLike);
+            reviewRepository.save(review);
         }
-
-        ReviewLike reviewLike = ReviewLike.createReviewLike(member, review);
-        review.addReviewLike(reviewLike);
-        reviewRepository.save(review);
     }
 
     /**

@@ -57,13 +57,13 @@ public class BookLikeServiceImpl implements BookLikeService {
         boolean alreadyLiked = bookLikeRepository.existsByMemberAndBook(member, book);
         if (alreadyLiked) {
             bookLikeRepository.deleteByBookIdAndMemberId(bookId, memberId);
+        } else {
+            BookLike bookLike = new BookLike();
+            bookLike.setMember(member);
+            bookLike.setBook(book);
+
+            bookLikeRepository.save(bookLike);
         }
-
-        BookLike bookLike = new BookLike();
-        bookLike.setMember(member);
-        bookLike.setBook(book);
-
-        bookLikeRepository.save(bookLike);
     }
 
     @Override
