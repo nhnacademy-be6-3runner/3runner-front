@@ -16,6 +16,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -83,6 +84,8 @@ public class Member {
 	private List<Purchase> purchaseList = new ArrayList<>();
 
 	public Member(CreateMemberRequest request) {
+		LocalDate birthday = LocalDate.parse(request.birthday());
+		ZonedDateTime zonedBirthday = birthday.atStartOfDay(ZoneId.systemDefault());
 		this.setPassword(request.password());
 		this.setPoint(5000L);
 		this.setName(request.name());
@@ -90,7 +93,7 @@ public class Member {
 		this.setStatus(Status.Active);
 		this.setPhone(request.phone());
 		this.setEmail(request.email());
-		this.setBirthday(request.birthday());
+		this.setBirthday(zonedBirthday);
 		this.setGrade(Grade.General);
 		this.setCreatedAt(ZonedDateTime.now(ZoneId.of("Asia/Seoul")));
 		this.setAuthProvider(AuthProvider.GENERAL);
