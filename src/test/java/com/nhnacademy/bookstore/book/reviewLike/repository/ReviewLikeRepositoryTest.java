@@ -100,7 +100,7 @@ class ReviewLikeRepositoryTest {
     @DisplayName("좋아요를 누른 적 있는지 테스트")
     @Test
     void existsByReviewAndMemberTest() {
-        boolean exists = reviewLikeRepository.existsByReviewAndMember(review, member2);
+        boolean exists = reviewLikeRepository.existsByReviewIdAndMemberId(review.getId(), member2.getId());
         assertThat(exists).isTrue();
     }
 
