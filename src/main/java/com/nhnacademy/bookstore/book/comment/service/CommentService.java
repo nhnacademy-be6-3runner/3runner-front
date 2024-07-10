@@ -11,9 +11,9 @@ import org.springframework.data.domain.Pageable;
  * @author 김은비
  */
 public interface CommentService {
-    Long createComment(long reviewId, long memberId, CreateCommentRequest createCommentRequest);
+    void createComment(long reviewId, long memberId, CreateCommentRequest createCommentRequest);
 
-    Long updateComment(long commentId, long memberId, CreateCommentRequest createCommentRequest);
+    void updateComment(long commentId, long memberId, CreateCommentRequest createCommentRequest);
 
     void deleteComment(long commentId, long memberId);
 
