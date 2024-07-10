@@ -48,7 +48,7 @@ public class BookLikeRepositoryTest {
 			.name("1")
 			.age(1)
 			.phone("1")
-			.birthday(ZonedDateTime.now().toString())
+			.birthday("2024-05-28")
 			.email("dfdaf@nav.com")
 			.build());
 		entityManager.persist(member1);
@@ -58,7 +58,7 @@ public class BookLikeRepositoryTest {
 			.name("1")
 			.age(1)
 			.phone("1")
-			.birthday(ZonedDateTime.now().toString())
+			.birthday("2024-05-28")
 			.email("dfdaf2@nav.com")
 			.build());
 		entityManager.persist(member2);

@@ -57,7 +57,7 @@ class ReviewRepositoryTest {
                 .name("1")
                 .age(1)
                 .phone("1")
-                .birthday(ZonedDateTime.now().toString())
+                .birthday("2024-05-28")
                 .email("dfdaf@nav.com")
                 .build());
         entityManager.persist(member);
@@ -67,7 +67,7 @@ class ReviewRepositoryTest {
                 .name("1")
                 .age(1)
                 .phone("1")
-                .birthday(ZonedDateTime.now().toString())
+                .birthday("2024-05-28")
                 .email("dfdaf2@nav.com")
                 .build());
         entityManager.persist(member2);

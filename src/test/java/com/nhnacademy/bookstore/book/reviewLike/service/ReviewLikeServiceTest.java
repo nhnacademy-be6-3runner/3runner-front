@@ -54,7 +54,7 @@ class ReviewLikeServiceTest {
                 .name("1")
                 .age(1)
                 .phone("1")
-                .birthday(ZonedDateTime.now().toString())
+                .birthday("2024-05-28".toString())
                 .email("dfdaf@nav.com")
                 .build());
         member.setId(1L);
@@ -64,7 +64,7 @@ class ReviewLikeServiceTest {
                 .name("1")
                 .age(1)
                 .phone("1")
-                .birthday(ZonedDateTime.now().toString())
+                .birthday("2024-05-28".toString())
                 .email("dfdaf2@nav.com")
                 .build());
         member2.setId(2L);
