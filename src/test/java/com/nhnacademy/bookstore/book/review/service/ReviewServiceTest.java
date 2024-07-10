@@ -93,7 +93,7 @@ class ReviewServiceTest {
                 .name("1")
                 .age(1)
                 .phone("1")
-                .birthday(ZonedDateTime.now())
+                .birthday(ZonedDateTime.now().toString())
                 .email("dfdaf@nav.com")
                 .build());
         member1.setId(1L);
@@ -103,7 +103,7 @@ class ReviewServiceTest {
                 .name("1")
                 .age(1)
                 .phone("1")
-                .birthday(ZonedDateTime.now())
+                .birthday(ZonedDateTime.now().toString())
                 .email("dfdaf2@nav.com")
                 .build());
         member2.setId(2L);
