@@ -1,6 +1,8 @@
 /* Container for the review card */
 .container {
     margin-top: 2rem;
+    max-width: 100%; /* 가로 스크롤 방지 */
+    overflow-x: hidden; /* 가로 스크롤 방지 */
 }
 
 .custom-container {
