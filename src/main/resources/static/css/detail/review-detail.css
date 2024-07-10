@@ -279,3 +279,22 @@
     display: flex;
     justify-content: space-between;
 }
+
+
+/*.like {*/
+/*    margin-bottom: 15px;*/
+/*    cursor: pointer;*/
+/*    transition: transform 0.2s;*/
+/*}*/
+
+/*.like.active path {*/
+/*    fill: #005cfa;*/
+/*}*/
+
+/*.like path {*/
+/*    fill: #777;*/
+/*}*/
+
+/*.like:hover {*/
+/*    transform: scale(1.2);*/
+/*}*/
