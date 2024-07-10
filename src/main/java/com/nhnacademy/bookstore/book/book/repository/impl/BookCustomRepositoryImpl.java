@@ -34,11 +34,13 @@ import java.util.stream.Collectors;
 @Slf4j
 @Repository
 public class BookCustomRepositoryImpl implements BookCustomRepository {
-    private final JPAQueryFactory jpaQueryFactory;
-    private static final QBook qBook = QBook.book;
-    private static final QBookImage qBookImage = QBookImage.bookImage;
-    private static final QTotalImage qTotalImage = QTotalImage.totalImage;
-    private static final QBookLike qBookLike = QBookLike.bookLike;
+	private final JPAQueryFactory jpaQueryFactory;
+	private static final QBook qBook = QBook.book;
+	private static final QBookImage qBookImage = QBookImage.bookImage;
+	private static final QTotalImage qTotalImage = QTotalImage.totalImage;
+	private static final QBookLike qBookLike = QBookLike.bookLike;
+	private static final QCategory qCategory = QCategory.category;
+	private static final QBookCategory qBookCategory = QBookCategory.bookCategory;
 
     public BookCustomRepositoryImpl(EntityManager entityManager) {
         this.jpaQueryFactory = new JPAQueryFactory(entityManager);
@@ -92,24 +94,30 @@ public class BookCustomRepositoryImpl implements BookCustomRepository {
                     log.info("Sorting by property: {}", property);
                     log.info("Is ascending: {}", isAscending);
 
-                    return switch (property) {
-                        case "viewCount" -> new OrderSpecifier<>(
-                                isAscending ? Order.ASC : Order.DESC,
-                                qBook.viewCount);
-                        case "likes" -> new OrderSpecifier<>(
-                                isAscending ? Order.ASC : Order.DESC,
-                                qBookLike.count());
-                        case "publishedDate" -> new OrderSpecifier<>(
-                                isAscending ? Order.ASC : Order.DESC,
-                                qBook.publishedDate);
-                        case "price" -> new OrderSpecifier<>(
-                                isAscending ? Order.ASC : Order.DESC,
-                                qBook.price);
-                        case "title" -> new OrderSpecifier<>(
-                                isAscending ? Order.ASC : Order.DESC,
-                                qBook.title);
-                        default -> throw new IllegalArgumentException("정렬 기준이 잘못되었습니다!!: " + property);
-                    };
+                    switch (property) {
+                        case "viewCount":
+                            return new OrderSpecifier<>(
+                                    isAscending ? Order.ASC : Order.DESC,
+                                    qBook.viewCount);
+                        case "likes":
+                            return new OrderSpecifier<>(
+                                    isAscending ? Order.ASC : Order.DESC,
+                                    qBookLike.count());
+                        case "publishedDate":
+                            return new OrderSpecifier<>(
+                                    isAscending ? Order.ASC : Order.DESC,
+                                    qBook.publishedDate);
+                        case "price":
+                            return new OrderSpecifier<>(
+                                    isAscending ? Order.ASC : Order.DESC,
+                                    qBook.price);
+                        case "title":
+                            return new OrderSpecifier<>(
+                                    isAscending ? Order.ASC : Order.DESC,
+                                    qBook.title);
+                        default:
+                            throw new IllegalArgumentException("정렬 기준이 잘못되었습니다!!: " + property);
+                    }
                 })
                 .collect(Collectors.toList());
 
@@ -158,35 +166,73 @@ public class BookCustomRepositoryImpl implements BookCustomRepository {
         return content.getFirst();
     }
 
-    /**
-     * 관리자 페이지에서 도서 정보를 불러오는 쿼리입니다.
-     *
-     * @param pageable 페이지 객체
-     * @return 도서 리스트
-     * @author 한민기
-     */
-    @Override
-    public Page<BookManagementResponse> readAdminBookList(Pageable pageable) {
-        List<BookManagementResponse> content = jpaQueryFactory.select(
-                        Projections.constructor(BookManagementResponse.class,
-                                qBook.id,
-                                qBook.title,
-                                qBook.price,
-                                qBook.sellingPrice,
-                                qBook.author,
-                                qBook.quantity,
-                                qBook.viewCount))
-                .from(qBook)
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
-        long total = Optional.ofNullable(
-                jpaQueryFactory.select(qBook.count())
-                        .from(qBook)
-                        .fetchOne()
-        ).orElse(0L);
-        return new PageImpl<>(content, pageable, total);
-    }
+	/**
+	 * 관리자 페이지에서 도서 정보를 불러오는 쿼리입니다.
+	 *
+	 * @param pageable 페이지 객체
+	 * @return 도서 리스트
+	 * @author 한민기
+	 */
+	@Override
+	public Page<BookManagementResponse> readAdminBookList(Pageable pageable) {
+		List<BookManagementResponse> content = jpaQueryFactory.select(
+				Projections.constructor(BookManagementResponse.class,
+					qBook.id,
+					qBook.title,
+					qBook.price,
+					qBook.sellingPrice,
+					qBook.author,
+					qBook.quantity,
+					qBook.viewCount))
+			.from(qBook)
+			.offset(pageable.getOffset())
+			.limit(pageable.getPageSize())
+			.fetch();
+		long total = Optional.ofNullable(
+			jpaQueryFactory.select(qBook.count())
+				.from(qBook)
+				.fetchOne()
+		).orElse(0L);
+		return new PageImpl<>(content, pageable, total);
+	}
+
+	@Override
+	public Page<BookListResponse> readCategoryAllBookList(Pageable pageable, Long categoryId) {
+		List<BookListResponse> content = jpaQueryFactory.select(
+				Projections.constructor(BookListResponse.class,
+					qBook.id,
+					qBook.title,
+					qBook.price,
+					qBook.sellingPrice,
+					qBook.author,
+					qTotalImage.url))
+			.distinct()
+			.from(qBook)
+			.leftJoin(qBookImage)
+			.on(qBookImage.book.id.eq(qBook.id).and(qBookImage.type.eq(BookImageType.MAIN)))
+			.leftJoin(qTotalImage)
+			.on(qTotalImage.bookImage.id.eq(qBookImage.id))
+			.leftJoin(qBookLike).on(qBookLike.book.id.eq(qBook.id))
+			.join(qBookCategory)
+			.on(qBook.id.eq(qBookCategory.book.id))
+			.join(qCategory)
+			.on(qBookCategory.category.id.eq(qCategory.id))
+			.groupBy(qBook.id, qBook.title, qBook.price, qBook.sellingPrice, qBook.author, qTotalImage.url)
+			.orderBy(getSort(pageable.getSort()))  // getSort 메서드에서 기본적으로 고유 정렬 키를 포함하도록 변경
+			.offset(pageable.getOffset())
+			.limit(pageable.getPageSize())
+			.where(qCategory.id.eq(categoryId))
+			.fetch();
+
+		long total = Optional.ofNullable(
+			jpaQueryFactory.select(qBook.count())
+				.from(qBook)
+				.fetchOne()
+		).orElse(0L);
+
+		return new PageImpl<>(content, pageable, total);
+
+	}
 
 }
 

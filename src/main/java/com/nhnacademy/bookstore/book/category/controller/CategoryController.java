@@ -2,6 +2,10 @@ package com.nhnacademy.bookstore.book.category.controller;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nhnacademy.bookstore.book.book.dto.response.BookListResponse;
+import com.nhnacademy.bookstore.book.book.service.BookService;
 import com.nhnacademy.bookstore.book.bookCartegory.service.BookCategoryService;
 import com.nhnacademy.bookstore.book.category.dto.request.CreateCategoryRequest;
 import com.nhnacademy.bookstore.book.category.dto.request.UpdateCategoryRequest;
@@ -42,6 +48,7 @@ import lombok.extern.slf4j.Slf4j;
 public class CategoryController {
 	private final CategoryService categoryService;
 	private final BookCategoryService bookCategoryService;
+	private final BookService bookService;
 
 	/**
 	 * 카테고리 생성 컨트롤러
@@ -135,5 +142,35 @@ public class CategoryController {
 	public ApiResponse<Void> deleteCategory(@PathVariable Long categoryId) {
 		categoryService.deleteCategory(categoryId);
 		return new ApiResponse<>(new ApiResponse.Header(true, 204));
+	}
+
+	/**
+	 * 카테고리 페이지에서 도서 전체를 조회하는 메소드
+	 *
+	 * @param page    페이지
+	 * @param size    사이즈
+	 * @param sort    정렬 기준
+	 * @param categoryId    카테고리 id
+	 * @return 카테고리 도서 리스트
+	 * @author 한민기
+	 */
+	@GetMapping("/books")
+	public ApiResponse<Page<BookListResponse>> readCategoryAllBooks(
+		@RequestParam(defaultValue = "0") int page,
+		@RequestParam(defaultValue = "12") int size,
+		@RequestParam(defaultValue = "publishedDate,desc") String sort,
+		@RequestParam Long categoryId) {
+
+		String[] sortParams = sort.split(",");
+		String property = sortParams[0];
+		String direction = sortParams.length > 1 ? sortParams[1].toUpperCase() : "DESC";
+		Sort.Direction directionEnum = Sort.Direction.valueOf(direction);
+
+		Sort sortOrder = Sort.by(new Sort.Order(directionEnum, property));
+		Pageable pageable = PageRequest.of(page, size, sortOrder);
+
+		Page<BookListResponse> bookList = bookService.readCategoryAllBooks(pageable, categoryId);
+		return ApiResponse.success(bookList);
+
 	}
 }

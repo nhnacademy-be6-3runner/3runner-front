@@ -35,56 +35,56 @@ import java.util.List;
 @RequestMapping("/bookstore/books")
 @Slf4j
 public class BookController {
-    private final BookService bookService;
-    private final BookTagService bookTagService;
-    private final BookCategoryService bookCategoryService;
+	private final BookService bookService;
+	private final BookTagService bookTagService;
+	private final BookCategoryService bookCategoryService;
 
-    /**
-     * 책 등록 요청 처리.
-     *
-     * @param createBookRequest request form
-     * @param bindingResult     binding result
-     * @return ApiResponse<>
-     */
-    @PostMapping
-    public ApiResponse<Void> createBook(@Valid @RequestBody CreateBookRequest createBookRequest,
-                                        BindingResult bindingResult) {
-        ValidationUtils.validateBindingResult(bindingResult,
-                new CreateBookRequestFormException("책의 항목들의 범위가 잘못되었습니다."));
+	/**
+	 * 책 등록 요청 처리.
+	 *
+	 * @param createBookRequest request form
+	 * @param bindingResult     binding result
+	 * @return ApiResponse<>
+	 */
+	@PostMapping
+	public ApiResponse<Void> createBook(@Valid @RequestBody CreateBookRequest createBookRequest,
+		BindingResult bindingResult) {
+		ValidationUtils.validateBindingResult(bindingResult,
+			new CreateBookRequestFormException("책의 항목들의 범위가 잘못되었습니다."));
 
-        bookService.createBook(createBookRequest);
+		bookService.createBook(createBookRequest);
 
-        return new ApiResponse<>(new ApiResponse.Header(true, 201));
-    }
+		return new ApiResponse<>(new ApiResponse.Header(true, 201));
+	}
 
-    /**
-     * 도서 페이지 전체 조회 메서드입니다.
-     *
-     * @param page 페이지
-     * @param size 사이즈
-     * @param sort 정렬 기준
-     * @return 도서 리스트
-     * @author 김은비
-     */
-    @GetMapping
-    public ApiResponse<Page<BookListResponse>> readAllBooks(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "12") int size,
-            @RequestParam(defaultValue = "publishedDate,desc") String sort) {
+	/**
+	 * 도서 페이지 전체 조회 메서드입니다.
+	 *
+	 * @param page 페이지
+	 * @param size 사이즈
+	 * @param sort 정렬 기준
+	 * @return 도서 리스트
+	 * @author 김은비
+	 */
+	@GetMapping
+	public ApiResponse<Page<BookListResponse>> readAllBooks(
+		@RequestParam(defaultValue = "0") int page,
+		@RequestParam(defaultValue = "12") int size,
+		@RequestParam(defaultValue = "publishedDate,desc") String sort) {
 
-        String[] sortParams = sort.split(",");
-        String property = sortParams[0];
-        String direction = sortParams.length > 1 ? sortParams[1].toUpperCase() : "DESC";
-        Sort.Direction directionEnum = Sort.Direction.valueOf(direction);
+		String[] sortParams = sort.split(",");
+		String property = sortParams[0];
+		String direction = sortParams.length > 1 ? sortParams[1].toUpperCase() : "DESC";
+		Sort.Direction directionEnum = Sort.Direction.valueOf(direction);
 
-        Sort sortOrder = Sort.by(new Sort.Order(directionEnum, property));
-        Pageable pageable = PageRequest.of(page, size, sortOrder);
+		Sort sortOrder = Sort.by(new Sort.Order(directionEnum, property));
+		Pageable pageable = PageRequest.of(page, size, sortOrder);
 
-        log.info("정렬 기준 : {}", pageable);
+		log.info("정렬 기준 : {}", pageable);
 
-        Page<BookListResponse> bookList = bookService.readAllBooks(pageable);
-        return ApiResponse.success(bookList);
-    }
+		Page<BookListResponse> bookList = bookService.readAllBooks(pageable);
+		return ApiResponse.success(bookList);
+	}
 
     /**
      * 책 상세보기 -> 조회수가 올라갑니다.
@@ -101,25 +101,26 @@ public class BookController {
                 bookTagService.readTagByBookId(
                         ReadBookIdRequest.builder().bookId(bookId).build());
 
-        UserReadBookResponse book = UserReadBookResponse.builder()
-                .id(detailBook.id())
-                .title(detailBook.title())
-                .description(detailBook.description())
-                .publishedDate(detailBook.publishedDate())
-                .price(detailBook.price())
-                .quantity(detailBook.quantity())
-                .sellingPrice(detailBook.sellingPrice())
-                .viewCount(detailBook.viewCount())
-                .packing(detailBook.packing())
-                .author(detailBook.author())
-                .isbn(detailBook.isbn())
-                .publisher(detailBook.publisher())
-                .imagePath(detailBook.imagePath())
-                .categoryList(categoryList)
-                .tagList(tagList)
-                .build();
-        return ApiResponse.success(book);
-    }
+		UserReadBookResponse book = UserReadBookResponse.builder()
+			.id(detailBook.id())
+			.title(detailBook.title())
+			.description(detailBook.description())
+			.publishedDate(detailBook.publishedDate())
+			.price(detailBook.price())
+			.quantity(detailBook.quantity())
+			.sellingPrice(detailBook.sellingPrice())
+			.viewCount(detailBook.viewCount())
+			.packing(detailBook.packing())
+			.author(detailBook.author())
+			.isbn(detailBook.isbn())
+			.publisher(detailBook.publisher())
+			.imagePath(detailBook.imagePath())
+			.categoryList(categoryList)
+			.tagList(tagList)
+			.build();
+		bookService.addView(bookId);
+		return ApiResponse.success(book);
+	}
 
     /**
      * 책 수정 관련 컨트롤러
@@ -166,22 +167,22 @@ public class BookController {
         return ApiResponse.success(response);
     }
 
-    /**
-     * 관리자 페이지에서 확인할 내용
-     *
-     * @param page 페이지
-     * @param size 페이지 사이즈
-     * @return 관리자 페이지에서 사용할 책 리스트
-     */
-    @GetMapping("/admin")
-    public ApiResponse<Page<BookManagementResponse>> readAllAdminBooks(@RequestParam(defaultValue = "0") int page,
-                                                                       @RequestParam(defaultValue = "10") int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<BookManagementResponse> bookList = bookService.readAllAdminBooks(pageable);
-        return new ApiResponse<>(
-                new ApiResponse.Header(true, 200),
-                new ApiResponse.Body<>(bookList)
-        );
-    }
+	/**
+	 * 관리자 페이지에서 확인할 내용
+	 *
+	 * @param page 페이지
+	 * @param size 페이지 사이즈
+	 * @return 관리자 페이지에서 사용할 책 리스트
+	 */
+	@GetMapping("/admin")
+	public ApiResponse<Page<BookManagementResponse>> readAllAdminBooks(@RequestParam(defaultValue = "0") int page,
+		@RequestParam(defaultValue = "10") int size) {
+		Pageable pageable = PageRequest.of(page, size);
+		Page<BookManagementResponse> bookList = bookService.readAllAdminBooks(pageable);
+		return new ApiResponse<>(
+			new ApiResponse.Header(true, 200),
+			new ApiResponse.Body<>(bookList)
+		);
+	}
 
 }

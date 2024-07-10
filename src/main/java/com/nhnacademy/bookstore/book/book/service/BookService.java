@@ -41,4 +41,8 @@ public interface BookService {
 	void deleteBook(Long bookId);
 
 	List<BookForCouponResponse> readBookByIds(List<Long> ids);
+
+	Page<BookListResponse> readCategoryAllBooks(Pageable pageable, Long categoryId);
+
+	void addView(Long bookId);
 }
