@@ -105,28 +105,30 @@ public class CouponMemberServiceImpl implements CouponMemberService {
         List<Member> members = memberRepository.findAll();
 
         for (Member member : members) {
-            if (member.getBirthday().getDayOfYear() == ZonedDateTime.now().getDayOfYear()) {
-                CreateCouponFormRequest couponFormRequest = CreateCouponFormRequest.builder()
-                        .startDate(ZonedDateTime.now())
-                        .endDate(ZonedDateTime.now().plusDays(30))
-                        .name("Birthday Coupon")
-                        .maxPrice(100000)
-                        .minPrice(10000)
-                        .couponTypeId(5L)
-                        .couponUsageId(3L)
-                        .build();
+            if (Objects.nonNull(member.getBirthday())) {
+                if (member.getBirthday().getDayOfYear() == ZonedDateTime.now().getDayOfYear()) {
+                    CreateCouponFormRequest couponFormRequest = CreateCouponFormRequest.builder()
+                            .startDate(ZonedDateTime.now())
+                            .endDate(ZonedDateTime.now().plusDays(30))
+                            .name("Birthday Coupon")
+                            .maxPrice(100000)
+                            .minPrice(10000)
+                            .couponTypeId(5L)
+                            .couponUsageId(3L)
+                            .build();
 
-                couponControllerClient.createCouponForm(couponFormRequest);
+                    couponControllerClient.createCouponForm(couponFormRequest);
 
-                Long couponFormId = couponControllerClient.createCouponForm(couponFormRequest).getBody().getData();
+                    Long couponFormId = couponControllerClient.createCouponForm(couponFormRequest).getBody().getData();
 
-                Coupon coupon = new Coupon(
-                        couponFormId,
-                        CouponStatus.READY,
-                        member
-                );
+                    Coupon coupon = new Coupon(
+                            couponFormId,
+                            CouponStatus.READY,
+                            member
+                    );
 
-                couponRepository.save(coupon);
+                    couponRepository.save(coupon);
+                }
             }
         }
     }

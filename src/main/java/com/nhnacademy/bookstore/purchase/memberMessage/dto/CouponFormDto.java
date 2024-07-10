@@ -6,6 +6,5 @@ import java.util.UUID;
 import lombok.Builder;
 
 @Builder
-public record CouponFormDto(Long id, ZonedDateTime startDate, ZonedDateTime endDate, ZonedDateTime createdAt, String name,
-                            UUID code, Integer maxPrice, Integer minPrice) {
+public record CouponFormDto(Long id, String name) {
     }
