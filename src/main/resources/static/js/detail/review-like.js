@@ -30,6 +30,14 @@ function increaseLikeCount(likeButton) {
             console.error('Error increasing like count:', error);
             console.error('Response Text:', xhr.responseText); // 응답 내용 출력
             console.error('Status:', status);
+
+            // 에러 메시지 파싱
+            const response = JSON.parse(xhr.responseText);
+            if (response.body && response.body.data && response.body.data.title) {
+                showAlert(response.body.data.title);
+            } else {
+                showAlert('자신의 리뷰에는 추천을 누를 수 없습니다.');
+            }
         }
     });
 }
@@ -111,4 +119,20 @@ function deactivateLikeButton() {
 function getReviewIdFromUrl() {
     const pathSegments = window.location.pathname.split('/');
     return pathSegments[pathSegments.length - 1];
+}
+
+function showAlert(message) {
+    const alertBox = document.createElement('div');
+    alertBox.className = 'alert alert-danger';
+    alertBox.textContent = message;
+    alertBox.style.position = 'fixed';
+    alertBox.style.top = '20px';
+    alertBox.style.left = '50%';
+    alertBox.style.transform = 'translateX(-50%)';
+    alertBox.style.zIndex = '10000';
+    document.body.appendChild(alertBox);
+
+    setTimeout(() => {
+        document.body.removeChild(alertBox);
+    }, 3000); // 3초 후에 팝업 제거
 }
