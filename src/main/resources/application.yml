@@ -21,27 +21,12 @@ spring:
         use_sql_comments: true
         highlight_sql: true
         auto_quote_keyword: true
-  #    hibernate:
-  #      ddl-auto: update
 
   servlet:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
 
-  datasource:
-    url: jdbc:mysql://133.186.241.167:3306/be6_3runner_dev
-    username: be6_3runner
-    password: tHos2g5st4@XH7mT
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    type: org.apache.commons.dbcp2.BasicDataSource
-    dbcp2:
-      initial-size: 5
-      max-total: 20
-      max-idle: 20
-      min-idle: 5
-      test-on-borrow: true
-      validation-query: SELECT 1
 
 
   rabbitmq:
@@ -90,3 +75,14 @@ springdoc:
 elasticsearch:
   url: 115.94.72.198:9200
   key: WVZvVlo1QUJxeC1mdVBfZkZPOHM6SjNHd1hRX2RUWmFCbnY4dmtIcTRDUQ==
+
+
+db:
+  driver: com.mysql.cj.jdbc.Driver
+  url: b6b9d1cb45ab4fb1b46637352b6a053c
+  username: 83f7720a5c66449bae3b4948e07b111f
+  password: 410f279ee5a54791b7dc0a1e87f94672
+  initial-size: 5
+  max-total: 20
+  max-idle: 20
+  min-idle: 5
