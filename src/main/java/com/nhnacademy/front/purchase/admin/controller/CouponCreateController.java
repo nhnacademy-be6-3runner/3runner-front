@@ -70,7 +70,7 @@ public class CouponCreateController {
                 createCouponFormFrontRequest.getMemberId()
         );
 
-        return "redirect:/admin/coupons/list";
+        return "redirect:/admin/coupons/all";
     }
 
     @PostMapping("/admin/coupons/mqs")
