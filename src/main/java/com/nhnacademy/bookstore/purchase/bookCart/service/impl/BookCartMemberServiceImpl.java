@@ -3,6 +3,7 @@ package com.nhnacademy.bookstore.purchase.bookCart.service.impl;
 import com.nhnacademy.bookstore.entity.member.Member;
 import com.nhnacademy.bookstore.member.member.exception.MemberNotExistsException;
 import com.nhnacademy.bookstore.purchase.bookCart.dto.request.*;
+import com.nhnacademy.bookstore.purchase.bookCart.dto.response.ReadBookCartGuestResponse;
 import com.nhnacademy.bookstore.purchase.bookCart.exception.BookCartDoesNotExistException;
 import com.nhnacademy.bookstore.purchase.bookCart.exception.NotExistsBookCartException;
 import com.nhnacademy.bookstore.purchase.bookCart.exception.NotExistsBookException;
@@ -14,6 +15,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.nhnacademy.bookstore.purchase.bookCart.repository.BookCartRedisRepository;
 import com.nhnacademy.bookstore.purchase.cart.exception.CartDoesNotExistException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +36,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @Transactional
 public class BookCartMemberServiceImpl implements BookCartMemberService {
+    private final BookCartRedisRepository bookCartRedisRepository;
     private final BookCartRepository bookCartRepository;
     private final CartRepository cartRepository;
     private final BookRepository bookRepository;
@@ -58,28 +61,43 @@ public class BookCartMemberServiceImpl implements BookCartMemberService {
         }
 
         cartRepository.save(cart);
+        List<ReadBookCartGuestResponse> redisResponses = bookCartRedisRepository.readAllHashName("Member"+readAllCartMemberRequest.userId());
 
+        if (redisResponses.size() == 0 ) {
+            List<BookCart> allBookCarts = bookCartRepository.findAllByCart(cart);
+            for (BookCart bookCart : allBookCarts) {
+                String url = "/img/no-image.png";
 
-        List<BookCart> allBookCarts = bookCartRepository.findAllByCart(cart);
+                if (bookCart.getBook().getBookImageList() != null && !bookCart.getBook().getBookImageList().isEmpty()) {
+                    url = bookCart.getBook().getBookImageList().getFirst().getTotalImage().getUrl();
+                }
 
-        for (BookCart bookCart : allBookCarts) {
-            String url = "/img/no-image.png";
-
-            if (bookCart.getBook().getBookImageList() != null && !bookCart.getBook().getBookImageList().isEmpty()) {
-                url = bookCart.getBook().getBookImageList().getFirst().getTotalImage().getUrl();
+                responses.add(ReadAllBookCartMemberResponse.builder()
+                        .quantity(bookCart.getQuantity())
+                        .bookCartId(bookCart.getId())
+                        .bookId(bookCart.getBook().getId())
+                        .price(bookCart.getBook().getPrice())
+                        .url(url)
+                        .title(bookCart.getBook().getTitle())
+                        .leftQuantity(bookCart.getBook().getQuantity())
+                        .build());
             }
+            return  responses;
+        } else {
+            for (ReadBookCartGuestResponse redisResponse : redisResponses) {
 
-            responses.add(ReadAllBookCartMemberResponse.builder()
-                    .quantity(bookCart.getQuantity())
-                    .bookCartId(bookCart.getId())
-                    .bookId(bookCart.getBook().getId())
-                    .price(bookCart.getBook().getPrice())
-                    .url(url)
-                    .title(bookCart.getBook().getTitle())
-                    .leftQuantity(bookCart.getBook().getQuantity())
-                    .build());
+                responses.add(ReadAllBookCartMemberResponse.builder()
+                        .quantity(redisResponse.quantity())
+                        .bookCartId(redisResponse.bookCartId())
+                        .bookId(redisResponse.bookId())
+                        .price(redisResponse.price())
+                        .url(redisResponse.url())
+                        .title(redisResponse.title())
+                        .leftQuantity(redisResponse.leftQuantity())
+                        .build());
+            }
+            return  responses;
         }
-        return  responses;
     }
 
     @Override
@@ -121,6 +139,17 @@ public class BookCartMemberServiceImpl implements BookCartMemberService {
 
         bookCartRepository.save(bookCart);
 
+        bookCartRedisRepository.create("Member"+createBookCartRequest.userId(), bookCart.getId(),
+                ReadBookCartGuestResponse.builder()
+                        .bookCartId(bookCart.getId())
+                        .bookId(createBookCartRequest.bookId())
+                        .price(bookCart.getBook().getPrice())
+                        .url(bookCart.getBook().getBookImageList().getFirst().getTotalImage().getUrl())
+                        .quantity(createBookCartRequest.quantity())
+                        .leftQuantity(bookCart.getBook().getQuantity())
+                        .build()
+        );
+
         return bookCart.getId();
     }
 
@@ -148,8 +177,10 @@ public class BookCartMemberServiceImpl implements BookCartMemberService {
 
         if (bookCart.getQuantity() <= 0) {
             bookCartRepository.deleteByCart(cart);
+            bookCartRedisRepository.delete("Member" + memberId, bookCart.getId());
         } else {
             bookCartRepository.save(bookCart);
+            bookCartRedisRepository.update("Member" + memberId, bookCart.getId(), bookCart.getQuantity());
         }
 
         return bookCart.getId();
@@ -162,6 +193,7 @@ public class BookCartMemberServiceImpl implements BookCartMemberService {
                     .findById(deleteBookCartMemberRequest.bookCartId())
                     .orElseThrow(NotExistsBookCartException::new)
         );
+        bookCartRedisRepository.delete("Member" + memberId, deleteBookCartMemberRequest.bookCartId());
 
         return memberId;
     }
@@ -172,7 +204,7 @@ public class BookCartMemberServiceImpl implements BookCartMemberService {
                 .orElseThrow(() -> new CartDoesNotExistException("카트 없음"));
 
         bookCartRepository.deleteByCart(cart);
-
+        bookCartRedisRepository.deleteAll("Member" + memberId);
         return memberId;
     }
 }
