@@ -28,7 +28,7 @@ import lombok.NoArgsConstructor;
 
 		int age,
 
-		ZonedDateTime birthday
+		String birthday
 
 	){}
 
