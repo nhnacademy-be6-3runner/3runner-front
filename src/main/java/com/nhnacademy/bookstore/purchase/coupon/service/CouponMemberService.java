@@ -2,6 +2,7 @@ package com.nhnacademy.bookstore.purchase.coupon.service;
 
 import com.nhnacademy.bookstore.entity.coupon.Coupon;
 import com.nhnacademy.bookstore.entity.member.Member;
+import com.nhnacademy.bookstore.purchase.coupon.dto.ReadCouponResponseForMember;
 import com.nhnacademy.bookstore.purchase.coupon.feign.dto.request.CreateCouponFormRequest;
 import com.nhnacademy.bookstore.purchase.coupon.feign.dto.response.ReadCouponFormResponse;
 
@@ -21,4 +22,7 @@ public interface CouponMemberService {
     Long readCoupon(Long couponFormId);
 
     Long registorCoupon(String code, Long memberId);
+
+
+    Boolean registorCouponForBook(Long bookId, Long memberId);
 }
