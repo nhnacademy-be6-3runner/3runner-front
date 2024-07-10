@@ -151,6 +151,7 @@ function downloadSelectedCoupon() {
             }
         },
         error: function (xhr, status, error) {
+            alert('발급 받을 수 있는 쿠폰이 없습니다');
             console.error('Error downloading coupon:', error);
         }
     });
