@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>Coupon Usages</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <link rel="stylesheet" th:href="@{/css/admin_styles.css}">
     <style>
         .table th, .table td {
             white-space: nowrap;
@@ -22,15 +24,24 @@
         .fieldError {
             border-color: #bd2130;
         }
+        @font-face {
+            font-family: 'YourFont';
+            src: url('/fonts/YouandiModernTR.ttf') format('truetype');
+        }
+        * {
+            font-family: 'YourFont', sans-serif;
+        }
     </style>
 </head>
 <body>
+<!-- Header -->
+<nav th:replace="fragments/admin_nav :: nav"></nav>
 <div class="container">
 
-    <h1 class="mt-5">Category Coupon Usage</h1>
+    <h1 class="mt-5">카테고리 쿠폰 사용처</h1>
     <form action="/admin/coupons/usages/categories" method="post">
         <div class="form-group">
-            <label>Select Categories</label>
+            <label>카테고리 선택</label>
             <div th:each="category : ${categories}">
                 <div>
                     <label>
@@ -46,11 +57,11 @@
                 </div>
             </div>
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary">카테고리 쿠폰 사용처 등록하기</button>
     </form>
 
 
-    <h1 class="mt-5">Book Coupon Usage</h1>
+    <h1 class="mt-5">북 쿠폰 사용처</h1>
     <form action="/admin/coupons/usages/books" method="post">
         <div class="form-group">
             <div th:each="book : ${books}">
@@ -60,7 +71,7 @@
                 </label>
             </div>
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary">북 쿠폰 사용처 등록</button>
     </form>
 
     <nav aria-label="Page navigation">
@@ -84,11 +95,12 @@
         </ul>
     </nav>
 
-    <a class="btn btn-secondary" href="/purchase/admin">돌아가기</a>
+    <a class="btn btn-secondary" href="/admin/purchases">돌아가기</a>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="/js/admin.js"></script>
 </body>
 </html>

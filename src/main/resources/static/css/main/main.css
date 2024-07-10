@@ -1,3 +1,10 @@
+@font-face {
+    font-family: 'YourFont';
+    src: url('../../fonts/YouandiModernTR.ttf') format('truetype');
+}
+* {
+    font-family: 'YourFont', sans-serif;
+}
 body {
     margin: 0;
     padding: 0;
@@ -281,3 +288,5 @@ ul {
 .footer .footer-text {
     color: white !important;
 }
+
+

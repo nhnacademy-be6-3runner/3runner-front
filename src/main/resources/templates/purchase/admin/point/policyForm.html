@@ -4,8 +4,11 @@
     <meta charset="UTF-8">
     <title>Create Point Policy</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/admin_styles.css}">
 </head>
 <body>
+<!-- Header -->
+<nav th:replace="fragments/admin_nav :: nav"></nav>
 <div class="container">
     <h1 class="mt-5">Create Point Policy</h1>
     <form action="/admin/points/policies" method="post">
@@ -21,5 +24,7 @@
     </form>
     <a class="btn btn-secondary mt-3" href="/purchase/admin">Back</a>
 </div>
+<script src="/js/admin.js"></script>
 </body>
+
 </html>

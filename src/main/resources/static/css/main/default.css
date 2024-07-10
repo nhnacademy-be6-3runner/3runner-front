@@ -1,4 +1,11 @@
 /* 전체적인 스타일 초기화 및 레이아웃 설정 */
+@font-face {
+    font-family: 'YourFont';
+    src: url('../../fonts/YouandiModernTR.ttf') format('truetype');
+}
+* {
+    font-family: 'YourFont', sans-serif;
+}
 body {
     margin: 0;
     padding: 0;

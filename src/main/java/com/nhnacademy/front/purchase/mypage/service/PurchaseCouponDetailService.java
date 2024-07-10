@@ -6,4 +6,6 @@ import org.springframework.data.domain.Page;
 public interface PurchaseCouponDetailService{
 
     Page<ReadPurchaseCouponDetailResponse> readPurchaseCouponForClient(int page, int size);
+
+    Boolean getBookCoupon(Long bookId);
 }

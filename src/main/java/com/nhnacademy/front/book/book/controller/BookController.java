@@ -16,7 +16,8 @@ import com.nhnacademy.front.book.book.dto.response.BookListResponse;
 import com.nhnacademy.front.book.book.dto.response.UserReadBookResponse;
 import com.nhnacademy.front.book.book.service.BookService;
 import com.nhnacademy.front.book.image.service.ImageService;
-
+import com.nhnacademy.front.book.tag.dto.response.ReadTagByBookResponse;
+import com.nhnacademy.front.book.tag.dto.response.TagResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

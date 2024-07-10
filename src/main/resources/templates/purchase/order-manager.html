@@ -5,6 +5,7 @@
     <title>개인화 섹션</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <!--    <link rel="stylesheet" href="/css/order-detail.css">-->
+    <link rel="stylesheet" th:href="@{/css/admin_styles.css}">
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -250,6 +251,7 @@
 </head>
 <body>
 
+<nav th:replace="fragments/admin_nav :: nav"></nav>
 <div id="orderDelivery">
     <h2>주문내역</h2>
     <ul class="order-list">
@@ -303,12 +305,7 @@
             </nav>
         </div>
     </ul>
-
 </div>
-
-
-<script>
-
-</script>
+<script src="/js/admin.js"></script>
 </body>
 </html>

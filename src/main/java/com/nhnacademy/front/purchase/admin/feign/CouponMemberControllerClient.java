@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
-@FeignClient(name = "CouponMemberControllerClient", url = "http://${feign.client.url}" , configuration = FeignConfiguration.class)
+@FeignClient(name = "CouponRegisterControllerClient", url = "http://${feign.client.url}" , configuration = FeignConfiguration.class)
 public interface CouponMemberControllerClient {
     @GetMapping("/bookstore/admin/members")
     ApiResponse<List<ReadMemberResponse>> getMembers();

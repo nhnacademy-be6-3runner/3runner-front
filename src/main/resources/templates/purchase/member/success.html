@@ -27,6 +27,13 @@
             line-height: 1.5;
             border-radius: .3rem;
         }
+        @font-face {
+            font-family: 'YourFont';
+            src: url('/fonts/YouandiModernTR.ttf') format('truetype');
+        }
+        * {
+            font-family: 'YourFont', sans-serif;
+        }
     </style>
 </head>
 <body>
@@ -147,11 +154,9 @@
     <p id="orderId"></p>
     <p id="amount"></p>
 </main>
-<footer class="bg-white text-dark p-3">
-    <div class="container text-center footer-content">
-        &copy; 2024 3runner
-    </div>
-</footer>
+
+<!-- footer -->
+<footer class="header-custom" th:replace="fragments/footer :: footer"></footer>
 
 <script th:inline="javascript">
     // 쿼리 파라미터 값이 결제 요청할 때 보낸 데이터와 동일한지 반드시 확인하세요.

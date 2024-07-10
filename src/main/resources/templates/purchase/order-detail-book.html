@@ -30,7 +30,7 @@
                 <li class="page-item" th:classappend="${books.hasPrevious()} ? '' : 'disabled'">
                     <a class="page-link" href="#" th:onclick="'loadBooks(' + (${books.number} - 1) + ', ' + ${books.size} + '); return false;'">이전</a>
                 </li>
-                <li class="page-item" th:each="i : ${#numbers.sequence(0, books.totalPages - 1)}" th:classappend="${i} == ${books.number} ? 'active' ">
+                <li class="page-item" th:each="i : ${#numbers.sequence(0, books.totalPages - 1)}" th:classappend="${i} == ${books.number} ? 'active'">
                     <a class="page-link" href="#" th:onclick="'loadBooks(' + ${i} + ', ' + ${books.size} + '); return false;'" th:text="${i + 1}">1</a>
                 </li>
                 <li class="page-item" th:classappend="${books.hasNext()} ? '' : 'disabled'">
