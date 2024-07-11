@@ -30,9 +30,9 @@ jobs:
 
       - name: Build with Maven
         run: mvn clean -B package --file pom.xml
-#
-#      - name: Run SonarQube
-#        run: mvn clean verify sonar:sonar -Dsonar.projectKey=${{secrets.SONAR_KEY}} -Dsonar.projectName=${{secrets.SONAR_NAME}} -Dsonar.host.url=${{secrets.SONAR_HOST}} -Dsonar.token=${{secrets.SONAR_TOKEN}}
+
+      - name: Run SonarQube
+        run: mvn clean verify sonar:sonar -Dsonar.projectKey=${{secrets.SONAR_KEY}} -Dsonar.projectName=${{secrets.SONAR_NAME}} -Dsonar.host.url=${{secrets.SONAR_HOST}} -Dsonar.token=${{secrets.SONAR_TOKEN}}
 
       - name : Delete file in server
         run : sudo rm -rf /home/nhnacademy/front
@@ -56,13 +56,25 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             cd /home/nhnacademy/front
-            mkdir -p ./certbot/www/.well-known/acme-challenge
-            mkdir -p ./certbot/www
-            mkdir -p ./certbot/conf
-            sudo chmod -R 755 ./certbot/www
-            sudo chown -R $USER:$USER ./certbot/www
-            echo "test" > ./certbot/www/.well-known/acme-challenge/test-file
-            
+            mkdir -p ../certbot/www/.well-known/acme-challenge
+            mkdir -p ../certbot/www
+            mkdir -p ../certbot/conf
+            sudo chmod -R 755 ../certbot/www
+            sudo chown -R $USER:$USER ../certbot/www
+            echo "test" > ../certbot/www/.well-known/acme-challenge/test-file
+
+            sudo docker run -it --rm --name certbot \
+              -v ../certbot/conf:/etc/letsencrypt \
+              -v ../certbot/www:/var/www/certbot \
+              certbot/certbot certonly --webroot \
+              --webroot-path=/var/www/certbot \
+              --agree-tos --email bwmichael@naver.com \
+              -d 3runner.shop
+
+            chmod +x ./renew_cert.sh
+            chmod +x ./setup_cron.sh
+            ./setup_cron.sh        
+                    
             sudo docker stop front1 || true
             sudo docker rm front1 || true
             sudo docker build -t front-image1 .
@@ -80,5 +92,5 @@ jobs:
             sudo docker run --name nginx -d \
               -p 80:80 -p 443:443 \
               -v ./nginx.conf:/etc/nginx/nginx.conf \
-              -v ./certbot/www:/var/www/certbot \
+              -v ../certbot/www:/var/www/certbot \
               --net front_network nginx
