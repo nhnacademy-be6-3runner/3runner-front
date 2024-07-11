@@ -61,10 +61,18 @@ jobs:
             chmod +x ./setup_cron.sh
             ./setup_cron.sh
             
-            sudo docker build -t front-image1 -f Dockerfile.front1 .
-            sudo docker build -t front-image2 -f Dockerfile.front2 .
+            sudo docker build -t front-image1 -f  .
+            sudo docker build -t front-image2 -f  .
 
-            sudo docker swarm init || true
+            # Docker Swarm 초기화
+            if ! sudo docker info | grep -q 'Swarm: active'; then
+              sudo docker swarm init
+            fi
+
+            # 네트워크 생성
+            if ! sudo docker network ls | grep -q 'front_network'; then
+              sudo docker network create --driver overlay front_network
+            fi
 
             sudo docker service rm front1 || true
             sudo docker service create --name front1 --publish 3000:8080 --network front_network front-image1
