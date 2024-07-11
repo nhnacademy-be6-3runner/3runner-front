@@ -67,18 +67,24 @@ jobs:
             if ! sudo docker info | grep -q 'Swarm: active'; then
               sudo docker swarm init
             fi
+            
+            # 네트워크 생성
+            if ! sudo docker network ls | grep -q 'front_network'; then
+              sudo docker network create --driver overlay front_network_swarm
+            fi
+
 
             if sudo docker service ls | grep -q 'front1'; then
               sudo docker service rm front1
             fi
-            sudo docker service create --name front1 --publish 3000:8080 --network ingress front-image1
+            sudo docker service create --name front1 --publish 3000:8080 --network front_network_swarm front-image1
             
             sleep 90
             
             if sudo docker service ls | grep -q 'front2'; then
               sudo docker service rm front2
             fi
-            sudo docker service create --name front2 --publish 3001:8080 --network ingress front-image2
+            sudo docker service create --name front2 --publish 3001:8080 --network front_network_swarm front-image2
             
             if sudo docker service ls | grep -q 'nginx'; then
               sudo docker service rm nginx
@@ -87,4 +93,4 @@ jobs:
             --mount type=bind,source=/home/nhnacademy/front/nginx.conf,target=/etc/nginx/nginx.conf \
             --mount type=bind,source=/home/nhnacademy/certbot/conf,target=/etc/letsencrypt \
             --mount type=bind,source=/home/nhnacademy/certbot/www,target=/var/www/certbot \
-            --network ingress nginx:latest
+            --network front_network_swarm nginx:latest
