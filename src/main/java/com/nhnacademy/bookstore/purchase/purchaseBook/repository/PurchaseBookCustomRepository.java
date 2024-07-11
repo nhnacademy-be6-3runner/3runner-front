@@ -15,6 +15,6 @@ public interface PurchaseBookCustomRepository {
 
 	List<ReadPurchaseBookResponse> readGuestBookPurchaseResponses(String purchaseId);
 
-
+	ReadPurchaseBookResponse readPurchaseBookResponse(Long purchaseBookId);
 
 }

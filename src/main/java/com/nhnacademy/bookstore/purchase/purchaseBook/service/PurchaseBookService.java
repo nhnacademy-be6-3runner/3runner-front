@@ -21,7 +21,7 @@ public interface PurchaseBookService {
 
     Long updatePurchaseBook(UpdatePurchaseBookRequest updatePurchaseBookRequest);
 
-    List<ReadPurchaseBookResponse> readBookByPurchaseResponses(Long purchaseId);
+    List<ReadPurchaseBookResponse> readBookByPurchaseResponses(Long purchaseId, Long memberId);
 
     List<ReadPurchaseBookResponse> readGuestBookByPurchaseResponses(String purchaseId);
 

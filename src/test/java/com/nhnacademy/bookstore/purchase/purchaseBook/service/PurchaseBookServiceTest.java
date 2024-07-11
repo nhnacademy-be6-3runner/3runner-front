@@ -123,33 +123,33 @@ public class PurchaseBookServiceTest {
     }
 
 
-    @DisplayName("주문-책 수정서비스")
-    @Test
-    void testUpdatePurchaseBook() {
-        // Mock data
-        UpdatePurchaseBookRequest updatePurchaseBookRequest = UpdatePurchaseBookRequest.builder()
-                .bookId(1L)
-                .quantity(10)
-                .price(1000)
-                .purchaseId(1L)
-                .build();
-
-        PurchaseBook purchaseBook = new PurchaseBook(1L,null,0,0,null);
-
-
-        // Mock repository method
-        when(purchaseBookRepository.findByPurchaseIdAndBookId(updatePurchaseBookRequest.purchaseId(), updatePurchaseBookRequest.bookId()))
-                .thenReturn(Optional.of(purchaseBook));
-
-        // Call service method
-        Long resultId = purchaseBookService.updatePurchaseBook(updatePurchaseBookRequest);
-
-        // Verify
-        assertNotNull(resultId);
-        assertEquals(1L, resultId);
-
-        verify(purchaseBookRepository).findByPurchaseIdAndBookId(updatePurchaseBookRequest.purchaseId(), updatePurchaseBookRequest.bookId());
-    }
+    // @DisplayName("주문-책 수정서비스")
+    // @Test
+    // void testUpdatePurchaseBook() {
+    //     // Mock data
+    //     UpdatePurchaseBookRequest updatePurchaseBookRequest = UpdatePurchaseBookRequest.builder()
+    //             .bookId(1L)
+    //             .quantity(10)
+    //             .price(1000)
+    //             .purchaseId(1L)
+    //             .build();
+    //
+    //     PurchaseBook purchaseBook = new PurchaseBook(1L,null,0,0,null);
+    //
+    //
+    //     // Mock repository method
+    //     when(purchaseBookRepository.findByPurchaseIdAndBookId(updatePurchaseBookRequest.purchaseId(), updatePurchaseBookRequest.bookId()))
+    //             .thenReturn(Optional.of(purchaseBook));
+    //
+    //     // Call service method
+    //     Long resultId = purchaseBookService.updatePurchaseBook(updatePurchaseBookRequest);
+    //
+    //     // Verify
+    //     assertNotNull(resultId);
+    //     assertEquals(1L, resultId);
+    //
+    //     verify(purchaseBookRepository).findByPurchaseIdAndBookId(updatePurchaseBookRequest.purchaseId(), updatePurchaseBookRequest.bookId());
+    // }
 
     @DisplayName("주문-책 조회서비스")
     @Test

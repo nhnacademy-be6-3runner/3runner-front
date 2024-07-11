@@ -53,10 +53,10 @@ public class PurchaseBookController {
 	 */
 	@GetMapping("/{purchaseId}")
 	public ApiResponse<List<ReadPurchaseBookResponse>> readPurchaseBook(
-		@PathVariable(value = "purchaseId")  Long purchaseId) {
+		@PathVariable(value = "purchaseId")  Long purchaseId, @RequestHeader(name = "Member-Id", required = false) Long memberId) {
 
 		List<ReadPurchaseBookResponse> tmp =
-			purchaseBookService.readBookByPurchaseResponses( purchaseId);
+			purchaseBookService.readBookByPurchaseResponses(purchaseId, memberId);
 		return ApiResponse.success(tmp);
 	}
 
