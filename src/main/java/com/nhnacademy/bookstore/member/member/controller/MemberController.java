@@ -230,13 +230,22 @@ public class MemberController {
 	}
 	@PutMapping("/bookstore/members/lastLogin")
 	ApiResponse<Void> lastLoginUpdate(@RequestBody Long memberId){
-		try {
+		Member member = memberService.readById(memberId);
+		if(member.getStatus() == Status.Active) {
+
 			memberService.updateStatus(memberId, Status.Active);
-			memberService.updateLastLogin(memberId, ZonedDateTime.now(ZoneId.of("Asia/Seoul")));
+			memberService.updateLastLogin(memberId, ZonedDateTime.now());
 			return new ApiResponse<>(new ApiResponse.Header(true, HttpStatus.ACCEPTED.value()));
-		}catch (Exception e){
+		} else{
 			return new ApiResponse<>(new ApiResponse.Header(false, HttpStatus.NOT_FOUND.value()));
-		}
+		}//inactive상태일때 상태를 바꾸지 않고 보낸다.
 	}
+	@PutMapping("/bookstore/members/lastLogin/dormantAwake")
+	ApiResponse<Void> dormantAwake(@RequestBody String email) {
+		Member member = memberService.readByEmail(email);
+		memberService.updateStatus(member.getId(), Status.Active);
+		memberService.updateLastLogin(member.getId(), ZonedDateTime.now());
+		return new ApiResponse<>(new ApiResponse.Header(true, HttpStatus.ACCEPTED.value()));
+	}//무조건 상태 변경
 }
 
