@@ -69,7 +69,6 @@ jobs:
             sudo docker build -t front-image2 .
             sudo docker run -d -p 3001:8080 --name front2 --net front_network front-image2
             
-            
             sudo docker stop nginx || true
             sudo docker rm nginx || true
-            sudo docker run --name nginx -d -p 80:80 -v ./nginx.conf:/etc/nginx/nginx.conf --net front_network nginx
+            sudo docker run --name nginx -d -p 80:80 -p 443:443 -v ./nginx.conf:/etc/nginx/nginx.conf --net front_network nginx
