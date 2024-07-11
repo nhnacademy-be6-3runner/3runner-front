@@ -70,9 +70,6 @@ public class PurchaseDetailMemberServiceImpl implements PurchaseDetailMemberServ
 	 * 회원 주문 내역 조회
 	 *
 	 * @param purchaseId 주문 아이디
-	 * @param page 현재 페이지
-	 * @param size 보여줄 개수
-	 * @param sort 정렬
 	 * @return 해당 주문 - 책 page 리스트
 	 */
 	@Override

@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 
 import com.nhnacademy.front.purchase.purchase.dto.purchase.response.ReadPurchaseResponse;
 import com.nhnacademy.front.purchase.purchase.service.PurchaseDetailManagerService;
+import com.nhnacademy.front.refund.feign.RefundControllerClient;
+import com.nhnacademy.front.refund.feign.RefundRecordMemberControllerClient;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,6 +24,8 @@ import lombok.RequiredArgsConstructor;
 public class PurchaseDetailManagerController {
 
 	private final PurchaseDetailManagerService purchaseDetailManagerService;
+	private final RefundControllerClient refundControllerClient;
+	private final RefundRecordMemberControllerClient refundRecordMemberControllerClient;
 
 	/**
 	 * 모든 주문 내역 조회
@@ -56,9 +60,16 @@ public class PurchaseDetailManagerController {
 	@PostMapping("/{orderNumber}")
 	public String purchaseDetailManager(@PathVariable String orderNumber, @RequestParam("dropdown") String status, Model model) {
 		purchaseDetailManagerService.updatePurchaseStatus(orderNumber,status);
-		return "redirect:/orders/managers";
+		return "redirect:/admin/orders";
 	}
 
+
+
+	@PostMapping("/refund/success/{refundRecord}")
+	public String refundSuccessManager(@PathVariable Long refundRecord) {
+		refundControllerClient.updateSuccessRefund(refundRecord);
+		return "redirect:/admin/orders";
+	}
 
 
 

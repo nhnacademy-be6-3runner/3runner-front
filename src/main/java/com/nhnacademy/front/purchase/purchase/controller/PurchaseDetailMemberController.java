@@ -49,11 +49,11 @@ public class PurchaseDetailMemberController {
      * @return 회원 주문내역 조회 페이지 이동(주문 내역조회페이지와 동일, 숨겨진 주문내역 보여짐)
      */
     @GetMapping("/members")
-    public String orderDetailMember(@RequestParam(name = "page", defaultValue = "0") int page, Model model){
+    public String orderDetailMember(@RequestParam(defaultValue = "0", required = false) int page, Model model){
 
 
         Page<ReadPurchase> orderDetail = purchaseMemberService.readPurchases(page);
-        int totalPages = orderDetail.getTotalPages();
+
         model.addAttribute("page", page);
         model.addAttribute("orders", orderDetail);
 

@@ -35,9 +35,6 @@ public class PurchaseDetailGuestController {
 	 * 비회원 주문내역 보여주기
 	 *
 	 * @param orderNumber 주문 번호
-	 * @param page 주문내역 현재 페이지(책들만)
-	 * @param size 주문내역 보여주는 요소 사이즈(책)
-	 * @param sort 정렬
 	 * @param model
 	 * @return 주문 창으로 이동
 	 */
