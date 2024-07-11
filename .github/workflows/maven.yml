@@ -56,6 +56,7 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             cd /home/nhnacademy/front
+            mkdir -p ./certbot/www/.well-known/acme-challenge
             mkdir -p ./certbot/www
             mkdir -p ./certbot/conf
             
