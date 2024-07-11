@@ -89,4 +89,6 @@ jobs:
             --mount type=bind,source=/home/nhnacademy/certbot/www,target=/var/www/certbot \
             --device-read-bps /dev/sda:100mb \
             --device-write-bps /dev/sda:100mb \
+            --restart-condition any \
+            --restart-max-attempts 3 \
             --network front_network_swarm nginx:latest
