@@ -67,12 +67,6 @@ jobs:
             if ! sudo docker info | grep -q 'Swarm: active'; then
               sudo docker swarm init
             fi
-            
-            # 네트워크 생성
-            if ! sudo docker network ls | grep -q 'front_network'; then
-              sudo docker network create --driver overlay front_network_swarm
-            fi
-
 
             if sudo docker service ls | grep -q 'front1'; then
               sudo docker service rm front1
