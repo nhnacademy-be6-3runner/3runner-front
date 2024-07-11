@@ -4,7 +4,8 @@ document.addEventListener('DOMContentLoaded', function () {
         submitCart();
     });
     updateTotalPrice();
-    loadReviewData(); // 리뷰 데이터를 로드하는 함수 호출
+    loadReviewData();
+    reviewRatings();
 });
 
 function addCart(bookId, quantity) {
@@ -83,6 +84,22 @@ function getBookIdFromUrl() {
     return pathSegments[pathSegments.length - 1];
 }
 
+function reviewRatings() {
+    const bookId = getBookIdFromUrl();
+    // 평균 별점 가져오기
+    fetch(`/api/books/${bookId}/reviews/avg`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.body && data.body.data !== undefined) {
+                const rating = data.body.data;
+                document.getElementById("average-rating-container").textContent = `이 책의 별점 평균은 ${rating.toFixed(2)} 입니다.`;
+            } else {
+                console.error('Invalid response structure:', data);
+            }
+        })
+        .catch(error => console.error('Error fetching average rating:', error));
+}
+
 function loadReviewData() {
     const bookId = getBookIdFromUrl();
 
@@ -119,3 +136,6 @@ function loadReviewData() {
         })
         .catch(error => console.error('Error fetching average rating:', error));
 }
+
+
+
