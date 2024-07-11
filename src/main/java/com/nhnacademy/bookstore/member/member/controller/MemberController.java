@@ -126,7 +126,7 @@ public class MemberController {
 			new ApiResponse.Body<>(getMemberResponse));
 
 	}
-
+//
 	/**
 	 * Find auths list. -권한에 대한 리스트를 받아온다.
 	 *
