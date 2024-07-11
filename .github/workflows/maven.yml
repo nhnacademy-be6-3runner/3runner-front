@@ -56,16 +56,16 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             cd /home/nhnacademy/front
-            mkdir -p ../certbot/www/.well-known/acme-challenge
-            mkdir -p ../certbot/www
-            mkdir -p ../certbot/conf
-            sudo chmod -R 755 ../certbot/www
-            sudo chown -R $USER:$USER ../certbot/www
-            echo "test" > ../certbot/www/.well-known/acme-challenge/test-file
+            mkdir -p /home/nhnacademy/certbot/www/.well-known/acme-challenge
+            mkdir -p /home/nhnacademy/certbot/www
+            mkdir -p /home/nhnacademy/certbot/conf
+            sudo chmod -R 755 /home/nhnacademy/certbot/www
+            sudo chown -R $USER:$USER /home/nhnacademy/certbot/www
+            echo "test" > /home/nhnacademy/certbot/www/.well-known/acme-challenge/test-file
 
             sudo docker run -it --rm --name certbot \
-              -v ../certbot/conf:/etc/letsencrypt \
-              -v ../certbot/www:/var/www/certbot \
+              -v /home/nhnacademy/certbot/conf:/etc/letsencrypt \
+              -v /home/nhnacademy/certbot/www:/var/www/certbot \
               certbot/certbot certonly --webroot \
               --webroot-path=/var/www/certbot \
               --agree-tos --email bwmichael@naver.com \
@@ -92,5 +92,5 @@ jobs:
             sudo docker run --name nginx -d \
               -p 80:80 -p 443:443 \
               -v ./nginx.conf:/etc/nginx/nginx.conf \
-              -v ../certbot/www:/var/www/certbot \
+              -v /home/nhnacademy/certbot/www:/var/www/certbot \
               --net front_network nginx
