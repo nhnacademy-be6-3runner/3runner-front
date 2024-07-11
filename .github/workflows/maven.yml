@@ -56,24 +56,26 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             cd /home/nhnacademy/front
-            mkdir -p /home/nhnacademy/certbot/www/.well-known/acme-challenge
-            mkdir -p /home/nhnacademy/certbot/www
-            mkdir -p /home/nhnacademy/certbot/conf
-            sudo chmod -R 755 /home/nhnacademy/certbot/www
-            sudo chown -R $USER:$USER /home/nhnacademy/certbot/www
-            echo "test" > /home/nhnacademy/certbot/www/.well-known/acme-challenge/test-file
 
-            sudo docker run -it --rm --name certbot \
-              -v /home/nhnacademy/certbot/conf:/etc/letsencrypt \
-              -v /home/nhnacademy/certbot/www:/var/www/certbot \
-              certbot/certbot certonly --webroot \
-              --webroot-path=/var/www/certbot \
-              --agree-tos --email bwmichael@naver.com \
-              -d 3runner.shop
-
-            chmod +x ./renew_cert.sh
-            chmod +x ./setup_cron.sh
-            ./setup_cron.sh        
+#            HTTPS 인증서 발급
+#            mkdir -p /home/nhnacademy/certbot/www/.well-known/acme-challenge
+#            mkdir -p /home/nhnacademy/certbot/www
+#            mkdir -p /home/nhnacademy/certbot/conf
+#            sudo chmod -R 755 /home/nhnacademy/certbot/www
+#            sudo chown -R $USER:$USER /home/nhnacademy/certbot/www
+#            echo "test" > /home/nhnacademy/certbot/www/.well-known/acme-challenge/test-file
+#
+#            sudo docker run -it --rm --name certbot \
+#              -v /home/nhnacademy/certbot/conf:/etc/letsencrypt \
+#              -v /home/nhnacademy/certbot/www:/var/www/certbot \
+#              certbot/certbot certonly --webroot \
+#              --webroot-path=/var/www/certbot \
+#              --agree-tos --email bwmichael@naver.com \
+#              -d 3runner.shop
+#
+#            chmod +x ./renew_cert.sh
+#            chmod +x ./setup_cron.sh
+#            ./setup_cron.sh
                     
             sudo docker stop front1 || true
             sudo docker rm front1 || true
