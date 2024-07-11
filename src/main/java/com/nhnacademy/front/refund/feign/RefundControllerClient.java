@@ -1,5 +1,7 @@
 package com.nhnacademy.front.refund.feign;
 
+import java.util.List;
+
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,9 +32,12 @@ public interface RefundControllerClient {
 	@PutMapping("/bookstore/refund/success/{refundRecord}")
 	ApiResponse<Boolean> updateSuccessRefund(@PathVariable("refundRecord") Long refundRecord);
 
-	@PutMapping("/reject/{refundRecord}")
+	@PutMapping("/bookstore/refund/reject/{refundRecord}")
 	ApiResponse<Boolean> updateRefundRejected(@PathVariable("refundRecord") Long refundRecord);
 
-	@PostMapping("/cancel/payment/{orderNumber}")
+	@PostMapping("/bookstore/refund/cancel/payment/{orderNumber}")
 	ApiResponse<Boolean> createRefundCancelPayment(@PathVariable("orderNumber") String orderNumber);
+
+	@GetMapping("/bookstore/refund/managers/all")
+	ApiResponse<List<ReadRefundResponse>> readAllRefund();
 }

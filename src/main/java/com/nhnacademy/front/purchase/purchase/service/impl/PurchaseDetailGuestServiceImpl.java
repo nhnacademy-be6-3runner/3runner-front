@@ -1,5 +1,6 @@
 package com.nhnacademy.front.purchase.purchase.service.impl;
 
+import java.util.List;
 import java.util.UUID;
 
 import com.nhnacademy.front.util.ApiResponse;
@@ -29,9 +30,9 @@ public class PurchaseDetailGuestServiceImpl implements PurchaseDetailGuestServic
 	}
 
 	@Override
-	public Page<ReadPurchaseBookResponse> readGuestPurchaseBooks(String orderNumber,int page,int size,String sort) {
+	public List<ReadPurchaseBookResponse> readGuestPurchaseBooks(String orderNumber) {
 
-		return purchaseBookControllerClient.readGuestPurchaseBook(orderNumber,page,size,sort).getBody().getData();
+		return purchaseBookControllerClient.readGuestPurchaseBook(orderNumber).getBody().getData();
 	}
 
 	@Override

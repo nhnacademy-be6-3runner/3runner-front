@@ -70,14 +70,11 @@ public class PurchaseDetailMemberServiceImpl implements PurchaseDetailMemberServ
 	 * 회원 주문 내역 조회
 	 *
 	 * @param purchaseId 주문 아이디
-	 * @param page 현재 페이지
-	 * @param size 보여줄 개수
-	 * @param sort 정렬
 	 * @return 해당 주문 - 책 page 리스트
 	 */
 	@Override
-	public Page<ReadPurchaseBookResponse> readPurchaseBookResponses(Long purchaseId, int page, int size, String sort){
-		return purchaseBookControllerClient.readPurchaseBook(purchaseId, page,size,null).getBody().getData();
+	public List<ReadPurchaseBookResponse> readPurchaseBookResponses(Long purchaseId){
+		return purchaseBookControllerClient.readPurchaseBook(purchaseId).getBody().getData();
 	}
 
 	/**

@@ -131,7 +131,7 @@
 
 <main class="container my-5">
     <div class="refund-header text-center">
-        <h2>환불 요청</h2>
+        <h2>결제 취소 요청</h2>
         <h4 id="orderNumber" th:text="${orderNumber}" ></h4>
     </div>
 
@@ -169,17 +169,12 @@
         </div>
 
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h4>총 환불 금액</h4>
+            <h4>총 결제 취소 금액</h4>
             <h4 class="total-refund"><span id="total-refund">0</span>₩</h4>
         </div>
 
-        <div class="form-group">
-            <label for="refund-reason">환불 사유</label>
-            <textarea id="refund-reason" class="form-control" placeholder="환불 사유를 입력하세요"></textarea>
-        </div>
-
         <!-- 환불 신청 버튼 -->
-        <button id="refund-button" class="btn btn-danger btn-block" type="button">환불 신청</button>
+        <button id="refund-button" class="btn btn-danger btn-block" type="button">결제 취소</button>
     </form>
 </main>
 <footer class="bg-white text-dark p-3">
@@ -211,7 +206,7 @@
         } else if (newQuantity > maxQuantity) {
             newQuantity = maxQuantity;
         }
-        var url = window.location.origin + '/refund/members/' + orderNumber + '/update/' + purchaseBookId + "?quantity=" + newQuantity;
+        var url = window.location.origin + '/refund/' + orderNumber + '/update/' + purchaseBookId + "?quantity=" + newQuantity;
         var method = 'GET';
 
         $.ajax({
@@ -238,7 +233,7 @@
     function toggleMaxQuantities() {
         var toggleButton = document.getElementById('toggle-max-btn');
         var quantityInputs = document.querySelectorAll('.quantity-input');
-        var method = 'GET';
+
         if (!allMaxSet) {
             quantityInputs.forEach(function (input) {
                 input.value = input.getAttribute('data-max');
@@ -246,8 +241,8 @@
             toggleButton.classList.add('active');
             allMaxSet = true;
 
-            var url = window.location.origin + '/refund/members/' + orderNumber + '/update/all';
-
+            var url = window.location.origin + '/refund/' + orderNumber + '/update/all';
+            var method = 'GET';
 
             $.ajax({
                 url: url,
@@ -269,22 +264,6 @@
             });
             toggleButton.classList.remove('active');
             allMaxSet = false;
-            var url2 = window.location.origin + '/refund/members/' + orderNumber + '/update/all/zero';
-
-            $.ajax({
-                url: url2,
-                type: method,
-                success: function (response) {
-                    console.log(parseInt(orderNumber))
-                    console.log(response);
-                },
-                error: function (xhr, status, error) {
-                    console.log(parseInt(orderNumber));
-                    console.error('Error:', error);
-                    console.error('Status:', status);
-                    console.error('XHR:', xhr);
-                }
-            })
         }
 
         calculateTotalRefund();
@@ -318,7 +297,7 @@
         }
 
         // 환불 요청 데이터를 서버로 전송
-        fetch('/refund/members/' + orderNumber + '?refund-content=' + refundReason + '&refund-price=' + refundAmount, {
+        fetch('/refund/' + orderNumber + '?refund-content=' + refundReason + '&refund-price=' + refundAmount, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

@@ -184,8 +184,8 @@ body {
     }
 }
 
-.confirm-order-btn, .details-btn, .refund-btn, .payment-cancel {
-    background-color: #28a745;
+.confirm-order-btn, .details-btn, .refund-btn, .payment-cancel-btn, .refund-detail-btn {
+
     border: none;
     color: white;
     padding: 5px 10px;
@@ -199,24 +199,30 @@ body {
     transition: background-color 0.3s;
     width: 100px;
 }
-
-.confirm-order-btn:hover, .details-btn:hover :hover {
+.confirm-order-btn{
+    background-color: #28a745;
+}
+.confirm-order-btn:hover {
     background-color: #218838;
 }
 
-.details-btn {
+.details-btn,
+.refund-detail-btn {
     background-color: #007bff;
 }
 
-.details-btn:hover {
+.details-btn:hover,
+.refund-detail-btn:hover {
     background-color: #0056b3;
 }
 
-.refund-btn, .payment-cancel {
+.refund-btn,
+.payment-cancel-btn {
     background-color: #dc3545;
 }
 
-.refund-btn, .payment-cancel :hover {
+.refund-btn:hover,
+.payment-cancel-btn :hover {
     background-color: #c82333;
 }
 .page-link.active {

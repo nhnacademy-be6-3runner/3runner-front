@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <title>개인화 섹션</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <!--    <link rel="stylesheet" href="/css/order-detail.css">-->
-    <link rel="stylesheet" th:href="@{/css/admin_styles.css}">
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -18,42 +16,11 @@
             flex-direction: column;
         }
 
-        .section-body {
-            display: flex;
-            justify-content: flex-end;
-            flex-wrap: wrap;
-            padding: 20px;
-            background-color: #f6f6f6;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .section-body button {
-            background-color: #ffffff;
-            border: 1px solid #444;
-            color: #444;
-            padding: 10px 20px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            border-radius: 20px;
-            margin: 5px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .section-body button:hover {
-            background-color: #f0f0f0;
-            color: #333;
-        }
-
-
-
         .order-delivery {
             padding: 20px;
             background-color: #ffffff;
             border-radius: 10px;
-            box-shadow: none;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             overflow-y: auto;
             flex: 1;
         }
@@ -65,7 +32,7 @@
 
         .order-item {
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
             padding: 20px;
             margin-bottom: 10px;
             background-color: #ffffff;
@@ -73,72 +40,76 @@
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             width: 100%;
-            align-items: center; /* Ensure items are aligned vertically */
         }
 
         .order-info {
             display: flex;
             flex-direction: column;
             gap: 5px;
-            flex: 1; /* Ensure order-info takes up available space */
-        }
-
-        .order-buttons {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end; /* Align buttons to the right */
-            gap: 10px; /* Space between buttons */
+            flex: 1;
         }
 
         .order-info > div {
             display: flex;
             align-items: center;
+            margin-bottom: 5px;
         }
 
         .order-info p {
-            margin: 0;
+            margin: 0 10px 0 0;
         }
 
-        .book-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
+        .order-buttons {
             display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
+            gap: 10px;
+            margin-top: 10px;
         }
 
-        .book-item {
+        .order-buttons form,
+        .order-buttons .refund-buttons {
+            flex: 1;
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: calc(20% - 20px); /* 5개씩 넣기 위해 20%로 설정 */
-            box-sizing: border-box;
+            justify-content: space-between;
         }
 
-        .book-item img {
-            max-width: 100%;
-            margin-bottom: 10px;
+        .order-buttons .refund-buttons {
+            justify-content: flex-end;
         }
 
-        .book-details {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
+        .refund-detail-btn, .btn-custom {
+            padding: 5px 10px;
+            font-size: 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100px;
+            border: none;
+            color: white;
         }
 
-        .book-details h4, .book-details h5, .book-details p {
-            margin: 0;
+        .btn-custom.accept {
+            background-color: #28a745;
         }
 
-        .book-details h5, .book-details p {
-            margin-top: 2px;
+        .btn-custom.accept:hover {
+            background-color: #218838;
+        }
+
+        .btn-custom.reject {
+            background-color: #dc3545;
+        }
+
+        .btn-custom.reject:hover {
+            background-color: #c82333;
+        }
+
+        .refund-detail-btn, .btn-custom.details {
+            background-color: #007bff;
+        }
+
+        .btn-custom.details:hover,
+        .refund-detail-btn:hover {
+            background-color: #0056b3;
         }
 
         .pagination {
@@ -164,95 +135,16 @@
             color: #333;
         }
 
-        .loading-spinner {
-            display: none;
-            width: 40px;
-            height: 40px;
-            border: 5px solid #f3f3f3;
-            border-radius: 50%;
-            border-top: 5px solid #444;
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
-        }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        .confirm-order-btn, .details-btn, .refund-btn {
-            background-color: #28a745;
-            border: none;
-            color: white;
-            padding: 5px 10px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 12px;
-            border-radius: 5px;
-            margin-top: 10px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            width: 100px;
-        }
-
-        .confirm-order-btn:hover, .details-btn:hover, .refund-btn:hover {
-            background-color: #218838;
-        }
-
-        .details-btn {
-            background-color: #007bff;
-        }
-
-        .details-btn:hover {
-            background-color: #0056b3;
-        }
-
-        .refund-btn {
-            background-color: #dc3545;
-        }
-
-        .refund-btn:hover {
-            background-color: #c82333;
-        }
-        .dropdown {
-            position: relative;
-            display: inline-block;
-        }
-
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #f9f9f9;
-            min-width: 160px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 1;
-        }
-
-        .dropdown-content a {
-            color: black;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-        }
-
-        .dropdown-content a:hover {
-            background-color: #f1f1f1;
-        }
-
-        .dropdown:hover .dropdown-content {
-            display: block;
+        .page-link.active {
+            background-color: #007bff; /* 원하는 색상으로 변경 가능 */
+            color: white; /* 글자 색상을 흰색으로 */
+            border-color: #007bff; /* 버튼 테두리 색상 */
         }
     </style>
 </head>
 <body>
 
-<nav th:replace="fragments/admin_nav :: nav"></nav>
-<div id="orderDelivery">
+<div id="orderDelivery" class="container mt-5">
     <h2>주문내역</h2>
     <ul class="order-list">
         <li class="order-item" th:each="order : ${orderAll}">
@@ -271,41 +163,69 @@
                 </div>
             </div>
             <div class="order-buttons">
-                <form th:action="@{/orders/managers/{purchaseId} (purchaseId= ${order.orderNumber()})}" method="POST">
-                    <div class="dropdown">
-                        <select name="dropdown">
-
+                <form th:action="@{/admin/orders/{purchaseId} (purchaseId= ${order.orderNumber()})}" method="POST">
+                    <div>
+                        <select name="dropdown" class="form-control">
                             <option value="DELIVERY_START">출고</option>
                             <option value="DELIVERY_COMPLETED">배달 완료</option>
                             <option value="DELIVERY_PROGRESS">배달 중</option>
                             <option value="COMPLETED">주문 확인</option>
                             <option value="REFUNDED_COMPLETED">환불 완료</option>
-
-
                         </select>
+                        <button type="submit" class="btn-custom details" name="상태 변경">변경</button>
                     </div>
-                    <button type="submit" class="submit-btn" name="상태 변경">변경</button>
                 </form>
-
             </div>
         </li>
+
         <div class="text-center mt-4">
             <nav>
                 <ul class="pagination justify-content-center">
-                    <li class="page-item" th:classappend="${orders.hasPrevious()} ? '' : 'disabled'">
-                        <a class="page-link" href="#" th:onclick="'loadBooks(' + (${orders.number} - 1) + ', ' + ${orders.size} + '); return false;'">이전</a>
+
+                    <li class="page-item" th:if="${orderAll.pageable.getPageNumber() > 0}">
+                        <a class="page-link"
+                           th:href="@{'/admin/orders?page={page}' (page = ${orderAll.pageable.getPageNumber() - 1})}">이전</a>
                     </li>
-                    <li class="page-item" th:each="i : ${#numbers.sequence(0, orders.totalPages - 1)}" th:classappend="${i} == ${orders.number} ? 'active' ">
-                        <a class="page-link" href="#" th:onclick="'loadBooks(' + ${i} + ', ' + ${orders.size} + '); return false;'" th:text="${i + 1}">1</a>
+                    <li class="page-item" th:each="i : ${#numbers.sequence(0, orderAll.totalPages - 1)}"
+                        th:if="${i >= (orderAll.pageable.getPageNumber() / 5) * 5 and i < ((orderAll.pageable.getPageNumber() / 5) + 1) * 5}">
+                        <a class="page-link" th:href="@{'/admin/orders?page={page}' (page = ${i})}"
+                           th:text="${i + 1}"
+                           th:classappend="${i == orderAll.pageable.getPageNumber()} ? 'active' : ''"></a>
                     </li>
-                    <li class="page-item" th:classappend="${orders.hasNext()} ? '' : 'disabled'">
-                        <a class="page-link" href="#" th:onclick="'loadBooks(' + (${orders.number} + 1) + ', ' + ${orders.size} + '); return false;'">다음</a>
+                    <li class="page-item" th:if="${orderAll.pageable.getPageNumber() < orderAll.totalPages - 1 }">
+                        <a class="page-link"
+                           th:href="@{'/admin/orders?page={page}' (page = ${orderAll.pageable.getPageNumber() + 1})}">다음</a>
                     </li>
                 </ul>
             </nav>
         </div>
     </ul>
 </div>
-<script src="/js/admin.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.refund-detail-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                const orderId = this.getAttribute('data-order-id');
+                window.location.href = `/admin/refund/detail/${orderId}`;
+            });
+        });
+
+        document.querySelectorAll('.btn-custom.accept').forEach(button => {
+            button.addEventListener('click', function () {
+                const orderId = this.getAttribute('data-order-id');
+                acceptRefund(orderId);
+            });
+        });
+
+        document.querySelectorAll('.btn-custom.reject').forEach(button => {
+            button.addEventListener('click', function () {
+                const orderId = this.getAttribute('data-order-id');
+                rejectRefund(orderId);
+            });
+        });
+    });
+
+</script>
 </body>
 </html>

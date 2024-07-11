@@ -1,6 +1,7 @@
 package com.nhnacademy.front.purchase.purchase.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.nhnacademy.front.entity.purchase.enums.PurchaseStatus;
@@ -48,11 +49,11 @@ public class PurchaseDetailMemberController {
      * @return 회원 주문내역 조회 페이지 이동(주문 내역조회페이지와 동일, 숨겨진 주문내역 보여짐)
      */
     @GetMapping("/members")
-    public String orderDetailMember(@RequestParam(name = "page", defaultValue = "0") int page, Model model){
+    public String orderDetailMember(@RequestParam(defaultValue = "0", required = false) int page, Model model){
 
 
         Page<ReadPurchase> orderDetail = purchaseMemberService.readPurchases(page);
-        int totalPages = orderDetail.getTotalPages();
+
         model.addAttribute("page", page);
         model.addAttribute("orders", orderDetail);
 
@@ -63,21 +64,14 @@ public class PurchaseDetailMemberController {
      * 주문 상세 내역(구매한 책들) 조회
      *
      * @param purchaseId 주문 내역 id(실제 id)
-     * @param page 주문 책 현재 페이지
-     * @param size 한번에 보여줄 주문책들 개수
-     * @param search 정렬
      * @param model
      * @return 주문 상세 내역 페이지로 이동
      */
     @GetMapping("/members/books/{purchaseId}")
     public String orderDetailBooks(
         @PathVariable(value = "purchaseId") Long purchaseId,
-        @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "30") int size,
-        @RequestParam(required = false) String search,
         Model model) {
-        Page<ReadPurchaseBookResponse> orderDetailBooks = purchaseMemberService.readPurchaseBookResponses(purchaseId, page,
-            size, search);
+        List<ReadPurchaseBookResponse> orderDetailBooks = purchaseMemberService.readPurchaseBookResponses(purchaseId);
         PurchaseStatus purchaseStatus = purchaseMemberService.readPurchaseStatus(purchaseId);
         model.addAttribute("books", orderDetailBooks);
         model.addAttribute("purchaseStatus", purchaseStatus.toString());
