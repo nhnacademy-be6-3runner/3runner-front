@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
+    checkAccessToken();
     loadComments(0); // 페이지 로드 시 첫 번째 페이지 댓글 리스트를 로드합니다.
     // 리뷰 작성자 이메일 마스킹
     const memberEmailElement = document.getElementById('memberEmail');
@@ -8,6 +9,20 @@ document.addEventListener('DOMContentLoaded', function () {
         memberEmailElement.textContent = maskedEmail;
     }
 });
+
+function checkAccessToken() {
+    const accessToken = getCookie('Access');
+    if (!accessToken) {
+        document.getElementById('commentForm').style.display = 'none';
+        document.getElementById('loginMessage').style.display = 'block';
+    }
+}
+
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+}
 
 // 댓글 생성
 document.getElementById('commentForm').addEventListener('submit', function (event) {
