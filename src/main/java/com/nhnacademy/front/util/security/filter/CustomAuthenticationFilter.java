@@ -13,6 +13,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.front.auth.dto.request.LoginRequest;
+import com.nhnacademy.front.auth.exception.DormantException;
 import com.nhnacademy.front.auth.exception.LoginException;
 import com.nhnacademy.front.auth.service.LoginService;
 import com.nhnacademy.front.threadlocal.TokenHolder;
@@ -68,10 +69,12 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 			loginRequest = new LoginRequest(email, password);
 			//여기서 토큰 생성
 			String message = loginService.getLoginResponse(loginRequest).message();
-
 			if (!message.equals("인증 성공")) {
+				 if(message.equals("휴면 계정")) {
+				 	throw new DormantException(message);
+				 }	//인증은 성공했는데 휴면 상태일 경우
 				throw new LoginException(message);
-			}
+			}//인증자체가 실패했을 경우
 
 		}
 		String token = TokenHolder.getAccessToken();
@@ -99,9 +102,15 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 	@Override
 	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
 		AuthenticationException failed) throws IOException, ServletException {
-			request.getSession().setAttribute("errorMessage","아이디나 비밀번호가 틀립니다.");
-			response.sendRedirect("/login");
+			if(failed instanceof DormantException) {
+				request.getSession().setAttribute("email",request.getParameter("email"));
+				response.sendRedirect("/member/dormant");
 
+			}else {
 
+				request.getSession().setAttribute("errorMessage", "아이디나 비밀번호가 틀립니다.");
+				response.sendRedirect("/login");
+
+			}
 	}
 }
