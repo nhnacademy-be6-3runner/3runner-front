@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.nhnacademy.front.member.member.dto.request.CreateMemberRequest;
 import com.nhnacademy.front.member.member.dto.request.PasswordCorrectRequest;
 import com.nhnacademy.front.member.member.dto.request.UpdateMemberRequest;
 import com.nhnacademy.front.member.member.dto.request.UpdatePasswordRequest;
 import com.nhnacademy.front.member.member.dto.response.UpdateMemberResponse;
-import com.nhnacademy.front.purchase.purchase.dto.member.request.CreateMemberRequest;
 import com.nhnacademy.front.purchase.purchase.dto.member.response.GetMemberResponse;
 import com.nhnacademy.front.util.ApiResponse;
 
