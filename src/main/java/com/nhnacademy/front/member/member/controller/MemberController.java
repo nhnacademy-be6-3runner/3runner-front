@@ -2,7 +2,8 @@ package com.nhnacademy.front.member.member.controller;
 
 import java.util.List;
 
-
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,17 +14,22 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.nhnacademy.front.auth.adapter.DormantAdapter;
+import com.nhnacademy.front.auth.adapter.LoginAdapter;
+import com.nhnacademy.front.auth.dto.request.DormantCodeRequeset;
+import com.nhnacademy.front.auth.dto.request.DormantRequest;
 import com.nhnacademy.front.auth.service.LoginService;
 import com.nhnacademy.front.member.address.dto.response.AddressResponse;
 import com.nhnacademy.front.member.address.feign.AddressControllerClient;
 
+import com.nhnacademy.front.member.member.dto.request.CreateMemberRequest;
 import com.nhnacademy.front.member.member.dto.request.PasswordCorrectRequest;
 import com.nhnacademy.front.member.member.dto.request.UpdateMemberRequest;
 import com.nhnacademy.front.member.member.dto.request.UpdatePasswordRequest;
 
 import com.nhnacademy.front.member.member.dto.response.UpdateMemberResponse;
 import com.nhnacademy.front.member.member.feign.MemberControllerClient;
-import com.nhnacademy.front.purchase.purchase.dto.member.request.CreateMemberRequest;
 import com.nhnacademy.front.purchase.purchase.dto.member.response.GetMemberResponse;
 import com.nhnacademy.front.threadlocal.TokenHolder;
 import com.nhnacademy.front.token.service.TokenService;
@@ -33,6 +39,7 @@ import com.nhnacademy.front.util.ApiResponse;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -43,6 +50,8 @@ public class MemberController {
 	private final AddressControllerClient addressControllerClient;
 	private final TokenService tokenService;
 	private final LoginService loginService;
+	private final LoginAdapter loginAdapter;
+	private final DormantAdapter dormantAdapter;
 
 	@GetMapping("/member/createForm")
 	public String createSigninPage() {
@@ -119,6 +128,47 @@ public class MemberController {
 	public Boolean isPasswordMatch(@RequestBody PasswordCorrectRequest passwordCorrectRequest) {
 		ApiResponse<Void> response = memberControllerClient.isPasswordMatch(passwordCorrectRequest);
 		return response.getHeader().isSuccessful();
+	}
+	@GetMapping("/member/dormant")
+	public String dormantForm(Model model,HttpServletRequest request) {
+		return "dormant";
+	}
+	@GetMapping("/member/dormant/resend")
+	public boolean resendDormant(HttpSession session) {
+		String email = session.getAttribute("email").toString();
+		ApiResponse<Void> response = dormantAdapter.resendDormant(email);
+		return response.getHeader().isSuccessful();
+	}
+	@PostMapping("/member/dormant")
+	public boolean dormant(@RequestBody DormantCodeRequeset code, HttpSession session,HttpServletRequest servletRequest,HttpServletResponse servletResponse){
+		ApiResponse<Void> response = dormantAdapter.dormantCheck(
+			DormantRequest.builder().email(session.getAttribute("email").toString()).code(code.code()).build());
+		if(response.getHeader().isSuccessful()){
+			String access = servletResponse.getHeader("Authorization");//이건 걍 access토큰 값아닝가...
+			Cookie[] cookies = servletRequest.getCookies();
+			String refresh = null;
+			if (cookies != null) {
+				for (Cookie cookie : cookies) {
+					if (cookie.getName().equals("Refresh")) {
+						refresh = cookie.getValue();
+						break;
+					}
+				}
+			}
+
+			Cookie cookie1 = new Cookie("Access", access);//이거도 걍 access토큰값넣으면되고
+			cookie1.setPath("/");
+			servletResponse.addCookie(cookie1);
+			Cookie cookie2 = new Cookie("Refresh", refresh);
+			cookie2.setPath("/");
+			servletResponse.addCookie(cookie2);
+
+			session.removeAttribute("email");
+			return true;
+		}else {
+			return false;
+		}
+
 	}
 }
 
