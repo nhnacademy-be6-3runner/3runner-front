@@ -87,4 +87,6 @@ jobs:
             --mount type=bind,source=/home/nhnacademy/front/nginx.conf,target=/etc/nginx/nginx.conf \
             --mount type=bind,source=/home/nhnacademy/certbot/conf,target=/etc/letsencrypt \
             --mount type=bind,source=/home/nhnacademy/certbot/www,target=/var/www/certbot \
+            --device-read-bps /dev/sda:100mb \
+            --device-write-bps /dev/sda:100mb \
             --network front_network_swarm nginx:latest
