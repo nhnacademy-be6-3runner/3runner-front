@@ -9,6 +9,7 @@ import com.nhnacademy.front.auth.config.LoginResponseConfig;
 import com.nhnacademy.front.auth.dto.request.DormantRequest;
 import com.nhnacademy.front.auth.dto.request.LoginRequest;
 import com.nhnacademy.front.auth.dto.response.LoginResponse;
+import com.nhnacademy.front.member.member.dto.response.DormantResponse;
 import com.nhnacademy.front.util.ApiResponse;
 @FeignClient(value = "dormant-api",url = "http://${feign.client.url}")
 public interface DormantAdapter {
@@ -16,7 +17,7 @@ public interface DormantAdapter {
 	ApiResponse<Void> resendDormant(@RequestBody String email);
 
 	@PostMapping("/auth/dormant")
-	ApiResponse<Void> dormantCheck(@RequestBody DormantRequest loginRequest);
+	ApiResponse<DormantResponse> dormantCheck(@RequestBody DormantRequest loginRequest);
 
 }
 

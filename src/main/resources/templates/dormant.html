@@ -143,6 +143,9 @@
                     timerElement.textContent = "인증 시간이 만료되었습니다.";
                     responseMessage.textContent = "인증 시간이 만료되었습니다. 인증코드를 다시 요청하세요.";
                     responseMessage.className = 'error-message';
+                    // 시간이 만료되면 로그인 페이지로 리디렉션하고 알림창 띄우기
+                    alert('인증 시간이 만료되었습니다. 다시 로그인해주세요.');
+                    window.location.href = '/login'; // 로그인 페이지 URL로 변경
                 }
             }, 1000);
         }
