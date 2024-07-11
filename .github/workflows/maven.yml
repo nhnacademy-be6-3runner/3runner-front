@@ -61,8 +61,8 @@ jobs:
             chmod +x ./setup_cron.sh
             ./setup_cron.sh
             
-            sudo docker build -t front-image1 -f  .
-            sudo docker build -t front-image2 -f  .
+            sudo docker build -t front-image1 .
+            sudo docker build -t front-image2 .
 
             # Docker Swarm 초기화
             if ! sudo docker info | grep -q 'Swarm: active'; then
@@ -74,15 +74,15 @@ jobs:
               sudo docker network create --driver overlay front_network
             fi
 
-            sudo docker service rm front1 || true
+#            sudo docker service rm front1 || true
             sudo docker service create --name front1 --publish 3000:8080 --network front_network front-image1
             
             sleep 90
             
-            sudo docker service rm front2 || true
+#            sudo docker service rm front2 || true
             sudo docker service create --name front2 --publish 3001:8080 --network front_network front-image2
             
-            sudo docker service rm nginx || true
+#            sudo docker service rm nginx || true
             sudo docker service create --name nginx --publish 80:80 --publish 443:443 \
             --mount type=bind,source=/home/nhnacademy/front/nginx.conf,target=/etc/nginx/nginx.conf \
             --mount type=bind,source=/home/nhnacademy/certbot/conf,target=/etc/letsencrypt \
