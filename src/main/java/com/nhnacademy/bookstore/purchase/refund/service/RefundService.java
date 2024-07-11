@@ -5,15 +5,15 @@ import com.nhnacademy.bookstore.purchase.refund.dto.response.ReadRefundResponse;
 public interface RefundService {
 	String readTossOrderId(String orderId);
 
-	Long createRefund(Long orderId, String refundContent, Integer price);
+	Long createRefund(Long orderId, String refundContent, Integer price, Long memberId);
 
-	Boolean updateSuccessRefund(Long refundRecordId);
+	Boolean updateSuccessRefund(Long refundId);
 
-	Boolean updateRefundRejected(Long refundRecordId);
+	Boolean updateRefundRejected(Long refundId);
 
 	ReadRefundResponse readRefund(Long refundRecordId);
 
-	Boolean createRefundCancelPayment(String orderId);
+	Long createRefundCancelPayment(String orderId);
 
 
 }
