@@ -28,6 +28,7 @@ import com.nhnacademy.front.member.member.dto.request.PasswordCorrectRequest;
 import com.nhnacademy.front.member.member.dto.request.UpdateMemberRequest;
 import com.nhnacademy.front.member.member.dto.request.UpdatePasswordRequest;
 
+import com.nhnacademy.front.member.member.dto.response.DormantResponse;
 import com.nhnacademy.front.member.member.dto.response.UpdateMemberResponse;
 import com.nhnacademy.front.member.member.feign.MemberControllerClient;
 import com.nhnacademy.front.purchase.purchase.dto.member.response.GetMemberResponse;
@@ -141,20 +142,13 @@ public class MemberController {
 	}
 	@PostMapping("/member/dormant")
 	public boolean dormant(@RequestBody DormantCodeRequeset code, HttpSession session,HttpServletRequest servletRequest,HttpServletResponse servletResponse){
-		ApiResponse<Void> response = dormantAdapter.dormantCheck(
+		ApiResponse<DormantResponse> response = dormantAdapter.dormantCheck(
 			DormantRequest.builder().email(session.getAttribute("email").toString()).code(code.code()).build());
+		DormantResponse dormantResponse = response.getBody().getData();
 		if(response.getHeader().isSuccessful()){
-			String access = servletResponse.getHeader("Authorization");//이건 걍 access토큰 값아닝가...
-			Cookie[] cookies = servletRequest.getCookies();
-			String refresh = null;
-			if (cookies != null) {
-				for (Cookie cookie : cookies) {
-					if (cookie.getName().equals("Refresh")) {
-						refresh = cookie.getValue();
-						break;
-					}
-				}
-			}
+			String access = dormantResponse.access();//이건 걍 access토큰 값아닝가...
+
+			String refresh = dormantResponse.refresh();
 
 			Cookie cookie1 = new Cookie("Access", access);//이거도 걍 access토큰값넣으면되고
 			cookie1.setPath("/");
