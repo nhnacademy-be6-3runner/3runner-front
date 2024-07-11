@@ -12,6 +12,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <link rel="stylesheet" th:href="@{/css/main/default.css}">
     <link rel="stylesheet" th:href="@{/css/detail/book-detail.css}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 </head>
 <body>
 <header class="header-custom" th:replace="fragments/no-nav-header :: header"></header>
@@ -73,10 +74,10 @@
 
             <div class="purchase-button">
                 <div class="options">
-                    <label for="quantityCart">수량</label>
+                    <label for="quantity">수량</label>
                     <div class="input-group">
                         <button type="button" class="btn btn-outline-secondary" onclick="decreaseQuantity()">-</button>
-                        <input type="number" id="quantityCart" name="quantityCart" value="1" min="1" class="form-control text-center" onchange="updateTotalPrice()">
+                        <input type="number" id="quantity" name="quantity" value="1" min="1" class="form-control text-center" onchange="updateTotalPrice()">
                         <button type="button" class="btn btn-outline-secondary" onclick="increaseQuantity()">+</button>
                     </div>
                 </div>
@@ -84,16 +85,8 @@
                     총 가격 <span id="totalPrice" th:text="${book.sellingPrice()}"></span>원
                 </div>
                 <div class="action-buttons">
-                    <form action="/carts" method="post" class="fixed-size-button">
-                        <input type="hidden" id="bookId" name="bookId" th:value="${book.id()}"/>
-                        <input type="hidden" id="quantityCartForm" name="quantity" value="1"/>
-                        <button type="submit" class="btn btn-outline-success">장바구니 담기</button>
-                    </form>
-                    <form action="/purchases" method="POST" class="fixed-size-button">
-                        <input type="hidden" id="bookIdPurchase" name="bookId" th:value="${book.id()}"/>
-                        <input type="hidden" id="quantityPurchase" name="quantity" value="1">
-                        <button type="submit" class="btn btn-outline-primary">바로 구매</button>
-                    </form>
+                    <button id="cartButton" class="btn btn-outline-success">장바구니 담기</button>
+                    <button id="purchaseButton" class="btn btn-outline-primary">바로 구매</button>
                 </div>
             </div>
         </div>
