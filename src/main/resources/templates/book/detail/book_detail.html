@@ -53,15 +53,10 @@
                 <span class="selling-price"> → <span th:text="${book.sellingPrice()}"></span>원</span>
             </div>
             <div class="rating">
-                <span th:each="star : ${#numbers.sequence(1, rating)}">
-                    <i class="bi bi-star-fill"></i>
-                </span>
-                <span th:each="star : ${#numbers.sequence(rating + 1, 5)}">
-                    <i class="bi bi-star"></i>
-                </span>
+                <span id="star-container"></span>
                 <span class="reviews">
-                    (<span th:text="${reviewCount}"></span> reviews)
-                </span>
+                (<span id="review-count"></span> reviews)
+            </span>
             </div>
 
             <hr class="my-3">

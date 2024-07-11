@@ -1,11 +1,10 @@
-// product-detail.js
-
 document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('cartButton').addEventListener('click', function(e) {
         e.preventDefault();
         submitCart();
     });
     updateTotalPrice();
+    loadReviewData(); // 리뷰 데이터를 로드하는 함수 호출
 });
 
 function addCart(bookId, quantity) {
@@ -45,7 +44,7 @@ function addPurchase(bookId, quantity) {
 }
 
 function submitCart() {
-    const bookId = getBookIdFromUrl()
+    const bookId = getBookIdFromUrl();
     const quantity = document.getElementById('quantity').value;
     addCart(bookId, quantity);
 }
@@ -82,4 +81,41 @@ function updateTotalPrice() {
 function getBookIdFromUrl() {
     const pathSegments = window.location.pathname.split('/');
     return pathSegments[pathSegments.length - 1];
+}
+
+function loadReviewData() {
+    const bookId = getBookIdFromUrl();
+
+    // 리뷰 수 가져오기
+    fetch(`/api/books/${bookId}/reviews/count`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.body && data.body.data !== undefined) {
+                document.getElementById("review-count").textContent = data.body.data;
+            } else {
+                console.error('Invalid response structure:', data);
+            }
+        })
+        .catch(error => console.error('Error fetching review count:', error));
+
+    // 평균 별점 가져오기
+    fetch(`/api/books/${bookId}/reviews/avg`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.body && data.body.data !== undefined) {
+                const rating = data.body.data;
+                const starContainer = document.getElementById("star-container");
+                starContainer.innerHTML = ''; // 기존 별 초기화
+
+                // 별점 채우기
+                for (let i = 1; i <= 5; i++) {
+                    const starElement = document.createElement("i");
+                    starElement.className = (i <= rating) ? "bi bi-star-fill" : "bi bi-star";
+                    starContainer.appendChild(starElement);
+                }
+            } else {
+                console.error('Invalid response structure:', data);
+            }
+        })
+        .catch(error => console.error('Error fetching average rating:', error));
 }
