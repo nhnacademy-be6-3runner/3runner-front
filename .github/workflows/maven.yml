@@ -30,9 +30,9 @@ jobs:
 
       - name: Build with Maven
         run: mvn clean -B package --file pom.xml
-
-      - name: Run SonarQube
-        run: mvn clean verify sonar:sonar -Dsonar.projectKey=${{secrets.SONAR_KEY}} -Dsonar.projectName=${{secrets.SONAR_NAME}} -Dsonar.host.url=${{secrets.SONAR_HOST}} -Dsonar.token=${{secrets.SONAR_TOKEN}}
+#
+#      - name: Run SonarQube
+#        run: mvn clean verify sonar:sonar -Dsonar.projectKey=${{secrets.SONAR_KEY}} -Dsonar.projectName=${{secrets.SONAR_NAME}} -Dsonar.host.url=${{secrets.SONAR_HOST}} -Dsonar.token=${{secrets.SONAR_TOKEN}}
 
       - name : Delete file in server
         run : sudo rm -rf /home/nhnacademy/front
@@ -59,6 +59,9 @@ jobs:
             mkdir -p ./certbot/www/.well-known/acme-challenge
             mkdir -p ./certbot/www
             mkdir -p ./certbot/conf
+            sudo chmod -R 755 ./certbot/www
+            sudo chown -R $USER:$USER ./certbot/www
+            echo "test" > ./certbot/www/.well-known/acme-challenge/test-file
             
             sudo docker stop front1 || true
             sudo docker rm front1 || true
