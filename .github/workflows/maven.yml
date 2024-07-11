@@ -71,14 +71,14 @@ jobs:
             if sudo docker service ls | grep -q 'front1'; then
               sudo docker service rm front1
             fi
-            sudo docker service create --name front1 --publish 3000:8080 --network front_network_swarm front-image1
+            sudo docker service create --name front1 --publish 3000:3000 --network front_network_swarm front-image1
             
             sleep 90
             
             if sudo docker service ls | grep -q 'front2'; then
               sudo docker service rm front2
             fi
-            sudo docker service create --name front2 --publish 3001:8080 --network front_network_swarm front-image2
+            sudo docker service create --name front2 --publish 3001:3001 --network front_network_swarm front-image2
             
             if sudo docker service ls | grep -q 'nginx'; then
               sudo docker service rm nginx
