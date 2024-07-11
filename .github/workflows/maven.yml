@@ -57,6 +57,7 @@ jobs:
           script: |
             cd /home/nhnacademy/front
 
+            rm -rf /home/nhnacademy/certbot
             mkdir -p /home/nhnacademy/certbot/www/.well-known/acme-challenge
             mkdir -p /home/nhnacademy/certbot/www
             mkdir -p /home/nhnacademy/certbot/conf
