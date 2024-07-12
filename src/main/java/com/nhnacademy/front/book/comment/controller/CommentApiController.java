@@ -31,4 +31,12 @@ public class CommentApiController {
         Page<CommentResponse> responses = commentService.readAllCommentsByReviewId(reviewId, page, size);
         return ApiResponse.success(responses);
     }
+
+    @GetMapping("/api/mypage/comments")
+    public ApiResponse<Page<CommentResponse>> readAllCommentsByMemberId(@RequestHeader(value = "Member-Id", required = false) Long memberId,
+                                                                        @RequestParam(defaultValue = "0") int page,
+                                                                        @RequestParam(defaultValue = "10") int size) {
+        Page<CommentResponse> responses = commentService.readAllCommentsByMemberId(memberId, page, size);
+        return ApiResponse.success(responses);
+    }
 }

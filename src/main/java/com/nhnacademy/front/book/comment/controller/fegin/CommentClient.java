@@ -8,11 +8,14 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
-@FeignClient(name = "CommentClient", url = "http://${feign.client.url}/bookstore/books/reviews")
+@FeignClient(name = "CommentClient", url = "http://${feign.client.url}/bookstore")
 public interface CommentClient {
-    @PostMapping("/{reviewId}")
+    @PostMapping("/books/reviews/{reviewId}")
     ApiResponse<Void> createComment(@PathVariable Long reviewId, @RequestHeader("Member-id") Long memberId, @RequestBody CreateCommentRequest createCommentRequest);
 
-    @GetMapping("/{reviewId}/comments")
+    @GetMapping("/books/reviews/{reviewId}/comments")
     ApiResponse<Page<CommentResponse>> readAllCommentsByReviewId(@PathVariable Long reviewId, @RequestParam int page, @RequestParam int size);
+
+    @GetMapping("/books/reviews/member/comments")
+    ApiResponse<Page<CommentResponse>> readAllCommentsByMemberId(@RequestHeader(value = "Member-Id", required = false) Long memberId, @RequestParam int page, @RequestParam int size);
 }
