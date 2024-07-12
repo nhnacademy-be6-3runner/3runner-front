@@ -18,10 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.time.ZonedDateTime;
@@ -36,6 +33,7 @@ public class PurchaseMemberController {
     private final MemberAddressControllerClient memberAddressControllerClient;
     private final MemberControllerClient memberControllerClient;
     private final PurchaseCouponService purchaseCouponService;
+    private final PaymentControllerClient paymentControllerClient;
 
     @GetMapping("/purchases/members")
     public String purchase(Model model){
@@ -76,5 +74,22 @@ public class PurchaseMemberController {
         model.addAttribute("roadFullAddr", roadFullAddr);
 
         return "purchase/member/address";
+    }
+
+    @PostMapping("/purchases/members/confirm")
+    @ResponseBody
+    public void purchase(
+            @RequestHeader(value = "Member-Id", required = false) Long memberId,
+            @RequestParam(required = false) String discountedPrice,
+            @RequestParam(required = false) String discountedPoint,
+            @RequestParam(required = false) String isPacking,
+            @RequestParam(required = false) String shipping,
+            @RequestParam(required = false) String road,
+            @RequestParam(required = false) Long couponFormId,
+            @RequestBody String jsonBody) throws Exception {
+        paymentControllerClient.confirmPayment(memberId, discountedPrice, discountedPoint,isPacking,shipping,road,couponFormId,jsonBody);
+
+
+        return;
     }
 }

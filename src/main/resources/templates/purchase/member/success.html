@@ -181,7 +181,7 @@
 
         };
 
-        const response = await fetch("https://" + window.location.hostname +":8080/bookstore/payments/members/confirm?discountedPoint=" + discountedPoint + "&couponFormId=" + couponFormId + "&discountedPrice=" + discountedPrice + "&isPacking=" + isPacking + "&road=" + road + "&shipping=" + shipping ,{
+        const response = await fetch("/purchases/members/confirm?discountedPoint=" + discountedPoint + "&couponFormId=" + couponFormId + "&discountedPrice=" + discountedPrice + "&isPacking=" + isPacking + "&road=" + road + "&shipping=" + shipping ,{
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
