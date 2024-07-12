@@ -187,7 +187,7 @@ function loadBookLikes(page = 0) {
 }
 
 function deleteComment(commentId) {
-    const url = `/api/comments/${commentId}`;
+    const url = `/api/mypage/comment/${commentId}/delete`;
     fetch(url, {
         method: 'DELETE'
     })
@@ -199,7 +199,7 @@ function deleteComment(commentId) {
         })
         .then(data => {
             console.log('Comment deleted:', data);
-            loadUserComments(commentPage); // 댓글 삭제 후 현재 페이지를 다시 로드
+            loadUserComments(commentPage);
         })
         .catch(error => {
             console.error('Error deleting comment:', error);

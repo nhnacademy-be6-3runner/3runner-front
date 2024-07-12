@@ -45,4 +45,9 @@ public class CommentServiceImpl implements CommentService {
             throw new InvalidApiResponseException("사용자 댓글 조회 중 exception");
         }
     }
+
+    @Override
+    public void deleteComment(Long commentId, Long memberId) {
+        commentClient.deleteComment(commentId, memberId);
+    }
 }

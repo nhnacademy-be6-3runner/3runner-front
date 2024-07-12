@@ -39,4 +39,10 @@ public class CommentApiController {
         Page<CommentResponse> responses = commentService.readAllCommentsByMemberId(memberId, page, size);
         return ApiResponse.success(responses);
     }
+
+    @DeleteMapping("/api/mypage/comment/{commentId}/delete")
+    public ApiResponse<Void> deleteComment(@PathVariable long commentId, @RequestHeader(value = "Member-Id", required = false) Long memberId) {
+        commentService.deleteComment(commentId, memberId);
+        return new ApiResponse<>(new ApiResponse.Header(true, 200));
+    }
 }

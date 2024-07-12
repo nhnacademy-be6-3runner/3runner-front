@@ -11,4 +11,6 @@ public interface CommentService {
     Page<CommentResponse> readAllCommentsByReviewId(Long reviewId, int page, int size);
 
     Page<CommentResponse> readAllCommentsByMemberId(Long memberId, int page, int size);
+
+    void deleteComment(Long commentId, Long memberId);
 }
