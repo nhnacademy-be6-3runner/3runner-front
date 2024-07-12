@@ -183,3 +183,23 @@ function loadReviewData() {
         })
         .catch(error => console.error('Error fetching average rating:', error));
 }
+
+function downloadSelectedCoupon() {
+    const bookId = getBookIdFromUrl();
+
+    $.ajax({
+        url: `/coupons/books/${bookId}`,
+        type: 'POST',
+        success: function (response) {
+            if(response === 'true'){
+                alert('쿠폰이 다운로드되었습니다!');
+            } else {
+                alert('발급 받을 수 있는 쿠폰이 없습니다');
+            }
+        },
+        error: function (xhr, status, error) {
+            alert('발급 받을 수 있는 쿠폰이 없습니다');
+            console.error('Error downloading coupon:', error);
+        }
+    });
+}
