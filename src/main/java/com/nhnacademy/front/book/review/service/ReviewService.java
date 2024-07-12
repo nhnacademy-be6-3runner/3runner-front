@@ -9,4 +9,6 @@ public interface ReviewService {
     Long createReview(long purchaseBookId, Long memberId, UserCreateReviewRequest request);
     Page<ReviewListResponse> readAllReviewsByBookId(Long bookId, int page, int size, String sort);
     ReviewDetailResponse readReviewDetail(long reviewId);
+    Long countReviewsByBookId(long bookId);
+    Double getAverageRatingByBookId(long bookId);
 }

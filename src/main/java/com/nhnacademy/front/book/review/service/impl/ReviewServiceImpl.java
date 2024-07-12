@@ -74,4 +74,17 @@ public class ReviewServiceImpl implements ReviewService {
         return imageList;
     }
 
+    public Long countReviewsByBookId(long bookId) {
+        ApiResponse<Long> response = reviewClient.countReviewsByBookId(bookId);
+        return response.getBody().getData();
+    }
+
+    public Double getAverageRatingByBookId(long bookId) {
+        ApiResponse<Double> response = reviewClient.avgReviewsByBookId(bookId);
+        Double averageRating = response.getBody().getData();
+        if (averageRating != null) {
+            return Double.valueOf(String.format("%.2f", averageRating));
+        }
+        return 0.0;
+    }
 }
