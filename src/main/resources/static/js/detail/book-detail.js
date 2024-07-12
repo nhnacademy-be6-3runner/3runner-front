@@ -3,10 +3,57 @@ document.addEventListener('DOMContentLoaded', function () {
         e.preventDefault();
         submitCart();
     });
+    document.getElementById('purchaseButton').addEventListener('click', function (e) {
+        e.preventDefault();
+        submitPurchase();
+    })
+    document.getElementById('like').addEventListener('click', function(e) {
+        e.preventDefault();
+        handleLikeClick();
+    });
     updateTotalPrice();
     loadReviewData();
     reviewRatings();
+    checkAccessTokenForComments();
+    checkAccessTokenForCoupon();
 });
+
+function handleLikeClick() {
+    const accessToken = getCookie('Access');
+    if (!accessToken) {
+        showPopupMessage();
+    } else {
+        // 실제 찜 기능 코드 추가 (여기서 필요한 찜 기능 관련 코드를 작성하세요)
+        const likeIcon = document.getElementById('like');
+        likeIcon.setAttribute('fill', likeIcon.getAttribute('fill') === 'red' ? 'none' : 'red');
+    }
+}
+
+function showPopupMessage() {
+    const popup = new bootstrap.Modal(document.getElementById('popupMessage'), {});
+    popup.show();
+}
+
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+}
+
+function checkAccessTokenForComments() {
+    const accessToken = getCookie('Access');
+    if (!accessToken) {
+        document.getElementById('commentForm').style.display = 'none';
+        document.getElementById('loginMessage').style.display = 'block';
+    }
+}
+
+function checkAccessTokenForCoupon() {
+    const accessToken = getCookie('Access');
+    if (accessToken) {
+        document.querySelector('.coupon').style.display = 'block';
+    }
+}
 
 function addCart(bookId, quantity) {
     $.ajax({
@@ -136,6 +183,3 @@ function loadReviewData() {
         })
         .catch(error => console.error('Error fetching average rating:', error));
 }
-
-
-

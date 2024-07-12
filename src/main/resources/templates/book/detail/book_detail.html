@@ -61,9 +61,9 @@
 
             <hr class="my-3">
 
-            <div class = "coupon">
+            <div class="coupon" style="display: none;">
                 <div class="input-group mb-3">
-                    <button class="btn btn-primary" onclick="downloadSelectedCoupon()">다운로드</button>
+                    <button class="btn btn-primary" id="downloadCoupon" onclick="downloadSelectedCoupon()">쿠폰 다운로드</button>
                 </div>
             </div>
 
@@ -82,6 +82,24 @@
                 <div class="action-buttons">
                     <button id="cartButton" class="btn btn-outline-success">장바구니 담기</button>
                     <button id="purchaseButton" class="btn btn-outline-primary">바로 구매</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Popup Message -->
+    <div id="popupMessage" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">알림</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>찜 기능은 로그인을 해야합니다.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">확인</button>
                 </div>
             </div>
         </div>
@@ -140,6 +158,7 @@
 <script th:src="@{/js/detail/book-detail.js}"></script>
 <script th:src="@{/js/detail/book-like.js}"></script>
 <script th:src="@{/js/list/review-page-list.js}"></script>
+<script th:src="@{/js/auth/checked-login.js}"></script>
 <!-- Bootstrap Icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css">
 <div th:replace="fragments/footer :: footer"></div>
