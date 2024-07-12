@@ -1,9 +1,12 @@
 let reviewPage = 0;
 let commentPage = 0;
+let bookLikePage = 0;
 
 document.addEventListener('DOMContentLoaded', function () {
     loadReviews(reviewPage);
     loadUserComments(commentPage);
+    loadBookLikes(bookLikePage);
+    setupEventDelegation();
 });
 
 function loadReviews(page = 0) {
@@ -22,30 +25,27 @@ function loadReviews(page = 0) {
         .then(data => {
             console.log("Review data:", data);
             const reviewListItems = document.getElementById('reviewsContent');
-            if (page === 0) {
-                reviewListItems.innerHTML = "";
-                reviewPage = 0;
-            }
+            reviewListItems.innerHTML = "";
 
             data.body.data.content.forEach(review => {
                 const reviewItem = document.createElement('div');
                 reviewItem.className = 'list-group-item';
                 reviewItem.innerHTML = `
-                        <div class="row g-0 align-items-center">
-                            <div class="col-md-2">
-                                <img src="/api/images/review/download?fileName=${review.imgUrl}" class="img-fluid rounded-start" alt="review img">
+                <div class="row g-0 align-items-center">
+                    <div class="col-md-2">
+                        <img src="/api/images/review/download?fileName=${review.imgUrl}" class="img-fluid rounded-start" alt="review img">
+                    </div>
+                    <div class="col-md-10">
+                        <div class="review-content" data-id="${review.reviewId}">
+                            <div class="rating">
+                                ${Array.from({ length: review.rating }, () => '<i class="bi bi-star-fill"></i>').join('')}
+                                ${Array.from({ length: 5 - review.rating }, () => '<i class="bi bi-star"></i>').join('')}
                             </div>
-                            <div class="col-md-10">
-                                <div class="review-content" data-id="${review.reviewId}">
-                                    <div class="rating">
-                                        ${Array.from({ length: review.rating }, () => '<i class="bi bi-star-fill"></i>').join('')}
-                                        ${Array.from({ length: 5 - review.rating }, () => '<i class="bi bi-star"></i>').join('')}
-                                    </div>
-                                    <h5 class="review-title">${review.title}</h5>
-                                </div>
-                            </div>
+                            <h5 class="review-title">${review.title}</h5>
                         </div>
-                    `;
+                    </div>
+                </div>
+            `;
                 reviewListItems.appendChild(reviewItem);
                 console.log('review Id', review.reviewId)
 
@@ -132,19 +132,62 @@ function loadUserComments(page = 0) {
         });
 }
 
-function loadMoreReviews() {
-    reviewPage++;
-    loadReviews(reviewPage);
-}
+function loadBookLikes(page = 0) {
+    const url = `/api/mypage/likes?page=${page}&size=12`;
+    fetch(url, {
+        method: 'GET'
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            const bookListItems = document.getElementById('likedBooksContent');
+            bookListItems.innerHTML = "";
 
-function loadMoreComments() {
-    commentPage++;
-    loadUserComments(commentPage);
+            data.body.data.content.forEach(book => {
+                const bookItem = document.createElement('div');
+                bookItem.className = 'col-lg-4 col-md-6 col-sm-12 book-item'; // 수정된 부분
+                bookItem.dataset.bookId = book.id;
+                bookItem.innerHTML = `
+                <div class="card">
+                    <img class="card-img-top book-thumbnail" src="/api/images/book/download?fileName=${book.thumbnail}" alt="Book Thumbnail">
+                    <div class="card-body">
+                        <h5 class="card-title">${book.title}</h5>
+                        <p class="card-text-author">${book.author}</p>
+                        <p class="card-text-price">${book.price}원 (${book.sellingPrice}원)</p>
+                    </div>
+                </div>
+            `;
+                bookListItems.appendChild(bookItem);
+            });
+
+            const pagination = document.getElementById('bookPagination');
+            pagination.innerHTML = '';
+
+            const totalPages = data.body.data.totalPages;
+            const currentPage = data.body.data.number;
+
+            for (let i = 0; i < totalPages; i++) {
+                const pageButton = document.createElement('button');
+                pageButton.textContent = i + 1;
+                pageButton.classList.add('btn', 'btn-secondary', 'me-2');
+                if (i === currentPage) {
+                    pageButton.classList.add('active');
+                }
+                pageButton.addEventListener('click', function () {
+                    loadBookLikes(i);
+                });
+                pagination.appendChild(pageButton);
+            }
+        })
+        .catch(error => console.error('Error loading books:', error));
 }
 
 function deleteComment(commentId) {
     const url = `/api/comments/${commentId}`;
-
     fetch(url, {
         method: 'DELETE'
     })
@@ -161,4 +204,16 @@ function deleteComment(commentId) {
         .catch(error => {
             console.error('Error deleting comment:', error);
         });
+}
+
+function setupEventDelegation() {
+    const bookListItems = document.getElementById('likedBooksContent');
+
+    bookListItems.addEventListener('click', function (event) {
+        const bookItem = event.target.closest('.book-item');
+        if (bookItem) {
+            const bookId = bookItem.dataset.bookId; // data-book-id 속성에서 bookId 추출
+            window.location.href = `/book/${bookId}`;
+        }
+    });
 }

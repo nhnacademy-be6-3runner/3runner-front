@@ -18,4 +18,7 @@ public interface CommentClient {
 
     @GetMapping("/books/reviews/member/comments")
     ApiResponse<Page<CommentResponse>> readAllCommentsByMemberId(@RequestHeader(value = "Member-Id", required = false) Long memberId, @RequestParam int page, @RequestParam int size);
+
+    @DeleteMapping("/books/reviews/{commentId}/delete")
+    ApiResponse<Void> deleteComment(@PathVariable Long commentId, @RequestHeader(value = "Member-Id", required = false) Long memberId);
 }

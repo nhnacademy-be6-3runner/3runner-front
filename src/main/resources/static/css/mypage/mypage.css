@@ -133,3 +133,23 @@
 .page-button button:hover {
     text-decoration: underline; /* 호버 시 밑줄 */
 }
+
+.book-item {
+    margin-bottom: 15px;
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center; /* 왼쪽 정렬 */
+    transition: box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-img-top {
+    width: 100%;
+    height: auto;
+}
+
+.card-body {
+    text-align: center;
+}
