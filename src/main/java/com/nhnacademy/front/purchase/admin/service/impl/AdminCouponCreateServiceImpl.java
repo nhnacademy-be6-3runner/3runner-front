@@ -47,9 +47,4 @@ public class AdminCouponCreateServiceImpl implements AdminCouponCreateService {
     public List<ReadMemberResponse> getMembers() {
         return couponMemberControllerClient.getMembers().getBody().getData();
     }
-
-    @Override
-    public void createCouponFormWithMq(CreateCouponFormRequest createCouponFormRequest, Long quantity) {
-        couponFormControllerClient.createCouponFormWithMq(createCouponFormRequest, quantity).getBody().getData();
-    }
 }

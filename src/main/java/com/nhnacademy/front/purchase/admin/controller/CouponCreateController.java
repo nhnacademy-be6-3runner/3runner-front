@@ -1,8 +1,10 @@
 package com.nhnacademy.front.purchase.admin.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.nhnacademy.front.purchase.admin.dto.CreateCouponFormFrontRequest;
 import com.nhnacademy.front.purchase.admin.dto.CreateCouponFormFrontRequestWithMq;
 import com.nhnacademy.front.purchase.admin.service.AdminCouponCreateService;
+import com.nhnacademy.front.purchase.admin.service.CouponRegisterService;
 import com.nhnacademy.front.purchase.purchase.dto.coupon.request.CreateCouponFormRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,7 @@ import java.time.format.DateTimeFormatter;
 @RequiredArgsConstructor
 public class CouponCreateController {
     private final AdminCouponCreateService adminCouponCreateService;
+    private final CouponRegisterService couponRegisterService;
 
     @GetMapping("/admin/coupons")
     public String createCouponForm(Model model){
@@ -76,7 +79,7 @@ public class CouponCreateController {
     @PostMapping("/admin/coupons/mqs")
     public String createCouponMq(@Valid @ModelAttribute CreateCouponFormFrontRequestWithMq createCouponFormFrontRequest,
                                BindingResult bindingResult,
-                               Model model){
+                               Model model) throws JsonProcessingException {
         if(bindingResult.hasErrors()){
             model.addAttribute("types", adminCouponCreateService.getTypes());
             model.addAttribute("usages", adminCouponCreateService.getUsages());
@@ -87,8 +90,7 @@ public class CouponCreateController {
         ZonedDateTime startDate = ZonedDateTime.parse(createCouponFormFrontRequest.getStartDate(), formatter.withZone(java.time.ZoneId.systemDefault()));
         ZonedDateTime endDate = ZonedDateTime.parse(createCouponFormFrontRequest.getEndDate(), formatter.withZone(java.time.ZoneId.systemDefault()));
 
-        //mq 사용
-         adminCouponCreateService.createCouponFormWithMq(CreateCouponFormRequest.builder()
+        couponRegisterService.creatWithMq(CreateCouponFormRequest.builder()
                         .startDate(startDate)
                         .endDate(endDate)
                         .name(createCouponFormFrontRequest.getName())
@@ -96,8 +98,7 @@ public class CouponCreateController {
                         .minPrice(createCouponFormFrontRequest.getMinPrice())
                         .couponTypeId(createCouponFormFrontRequest.getCouponTypeId())
                         .couponUsageId(createCouponFormFrontRequest.getCouponUsageId()).build(),
-                        createCouponFormFrontRequest.getQuantity()
-         );
+                createCouponFormFrontRequest.getQuantity());
 
         return "redirect:/admin/purchases";
     }
