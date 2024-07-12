@@ -34,7 +34,11 @@ public interface ReviewClient {
             @RequestParam String sort
     );
 
-    // TODO 사용자 아이디로 리뷰 조회
+    @GetMapping("/reviews/member")
+    ApiResponse<Page<ReviewListResponse>> readAllReviewsByMemberId(
+            @RequestHeader(value = "Member-Id", required = false) Long memberId,
+            @RequestParam int page,
+            @RequestParam int size);
 
     @GetMapping("/books/{bookId}/reviews/count")
     ApiResponse<Long> countReviewsByBookId(@PathVariable long bookId);

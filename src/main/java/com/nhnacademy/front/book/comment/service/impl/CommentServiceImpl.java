@@ -34,4 +34,20 @@ public class CommentServiceImpl implements CommentService {
             throw new InvalidApiResponseException("댓글 페이지 조회 exception");
         }
     }
+
+    @Override
+    public Page<CommentResponse> readAllCommentsByMemberId(Long memberId, int page, int size) {
+        ApiResponse<Page<CommentResponse>> response = commentClient.readAllCommentsByMemberId(memberId, page, size);
+
+        if (response.getHeader().isSuccessful() && response.getBody() != null) {
+            return response.getBody().getData();
+        } else {
+            throw new InvalidApiResponseException("사용자 댓글 조회 중 exception");
+        }
+    }
+
+    @Override
+    public void deleteComment(Long commentId, Long memberId) {
+        commentClient.deleteComment(commentId, memberId);
+    }
 }

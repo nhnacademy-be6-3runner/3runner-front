@@ -11,4 +11,5 @@ public interface ReviewService {
     ReviewDetailResponse readReviewDetail(long reviewId);
     Long countReviewsByBookId(long bookId);
     Double getAverageRatingByBookId(long bookId);
+    Page<ReviewListResponse> readAllReviewsByMemberId(Long memberId, int page, int size);
 }
