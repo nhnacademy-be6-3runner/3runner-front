@@ -60,26 +60,24 @@ jobs:
             chmod +x ./renew_cert.sh
             chmod +x ./setup_cron.sh
             ./setup_cron.sh
-            
-            sudo docker build -t front-image1 .
-            sudo docker build -t front-image2 .
 
             sudo docker stop front1 || true
             sudo docker rm front1 || true
             sudo docker build -t front-image1 .
-            sudo docker run -d -p 3000:3000 --name front1 --net front_network front-image1
+            sudo docker run -d -p 3000:8080 --name front1 --net front_network front-image1
             
-            sleep 120
+            sleep 90
             
             sudo docker stop front2 || true
             sudo docker rm front2 || true
             sudo docker build -t front-image2 .
-            sudo docker run -d -p 3001:3001 --name front2 --net front_network front-image2
+            sudo docker run -d -p 3001:8080 --name front2 --net front_network front-image2
             
             sudo docker stop nginx || true
             sudo docker rm nginx || true
-            sudo docker run --name nginx -d -p 80:80 -p 443:443 \
+            sudo docker run --name nginx -d \
+              -p 80:80 -p 443:443 \
               -v ./nginx.conf:/etc/nginx/nginx.conf \
-              -v /home/nhnacademy/certbot/conf,target=/etc/letsencrypt \
-              -v /home/nhnacademy/certbot/www,target=/var/www/certbot \
-              --net front_network nginx\
+              -v /home/nhnacademy/certbot/conf:/etc/letsencrypt \
+              -v /home/nhnacademy/certbot/www:/var/www/certbot \
+              --net front_network nginx
