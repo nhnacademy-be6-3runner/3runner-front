@@ -99,7 +99,7 @@
             <div class="refund-info">
                 <div>
                     <p>환불 코드:</p>
-                    <p th:text="${refund.refundContent()}">환불 코드</p>
+                    <p th:text="${refund.refundId()}">환불 코드</p>
                 </div>
                 <div>
                     <p>주문 ID:</p>
@@ -114,7 +114,7 @@
                     <p th:text="${refund.refundContent()}">환불 사유</p>
                 </div>
             </div>
-            <div class="refund-buttons">
+            <div class="refund-buttons" th:if="${refund.status().toString() == 'READY'}">
                 <button class="btn-custom accept"
                         th:attr="data-refund-id=${refund.refundId()}"
                         th:text="'수락'"></button>
@@ -146,7 +146,9 @@
     });
 
     function processRefund(refundId, action) {
-        fetch(`/admin/refunds/${refundId}/${action}`, {
+        let url = '/admin/refund/' + (action === 'accept' ? 'success' : 'reject') + '/' + refundId;
+
+        fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -156,7 +158,7 @@
                 if (!response.ok) {
                     throw new Error('처리에 실패했습니다. 상태 코드: ' + response.status);
                 }
-                return response.json();
+                return response.text(); // 변경된 부분
             })
             .then(data => {
                 console.log(`Refund ${action}ed successfully:`, data);

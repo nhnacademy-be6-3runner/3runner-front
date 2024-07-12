@@ -58,7 +58,7 @@ public class RefundServiceImpl implements RefundService {
 	}
 
 	@Override
-	public Map<String, Object> refundToss(String orderNumber,Integer price, String cancelReason) {
+	public Map<String, Object> refundToss(String orderNumber, Integer price, String cancelReason) {
 
 		Map<String, Object> result = new HashMap<>();
 
@@ -73,7 +73,7 @@ public class RefundServiceImpl implements RefundService {
 
 			URL url = new URL("https://api.tosspayments.com/v1/payments/" + paymentKey + "/cancel");
 
-			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			HttpURLConnection connection = (HttpURLConnection)url.openConnection();
 			connection.setRequestProperty("Authorization", authorizations);
 			connection.setRequestProperty("Content-Type", "application/json");
 			connection.setRequestMethod("POST");
@@ -81,7 +81,9 @@ public class RefundServiceImpl implements RefundService {
 
 			JSONObject obj = new JSONObject();
 			obj.put("cancelReason", cancelReason);
-			obj.put("cancelAmount", price);
+			if (price != null) {
+				obj.put("cancelAmount", price);
+			}
 
 			OutputStream outputStream = connection.getOutputStream();
 			outputStream.write(obj.toString().getBytes(StandardCharsets.UTF_8));
@@ -93,12 +95,12 @@ public class RefundServiceImpl implements RefundService {
 
 			Reader reader = new InputStreamReader(responseStream, StandardCharsets.UTF_8);
 			JSONParser parser = new JSONParser();
-			JSONObject jsonObject = (JSONObject) parser.parse(reader);
+			JSONObject jsonObject = (JSONObject)parser.parse(reader);
 			responseStream.close();
 
 			result.put("isSuccess", isSuccess);
 			result.put("jsonObject", jsonObject);
-			if(isSuccess) {
+			if (isSuccess) {
 				refundControllerClient.createRefundCancelPayment(orderNumber);
 			}
 
@@ -106,19 +108,19 @@ public class RefundServiceImpl implements RefundService {
 			e.printStackTrace();
 		}
 
-
 		return result;
 
 	}
 
 	@Override
 	public Long createRefundRequest(Long orderId, Integer price, String refundReason) {
-		return refundControllerClient.createRefund(orderId, CreateRefundRequest.builder().refundContent(refundReason).price(price).build()).getBody().getData();
+		return refundControllerClient.createRefund(orderId,
+			CreateRefundRequest.builder().refundContent(refundReason).price(price).build()).getBody().getData();
 	}
 
 	@Override
-	public Boolean updateRefundSuccess(Long refundId){
-		return  refundControllerClient.updateSuccessRefund(refundId).getBody().getData();
+	public Boolean updateRefundSuccess(Long refundId) {
+		return refundControllerClient.updateSuccessRefund(refundId).getBody().getData();
 	}
 
 	@Override

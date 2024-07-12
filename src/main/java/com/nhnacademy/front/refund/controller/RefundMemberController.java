@@ -33,10 +33,11 @@ public class RefundMemberController {
 
 	//Todo : security에 걸리게 링크 수정
 	@GetMapping("/{orderNumber}")
-	public String refund(@PathVariable(name = "orderNumber") Long purchaseId
+	public String refund(@PathVariable(name = "orderNumber") Long purchaseId,@RequestParam(name="type") String type
 		, Model model) {
 
 
+		model.addAttribute("type", type);
 		List<ReadPurchaseBookResponse> books = refundService.readMemberPurchaseBooks(purchaseId);
 
 		model.addAttribute("books", books);
@@ -64,7 +65,7 @@ public class RefundMemberController {
 		@RequestParam(name = "refund-content") String refundContent,
 		@RequestParam(name = "refund-price") Integer price) {
 		Long refundId = refundService.createRefundRequest(purchaseId, price, refundContent);
-		if(!refundRecordMemberControllerClient.createRefundRecordMember(refundId).getBody().getData()){
+		if(Boolean.FALSE.equals(refundRecordMemberControllerClient.createRefundRecordMember(refundId).getBody().getData())){
 			Map<String, String> errorResponse = new HashMap<>();
 			errorResponse.put("message", "환불 요청이 완료된 건입니다.");
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
@@ -72,31 +73,32 @@ public class RefundMemberController {
 
 		Map<String, String> response = new HashMap<>();
 		response.put("message", "Refund request successful");
-		response.put("redirectUrl", "/refund/success");
+		response.put("redirectUrl", "/refund/members/success");
 
 		return ResponseEntity.ok(response);
 	}
 
 	@GetMapping("/{orderNumber}/update/{purchaseBookId}")
-	public String updateRefund(@PathVariable(name = "orderNumber") Long orderNumber, @PathVariable(name = "purchaseBookId") Long purchaseBookId,@RequestParam(name = "quantity", required = false) int quantity, Model model) {
+	public String updateRefund(@PathVariable(name = "orderNumber") Long orderNumber, @PathVariable(name = "purchaseBookId") Long purchaseBookId, @RequestParam(name = "quantity", required = false) int quantity, Model model) {
 		refundRecordMemberControllerClient.updateRefundRecordMember(purchaseBookId, quantity);
-		return "redirect:/refund/"+orderNumber;
+		return "redirect:/refund/members/"+orderNumber;
 	}
 
 	@GetMapping("/{orderNumber}/update/all")
 	public String updateRefundAll(@PathVariable(name = "orderNumber") Long orderNumber) {
 		refundRecordMemberControllerClient.updateRefundRecordAllMember(orderNumber);
-		return "redirect:/refund/"+orderNumber;
+		return "redirect:/refund/members/"+orderNumber;
 	}
 
 	@GetMapping("/{orderNumber}/update/all/zero")
 	public String updateRefundAllZero(@PathVariable(name = "orderNumber") Long orderNumber) {
 		refundRecordMemberControllerClient.updateRefundRecordAllZeroMember(orderNumber);
-		return "redirect:/refund/"+orderNumber;
+		return "redirect:/refund/members/"+orderNumber;
 	}
 
 	@GetMapping("/success")
 	public String success(Model model) {
+		model.addAttribute("result", "success");
 		return "refundSuccess";
 	}
 }

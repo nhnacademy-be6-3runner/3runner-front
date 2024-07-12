@@ -130,7 +130,14 @@
             button.addEventListener('click', function () {
                 const orderId = this.getAttribute('data-order-id');
 
-                window.location.href = `/refund/members/${orderId}`;
+                window.location.href = `/refund/members/${orderId}?type=refund`;
+            });
+        });
+        document.querySelectorAll('.payment-cancel-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                const orderId = this.getAttribute('data-order-id');
+
+                window.location.href = `/refund/members/${orderId}?type=cancel`;
             });
         });
     });
