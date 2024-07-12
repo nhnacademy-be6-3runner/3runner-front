@@ -103,7 +103,7 @@ function loadUserComments(page = 0) {
                 <p><small class="text-muted">${comment.commentId}</small></p>
                 <p>${comment.content}</p>
                 <p><small class="text-muted">작성일: ${createdAt}</small></p>
-                <button class="delete-btn" onclick="deleteComment(${comment.commentId})">&times;</button>
+                <button class="delete-btn" onclick="confirmDeleteComment(${comment.commentId})">&times;</button>
             `;
                 commentList.appendChild(commentDiv);
             });
@@ -184,6 +184,12 @@ function loadBookLikes(page = 0) {
             }
         })
         .catch(error => console.error('Error loading books:', error));
+}
+
+function confirmDeleteComment(commentId) {
+    if (confirm('댓글을 삭제하시겠습니까?')) {
+        deleteComment(commentId);
+    }
 }
 
 function deleteComment(commentId) {

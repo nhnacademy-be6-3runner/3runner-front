@@ -38,7 +38,7 @@ function logout() {
 }
 
 function mypage() {
-    window.location.href = '/mypage';
+    window.location.href = '/member/mypage';
 }
 
 function login() {
