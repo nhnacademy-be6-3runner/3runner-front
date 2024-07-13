@@ -61,9 +61,15 @@ function addCart(bookId, quantity) {
         type: 'POST',
         contentType: 'application/x-www-form-urlencoded',
         data: $.param({ bookId: bookId, quantity: quantity }),
+
+        //TODO : 최종 배포시 변경오먕
         success: function (response) {
             console.log(response);
-            window.location.href = window.location.origin + '/carts';
+            try{
+                window.location.href = window.location.origin + '/carts';
+            } catch (error) {
+                window.location.href = 'https://'+ window.location.host + '/carts';
+            }
         },
         error: function (xhr, status, error) {
             console.error('Error:', error);
@@ -79,9 +85,15 @@ function addPurchase(bookId, quantity) {
         type: 'POST',
         contentType: 'application/x-www-form-urlencoded',
         data: $.param({ bookId: bookId, quantity: quantity }),
+
+        //TODO : 최종 배포시 변경오먕
         success: function (response) {
             console.log(response);
-            window.location.href = window.location.origin + '/purchases';
+            try{
+                window.location.href = window.location.origin + '/carts';
+            } catch (error) {
+                window.location.href = 'https://'+ window.location.host + '/carts';
+            }
         },
         error: function (xhr, status, error) {
             console.error('Error:', error);
