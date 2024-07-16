@@ -12,15 +12,20 @@ import lombok.RequiredArgsConstructor;
 public class RefundRecordGuestServiceImpl implements RefundRecordGuestService {
 	private final RefundRecordGuestControllerClient refundRecordGuestControllerClient;
 
+	@Override
 	public void updateRefundRecorderGuest(String orderNumber,Long purchaseBookId, int quantity){
 		refundRecordGuestControllerClient.updateRefundRecordGuest(orderNumber,purchaseBookId, quantity);
 	}
 
+	@Override
 	public void updateRefundGuestAll(String orderNumber){
 		refundRecordGuestControllerClient.updateRefundRecordAllGuest(orderNumber);
 	}
 
-	public void createRefundRecordGuest(String orderNumber, Long refundId){
-		refundRecordGuestControllerClient.createRefundRecordGuest(orderNumber, refundId);
+	@Override
+	public void updateRefundRecordAllZero(String orderNumber){
+		refundRecordGuestControllerClient.updateRefundRecordAllZeroGuest(orderNumber);
 	}
+
+
 }

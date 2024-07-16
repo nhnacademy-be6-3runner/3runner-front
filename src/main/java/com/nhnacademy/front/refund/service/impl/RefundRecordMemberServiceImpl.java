@@ -19,9 +19,12 @@ public class RefundRecordMemberServiceImpl implements RefundRecordMemberService 
 	public void updateRefundAll(Long orderNumber){
 		refundRecordMemberControllerClient.updateRefundRecordAllMember(orderNumber);
 	}
+	public void updateRefundAllZero(Long orderNumber){
+		refundRecordMemberControllerClient.updateRefundRecordAllZeroMember(orderNumber);
+	}
 
-	public void createRefundRecordMember(Long orderNumber, Long refundId){
-		refundRecordMemberControllerClient.createRefundRecordMember(orderNumber, refundId);
+	public Boolean createRefundRecordMember(Long orderNumber, Long refundId){
+		return refundRecordMemberControllerClient.createRefundRecordMember(orderNumber, refundId).getBody().getData();
 	}
 
 

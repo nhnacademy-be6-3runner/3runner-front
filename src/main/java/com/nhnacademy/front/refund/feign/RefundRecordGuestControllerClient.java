@@ -43,7 +43,7 @@ public interface RefundRecordGuestControllerClient {
 	ApiResponse<Boolean> updateRefundRecordAllGuest(@PathVariable(name = "orderNumber") String orderNumber);
 
 	@PutMapping("/bookstore/refundRecord/guests/all/zero/{orderNumber}")
-	ApiResponse<Boolean> updateRefundRecordAllZeroMember(
+	ApiResponse<Boolean> updateRefundRecordAllZeroGuest(
 		@PathVariable(name = "orderNumber") String orderNumber
 	);
 }

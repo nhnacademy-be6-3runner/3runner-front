@@ -2,35 +2,40 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>개인화 섹션</title>
+    <title>주문 관리</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/admin_styles.css}">
     <style>
-        body {
+        .order-delivery-section {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
+            margin: 0 auto;
+            padding: 20px;
             background-color: #ffffff;
             color: #333;
-            height: 100vh;
             display: flex;
             flex-direction: column;
+            width: 80%;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            align-items: center;
         }
 
-        .order-delivery {
+        .order-delivery-section .order-delivery {
             padding: 20px;
             background-color: #ffffff;
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             overflow-y: auto;
             flex: 1;
+            width: 100%;
         }
 
-        .order-list {
+        .order-delivery-section .order-list {
             list-style: none;
             padding: 0;
+            width: 100%;
         }
 
-        .order-item {
+        .order-delivery-section .order-item {
             display: flex;
             flex-direction: column;
             padding: 20px;
@@ -42,41 +47,42 @@
             width: 100%;
         }
 
-        .order-info {
+        .order-delivery-section .order-info {
             display: flex;
             flex-direction: column;
             gap: 5px;
             flex: 1;
         }
 
-        .order-info > div {
+        .order-delivery-section .order-info > div {
             display: flex;
             align-items: center;
             margin-bottom: 5px;
         }
 
-        .order-info p {
+        .order-delivery-section .order-info p {
             margin: 0 10px 0 0;
         }
 
-        .order-buttons {
+        .order-delivery-section .order-buttons {
             display: flex;
             gap: 10px;
             margin-top: 10px;
         }
 
-        .order-buttons form,
-        .order-buttons .refund-buttons {
+        .order-delivery-section .order-buttons form,
+        .order-delivery-section .order-buttons .refund-buttons {
             flex: 1;
             display: flex;
             justify-content: space-between;
         }
 
-        .order-buttons .refund-buttons {
+        .order-delivery-section .order-buttons .refund-buttons {
             justify-content: flex-end;
         }
 
-        .refund-detail-btn, .btn-custom {
+        .order-delivery-section .refund-detail-btn,
+        .order-delivery-section .btn-custom {
             padding: 5px 10px;
             font-size: 14px;
             border-radius: 5px;
@@ -87,38 +93,39 @@
             color: white;
         }
 
-        .btn-custom.accept {
+        .order-delivery-section .btn-custom.accept {
             background-color: #28a745;
         }
 
-        .btn-custom.accept:hover {
+        .order-delivery-section .btn-custom.accept:hover {
             background-color: #218838;
         }
 
-        .btn-custom.reject {
+        .order-delivery-section .btn-custom.reject {
             background-color: #dc3545;
         }
 
-        .btn-custom.reject:hover {
+        .order-delivery-section .btn-custom.reject:hover {
             background-color: #c82333;
         }
 
-        .refund-detail-btn, .btn-custom.details {
+        .order-delivery-section .refund-detail-btn,
+        .order-delivery-section .btn-custom.details {
             background-color: #007bff;
         }
 
-        .btn-custom.details:hover,
-        .refund-detail-btn:hover {
+        .order-delivery-section .btn-custom.details:hover,
+        .order-delivery-section .refund-detail-btn:hover {
             background-color: #0056b3;
         }
 
-        .pagination {
+        .order-delivery-section .pagination {
             display: flex;
             justify-content: center;
             margin-top: 20px;
         }
 
-        .pagination button {
+        .order-delivery-section .pagination button {
             background-color: #ffffff;
             border: 1px solid #444;
             color: #444;
@@ -130,58 +137,63 @@
             display: block;
         }
 
-        .pagination button:hover {
+        .order-delivery-section .pagination button:hover {
             background-color: #f0f0f0;
             color: #333;
         }
 
-        .page-link.active {
-            background-color: #007bff; /* 원하는 색상으로 변경 가능 */
-            color: white; /* 글자 색상을 흰색으로 */
-            border-color: #007bff; /* 버튼 테두리 색상 */
+        .order-delivery-section .page-link.active {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
         }
+
     </style>
 </head>
 <body>
-
-<div id="orderDelivery" class="container mt-5">
-    <h2>주문내역</h2>
-    <ul class="order-list">
-        <li class="order-item" th:each="order : ${orderAll}">
-            <div class="order-info">
-                <div>
-                    <p>주문 번호:</p>
-                    <p th:text="${order.orderNumber().toString()}">주문 번호</p>
-                </div>
-                <div>
-                    <p>주문 날짜:</p>
-                    <p th:text="${order.createdAt()}">주문 날짜</p>
-                </div>
-                <div>
-                    <p>상태:</p>
-                    <p th:text="${order.status()}" id="order-status-${order.orderNumber}">상태</p>
-                </div>
-            </div>
-            <div class="order-buttons">
-                <form th:action="@{/admin/orders/{purchaseId} (purchaseId= ${order.orderNumber()})}" method="POST">
+<header>
+    <h1>주문 관리</h1>
+</header>
+<nav th:replace="fragments/admin_nav :: nav"></nav>
+<main>
+    <div id="orderDelivery" class="order-delivery-section container mt-5">
+        <h2>주문내역</h2>
+        <ul class="order-list">
+            <li class="order-item" th:each="order : ${orderAll}">
+                <div class="order-info">
                     <div>
-                        <select name="dropdown" class="form-control">
-                            <option value="DELIVERY_START">출고</option>
-                            <option value="DELIVERY_COMPLETED">배달 완료</option>
-                            <option value="DELIVERY_PROGRESS">배달 중</option>
-                            <option value="COMPLETED">주문 확인</option>
-                            <option value="REFUNDED_COMPLETED">환불 완료</option>
-                        </select>
-                        <button type="submit" class="btn-custom details" name="상태 변경">변경</button>
+                        <p>주문 번호:</p>
+                        <p th:text="${order.orderNumber().toString()}">주문 번호</p>
                     </div>
-                </form>
-            </div>
-        </li>
+                    <div>
+                        <p>주문 날짜:</p>
+                        <p th:text="${order.createdAt()}">주문 날짜</p>
+                    </div>
+                    <div>
+                        <p>상태:</p>
+                        <p th:text="${order.status()}" id="order-status-${order.orderNumber}">상태</p>
+                    </div>
+                </div>
+                <div class="order-buttons">
+                    <form th:action="@{/admin/orders/{purchaseId} (purchaseId= ${order.orderNumber()})}" method="POST">
+                        <div>
+                            <select name="dropdown" class="form-control">
+                                <option value="DELIVERY_START">출고</option>
+                                <option value="DELIVERY_COMPLETED">배달 완료</option>
+                                <option value="DELIVERY_PROGRESS">배달 중</option>
+                                <option value="COMPLETED">주문 확인</option>
+                                <option value="REFUNDED_COMPLETED">환불 완료</option>
+                            </select>
+                            <button type="submit" class="btn-custom details" name="상태 변경">변경</button>
+                        </div>
+                    </form>
+                </div>
+            </li>
+        </ul>
 
         <div class="text-center mt-4">
             <nav>
                 <ul class="pagination justify-content-center">
-
                     <li class="page-item" th:if="${orderAll.pageable.getPageNumber() > 0}">
                         <a class="page-link"
                            th:href="@{'/admin/orders?page={page}' (page = ${orderAll.pageable.getPageNumber() - 1})}">이전</a>
@@ -199,10 +211,10 @@
                 </ul>
             </nav>
         </div>
-    </ul>
-</div>
+    </div>
+</main>
 
-<script>
+<script src="/js/admin.js">
     document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll('.refund-detail-btn').forEach(button => {
             button.addEventListener('click', function () {

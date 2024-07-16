@@ -53,10 +53,6 @@ public class RefundServiceImpl implements RefundService {
 		return purchaseBookControllerClient.readGuestPurchaseBook(orderNumber).getBody().getData();
 	}
 
-	@Override
-	public ReadRefundResponse readRefund(Long refundId) {
-		return refundControllerClient.readRefundRecprd(refundId).getBody().getData();
-	}
 
 	@Override
 	public Map<String, Object> refundToss(Object orderNumber, Integer price, String cancelReason) {
@@ -64,7 +60,7 @@ public class RefundServiceImpl implements RefundService {
 		Map<String, Object> result = new HashMap<>();
 		String paymentKey = "";
 		if (orderNumber instanceof String) {
-			paymentKey = refundControllerClient.readTossOrderId((String)orderNumber).getBody().getData().paymentKey();
+			paymentKey = refundControllerClient.readTossOrderId((String)orderNumber).getBody().getData();
 		} else if (orderNumber instanceof Long) {
 			paymentKey = refundControllerClient.readTossOrderIdMember((long)orderNumber).getBody().getData();
 		}
@@ -106,7 +102,7 @@ public class RefundServiceImpl implements RefundService {
 			result.put("isSuccess", isSuccess);
 			result.put("jsonObject", jsonObject);
 
-			Long refundId = refundControllerClient.createRefundCancelPartPayment(orderNumber).getBody().getData();
+			Long refundId = refundControllerClient.createRefundCancelPartPayment(orderNumber,price).getBody().getData();
 
 		} catch (Exception e) {
 			e.printStackTrace();
