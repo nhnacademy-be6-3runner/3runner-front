@@ -12,6 +12,7 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -58,13 +59,17 @@ public class RefundServiceImpl implements RefundService {
 	}
 
 	@Override
-	public Map<String, Object> refundToss(String orderNumber, Integer price, String cancelReason) {
+	public Map<String, Object> refundToss(Object orderNumber, Integer price, String cancelReason) {
 
 		Map<String, Object> result = new HashMap<>();
+		String paymentKey = "";
+		if (orderNumber instanceof String) {
+			paymentKey = refundControllerClient.readTossOrderId((String)orderNumber).getBody().getData().paymentKey();
+		} else if (orderNumber instanceof Long) {
+			paymentKey = refundControllerClient.readTossOrderIdMember((long)orderNumber).getBody().getData();
+		}
 
-		String paymentKey = refundControllerClient.readTossOrderId(orderNumber).getBody().getData().paymentKey();
-
-		String secretKey = "test_sk_nRQoOaPz8LEXJvm6Reo53y47BMw6";
+		String secretKey = "Authorization: test_sk_nRQoOaPz8LEXJvm6Reo53y47BMw6";
 
 		try {
 			Base64.Encoder encoder = Base64.getEncoder();
@@ -80,9 +85,9 @@ public class RefundServiceImpl implements RefundService {
 			connection.setDoOutput(true);
 
 			JSONObject obj = new JSONObject();
-			obj.put("cancelReason", cancelReason);
+			obj.put("cancelReason : ", cancelReason);
 			if (price != null) {
-				obj.put("cancelAmount", price);
+				obj.put("cancelAmount : ", price);
 			}
 
 			OutputStream outputStream = connection.getOutputStream();
@@ -100,9 +105,8 @@ public class RefundServiceImpl implements RefundService {
 
 			result.put("isSuccess", isSuccess);
 			result.put("jsonObject", jsonObject);
-			if (isSuccess) {
-				refundControllerClient.createRefundCancelPayment(orderNumber);
-			}
+
+			Long refundId = refundControllerClient.createRefundCancelPartPayment(orderNumber).getBody().getData();
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -117,6 +121,7 @@ public class RefundServiceImpl implements RefundService {
 		return refundControllerClient.createRefund(orderId,
 			CreateRefundRequest.builder().refundContent(refundReason).price(price).build()).getBody().getData();
 	}
+
 
 	@Override
 	public Boolean updateRefundSuccess(Long refundId) {

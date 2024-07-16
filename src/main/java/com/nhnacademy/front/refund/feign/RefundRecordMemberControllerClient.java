@@ -19,6 +19,7 @@ public interface RefundRecordMemberControllerClient {
 
 	@PutMapping("/bookstore/refundRecord/members/{purchaseBookId}")
 	ApiResponse<Long> updateRefundRecordMember(
+		@RequestParam(name = "orderNumber") Long orderNumber,
 		@PathVariable(name = "purchaseBookId") Long purchaseBookId,
 		@RequestParam(name = "quantity") int quantity);
 
@@ -29,6 +30,7 @@ public interface RefundRecordMemberControllerClient {
 
 	@PostMapping("/bookstore/refundRecord/members/save/{refundId}")
 	ApiResponse<Boolean> createRefundRecordMember(
+		@RequestParam(name = "orderNumber") Long orderNumber,
 		@PathVariable(name = "refundId") Long refundId
 	);
 

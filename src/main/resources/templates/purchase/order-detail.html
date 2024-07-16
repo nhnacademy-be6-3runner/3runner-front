@@ -18,7 +18,7 @@
         <li class="order-item" th:each="order : ${orders}" >
             <div class="order-info">
                 <div>
-                    <p>주문 번호:</p>
+                    <p>주문 번호123:</p>
                     <p th:text="${order.orderNumber.toString()}">주문 번호</p>
                 </div>
                 <div>
@@ -43,14 +43,14 @@
                 <!-- 결제 취소 버튼 (COMPLETED 상태인 경우) -->
                 <button class="payment-cancel-btn"
                         th:if="${order.status.toString() == 'COMPLETED'}"
-                        th:attr="data-order-id=${order.id}"
+                        th:attr="data-order-id=${order.id()}"
                         th:text="'결제 취소'">
                 </button>
 
                 <!-- 환불 버튼 (COMPLETED가 아니고 CONFIRMED 상태가 아닌 경우) -->
                 <button class="refund-btn"
-                        th:if="${order.status.toString() != 'COMPLETED' && order.status.toString() != 'CONFIRMATION'}"
-                        th:attr="data-order-id=${order.id}"
+                        th:if="${order.status.toString() != 'COMPLETED' && order.status.toString() != 'CONFIRMATION' && order.status.toString() != 'REFUNDED_REQUEST' && order.status.toString() != 'REFUNDED_COMPLETE'}"
+                        th:attr="data-order-id=${order.id()}"
                         th:text="'환불'">
                 </button>
 

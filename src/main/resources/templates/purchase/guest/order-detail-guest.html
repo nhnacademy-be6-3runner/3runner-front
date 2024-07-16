@@ -27,8 +27,7 @@
     </div>
 </div>
 
-<form method="post"
-      th:action="@{'/orders/guests/{purchaseId}' (purchaseId = ${guestorder.orderNumber().toString())}">
+<form method="post" th:action="@{'/orders/guests/{purchaseId}' (purchaseId = ${guestorder.orderNumber().toString()})}">
     <button type="submit" class="confirm-order-btn" th:if="${guestorder.status.toString() != 'CONFIRMATION'}">주문 확정
     </button>
 </form>
@@ -37,7 +36,8 @@
 <button class="refund-btn"
         th:if="${guestorder.status.toString() == 'COMPLETED'}"
         th:attr="data-order-id=${guestorder.orderNumber}"
-        th:text="'결제 취소'">
+        th:text="'결제 취소'"
+        onclick="cancelOrder()">
 </button>
 
 <div class="order-details">
@@ -63,10 +63,9 @@
 </div>
 
 <script>
-    const purchaseId = document.body.getAttribute('data-purchase-id');
-
-    function loadBooks(page, size) {
-        window.location.href = `/orders/guests/${orderNumber}`;
+    function cancelOrder() {
+        const orderNumber = document.querySelector('.refund-btn').getAttribute('data-order-id');
+        window.location.href = '/refund/guests/' + orderNumber;
     }
 </script>
 

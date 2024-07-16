@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Refund</title>
+    <title>도서 환불</title>
     <script src="https://js.tosspayments.com/v1/payment-widget"></script>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -19,22 +19,8 @@
             background-color: #f8f9fa;
         }
 
-        .menu-desktop {
-            background-color: white;
-            padding: 15px 0;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
         .refund-header {
             margin: 20px 0;
-        }
-
-        .order-item {
-            background-color: white;
-            padding: 15px;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin-bottom: 15px;
         }
 
         .order-item img {
@@ -45,10 +31,6 @@
             margin-top: 50px;
             background-color: #fff;
             border-top: 1px solid #dee2e6;
-        }
-
-        .footer-content {
-            padding: 20px 0;
         }
 
         a {
@@ -75,6 +57,7 @@
         .book-quantity-price {
             display: flex;
             align-items: center;
+            justify-content: center;
         }
 
         .quantity-input {
@@ -86,68 +69,36 @@
         .quantity-btn {
             padding: 5px 10px;
             font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
     </style>
 </head>
 <body th:data-purchase-id="${orderNumber}">
 <!-- Header -->
-<header class="header-v4">
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light menu-desktop">
-        <div class="container">
-            <!-- Logo -->
-            <a class="navbar-brand logo" href="#">
-                3runner
-            </a>
+<header class="header-custom" th:replace="fragments/no-nav-header :: header"></header>
 
-            <!-- Toggler/collapsibe Button -->
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <!-- Navbar links -->
-            <div class="collapse navbar-collapse" id="collapsibleNavbar">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="login.html">login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="logout.html">logout</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="mypage.html">my page</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="register.html">register</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="cart.html">cart</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-</header>
 
 <main class="container my-5">
-    <div class="refund-header text-center" th:if="${type=='refund'}">
-        <h2 th:if="${type == 'refund'}">  환불 요청</h2>
-        <h2 th:if="${type == 'cancel'}"> 결제 취소</h2>
+    <div class="refund-header text-center">
+        <h2 th:text="${type == 'refund'} ? '환불 요청' : '결제 취소'"></h2>
         <h4 id="orderNumber" th:text="${orderNumber}"></h4>
     </div>
 
     <form>
         <div class="order-details">
             <ul class="book-list">
-                <li class="book-item" th:each="book, iter : ${books}" th:data-book-id="${book.id()}" >
+                <li class="book-item" th:each="book, iter : ${books}" th:data-book-id="${book.id()}">
                     <img th:src="@{/api/images/book/download(fileName=${book.readBookByPurchase().bookImage()})}"
                          th:data-book-image="${book.readBookByPurchase().bookImage()}" alt="Product Image">
-                    <div class="book-details" >
+                    <div class="book-details">
                         <p style="font-size: 18px" th:text="${book.readBookByPurchase().title()}">Product</p>
                         <p style="font-size: 16px" th:text="${book.readBookByPurchase().author()}">저자</p>
                         <p style="font-size: 14px" th:text="${book.readBookByPurchase().publisher()}">출판사</p>
                         <p style="font-size: 14px" th:text="'구입수량: ' + ${book.quantity()}">구입수량</p>
-                        <p style="font-size: 14px" th:text="'가격: ' + ${book.readBookByPurchase().price()} + '₩'">가격</p>
+                        <p style="font-size: 14px" th:text="'가격: ' + ${book.readBookByPurchase().sellingPrice()} + '₩'">
+                            가격</p>
                         <!-- 가격 추가 -->
                     </div>
                     <div class="book-quantity-price">
@@ -180,21 +131,21 @@
         </div>
 
         <!-- 환불 신청 버튼 -->
-        <button id="refund-button" class="btn btn-danger btn-block" type="button" th:if="${type=='refund'}">환불 신청</button>
-        <button id="cancel-button" class="btn btn-danger btn-block" type="button" th:if="${type=='cancel'}">결제 취소</button>
+        <button id="refund-button" class="btn btn-danger btn-block" type="button" th:if="${type=='refund'}" th:if=>환불 신청
+        </button>
+
+        <button id="cancel-button" class="btn btn-danger btn-block" type="button" th:if="${type=='cancel'}">결제 취소
+        </button>
+
 
     </form>
 </main>
-<footer class="bg-white text-dark p-3">
-    <div class="container text-center footer-content">
-        &copy; 2024 3runner
-    </div>
-</footer>
+<div th:replace="fragments/footer :: footer"></div>
+
 
 <script type="text/javascript">
     let allMaxSet = false;
     const orderNumber = document.getElementById('orderNumber').textContent;
-
 
 
     function updateQuantity(index, delta) {
@@ -239,6 +190,7 @@
     }
 
     function toggleMaxQuantities() {
+        var orderNumber = window.location.pathname.split('/').pop();
         var toggleButton = document.getElementById('toggle-max-btn');
         var quantityInputs = document.querySelectorAll('.quantity-input');
         var method = 'GET';
@@ -310,7 +262,34 @@
         document.getElementById('total-refund').innerText = total.toFixed(0);
     }
 
-    document.getElementById('refund-button').addEventListener('click', function () {
+    function handleCancelClick() {
+        var refundAmount = document.getElementById('total-refund').textContent;
+        var orderNumber = window.location.pathname.split('/').pop();
+
+        fetch('/refund/members/cancelPayment/' + orderNumber + '?refund-price=' + refundAmount, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('결제취소에 실패했습니다. 상태 코드: ' + response.status);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("Refund Request Successful:", data);
+                alert("결제취소가 완료되었습니다.");
+                window.location.href = data.redirectUrl;
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("결제취소가 실패했습니다. 에러 메시지: " + error.message);
+            });
+    }
+
+    function handleRefundClick() {
         var refundReason = document.getElementById('refund-reason').value;
         var refundAmount = document.getElementById('total-refund').textContent;
         var orderNumber = document.getElementById('orderNumber').textContent.trim();
@@ -320,7 +299,6 @@
             return;
         }
 
-        // 환불 요청 데이터를 서버로 전송
         fetch('/refund/members/' + orderNumber + '?refund-content=' + refundReason + '&refund-price=' + refundAmount, {
             method: 'POST',
             headers: {
@@ -342,9 +320,19 @@
                 console.error("Error:", error);
                 alert("환불 요청에 실패했습니다. 에러 메시지: " + error.message);
             });
-    });
+    }
 
     document.addEventListener('DOMContentLoaded', function () {
+        var cancelButton = document.getElementById('cancel-button');
+        if (cancelButton) {
+            cancelButton.addEventListener('click', handleCancelClick);
+        }
+
+        var refundButton = document.getElementById('refund-button');
+        if (refundButton) {
+            refundButton.addEventListener('click', handleRefundClick);
+        }
+
         calculateTotalRefund();
     });
 </script>

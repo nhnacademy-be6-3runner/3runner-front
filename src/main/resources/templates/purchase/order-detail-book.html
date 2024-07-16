@@ -20,7 +20,7 @@
                 <p>수량 : <span th:text="${book.quantity()}"></span></p>
                 <p>₩<span th:text="${book.price()}"></span></p>
             </div>
-            <button class="order-delivery" th:if="${purchaseStatus == 'CONFIRMATION'}">리뷰</button>
+            <button class="review-button" th:data-purchase-book-id="${book.id()}" th:if="${purchaseStatus == 'CONFIRMATION'}" onclick="createReview(this)">리뷰</button>
         </li>
 
     </ul>
@@ -32,6 +32,11 @@
 
     function loadBooks(page, size) {
         window.location.href = `/bookstore/members/purchases/books/${purchaseId}?page=${page}&size=${size}`;
+    }
+
+    function createReview(button){
+        const purchaseBookId = button.getAttribute('data-purchase-book-id')
+        window.location.href = `/${purchaseBookId}/review`;
     }
 </script>
 

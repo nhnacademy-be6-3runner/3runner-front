@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.nhnacademy.front.refund.dto.request.CreateRefundRequest;
 import com.nhnacademy.front.refund.dto.request.PaymentKeyRequest;
@@ -22,6 +24,9 @@ public interface RefundControllerClient {
 	@GetMapping("/bookstore/refund/{purchaseId}")
 	ApiResponse<PaymentKeyRequest> readTossOrderId(@PathVariable("purchaseId") String purchaseId);
 
+	@GetMapping("/bookstore/refund/member/{purchaseId}")
+	ApiResponse<String> readTossOrderIdMember(@PathVariable("purchaseId") Long purchaseId);
+
 	@GetMapping("/bookstore/refund/managers/{refundRecord}")
 	ApiResponse<ReadRefundResponse> readRefundRecprd(@PathVariable("refundRecord") Long refundRecord);
 
@@ -35,9 +40,11 @@ public interface RefundControllerClient {
 	@PutMapping("/bookstore/refund/reject/{refundRecord}")
 	ApiResponse<Boolean> updateRefundRejected(@PathVariable("refundRecord") Long refundRecord);
 
-	@PostMapping("/bookstore/refund/cancel/payment/{orderNumber}")
-	ApiResponse<Boolean> createRefundCancelPayment(@PathVariable("orderNumber") String orderNumber);
 
-	@GetMapping("/bookstore/refund/managers/all")
+	@PostMapping("/bookstore/refund/cancel/payment/part/{orderNumber}")
+	ApiResponse<Long> createRefundCancelPartPayment( @PathVariable("orderNumber") Object orderNumber);
+
+
+		@GetMapping("/bookstore/refund/managers/all")
 	ApiResponse<List<ReadRefundResponse>> readAllRefund();
 }

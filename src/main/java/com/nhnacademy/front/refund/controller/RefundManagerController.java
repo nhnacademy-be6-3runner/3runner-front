@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nhnacademy.front.refund.dto.response.ReadRefundResponse;
 import com.nhnacademy.front.refund.service.RefundService;
@@ -45,7 +44,7 @@ public class RefundManagerController {
 	@GetMapping("/all")
 	public String all(Model model) {
 		model.addAttribute("refunds",refundService.readRefundAll());
-		return "admin-refund";
+		return "refund/admin/admin-refund";
 	}
 
 }

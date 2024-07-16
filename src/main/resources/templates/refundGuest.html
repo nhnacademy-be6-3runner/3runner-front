@@ -146,7 +146,7 @@
                         <p style="font-size: 16px" th:text="${book.readBookByPurchase().author()}">저자</p>
                         <p style="font-size: 14px" th:text="${book.readBookByPurchase().publisher()}">출판사</p>
                         <p style="font-size: 14px" th:text="'구입수량: ' + ${book.quantity()}">구입수량</p>
-                        <p style="font-size: 14px" th:text="'가격: ' + ${book.readBookByPurchase().price()} + '₩'">가격</p>
+                        <p style="font-size: 14px" th:text="'가격: ' + ${book.readBookByPurchase().sellingPrice()} + '₩'">가격</p>
                         <!-- 가격 추가 -->
                     </div>
                     <div class="book-quantity-price">
@@ -174,7 +174,9 @@
         </div>
 
         <!-- 환불 신청 버튼 -->
+
         <button id="refund-button" class="btn btn-danger btn-block" type="button">결제 취소</button>
+
     </form>
 </main>
 <footer class="bg-white text-dark p-3">
@@ -206,7 +208,7 @@
         } else if (newQuantity > maxQuantity) {
             newQuantity = maxQuantity;
         }
-        var url = window.location.origin + '/refund/' + orderNumber + '/update/' + purchaseBookId + "?quantity=" + newQuantity;
+        var url = window.location.origin + '/refund/guests/' + orderNumber + '/update/' + purchaseBookId + "?quantity=" + newQuantity;
         var method = 'GET';
 
         $.ajax({
@@ -233,7 +235,7 @@
     function toggleMaxQuantities() {
         var toggleButton = document.getElementById('toggle-max-btn');
         var quantityInputs = document.querySelectorAll('.quantity-input');
-
+        var orderNumber = window.location.pathname.split('/').pop();
         if (!allMaxSet) {
             quantityInputs.forEach(function (input) {
                 input.value = input.getAttribute('data-max');
@@ -241,7 +243,7 @@
             toggleButton.classList.add('active');
             allMaxSet = true;
 
-            var url = window.location.origin + '/refund/' + orderNumber + '/update/all';
+            var url = window.location.origin + '/refund/guests/' + orderNumber + '/update/all';
             var method = 'GET';
 
             $.ajax({
@@ -264,6 +266,24 @@
             });
             toggleButton.classList.remove('active');
             allMaxSet = false;
+
+            var url2 = window.location.origin + '/refund/guests/' + orderNumber + '/update/all/zero';
+            var method = 'GET';
+
+            $.ajax({
+                url: url2,
+                type: method,
+                success: function (response) {
+                    console.log(parseInt(orderNumber))
+                    console.log(response);
+                },
+                error: function (xhr, status, error) {
+                    console.log(parseInt(orderNumber));
+                    console.error('Error:', error);
+                    console.error('Status:', status);
+                    console.error('XHR:', xhr);
+                }
+            })
         }
 
         calculateTotalRefund();
@@ -287,17 +307,12 @@
     }
 
     document.getElementById('refund-button').addEventListener('click', function () {
-        var refundReason = document.getElementById('refund-reason').value;
         var refundAmount = document.getElementById('total-refund').textContent;
         var orderNumber = document.getElementById('orderNumber').textContent.trim();
 
-        if (refundReason.trim() === "") {
-            alert("환불 사유를 입력하세요.");
-            return;
-        }
 
         // 환불 요청 데이터를 서버로 전송
-        fetch('/refund/' + orderNumber + '?refund-content=' + refundReason + '&refund-price=' + refundAmount, {
+        fetch('/refund/guests/cancelPayment/' + orderNumber + '?refund-price=' + refundAmount, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -305,18 +320,18 @@
         })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('환불 요청에 실패했습니다. 상태 코드: ' + response.status);
+                    throw new Error('결제 취소에 실패했습니다. 상태 코드: ' + response.status);
                 }
                 return response.json();
             })
             .then(data => {
                 console.log("Refund Request Successful:", data);
-                alert("환불 요청이 접수되었습니다.");
+                alert("결제가 취소되었습니다.");
                 window.location.href = data.redirectUrl;
             })
             .catch(error => {
                 console.error("Error:", error);
-                alert("환불 요청에 실패했습니다. 에러 메시지: " + error.message);
+                alert("결제취소가 실패했습니다. 에러 메시지: " + error.message);
             });
     });
 

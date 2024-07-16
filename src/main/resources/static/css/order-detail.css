@@ -52,6 +52,30 @@ body {
     flex: 1;
 }
 
+.review-button {
+    padding: 10px 20px;
+    background: #ffffff;
+    border: 2px solid #ddd;
+    color: #333;
+    border-radius: 30px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+    display: block;
+    margin-top: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.review-button:hover {
+    background: #f0f0f0;
+    border-color: #ccc;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    transform: translateY(-3px);
+}
+
 .order-list {
     list-style: none;
     padding: 0;
@@ -107,31 +131,41 @@ body {
     flex-wrap: wrap;
     gap: 20px;
 }
-
 .book-item {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: calc(20% - 20px); /* 5개씩 넣기 위해 20%로 설정 */
+    width: calc(20% - 20px);
     box-sizing: border-box;
+    margin-bottom: 20px;
 }
+
+.book-details, .book-quantity-price {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
 
 .book-item img {
     max-width: 100%;
     margin-bottom: 10px;
 }
-
-.book-details {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
+.book-item .review-button-container {
+    position: absolute;
+    bottom: 10px; /* 위치를 고정하여 아래쪽에 배치 */
+    left: 50%;
+    transform: translateX(-50%); /* 중앙 정렬 */
 }
+
+
 
 .book-details h4, .book-details h5, .book-details p {
     margin: 0;

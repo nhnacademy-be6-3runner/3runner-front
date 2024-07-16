@@ -12,16 +12,16 @@ import lombok.RequiredArgsConstructor;
 public class RefundRecordMemberServiceImpl implements RefundRecordMemberService {
 	private final RefundRecordMemberControllerClient refundRecordMemberControllerClient;
 
-	public void updateRefundRecorderMember(Long purchaseBookId, int quantity){
-		refundRecordMemberControllerClient.updateRefundRecordMember(purchaseBookId, quantity);
+	public void updateRefundRecorderMember(Long orderNumber, Long purchaseBookId, int quantity){
+		refundRecordMemberControllerClient.updateRefundRecordMember(orderNumber, purchaseBookId, quantity);
 	}
 
 	public void updateRefundAll(Long orderNumber){
 		refundRecordMemberControllerClient.updateRefundRecordAllMember(orderNumber);
 	}
 
-	public void createRefundRecordMember(Long refundId){
-		refundRecordMemberControllerClient.createRefundRecordMember(refundId);
+	public void createRefundRecordMember(Long orderNumber, Long refundId){
+		refundRecordMemberControllerClient.createRefundRecordMember(orderNumber, refundId);
 	}
 
 

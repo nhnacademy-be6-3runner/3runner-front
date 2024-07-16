@@ -12,9 +12,10 @@ public interface RefundService {
 
 	List<ReadPurchaseBookResponse> readMemberPurchaseBooks(Long purchaseId);
 
-	Map<String, Object> refundToss(String orderNumber,Integer price,String cancelReason);
+	Map<String, Object> refundToss(Object orderNumber,Integer price,String cancelReason);
 
 	Long createRefundRequest(Long orderId, Integer price, String refundReason);
+
 
 	List<ReadPurchaseBookResponse> readGuestPurchaseBooks(String orderNumber);
 

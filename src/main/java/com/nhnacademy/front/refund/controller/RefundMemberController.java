@@ -45,8 +45,9 @@ public class RefundMemberController {
 		return "refund";
 	}
 
+	@ResponseBody
 	@PostMapping("/cancelPayment/{orderNumber}")
-	public String cancelPayment(@PathVariable(name = "orderNumber") String orderNumber, @RequestParam(name = "price", required = false) Integer price, Model model) {
+	public ResponseEntity<Map<String, String>> cancelPayment(@PathVariable(name = "orderNumber") Long orderNumber, @RequestParam(name = "refund-price", required = false) Integer price, Model model) {
 
 		Map<String, Object> result = refundService.refundToss(orderNumber, price, "결제 취소");
 
@@ -56,16 +57,21 @@ public class RefundMemberController {
 		model.addAttribute("isSuccess", isSuccess);
 		model.addAttribute("jsonObject", json);
 
-		return "result";
+		Map<String, String> response = new HashMap<>();
+		response.put("message", "Refund request successful");
+		response.put("redirectUrl", "/refund/members/success");
+
+		return ResponseEntity.ok(response);
 	}
 
 	@ResponseBody
 	@PostMapping("/{purchaseId}")
 	public ResponseEntity<Map<String, String>> refundRequest(@PathVariable(name = "purchaseId") Long purchaseId,
+
 		@RequestParam(name = "refund-content") String refundContent,
 		@RequestParam(name = "refund-price") Integer price) {
 		Long refundId = refundService.createRefundRequest(purchaseId, price, refundContent);
-		if(Boolean.FALSE.equals(refundRecordMemberControllerClient.createRefundRecordMember(refundId).getBody().getData())){
+		if(Boolean.FALSE.equals(refundRecordMemberControllerClient.createRefundRecordMember(purchaseId,refundId).getBody().getData())){
 			Map<String, String> errorResponse = new HashMap<>();
 			errorResponse.put("message", "환불 요청이 완료된 건입니다.");
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
@@ -80,7 +86,7 @@ public class RefundMemberController {
 
 	@GetMapping("/{orderNumber}/update/{purchaseBookId}")
 	public String updateRefund(@PathVariable(name = "orderNumber") Long orderNumber, @PathVariable(name = "purchaseBookId") Long purchaseBookId, @RequestParam(name = "quantity", required = false) int quantity, Model model) {
-		refundRecordMemberControllerClient.updateRefundRecordMember(purchaseBookId, quantity);
+		refundRecordMemberControllerClient.updateRefundRecordMember(orderNumber,purchaseBookId, quantity);
 		return "redirect:/refund/members/"+orderNumber;
 	}
 
