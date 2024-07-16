@@ -104,7 +104,7 @@ public class RefundController {
 	/**
 	 * 결제 취소를 위한 코드, member
 	 *
-	 * @param memberId
+	 * @param memberId 현재 접근한 회원 ID
 	 * @param orderNumber
 	 * @return
 	 */
@@ -113,6 +113,10 @@ public class RefundController {
 		return ApiResponse.success(refundService.createRefundCancelPartPayment(memberId, orderNumber,price));
 	}
 
+	/**
+	 * 모든 환불 리스트 조회
+	 * @return 환불
+	 */
 	@GetMapping("/managers/all")
 	public ApiResponse<List<ReadRefundResponse>> readAllRefund() {
 		return ApiResponse.success(refundService.readRefundListAll());
