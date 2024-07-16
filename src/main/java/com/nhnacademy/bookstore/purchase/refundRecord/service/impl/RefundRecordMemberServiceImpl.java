@@ -1,12 +1,14 @@
 package com.nhnacademy.bookstore.purchase.refundRecord.service.impl;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.nhnacademy.bookstore.entity.purchaseBook.PurchaseBook;
 import com.nhnacademy.bookstore.entity.refund.Refund;
+import com.nhnacademy.bookstore.entity.refund.enums.RefundStatus;
 import com.nhnacademy.bookstore.entity.refundRecord.RefundRecord;
 import com.nhnacademy.bookstore.purchase.purchaseBook.dto.response.ReadBookByPurchase;
 import com.nhnacademy.bookstore.purchase.purchaseBook.dto.response.ReadPurchaseBookResponse;
@@ -36,9 +38,9 @@ public class RefundRecordMemberServiceImpl implements RefundRecordMemberService 
 	private final PurchaseBookCustomRepository purchaseBookCustomRepository;
 
 	@Override
-	public Long createRefundRecordRedis(Long memberId, Long purchaseBookId, int price, int quantity,
+	public Long createRefundRecordRedis(Long orderNumber, Long purchaseBookId, int price, int quantity,
 		ReadBookByPurchase readBookByPurchase) {
-		if (refundRecordRedisRepository.detailIsHit(memberId.toString(), purchaseBookId)) {
+		if (refundRecordRedisRepository.detailIsHit(orderNumber.toString(), purchaseBookId)) {
 			throw new AlreadyExistsRefundRecordRedis();
 		}
 		ReadRefundRecordResponse readRefundRecordResponse = ReadRefundRecordResponse.builder()
@@ -47,49 +49,54 @@ public class RefundRecordMemberServiceImpl implements RefundRecordMemberService 
 			.price(price)
 			.quantity(quantity)
 			.build();
-		return refundRecordRedisRepository.create(memberId.toString(), purchaseBookId, readRefundRecordResponse);
+		return refundRecordRedisRepository.create(orderNumber.toString(), purchaseBookId, readRefundRecordResponse);
 	}
 
 	@Override
-	public Long createRefundRecordAllRedis(Long memberId, Long orderNumber) {
-		if (refundRecordRedisRepository.isHit(memberId.toString())) {
+	public Long createRefundRecordAllRedis(Long orderNumber) {
+		if (refundRecordRedisRepository.isHit(orderNumber.toString())) {
 			throw new AlreadyExistsRefundRecordRedis();
 		}
 		List<ReadPurchaseBookResponse> responses = purchaseBookCustomRepository.readBookPurchaseResponses(orderNumber);
 		for (ReadPurchaseBookResponse readPurchaseBookResponse : responses) {
-			createRefundRecordRedis(memberId, readPurchaseBookResponse.id(), readPurchaseBookResponse.price(),
+			createRefundRecordRedis(orderNumber, readPurchaseBookResponse.id(),
+				readPurchaseBookResponse.price(),
 				readPurchaseBookResponse.quantity(), readPurchaseBookResponse.readBookByPurchase());
 		}
 		return orderNumber;
 	}
 
 	@Override
-	public Long updateRefundRecordRedis(Long memberId, Long purchaseBookId, int quantity) {
-		if (!refundRecordRedisRepository.detailIsHit(memberId.toString(), purchaseBookId)) {
-			ReadPurchaseBookResponse purchaseBook = purchaseBookCustomRepository.readPurchaseBookResponse(
-				purchaseBookId);
-			return createRefundRecordRedis(memberId, purchaseBookId,
+	public Long updateRefundRecordRedis(Long orderNumber, Long purchaseBookId, int quantity) {
+		ReadPurchaseBookResponse purchaseBook = purchaseBookCustomRepository.readPurchaseBookResponse(
+			purchaseBookId);
+		if (!refundRecordRedisRepository.detailIsHit(orderNumber.toString(), purchaseBookId)) {
+
+			return createRefundRecordRedis(orderNumber, purchaseBookId,
 				(purchaseBook.price() / purchaseBook.quantity()) * quantity, quantity,
 				purchaseBook.readBookByPurchase());
 
 		}
-		return refundRecordRedisRepository.update(memberId.toString(), purchaseBookId, quantity);
+		return refundRecordRedisRepository.update(orderNumber.toString(), purchaseBookId, quantity,
+			purchaseBook.price() / purchaseBook.quantity());
 	}
 
 	@Override
-	public Long updateRefundRecordAllRedis(Long memberId, Long orderNumber) {
-		if (!refundRecordRedisRepository.isHit(memberId.toString())) {
-			return createRefundRecordAllRedis(memberId, orderNumber);
+	public Long updateRefundRecordAllRedis(Long orderNumber) {
+		if (!refundRecordRedisRepository.isHit(orderNumber.toString())) {
+			return createRefundRecordAllRedis(orderNumber);
 		}
+
 		List<ReadPurchaseBookResponse> responses = purchaseBookCustomRepository.readBookPurchaseResponses(orderNumber);
 		for (ReadPurchaseBookResponse readPurchaseBookResponse : responses) {
-			if (!refundRecordRedisRepository.detailIsHit(memberId.toString(), readPurchaseBookResponse.id())) {
-				createRefundRecordRedis(memberId, readPurchaseBookResponse.id(),
+			if (!refundRecordRedisRepository.detailIsHit(orderNumber.toString(), readPurchaseBookResponse.id())) {
+				createRefundRecordRedis(orderNumber, readPurchaseBookResponse.id(),
 					readPurchaseBookResponse.price(),
 					readPurchaseBookResponse.quantity(), readPurchaseBookResponse.readBookByPurchase());
 			} else {
-				refundRecordRedisRepository.update(memberId.toString(), readPurchaseBookResponse.id(),
-					readPurchaseBookResponse.quantity());
+				PurchaseBook purchaseBook = purchaseBookRepository.findById(readPurchaseBookResponse.id()).orElse(null);
+				refundRecordRedisRepository.update(orderNumber.toString(), readPurchaseBookResponse.id(),
+					readPurchaseBookResponse.quantity(), purchaseBook.getPrice() / purchaseBook.getQuantity());
 			}
 		}
 		return orderNumber;
@@ -97,19 +104,19 @@ public class RefundRecordMemberServiceImpl implements RefundRecordMemberService 
 	}
 
 	@Override
-	public Long updateRefundRecordZeroAllRedis(Long memberId, Long orderNumber) {
-		if (!refundRecordRedisRepository.isHit(memberId.toString())) {
-			return createRefundRecordAllRedis(memberId, orderNumber);
+	public Long updateRefundRecordZeroAllRedis(Long orderNumber) {
+		if (!refundRecordRedisRepository.isHit(orderNumber.toString())) {
+			return createRefundRecordAllRedis(orderNumber);
 		}
 		List<ReadPurchaseBookResponse> responses = purchaseBookCustomRepository.readBookPurchaseResponses(orderNumber);
 		for (ReadPurchaseBookResponse readPurchaseBookResponse : responses) {
-			if (!refundRecordRedisRepository.detailIsHit(memberId.toString(), readPurchaseBookResponse.id())) {
-				createRefundRecordRedis(memberId, readPurchaseBookResponse.id(),
+			if (!refundRecordRedisRepository.detailIsHit(orderNumber.toString(), readPurchaseBookResponse.id())) {
+				createRefundRecordRedis(orderNumber, readPurchaseBookResponse.id(),
 					0,
 					0, readPurchaseBookResponse.readBookByPurchase());
 			} else {
-				refundRecordRedisRepository.update(memberId.toString(), readPurchaseBookResponse.id(),
-					0);
+				refundRecordRedisRepository.update(orderNumber.toString(), readPurchaseBookResponse.id(),
+					0, 0);
 			}
 		}
 		return orderNumber;
@@ -124,22 +131,24 @@ public class RefundRecordMemberServiceImpl implements RefundRecordMemberService 
 	}
 
 	@Override
-	public List<ReadRefundRecordResponse> readRefundRecordRedis(Long memberId) {
-		if (!refundRecordRedisRepository.isHit(memberId.toString())) {
+	public List<ReadRefundRecordResponse> readRefundRecordRedis(Long orderNumber) {
+		if (!refundRecordRedisRepository.isHit(orderNumber.toString())) {
 			throw new NotExistsRefundRecordRedis();
 		}
 
-		return refundRecordRedisRepository.readAll(memberId.toString());
+		return refundRecordRedisRepository.readAll(orderNumber.toString());
 	}
 
 	@Override
-	public Boolean createRefundRecord(Long memberId, Long refundId) {
-		if (!refundRecordRedisRepository.isHit(memberId.toString())) {
+	public Boolean createRefundRecord(Long orderNumber, Long refundId) {
+		if (!refundRecordRedisRepository.isHit(orderNumber.toString())) {
 			return false;
 		}
 		Refund refund = refundRepository.findById(refundId).orElseThrow(NotExistsRefund::new);
-
-		List<ReadRefundRecordResponse> readRefundRecordResponseList = readRefundRecordRedis(memberId);
+		if (!refund.getRefundRecordList().isEmpty()) {
+			return false;
+		}
+		List<ReadRefundRecordResponse> readRefundRecordResponseList = readRefundRecordRedis(orderNumber);
 
 		for (ReadRefundRecordResponse readRefundRecordResponse : readRefundRecordResponseList) {
 			RefundRecord refundRecord = new RefundRecord();
@@ -150,6 +159,7 @@ public class RefundRecordMemberServiceImpl implements RefundRecordMemberService 
 			refundRecord.setQuantity(readRefundRecordResponse.quantity());
 			refundRecordRepository.save(refundRecord);
 		}
+		refundRecordRedisRepository.deleteAll(orderNumber.toString());
 
 		return true;
 

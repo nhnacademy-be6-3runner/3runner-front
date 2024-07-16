@@ -82,7 +82,8 @@ public class RefundRecordGuestServiceImpl implements RefundRecordGuestService {
 					readPurchaseBookResponse.quantity(), readPurchaseBookResponse.readBookByPurchase());
 			} else {
 				refundRecordRedisRepository.update(orderNumber.toString(), readPurchaseBookResponse.id(),
-					readPurchaseBookResponse.quantity());
+					readPurchaseBookResponse.quantity(),
+					readPurchaseBookResponse.price() / readPurchaseBookResponse.quantity());
 			}
 		}
 		return true;
@@ -102,7 +103,7 @@ public class RefundRecordGuestServiceImpl implements RefundRecordGuestService {
 					0, readPurchaseBookResponse.readBookByPurchase());
 			} else {
 				refundRecordRedisRepository.update(orderNumber.toString(), readPurchaseBookResponse.id(),
-					0);
+					0, 0);
 			}
 		}
 		return true;
@@ -113,7 +114,9 @@ public class RefundRecordGuestServiceImpl implements RefundRecordGuestService {
 		if (!refundRecordRedisRepository.isHit(orderNumber)) {
 			throw new NotExistsRefundRecordRedis();
 		}
-		return refundRecordRedisRepository.update(orderNumber, purchaseBookId, quantity);
+		ReadPurchaseBookResponse purchaseBook = purchaseBookCustomRepository.readPurchaseBookResponse(purchaseBookId);
+		return refundRecordRedisRepository.update(orderNumber, purchaseBookId, quantity,
+			purchaseBook.price() / purchaseBook.quantity());
 	}
 
 	@Override
@@ -151,6 +154,7 @@ public class RefundRecordGuestServiceImpl implements RefundRecordGuestService {
 			refundRecord.setQuantity(readRefundRecordResponse.quantity());
 			refundRecordRepository.save(refundRecord);
 		}
+		refundRecordRedisRepository.deleteAll(orderNumber);
 
 		return true;
 

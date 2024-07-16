@@ -1,5 +1,7 @@
 package com.nhnacademy.bookstore.purchase.refund.repository.impl;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -10,6 +12,7 @@ import com.nhnacademy.bookstore.entity.refundRecord.QRefundRecord;
 import com.nhnacademy.bookstore.purchase.refund.dto.response.ReadRefundResponse;
 import com.nhnacademy.bookstore.purchase.refund.repository.RefundCustomRepository;
 import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import jakarta.persistence.EntityManager;
@@ -29,22 +32,26 @@ public class RefundCustomRepositoryImpl implements RefundCustomRepository {
 	}
 
 
-	@Override
-	public ReadRefundResponse readRefund(Long refundId) {
+	public List<ReadRefundResponse> readRefundAll() {
+		QRefundRecord subRefundRecord = new QRefundRecord("subRefundRecord");
+
 		return jpaQueryFactory.select(
 				Projections.constructor(ReadRefundResponse.class,
 					qRefund.refundContent,
 					qRefund.price,
 					qRefund.id,
+					qRefund.refundStatus,
 					qPurchase.orderNumber
 				))
 			.from(qRefund)
-			.leftJoin(qRefundRecord)
-			.on(qRefundRecord.refund.eq(qRefund))
-			.join(qRefundRecord.purchaseBook, qPurchaseBook)
-			.join(qPurchaseBook.purchase, qPurchase)
-			.where(qRefund.id.eq(refundId))
-			.groupBy(qRefund.id, qRefund.refundContent, qRefund.price, qPurchase.orderNumber)
-			.fetchOne();
+			.leftJoin(qRefund.refundRecordList, qRefundRecord)
+			.leftJoin(qRefundRecord.purchaseBook, qPurchaseBook)
+			.leftJoin(qPurchaseBook.purchase, qPurchase)
+			.where(qRefundRecord.id.eq(
+				JPAExpressions.select(subRefundRecord.id.min())
+					.from(subRefundRecord)
+					.where(subRefundRecord.refund.eq(qRefund))
+			))
+			.fetch();
 	}
 }

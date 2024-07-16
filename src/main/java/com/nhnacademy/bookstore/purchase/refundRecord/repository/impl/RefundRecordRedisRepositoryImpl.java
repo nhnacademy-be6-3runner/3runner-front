@@ -28,16 +28,16 @@ public class RefundRecordRedisRepositoryImpl implements RefundRecordRedisReposit
 	}
 
 	@Override
-	public Long update(String hashName, Long id, int quantity) {
+	public Long update(String hashName, Long id, int quantity, int price) {
 		Object responses = redisTemplate.opsForHash()
 			.get(hashName + ":", id.toString());
 		if (Objects.isNull(responses)) {
 			throw new NotExistsRefundRecordRedis();
 		}
-		ReadRefundRecordResponse response = (ReadRefundRecordResponse) responses;
+		ReadRefundRecordResponse response = (ReadRefundRecordResponse)responses;
 		ReadRefundRecordResponse updateResponse = ReadRefundRecordResponse.builder()
 			.quantity(quantity)
-			.price((response.price() / response.quantity()) * quantity)
+			.price(price * quantity)
 			.readBookByPurchase(response.readBookByPurchase())
 			.id(response.id())
 			.build();
