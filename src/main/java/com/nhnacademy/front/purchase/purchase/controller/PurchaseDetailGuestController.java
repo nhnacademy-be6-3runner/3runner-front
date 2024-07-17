@@ -35,9 +35,6 @@ public class PurchaseDetailGuestController {
 	 * 비회원 주문내역 보여주기
 	 *
 	 * @param orderNumber 주문 번호
-	 * @param page 주문내역 현재 페이지(책들만)
-	 * @param size 주문내역 보여주는 요소 사이즈(책)
-	 * @param sort 정렬
 	 * @param model
 	 * @return 주문 창으로 이동
 	 */
@@ -45,17 +42,14 @@ public class PurchaseDetailGuestController {
 	public String orders(
 		@PathVariable(name = "orderNumber") String orderNumber,
 		@RequestParam(name = "password",required = false) String password,
-		@RequestParam(defaultValue = "0", required = false) int page,
-		@RequestParam(defaultValue = "30", required = false) int size,
-		@RequestParam(required = false) String sort,
 		Model model) {
 		ReadPurchaseResponse response = purchaseGuestService.readGuestPurchases(orderNumber,password);
 		if(Objects.isNull(response)){
 			return "redirect:/orders/guests/login";
 		}
 		model.addAttribute("guestorder",response);
-		model.addAttribute("guestorderbooks",purchaseGuestService.readGuestPurchaseBooks(orderNumber,page,size,sort));
-		return "purchase/guest/order-detail-guest";
+		model.addAttribute("guestorderbooks",purchaseGuestService.readGuestPurchaseBooks(orderNumber));
+		return "/purchase/guest/order-detail-guest";
 	}
 
 	/**

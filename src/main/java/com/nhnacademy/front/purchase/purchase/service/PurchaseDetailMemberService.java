@@ -1,5 +1,7 @@
 package com.nhnacademy.front.purchase.purchase.service;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 
 import com.nhnacademy.front.entity.purchase.enums.PurchaseStatus;
@@ -16,7 +18,7 @@ public interface PurchaseDetailMemberService {
 
 	Page<ReadPurchase> readPurchases(int page);
 
-	Page<ReadPurchaseBookResponse> readPurchaseBookResponses(Long purchaseId, int page, int size, String sort);
+	List<ReadPurchaseBookResponse> readPurchaseBookResponses(Long purchaseId);
 
 	PurchaseStatus readPurchaseStatus(Long purchaseId);
 
