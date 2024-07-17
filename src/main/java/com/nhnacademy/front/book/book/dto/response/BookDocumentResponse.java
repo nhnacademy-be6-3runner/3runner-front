@@ -11,7 +11,6 @@ public record BookDocumentResponse(
 	String author,
 	String thumbnail,
 	String publisher,
-	String publishedDate,
 	int price,
 	int sellingPrice,
 	List<String> tagList,
