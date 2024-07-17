@@ -34,7 +34,7 @@ public class SecurityConfig {
 
 	private final CustomUserDetailService userDetailsService;
 	private final ObjectMapper objectMapper;
-	private JWTUtil jwtUtil;
+	private final JWTUtil jwtUtil;
 	private final LoginService loginService;
 	private final TokenService tokenService;
 

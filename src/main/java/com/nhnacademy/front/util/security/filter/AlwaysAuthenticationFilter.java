@@ -47,6 +47,7 @@ public class AlwaysAuthenticationFilter extends UsernamePasswordAuthenticationFi
 		if (cookie != null) {
 			for (Cookie c : cookie) {
 				if (c.getName().equals("Access")) {
+
 					String token = c.getValue();
 					if (jwtUtil.isExpired(token)) {
 						String refreshToken = findRefreshToken(request, response);
