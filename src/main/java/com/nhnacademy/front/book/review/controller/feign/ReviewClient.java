@@ -35,4 +35,10 @@ public interface ReviewClient {
     );
 
     // TODO 사용자 아이디로 리뷰 조회
+
+    @GetMapping("/books/{bookId}/reviews/count")
+    ApiResponse<Long> countReviewsByBookId(@PathVariable long bookId);
+
+    @GetMapping("/books/{bookId}/reviews/avg")
+    ApiResponse<Double> avgReviewsByBookId(@PathVariable long bookId);
 }

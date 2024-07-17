@@ -60,33 +60,24 @@ jobs:
             chmod +x ./renew_cert.sh
             chmod +x ./setup_cron.sh
             ./setup_cron.sh
-            
+
+            sudo docker stop front1 || true
+            sudo docker rm front1 || true
             sudo docker build -t front-image1 .
-            sudo docker build -t front-image2 .
-
-            if ! sudo docker info | grep -q 'Swarm: active'; then
-              sudo docker swarm init
-            fi
-
-            if sudo docker service ls | grep -q 'front1'; then
-              sudo docker service rm front1
-            fi
-            sudo docker service create --name front1 --publish 3000:3000 --network front_network_swarm front-image1
+            sudo docker run -d -p 3000:3000 --name front1 --net front_network front-image1
             
             sleep 90
             
-            if sudo docker service ls | grep -q 'front2'; then
-              sudo docker service rm front2
-            fi
-            sudo docker service create --name front2 --publish 3001:3001 --network front_network_swarm front-image2
+            sudo docker stop front2 || true
+            sudo docker rm front2 || true
+            sudo docker build -t front-image2 .
+            sudo docker run -d -p 3001:3001 --name front2 --net front_network front-image2
             
-            if sudo docker service ls | grep -q 'nginx'; then
-              sudo docker service rm nginx
-            fi
-            sudo docker service create --name nginx --publish 80:80 --publish 443:443 \
-            --mount type=bind,source=/home/nhnacademy/front/nginx.conf,target=/etc/nginx/nginx.conf \
-            --mount type=bind,source=/home/nhnacademy/certbot/conf,target=/etc/letsencrypt \
-            --mount type=bind,source=/home/nhnacademy/certbot/www,target=/var/www/certbot \
-            --restart-condition any \
-            --restart-max-attempts 3 \
-            --network front_network_swarm nginx:latest
+            sudo docker stop nginx || true
+            sudo docker rm nginx || true
+            sudo docker run --name nginx -d \
+              -p 80:80 -p 443:443 \
+              -v ./nginx.conf:/etc/nginx/nginx.conf \
+              -v /home/nhnacademy/certbot/conf:/etc/letsencrypt \
+              -v /home/nhnacademy/certbot/www:/var/www/certbot \
+              --net front_network nginx

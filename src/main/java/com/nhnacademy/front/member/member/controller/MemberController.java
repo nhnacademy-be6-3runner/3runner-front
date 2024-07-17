@@ -76,6 +76,11 @@ public class MemberController {
 		return "mypage";
 	}
 
+	@GetMapping("/member/mypage")
+	public String memberMypage() {
+		return "mypage/mypage";
+	}
+
 	@GetMapping("/member")
 	public String myPage(Model model) {
 			ApiResponse<GetMemberResponse> memberdetails = memberControllerClient.readById();

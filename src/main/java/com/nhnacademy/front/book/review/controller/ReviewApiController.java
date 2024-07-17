@@ -22,4 +22,14 @@ public class ReviewApiController {
         Page<ReviewListResponse> reviewList = reviewService.readAllReviewsByBookId(bookId, page, size, sort);
         return ApiResponse.success(reviewList);
     }
+
+    @GetMapping("/{bookId}/reviews/count")
+    public ApiResponse<Long> countReviewsByBookId(@PathVariable Long bookId) {
+        return ApiResponse.success(reviewService.countReviewsByBookId(bookId));
+    }
+
+    @GetMapping("/{bookId}/reviews/avg")
+    public ApiResponse<Double> avgReviewsByBookId(@PathVariable Long bookId) {
+        return ApiResponse.success(reviewService.getAverageRatingByBookId(bookId));
+    }
 }
