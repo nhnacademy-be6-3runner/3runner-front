@@ -18,7 +18,7 @@
         <li class="order-item" th:each="order : ${orders}">
             <div class="order-info">
                 <div>
-                    <p>주문 번호123:</p>
+                    <p>주문 번호:</p>
                     <p th:text="${order.orderNumber.toString()}">주문 번호</p>
                 </div>
                 <div>
@@ -38,7 +38,7 @@
                 <button class="details-btn" th:attr="data-order-id=${order.id()}">자세히 보기</button>
                 <form method="post" th:action="@{'/orders/members/{purchaseId}' (purchaseId = ${order.id()})}">
                     <button type="submit" class="confirm-order-btn" th:if="${order.status.toString() != 'CONFIRMATION'
-                        and order.status.toString() != 'REFUNDED_REQUEST' and order.status.toString() != 'REFUNDED_COMPLETE'}">
+                        and order.status.toString() != 'REFUNDED_REQUEST' and order.status.toString() != 'REFUNDED_COMPLETED'}">
                         주문 확정
                     </button>
                 </form>
@@ -49,7 +49,7 @@
                         th:text="'결제 취소'">
                 </button>
                 <button class="refund-btn"
-                        th:if="${order.status.toString() != 'COMPLETED' && order.status.toString() != 'CONFIRMATION' && order.status.toString() != 'REFUNDED_REQUEST' && order.status.toString() != 'REFUNDED_COMPLETE'}"
+                        th:if="${order.status.toString() != 'COMPLETED' && order.status.toString() != 'CONFIRMATION' && order.status.toString() != 'REFUNDED_REQUEST' && order.status.toString() != 'REFUNDED_COMPLETED'}"
                         th:attr="data-order-id=${order.id()}"
                         th:text="'환불'">
                 </button>
