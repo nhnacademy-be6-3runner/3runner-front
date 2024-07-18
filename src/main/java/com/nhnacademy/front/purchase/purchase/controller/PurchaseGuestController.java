@@ -2,6 +2,7 @@ package com.nhnacademy.front.purchase.purchase.controller;
 
 import com.nhnacademy.front.purchase.cart.dto.response.ReadBookCartGuestResponse;
 import com.nhnacademy.front.purchase.cart.feign.BookCartControllerClient;
+import com.nhnacademy.front.purchase.purchase.feign.PaymentControllerClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +20,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PurchaseGuestController {
     private final BookCartControllerClient bookCartGuestControllerClient;
+    private final PaymentControllerClient paymentControllerClient;
 
     /**
      * 비회원 주문 UI.
@@ -50,5 +52,20 @@ public class PurchaseGuestController {
 
         model.addAttribute("roadFullAddr", roadFullAddr);
         return "purchase/guest/address";
+    }
+
+    @PostMapping("/purchases/guests/confirm")
+    @ResponseBody
+    public void purchase(
+            @RequestHeader(value = "Member-Id", required = false) Long memberId,
+            @RequestParam(required = false)  Long cartId,
+            @RequestParam(required = false)  String address,
+            @RequestParam(required = false)  String password,
+            @RequestParam(required = false) String isPacking,
+            @RequestParam(required = false) String shipping,
+            @RequestBody String jsonBody) throws Exception {
+
+        paymentControllerClient.confirmPayment(memberId,cartId,address,password,isPacking,shipping,jsonBody);
+
     }
 }

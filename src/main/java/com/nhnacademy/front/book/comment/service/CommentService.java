@@ -9,4 +9,8 @@ public interface CommentService {
     void createComment(Long reviewId, Long memberId, CreateCommentRequest createCommentRequest);
 
     Page<CommentResponse> readAllCommentsByReviewId(Long reviewId, int page, int size);
+
+    Page<CommentResponse> readAllCommentsByMemberId(Long memberId, int page, int size);
+
+    void deleteComment(Long commentId, Long memberId);
 }

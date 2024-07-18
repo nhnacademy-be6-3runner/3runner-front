@@ -18,7 +18,7 @@
         <li class="order-item" th:each="order : ${orders}">
             <div class="order-info">
                 <div>
-                    <p>주문 번호:</p>
+                    <p>주문 번호123:</p>
                     <p th:text="${order.orderNumber.toString()}">주문 번호</p>
                 </div>
                 <div>
@@ -42,6 +42,7 @@
                         주문 확정
                     </button>
                 </form>
+
                 <button class="payment-cancel-btn"
                         th:if="${order.status.toString() == 'COMPLETED'}"
                         th:attr="data-order-id=${order.id()}"
@@ -57,6 +58,7 @@
 <!--                        th:attr="data-order-id=${order.id}"-->
 <!--                        th:text="'환불 내역'">-->
 <!--                </button>-->
+
             </div>
         </li>
     </ul>
@@ -97,12 +99,14 @@
         document.querySelectorAll('.refund-btn').forEach(button => {
             button.addEventListener('click', function () {
                 const orderId = this.getAttribute('data-order-id');
+
                 window.location.href = `/refund/members/${orderId}?type=refund`;
             });
         });
         document.querySelectorAll('.payment-cancel-btn').forEach(button => {
             button.addEventListener('click', function () {
                 const orderId = this.getAttribute('data-order-id');
+
                 window.location.href = `/refund/members/${orderId}?type=cancel`;
             });
         });

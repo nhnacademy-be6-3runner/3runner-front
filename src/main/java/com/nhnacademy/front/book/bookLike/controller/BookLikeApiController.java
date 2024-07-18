@@ -36,4 +36,14 @@ public class BookLikeApiController {
         Boolean isLiked = bookLikeService.isLikedByMember(bookId, memberId);
         return ApiResponse.success(isLiked);
     }
+
+    @GetMapping("/api/mypage/likes")
+    public ApiResponse<Page<BookListResponse>> readAllBookLikesByMemberId(
+            @RequestHeader(value = "Member-Id", required = false) Long memberId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Page<BookListResponse> response = bookLikeService.readAllBookLikesByMemberId(memberId, page, size);
+        return ApiResponse.success(response);
+    }
 }

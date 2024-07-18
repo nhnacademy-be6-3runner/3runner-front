@@ -130,7 +130,6 @@ body {
     flex-wrap: wrap;
     gap: 20px;
 }
-
 .book-item {
     display: flex;
     flex-direction: column;
@@ -154,6 +153,7 @@ body {
     margin-bottom: 10px;
 }
 
+
 .book-item img {
     max-width: 100%;
     margin-bottom: 10px;
@@ -169,6 +169,7 @@ body {
 .book-details h4,
 .book-details h5,
 .book-details p {
+
     margin: 0;
 }
 
@@ -225,6 +226,7 @@ body {
 .refund-btn,
 .payment-cancel-btn,
 .refund-detail-btn {
+
     border: none;
     color: white;
     padding: 5px 10px;
@@ -242,6 +244,7 @@ body {
 .confirm-order-btn {
     background-color: #28a745;
 }
+
 
 .confirm-order-btn:hover {
     background-color: #218838;
@@ -264,6 +267,7 @@ body {
 
 .refund-btn:hover,
 .payment-cancel-btn:hover {
+
     background-color: #c82333;
 }
 

@@ -25,7 +25,7 @@ spring:
       max-request-size: 10MB
 
   profiles:
-    active: prod
+    active: dev
   thymeleaf:
     cache: false
     prefix: classpath:/templates/
@@ -34,6 +34,11 @@ spring:
   jwt:
     secret: aaaasqwlkljlfasdfqwerafcxvzpojijoijopjewndllllllsserrrrrrwqexc
 
+  rabbitmq:
+    host: 133.186.241.167
+    port: 5672
+    username: admin
+    password: nhnacademy123!
 
   cloud:
     openfeign:

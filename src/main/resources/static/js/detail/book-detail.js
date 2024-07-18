@@ -61,9 +61,15 @@ function addCart(bookId, quantity) {
         type: 'POST',
         contentType: 'application/x-www-form-urlencoded',
         data: $.param({ bookId: bookId, quantity: quantity }),
+
+        //TODO : 최종 배포시 변경오먕
         success: function (response) {
             console.log(response);
-            window.location.href = window.location.origin + '/carts';
+            try{
+                window.location.href = window.location.origin + '/carts';
+            } catch (error) {
+                window.location.href = 'https://'+ window.location.host + '/carts';
+            }
         },
         error: function (xhr, status, error) {
             console.error('Error:', error);
@@ -79,9 +85,15 @@ function addPurchase(bookId, quantity) {
         type: 'POST',
         contentType: 'application/x-www-form-urlencoded',
         data: $.param({ bookId: bookId, quantity: quantity }),
+
+        //TODO : 최종 배포시 변경오먕
         success: function (response) {
             console.log(response);
-            window.location.href = window.location.origin + '/purchases';
+            try{
+                window.location.href = window.location.origin + '/carts';
+            } catch (error) {
+                window.location.href = 'https://'+ window.location.host + '/carts';
+            }
         },
         error: function (xhr, status, error) {
             console.error('Error:', error);
@@ -182,4 +194,24 @@ function loadReviewData() {
             }
         })
         .catch(error => console.error('Error fetching average rating:', error));
+}
+
+function downloadSelectedCoupon() {
+    const bookId = getBookIdFromUrl();
+
+    $.ajax({
+        url: `/coupons/books/${bookId}`,
+        type: 'POST',
+        success: function (response) {
+            if(response === 'true'){
+                alert('쿠폰이 다운로드되었습니다!');
+            } else {
+                alert('발급 받을 수 있는 쿠폰이 없습니다');
+            }
+        },
+        error: function (xhr, status, error) {
+            alert('발급 받을 수 있는 쿠폰이 없습니다');
+            console.error('Error downloading coupon:', error);
+        }
+    });
 }

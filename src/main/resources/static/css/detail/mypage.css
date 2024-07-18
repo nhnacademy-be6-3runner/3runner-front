@@ -1,16 +1,11 @@
-body {
-    overflow-x: hidden;
-}
-.header2 {
-    margin-right: 200px;
-}
 .d-flex {
-    margin-left: 200px;
+
 }
 .container2 {
+    width: 120%;
     margin-top: 50px;
     margin-bottom: 50px;
-    margin-left: 230px;
+    margin-left: 250px;
     max-width: 800px;
     padding: 30px;
     background-color: #fff;

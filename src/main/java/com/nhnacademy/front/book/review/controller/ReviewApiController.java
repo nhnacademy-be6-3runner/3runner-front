@@ -32,4 +32,12 @@ public class ReviewApiController {
     public ApiResponse<Double> avgReviewsByBookId(@PathVariable Long bookId) {
         return ApiResponse.success(reviewService.getAverageRatingByBookId(bookId));
     }
+
+    @GetMapping("/mypage/reviews")
+    public ApiResponse<Page<ReviewListResponse>> readAllReviewsByMemberId(@RequestHeader(value = "Member-Id", required = false) Long memberId,
+                                                                          @RequestParam(defaultValue = "0") int page,
+                                                                          @RequestParam(defaultValue = "5") int size) {
+        Page<ReviewListResponse> reviewList = reviewService.readAllReviewsByMemberId(memberId, page, size);
+        return ApiResponse.success(reviewList);
+    }
 }

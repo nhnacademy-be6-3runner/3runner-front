@@ -87,4 +87,14 @@ public class ReviewServiceImpl implements ReviewService {
         }
         return 0.0;
     }
+
+    @Override
+    public Page<ReviewListResponse> readAllReviewsByMemberId(Long memberId, int page, int size) {
+        ApiResponse<Page<ReviewListResponse>> response = reviewClient.readAllReviewsByMemberId(memberId, page, size);
+        if (response.getHeader().isSuccessful() && response.getBody() != null) {
+            return response.getBody().getData();
+        } else {
+            throw new InvalidApiResponseException("사용자 리뷰 조회 exception");
+        }
+    }
 }
