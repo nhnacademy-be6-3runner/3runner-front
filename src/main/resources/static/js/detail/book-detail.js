@@ -64,8 +64,7 @@ function addCart(bookId, quantity) {
 
         //TODO : 최종 배포시 변경오먕
         success: function (response) {
-            console.log(response);
-            window.location.href = 'https://'+ window.location.host + '/carts';
+            window.location.href = window.location.origin + '/carts';
         },
         error: function (xhr, status, error) {
             console.error('Error:', error);
@@ -85,7 +84,7 @@ function addPurchase(bookId, quantity) {
         //TODO : 최종 배포시 변경오먕
         success: function (response) {
             console.log(response);
-            window.location.href = 'https://'+ window.location.host + '/carts';
+            window.location.href = window.location.origin + '/carts';
         },
         error: function (xhr, status, error) {
             console.error('Error:', error);

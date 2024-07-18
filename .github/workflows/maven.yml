@@ -71,8 +71,6 @@ jobs:
             sudo docker stop nginx || true
             sudo docker rm nginx || true
             sudo docker run --name nginx -d \
-              -p 80:80 -p 443:443 \
+              -p 80:80 \
               -v ./nginx.conf:/etc/nginx/nginx.conf \
-              -v /home/nhnacademy/certbot/conf:/etc/letsencrypt \
-              -v /home/nhnacademy/certbot/www:/var/www/certbot \
               --net front_network nginx

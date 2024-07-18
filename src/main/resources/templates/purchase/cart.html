@@ -104,13 +104,13 @@
         }
         quantityInput.value = newQuantity;
 
-        var url = 'https://'+ window.location.host +'/carts/'+bookId+'/updates/'+deltaInt
+        var url = window.location.origin +'/carts/'+bookId+'/updates/'+deltaInt
         var method = 'GET';
         var cartIdElement = [[${cartId}]];
 
         if(newQuantity === 0){
             if (confirm("아이템을 삭제하시겠습니까?")) {
-                url = 'https://'+ window.location.host + '/carts/deletes/books/' + bookCartId;
+                url = window.location.origin + '/carts/deletes/books/' + bookCartId;
                 $.ajax({
                     url: url,
                     type: method,
@@ -170,7 +170,7 @@
     }
     function deleteItem(bookCartId, cartId) {
         const location = window.location;
-        var url = 'https://'+ window.location.host + '/carts/deletes/books/' + bookCartId;
+        var url = window.location.origin + '/carts/deletes/books/' + bookCartId;
 
         $.ajax({
             url: url,
@@ -189,7 +189,7 @@
 
     function deleteAll(cartId) {
         const location = window.location;
-        var url = 'https://'+ window.location.host + '/carts/deletes';
+        var url = window.location.origin + '/carts/deletes';
 
         $.ajax({
             url: url,
@@ -205,6 +205,45 @@
             }
         });
     }
+
+    // function updateQuantity(index, delta) {
+    //     const quantityInput = document.getElementById('quantity-'+index);
+    //     const bookId =  document.getElementById('bookId-'+index).value;
+    //     const bookCartId = document.getElementById('bookCartId-'+index).value;
+    //     const deltaInt = parseInt(delta);
+    //
+    //     var url = window.location.origin +'/carts/'+bookId+'/updates/'+deltaInt
+    //     const form = document.createElement('form');
+    //     form.method = 'GET';
+    //     form.action = url;
+    //
+    //     document.body.appendChild(form);
+    //     form.submit();
+    //
+    //     calculateTotal();
+    // }
+    // function deleteItem(bookCartId, cartId) {
+    //
+    //     var url = window.location.origin + '/carts/deletes/books/' + bookCartId;
+    //
+    //     const form = document.createElement('form');
+    //     form.method = 'GET';
+    //     form.action = url;
+    //
+    //     document.body.appendChild(form);
+    //     form.submit();
+    // }
+    //
+    // function deleteAll(cartId) {
+    //     var url = window.location.origin + '/carts/deletes';
+    //
+    //     const form = document.createElement('form');
+    //     form.method = 'GET';
+    //     form.action = url;
+    //
+    //     document.body.appendChild(form);
+    //     form.submit();
+    // }
 </script>
 </body>
 </html>
