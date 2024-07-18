@@ -22,7 +22,6 @@
             <tr>
                 <th>리뷰 아이디</th>
                 <th>제목</th>
-                <th>이미지</th>
                 <th>평점</th>
                 <th>작성자 이메일</th>
                 <th>작성일</th>
@@ -74,7 +73,6 @@
 
 <script>
     let currentPage = 0;
-
     function loadReviews(page) {
         $.ajax({
             url: `/api/reviews?page=${page}`,
@@ -91,21 +89,21 @@
                         const deletedAt = review.deletedAt ? new Date(review.deletedAt).toLocaleString() : '-';
                         const status = review.deletedAt ? '삭제됨' : '-';
                         const deletedReason = review.deletedReason ? review.deletedReason : '-';
+                        const deleteButton = review.deletedAt ? '' : `<button class="delete-button btn btn-danger" data-id="${review.reviewId}">삭제</button>`;
 
                         const row = `<tr>
-                                        <td>${review.reviewId}</td>
-                                        <td><a href="/review/${review.reviewId}">${review.title}</a></td>
-                                        <td><img src="${review.imgUrl}" alt="리뷰 이미지" width="50" height="50"></td>
-                                        <td>${review.rating}</td>
-                                        <td>${review.memberEmail}</td>
-                                        <td>${createdAt}</td>
-                                        <td>${review.reviewLike}</td>
-                                        <td><button class="delete-button btn btn-danger" data-id="${review.reviewId}">삭제</button></td>
-                                        <td>${status}</td>
-                                        <td>${createdAt}</td>
-                                        <td>${deletedAt}</td>
-                                        <td>${deletedReason}</td>
-                                     </tr>`;
+                                    <td>${review.reviewId}</td>
+                                    <td><a href="/review/${review.reviewId}">${review.title}</a></td>
+                                    <td>${review.rating}</td>
+                                    <td>${review.memberEmail}</td>
+                                    <td>${createdAt}</td>
+                                    <td>${review.reviewLike}</td>
+                                    <td>${deleteButton}</td>
+                                    <td>${status}</td>
+                                    <td>${createdAt}</td>
+                                    <td>${deletedAt}</td>
+                                    <td>${deletedReason}</td>
+                                 </tr>`;
                         tbody.append(row);
                     });
                 } else {
@@ -129,6 +127,7 @@
             }
         });
     }
+
 
     function deleteReview(reviewId, deletedReason) {
         console.log("Deleting review with reason:", deletedReason); // 삭제 사유 로그 추가

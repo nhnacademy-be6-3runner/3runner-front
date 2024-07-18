@@ -1,6 +1,7 @@
 package com.nhnacademy.front.book.review.controller;
 
 import com.nhnacademy.front.book.review.dto.request.DeleteReviewRequest;
+import com.nhnacademy.front.book.review.dto.request.UserCreateReviewRequest;
 import com.nhnacademy.front.book.review.dto.response.ReviewAdminListResponse;
 import com.nhnacademy.front.book.review.dto.response.ReviewDetailResponse;
 import com.nhnacademy.front.book.review.dto.response.ReviewListResponse;
@@ -56,5 +57,12 @@ public class ReviewApiController {
                                                                @RequestParam(defaultValue = "10") int size) {
         Page<ReviewAdminListResponse> responses = reviewService.readAllReviews(page, size);
         return ApiResponse.success(responses);
+    }
+
+    @PostMapping(value = "/{purchaseBookId}/review", consumes = "multipart/form-data")
+    public ApiResponse<Long> createReview(@PathVariable long purchaseBookId, @RequestHeader(value = "Member-id", required = false) Long memberId,
+                                          UserCreateReviewRequest reviewRequest) {
+        Long reviewId = reviewService.createReview(purchaseBookId, memberId, reviewRequest);
+        return ApiResponse.success(reviewId);
     }
 }

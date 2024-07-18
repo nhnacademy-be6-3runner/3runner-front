@@ -20,14 +20,6 @@ public class ReviewController {
         return "review/create-review";
     }
 
-    @PostMapping(value = "/{purchaseBookId}/review", consumes = "multipart/form-data")
-    public String createReview(@PathVariable long purchaseBookId, @RequestHeader(value = "Member-id", required = false) Long memberId,
-                               UserCreateReviewRequest reviewRequest) {
-        log.info(reviewRequest.toString());
-        Long reviewId = reviewService.createReview(purchaseBookId, memberId, reviewRequest);
-        return "redirect:/review/" + reviewId;
-    }
-
     @GetMapping("/review/{reviewId}")
     public String readReviewDetail(@PathVariable long reviewId, Model model) {
         reviewService.readReviewDetail(reviewId);

@@ -5,10 +5,7 @@ import com.nhnacademy.front.book.review.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @Controller
@@ -22,7 +19,7 @@ public class ReviewAdminController {
     }
 
     @PutMapping("/admin/review/management/{reviewId}/delete")
-    public String deleteReview(@PathVariable long reviewId, @RequestHeader(value = "Member-Id", required = false) Long memberId, DeleteReviewRequest request) {
+    public String deleteReview(@PathVariable long reviewId, @RequestHeader(value = "Member-Id", required = false) Long memberId, @RequestBody DeleteReviewRequest request) {
         log.info("Delete reason: {}", request.deletedReason());
         reviewService.deleteReview(reviewId, memberId, request);
         return "admin/admin_review";
