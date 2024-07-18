@@ -87,7 +87,7 @@ public class CouponPolicyController {
         }
         adminCouponPolicyService.createRatioTypes(createRatioCouponRequest);
 
-        return "redirect:/purchase/admin";
+        return "redirect:/admin/purchases";
     }
 
     @PostMapping("/admin/coupons/types/fixes")
