@@ -1,4 +1,4 @@
-package com.nhnacademy.front.member.member.dto.request;
+package com.nhnacademy.front.purchase.purchase.dto.member.request;
 
 import java.time.ZonedDateTime;
 
@@ -14,5 +14,5 @@ public record UpdateMemberRequest(
     String name,
     int age,
     String phone,
-    ZonedDateTime birthday
+    String birthday
 ){}
