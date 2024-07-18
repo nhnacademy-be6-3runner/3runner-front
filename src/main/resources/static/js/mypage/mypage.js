@@ -35,7 +35,7 @@ function loadReviews(page = 0) {
                     <div class="col-md-2">
                         <img src="/api/images/review/download?fileName=${review.imgUrl}" class="img-fluid rounded-start" alt="review img">
                     </div>
-                    <div class="col-md-10">
+                    <div class="col-md-8">
                         <div class="review-content" data-id="${review.reviewId}">
                             <div class="rating">
                                 ${Array.from({ length: review.rating }, () => '<i class="bi bi-star-fill"></i>').join('')}
@@ -43,6 +43,9 @@ function loadReviews(page = 0) {
                             </div>
                             <h5 class="review-title">${review.title}</h5>
                         </div>
+                    </div>
+                    <div class="col-md-2 text-end">
+                        <button class="btn btn-outline-primary btn-sm edit-review-btn" data-id="${review.reviewId}">수정</button>
                     </div>
                 </div>
             `;
@@ -54,6 +57,13 @@ function loadReviews(page = 0) {
                     window.location.href = `http://localhost:3000/review/${review.reviewId}`;
                 });
 
+                // 수정 버튼 클릭 이벤트 리스너 추가
+                const editButton = reviewItem.querySelector('.edit-review-btn');
+                editButton.addEventListener('click', (event) => {
+                    event.stopPropagation(); // 클릭 이벤트가 상위 요소로 전달되지 않도록 막음
+                    const reviewId = event.target.dataset.id;
+                    window.location.href = `http://localhost:3000/review/edit/${reviewId}`;
+                });
             });
 
             const pagination = document.getElementById('reviewPagination');
@@ -77,6 +87,8 @@ function loadReviews(page = 0) {
         })
         .catch(error => console.error('Error loading reviews:', error));
 }
+
+
 
 function loadUserComments(page = 0) {
     const url = `/api/mypage/comments?page=${page}&size=10`;

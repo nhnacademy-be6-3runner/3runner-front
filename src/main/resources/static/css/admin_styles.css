@@ -125,3 +125,12 @@ table td a:hover {
     background-color: #0056b3;
 }
 
+.modal-dialog {
+    max-width: 500px;
+    margin: 1.75rem auto;
+}
+
+.modal-content {
+    border-radius: 0.3rem;
+}
+

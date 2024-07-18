@@ -3,7 +3,9 @@ package com.nhnacademy.front.book.review.service.impl;
 import com.nhnacademy.front.book.book.exception.InvalidApiResponseException;
 import com.nhnacademy.front.book.review.controller.feign.ReviewClient;
 import com.nhnacademy.front.book.review.dto.request.CreateReviewRequest;
+import com.nhnacademy.front.book.review.dto.request.DeleteReviewRequest;
 import com.nhnacademy.front.book.review.dto.request.UserCreateReviewRequest;
+import com.nhnacademy.front.book.review.dto.response.ReviewAdminListResponse;
 import com.nhnacademy.front.book.review.dto.response.ReviewDetailResponse;
 import com.nhnacademy.front.book.review.dto.response.ReviewListResponse;
 import com.nhnacademy.front.book.review.service.ReviewService;
@@ -40,6 +42,29 @@ public class ReviewServiceImpl implements ReviewService {
         log.info("리뷰 생성 : {}", createReviewRequest);
         ApiResponse<Long> response = reviewClient.createReview(purchaseBookId, memberId, createReviewRequest);
         return response.getBody().getData();
+    }
+
+    @Override
+    public Long updateReview(long reviewId, Long memberId, UserCreateReviewRequest request) {
+        CreateReviewRequest createReviewRequest = CreateReviewRequest.builder()
+                .title(request.title())
+                .content(request.content())
+                .imageList(contentToImageList(request.content()))
+                .ratings(request.ratings())
+                .build();
+        ApiResponse<Long> response = reviewClient.updateReview(reviewId, memberId, createReviewRequest);
+        return response.getBody().getData();
+    }
+
+    @Override
+    public Page<ReviewAdminListResponse> readAllReviews(int page, int size) {
+        ApiResponse<Page<ReviewAdminListResponse>> response = reviewClient.readReviewList(page, size);
+
+        if (response.getHeader().isSuccessful() && response.getBody() != null) {
+            return response.getBody().getData();
+        } else {
+            throw new InvalidApiResponseException("리뷰 페이지 조회 exception");
+        }
     }
 
     @Override
@@ -96,5 +121,10 @@ public class ReviewServiceImpl implements ReviewService {
         } else {
             throw new InvalidApiResponseException("사용자 리뷰 조회 exception");
         }
+    }
+
+    @Override
+    public void deleteReview(long reviewId, Long memberId, DeleteReviewRequest request) {
+        reviewClient.deleteReview(reviewId, memberId, request);
     }
 }

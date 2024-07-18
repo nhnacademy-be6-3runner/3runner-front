@@ -53,24 +53,6 @@ public class BookController {
 	}
 
 	/**
-	 * 도서 페이지 조회 메서드입니다.
-	 * @param page 페이지
-	 * @param size 사이즈
-	 * @param model 데이터를 전달하기 위한 모델 객체
-	 * @return 도서 리스트
-	 */
-	@GetMapping("/all")
-	public String readAllBooks(@RequestParam(defaultValue = "0") int page,
-		@RequestParam(defaultValue = "12") int size,
-		@RequestParam(defaultValue = "publishedDate,desc") String sort,
-		Model model) {
-		Page<BookListResponse> bookList = bookService.readAllBooks(page, size, sort);
-		model.addAttribute("bookList", bookList);
-
-		return "book/list/book-page-list";
-	}
-
-	/**
 	 * 책의 상세 페이지 보기.
 	 * @param bookId 책의 id
 	 * @param model 페이지의 model

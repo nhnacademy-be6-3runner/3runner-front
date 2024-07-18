@@ -47,11 +47,12 @@
                         <hr>
                         <p class="card-text"><small class="text-muted">작성자: <span id="memberEmail" th:text="${review.memberEmail}">작성자 이메일</span></small></p>
                         <p class="card-text">
-                            <small class="text-muted">작성일 : <span th:text="${review.createdAt()}">작성일</span></small>
+                            <small class="text-muted">작성일 : <span id="createdAt" th:text="${review.createdAt}">작성일</span></small>
                         </p>
                         <div th:if="${review.updated}">
                             <p class="card-text">
-                                <small class="text-muted">수정일 : <span th:text="${review.updatedAt()}">수정일</span></small>
+                                <small class="text-muted">수정일 : <span id="updatedAt" th:text="${review.updatedAt}">수정일</span></small>
+                                <span class="badge bg-secondary">수정됨</span>
                             </p>
                         </div>
                     </div>

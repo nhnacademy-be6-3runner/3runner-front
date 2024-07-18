@@ -1,6 +1,8 @@
 package com.nhnacademy.front.book.review.controller.feign;
 
 import com.nhnacademy.front.book.review.dto.request.CreateReviewRequest;
+import com.nhnacademy.front.book.review.dto.request.DeleteReviewRequest;
+import com.nhnacademy.front.book.review.dto.response.ReviewAdminListResponse;
 import com.nhnacademy.front.book.review.dto.response.ReviewDetailResponse;
 import com.nhnacademy.front.book.review.dto.response.ReviewListResponse;
 import com.nhnacademy.front.util.ApiResponse;
@@ -13,18 +15,26 @@ import org.springframework.web.bind.annotation.*;
 public interface ReviewClient {
     @PostMapping("/{purchaseBookId}/create")
     ApiResponse<Long> createReview(@PathVariable long purchaseBookId,
-                                   @RequestHeader(value = "Member-id", required = false) Long memberId,
+                                   @RequestHeader(value = "Member-Id", required = false) Long memberId,
                                    @Valid @RequestBody CreateReviewRequest createReviewRequest);
 
-    @GetMapping("reviews/{reviewId}")
+    @GetMapping("/reviews/{reviewId}")
     ApiResponse<ReviewDetailResponse> readReviewDetail(@PathVariable long reviewId);
 
-    // TODO 리뷰 수정
+    @PutMapping("/review/{reviewId}")
+    ApiResponse<Long> updateReview(@PathVariable long reviewId,
+                                                   @RequestHeader(value = "Member-Id", required = false) Long memberId,
+                                                   @Valid @RequestBody CreateReviewRequest createReviewRequest);
 
 
-    // TODO 리뷰 삭제
+    @PutMapping("/reviews/{reviewId}/delete")
+    ApiResponse<Void> deleteReview(@PathVariable long reviewId,
+                                   @RequestHeader(value = "Member-Id", required = false) Long memberId,
+                                   @Valid @RequestBody DeleteReviewRequest deleteReviewRequest);
 
-    // TODO 리뷰 전체 조회
+
+    @GetMapping("/reviews")
+    ApiResponse<Page<ReviewAdminListResponse>> readReviewList(@RequestParam int page, @RequestParam int size);
 
     @GetMapping("/books/{bookId}/reviews")
     ApiResponse<Page<ReviewListResponse>> readAllReviewsByBookId(

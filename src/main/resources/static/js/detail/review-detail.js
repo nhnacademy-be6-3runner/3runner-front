@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     checkAccessToken();
     loadComments(0); // 페이지 로드 시 첫 번째 페이지 댓글 리스트를 로드합니다.
+    formatReviewDates();
     // 리뷰 작성자 이메일 마스킹
     const memberEmailElement = document.getElementById('memberEmail');
     if (memberEmailElement) {
@@ -123,4 +124,24 @@ function loadComments(page) {
         .catch(error => {
             console.error('Error:', error);
         });
+}
+
+function formatReviewDates() {
+    const createdAtElement = document.getElementById('createdAt');
+    const updatedAtElement = document.getElementById('updatedAt');
+    if (createdAtElement) {
+        createdAtElement.textContent = formatDate(new Date(createdAtElement.textContent));
+    }
+    if (updatedAtElement) {
+        updatedAtElement.textContent = formatDate(new Date(updatedAtElement.textContent));
+    }
+}
+
+function formatDate(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    return `${year}-${month}-${day} ${hours}:${minutes}`;
 }

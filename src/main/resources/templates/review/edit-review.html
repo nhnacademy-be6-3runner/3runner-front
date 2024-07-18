@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Review Page</title>
+    <title>Review Edit Page</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css"/>
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css" />
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -216,7 +217,7 @@
 </head>
 <body>
 <div class="container mt-5">
-    <h2 class="text-center">리뷰 등록</h2>
+    <h2 class="text-center">리뷰 수정</h2>
     <form class="review-form" id="editorForm" method="POST" enctype="multipart/form-data">
         <div class="form-group mb-3">
             <label for="title" class="form-label">제목</label>
@@ -247,62 +248,88 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
 <script>
-    const editor = new toastui.Editor({
-        el: document.querySelector('#edit'),
-        height: '500px',
-        initialEditType: 'markdown',
-        initialValue: '',
-        previewStyle: 'vertical',
-        hooks: {
-            async addImageBlobHook(blob, callback) {
-                try {
-                    const formData = new FormData();
-                    formData.append('image', blob);
-                    const type = 'review';
-                    const url = `/api/images/${type}/upload`;
+    document.addEventListener('DOMContentLoaded', function () {
+        const reviewId = window.location.pathname.split('/').pop();
 
-                    const response = await fetch(url, {
-                        method: 'POST',
-                        body: formData,
-                    });
+        // 에디터 초기화
+        const editor = new toastui.Editor({
+            el: document.querySelector('#edit'),
+            height: '500px',
+            initialEditType: 'markdown',
+            previewStyle: 'vertical',
+            hooks: {
+                async addImageBlobHook(blob, callback) {
+                    try {
+                        const formData = new FormData();
+                        formData.append('image', blob);
+                        const type = 'review';
+                        const url = `/api/images/${type}/upload`;
 
-                    const filename = await response.text();
-                    console.log('서버에 저장된 파일명 : ', filename);
+                        const response = await fetch(url, {
+                            method: 'POST',
+                            body: formData,
+                        });
 
-                    const imageUrl = `/api/images/${type}/download?fileName=${filename}`;
-                    callback(imageUrl, 'image alt attribute');
+                        const filename = await response.text();
+                        console.log('서버에 저장된 파일명 : ', filename);
 
-                } catch (error) {
-                    console.error('업로드 실패 : ', error);
+                        const imageUrl = `/api/images/${type}/download?fileName=${filename}`;
+                        callback(imageUrl, 'image alt attribute');
+
+                    } catch (error) {
+                        console.error('업로드 실패 : ', error);
+                    }
                 }
             }
-        }
-    });
+        });
 
-    document.getElementById('editorForm').addEventListener('submit', function (event) {
-        event.preventDefault();
-        document.getElementById('content').value = editor.getHTML();
-        console.log('폼 내용:', document.getElementById('content').value);
-
-        const purchaseBookId = window.location.pathname.split('/')[1];
-        const url = `/${purchaseBookId}/review`;
-
-        const formData = new FormData(this);
-
-        fetch(url, {
-            method: 'POST',
-            body: formData
-        })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Success:', data);
-                alert('리뷰가 성공적으로 등록되었습니다!');
+        // 기존 리뷰 데이터 불러오기
+        fetch(`/api/reviews/${reviewId}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
             })
-            .catch((error) => {
-                console.error('Error:', error);
-                alert('리뷰 등록에 실패했습니다.');
-            });
+            .then(data => {
+                console.log('Review data:', data);
+                const reviewData = data.body.data; // ApiResponse에서 실제 데이터에 접근
+                document.getElementById('title').value = reviewData.reviewTitle;
+                editor.setMarkdown(reviewData.reviewContent);
+
+                const ratingInput = document.querySelector(`input[name="ratings"][value="${reviewData.ratings}"]`);
+                if (ratingInput) {
+                    ratingInput.checked = true;
+                }
+            })
+            .catch(error => console.error('Error loading review:', error));
+
+
+        // 폼 제출 이벤트 처리
+        document.getElementById('editorForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            document.getElementById('content').value = editor.getHTML();
+            console.log('폼 내용:', document.getElementById('content').value);
+
+            const formData = new FormData(this);
+
+            fetch(`/review/edit/${reviewId}`, {
+                method: 'PUT',
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success:', data);
+                    alert('리뷰가 성공적으로 수정되었습니다!');
+                    window.location.href = `/review/${reviewId}`; // 리뷰 디테일 페이지로 리다이렉트
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    alert('리뷰 수정에 실패했습니다.');
+                });
+        });
     });
+
 </script>
 </body>
 </html>

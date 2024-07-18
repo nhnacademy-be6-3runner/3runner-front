@@ -24,8 +24,8 @@ public class ReviewController {
     public String createReview(@PathVariable long purchaseBookId, @RequestHeader(value = "Member-id", required = false) Long memberId,
                                UserCreateReviewRequest reviewRequest) {
         log.info(reviewRequest.toString());
-        reviewService.createReview(purchaseBookId, memberId, reviewRequest);
-        return "review/create-review";
+        Long reviewId = reviewService.createReview(purchaseBookId, memberId, reviewRequest);
+        return "redirect:/review/" + reviewId;
     }
 
     @GetMapping("/review/{reviewId}")
@@ -33,5 +33,18 @@ public class ReviewController {
         reviewService.readReviewDetail(reviewId);
         model.addAttribute("review", reviewService.readReviewDetail(reviewId));
         return "review/review-detail";
+    }
+
+    @GetMapping("/review/edit/{reviewId}")
+    public String editReview(@PathVariable long reviewId, Model model) {
+        model.addAttribute("review", reviewService.readReviewDetail(reviewId));
+        return "review/edit-review";
+    }
+
+    @PutMapping("/review/edit/{reviewId}")
+    public String updateReview(@PathVariable long reviewId, @RequestHeader(value = "Member-Id", required = false) Long memberId, UserCreateReviewRequest reviewRequest) {
+        log.info(reviewRequest.toString());
+        reviewService.updateReview(reviewId, memberId, reviewRequest);
+        return "redirect:/review/" + reviewId;
     }
 }
