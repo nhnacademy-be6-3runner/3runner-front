@@ -17,6 +17,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.front.auth.service.LoginService;
+import com.nhnacademy.front.token.service.TokenService;
+import com.nhnacademy.front.util.JWTUtil;
 import com.nhnacademy.front.util.security.CustomUserDetailService;
 import com.nhnacademy.front.util.security.filter.AlwaysAuthenticationFilter;
 import com.nhnacademy.front.util.security.filter.CustomAuthenticationFilter;
@@ -25,8 +27,6 @@ import com.nhnacademy.front.util.security.provider.CustomAuthenticationProvider;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
-import static org.springframework.security.config.Customizer.withDefaults;
-
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -34,7 +34,9 @@ public class SecurityConfig {
 
 	private final CustomUserDetailService userDetailsService;
 	private final ObjectMapper objectMapper;
+	private final JWTUtil jwtUtil;
 	private final LoginService loginService;
+	private final TokenService tokenService;
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
@@ -53,7 +55,7 @@ public class SecurityConfig {
 
 		http
 			.csrf(AbstractHttpConfigurer::disable)
-        	.cors(AbstractHttpConfigurer::disable);
+			.cors(AbstractHttpConfigurer::disable);
 		// http
 		// 	.formLogin(AbstractHttpConfigurer::disable);
 		// http
@@ -98,7 +100,7 @@ public class SecurityConfig {
 			UsernamePasswordAuthenticationFilter.class
 		);
 		http.addFilterAt(
-			new AlwaysAuthenticationFilter(authenticationManager(), loginService),
+			new AlwaysAuthenticationFilter(authenticationManager(), loginService, jwtUtil, tokenService),
 			UsernamePasswordAuthenticationFilter.class);
 
 		http

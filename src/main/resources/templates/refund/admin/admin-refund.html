@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>환불 내역 관리</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -89,11 +90,17 @@
             background-color: #c82333;
         }
     </style>
+
+    <link rel="stylesheet" href="/css/admin_styles.css">
+
 </head>
 <body>
+<header>
+    <h1>환불 관리</h1>
+</header>
+<nav th:replace="fragments/admin_nav :: nav"></nav>
+<div id="refundManagement" class="mt-5">
 
-<div id="refundManagement" class="container mt-5">
-    <h2>환불 내역 관리</h2>
     <ul class="refund-list">
         <li class="refund-item" th:each="refund : ${refunds}">
             <div class="refund-info">
@@ -128,6 +135,9 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script src="/js/admin.js"></script>
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll('.btn-custom.accept').forEach(button => {
