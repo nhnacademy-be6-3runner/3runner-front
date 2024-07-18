@@ -57,3 +57,7 @@ spring:
       validation-query: SELECT 1
 
 
+springdoc:
+  swagger-ui:
+    url: /docs/openapi-3.0.json, /docs/openapi-3.0-coupon.json
+    path: /docs/swagger
