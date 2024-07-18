@@ -10,6 +10,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.nhnacademy.front.auth.service.LoginService;
+import com.nhnacademy.front.threadlocal.TokenHolder;
+import com.nhnacademy.front.token.service.TokenService;
+import com.nhnacademy.front.util.CookieUtil;
+import com.nhnacademy.front.util.JWTUtil;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -22,11 +26,16 @@ import lombok.extern.slf4j.Slf4j;
 public class AlwaysAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 	private final AuthenticationManager customAuthenticationManager;
 
+	private final TokenService tokenService;
+	private final JWTUtil jwtUtil;
 	private final LoginService loginService;
 
-	public AlwaysAuthenticationFilter(AuthenticationManager customAuthenticationManager, LoginService loginService) {
+	public AlwaysAuthenticationFilter(AuthenticationManager customAuthenticationManager, LoginService loginService,
+		JWTUtil jwtUtil, TokenService tokenService) {
 		this.customAuthenticationManager = customAuthenticationManager;
 		this.loginService = loginService;
+		this.jwtUtil = jwtUtil;
+		this.tokenService = tokenService;
 		setFilterProcessesUrl("/**");
 	}
 
@@ -38,10 +47,32 @@ public class AlwaysAuthenticationFilter extends UsernamePasswordAuthenticationFi
 		if (cookie != null) {
 			for (Cookie c : cookie) {
 				if (c.getName().equals("Access")) {
+
 					String token = c.getValue();
+					if (jwtUtil.isExpired(token)) {
+						String refreshToken = findRefreshToken(request, response);
+
+						token = tokenService.requestNewAccessToken(refreshToken);
+
+						c.setMaxAge(0);
+						response.addCookie(c);
+
+						Cookie newAccessTokenCookie = CookieUtil.createCookie("Access", token);
+						response.addCookie(newAccessTokenCookie);
+						log.error("재발급 쿠키에 설정 - access token: {}", token);
+
+						// 새로운 refresh cookie 추가
+						Cookie newRefreshTokenCookie = CookieUtil.createCookie("Refresh", TokenHolder.getRefreshToken(),
+							7 * 24 * 60 * 60);
+
+						response.addCookie(newRefreshTokenCookie);
+						log.error("재발급 쿠키에 설정 - refresh token: {}", TokenHolder.getRefreshToken());
+
+					}
 					UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
 						token, "1234"
 					);
+					TokenHolder.setAccessToken(token);
 					return customAuthenticationManager.authenticate(authToken);
 				}
 			}
@@ -79,4 +110,22 @@ public class AlwaysAuthenticationFilter extends UsernamePasswordAuthenticationFi
 		}
 		return false; // Access 쿠키가 없으면 인증 시도하지 않음
 	}
+
+	private String findRefreshToken(HttpServletRequest request, HttpServletResponse response) {
+		// Access Token 검증, 만료 되었으면 REFRESH TOKEN 전송
+		Cookie[] cookies = request.getCookies();
+		String refreshToken = null;
+		if (cookies != null) {
+			for (Cookie cookie : cookies) {
+				if (cookie.getName().equals("Refresh")) {
+					refreshToken = cookie.getValue();
+					cookie.setMaxAge(0);
+					response.addCookie(cookie);
+					return refreshToken;
+				}
+			}
+		}
+		return refreshToken;
+	}
+
 }
