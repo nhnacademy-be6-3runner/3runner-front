@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Fixed Coupon</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <link rel="stylesheet" th:href="@{/css/admin_styles.css}">
+    <style>
+        @font-face {
+            font-family: 'YourFont';
+            src: url('/fonts/YouandiModernTR.ttf') format('truetype');
+        }
+        * {
+            font-family: 'YourFont', sans-serif;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Header -->
+<nav th:replace="fragments/admin_nav :: nav"></nav>
+<div class="container">
+    <h1 class="mt-5">쿠폰 타입 리스트</h1>
+    <table class="table table-striped mt-3">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Type</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="type : ${types}">
+            <td th:text="${type.couponTypeId}">1</td>
+            <td th:text="${type.type}">Sample Type</td>
+        </tr>
+        </tbody>
+    </table>
+    <a class="btn btn-secondary" href="/admin/coupons/types/form">타입 등록</a>
+    <a class="btn btn-secondary" href="/admin/purchases">돌아가기</a>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="/js/admin.js"></script>
+</body>
+</html>

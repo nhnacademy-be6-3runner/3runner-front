@@ -1,0 +1,292 @@
+@font-face {
+    font-family: 'YourFont';
+    src: url('../../fonts/YouandiModernTR.ttf') format('truetype');
+}
+* {
+    font-family: 'YourFont', sans-serif;
+}
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow: auto;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #2f3542;
+}
+
+::-webkit-scrollbar-track {
+    background-color: grey;
+    box-shadow: inset 0px 0px 5px white;
+}
+
+.header-custom,
+.navbar-custom {
+    background-color: #353535; /* 배경색 #353535로 변경 */
+    color: white;
+    width: calc(100% - 200px); /* 사이드바 너비만큼 빼기 */
+    margin-left: 200px; /* 사이드바 너비만큼 이동 */
+}
+
+.header-custom .container {
+    justify-content: center; /* 컨테이너 가운데 정렬 */
+}
+
+.header-custom .container a {
+    font-size: 3.0rem; /* 텍스트 크기 조정 */
+}
+
+.header-custom svg {
+    margin-right: 8px; /* SVG와 텍스트 간격 */
+}
+
+.header-custom .form-control {
+    flex-grow: 1;
+}
+
+.header-custom .nav-link,
+.header-custom .navbar-brand,
+.navbar-custom .nav-link,
+.navbar-custom .navbar-brand {
+    color: white;
+}
+
+.header-custom .nav-link:hover,
+.header-custom .navbar-brand:hover,
+.navbar-custom .nav-link:hover,
+.navbar-custom .navbar-brand:hover {
+    color: #ddd;
+}
+
+.no-gap-nav {
+    margin-top: 0 !important; /* 마진 제거 */
+    padding-top: 0; /* 패딩 제거 */
+}
+
+.d-flex {
+    width: 100%;
+}
+
+/* Add this to your existing CSS if you want to style the hr tag */
+hr {
+    border: 1px solid #ddd;
+    margin: 1rem 0;
+}
+
+
+.sidebar {
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 200px; /* 사이드바 너비를 줄이기 */
+    background-color: #232323; /* 사이드바 배경색 #232323로 변경 */
+    padding: 1rem;
+    overflow-y: auto;
+    z-index: 1000;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5); /* 사이드바에 그림자 추가 */
+}
+
+.sidebar .nav-link {
+    color: white !important;
+}
+
+.sidebar .nav-link:hover {
+    color: #ddd !important; /* 사이드바 링크에 마우스를 올렸을 때 색상 변경 */
+}
+
+.sidebar .dropdown-toggle {
+    color: white !important;
+}
+
+.sidebar .dropdown-toggle:hover {
+    color: #ddd !important;
+}
+
+.main-content {
+    margin-left: 200px; /* 사이드바 너비만큼 마진을 줍니다 */
+    padding: 1rem;
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+.form-control {
+    max-width: 600px; /* 검색창의 최대 너비를 설정 */
+    width: 80%; /* 검색창 너비를 80%로 설정 */
+    margin: 0 auto; /* 검색창을 가운데 정렬 */
+}
+
+.header-custom .container {
+    display: flex;
+    align-items: center; /* 모든 컨텐츠를 가운데 정렬 */
+    justify-content: space-between;
+}
+
+.header-custom .container .d-flex {
+    flex-grow: 1;
+    justify-content: center;
+}
+
+.dropdown-submenu {
+    position: relative;
+}
+
+.dropdown-submenu > .dropdown-menu {
+    top: 0;
+    left: 100%;
+}
+
+.dropdown-submenu:hover > .dropdown-menu {
+    display: block;
+}
+
+.dropdown-menu {
+    background-color: #353535; /* 드롭다운 배경색 #353535로 변경 */
+}
+
+.dropdown-menu .dropdown-item {
+    color: white;
+}
+
+.dropdown-menu .dropdown-item:hover {
+    background-color: yellow;
+    color: black;
+}
+
+ul {
+    list-style-type: none;
+}
+
+.nested {
+    display: none;
+}
+
+.active {
+    display: block;
+}
+
+.caret-down::after {
+    content: "\25BC";
+}
+
+.book-item {
+    margin-bottom: 15px;
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center; /* 왼쪽 정렬 */
+    transition: box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.book-item:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.book-thumbnail {
+    width: 100%;
+    height: auto;
+    max-height: 300px; /* 최대 높이를 300px로 설정 */
+    object-fit: contain;
+    border-radius: 8px;
+    transition: transform 0.3s ease;
+}
+
+.card {
+    border: none;
+    box-shadow: none;
+}
+
+.card-body {
+    margin-top: 10px;
+}
+
+.card-title {
+    font-size: 1.0rem;
+    color: #353535;
+    font-weight: bold;
+}
+
+.card-text-author {
+    font-size: 0.7rem;
+    margin: 0.5rem 0;
+    color: #777;
+}
+
+.card-text-price, .card-text-selling {
+    font-size: 0.8rem;
+    margin: 0.5rem 0;
+    color: #353535;
+    font-weight: bold;
+}
+
+.book-actions {
+    display: flex;
+    justify-content: center; /* 가운데 정렬 */
+    align-items: center; /* 수직 가운데 정렬 */
+    gap: 10px; /* 버튼 간의 간격 추가 */
+    margin-top: 10px;
+}
+
+.book-actions .btn {
+    flex: none; /* 크기 조정 방지 */
+    margin: 0; /* 버튼 간의 기본 마진 제거 */
+    width: 100px; /* 리뷰 버튼의 너비를 고정 */
+}
+
+.like, .cart {
+    cursor: pointer;
+    transition: fill 0.3s ease;
+    width: 24px; /* SVG 아이콘의 너비 고정 */
+    height: 24px; /* SVG 아이콘의 높이 고정 */
+    flex-shrink: 0; /* 크기 변경 방지 */
+}
+
+.like path, .cart path {
+    fill: #777; /* 초기 색상 */
+    transition: fill 0.3s ease;
+}
+
+.like.active path {
+    fill: #e30d0d;
+}
+
+.cart.active path {
+    fill: #000080;
+}
+
+
+
+.footer {
+    background-color: #353535; /* 푸터 배경색 #353535로 변경 */
+    color: white;
+    width: calc(100% - 200px); /* 사이드바 너비만큼 빼기 */
+    margin-left: 200px; /* 사이드바 너비만큼 이동 */
+    padding: 1rem;
+    text-align: center;
+    position: relative;
+    bottom: 0;
+}
+
+.footer .footer-link,
+.footer .text-body-secondary {
+    color: white !important;
+}
+
+.footer .footer-link:hover {
+    color: #ddd !important;
+}
+
+.footer .footer-text {
+    color: white !important;
+}
+
+

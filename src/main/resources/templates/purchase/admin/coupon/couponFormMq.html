@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Coupon</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tempusdominus-bootstrap-4@5.39.0/build/js/tempusdominus-bootstrap-4.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tempusdominus-bootstrap-4@5.39.0/build/css/tempusdominus-bootstrap-4.min.css" />
+
+    <link rel="stylesheet" th:href="@{/css/admin_styles.css}">
+    <style>
+        @font-face {
+            font-family: 'YourFont';
+            src: url('/fonts/YouandiModernTR.ttf') format('truetype');
+        }
+        * {
+            font-family: 'YourFont', sans-serif;
+        }
+    </style>
+</head>
+<style>
+    .fieldError {
+    border-color: #bd2130;
+    }
+</style>
+<body>
+
+<!-- Header -->
+<nav th:replace="fragments/admin_nav :: nav"></nav>
+<div class="container">
+    <h1>MQ 쿠폰 발급하기</h1>
+    <form id="couponForm" action="/admin/coupons/mqs" method="post">
+<!--        <div th:if="${#fields.hasErrors()}">-->
+<!--            <p class="field-error" th:each="err : ${#fields.allErrors()}" th:text="${err}">글로벌 오류 메시지</p>-->
+<!--        </div>-->
+
+        <div class="form-group">
+            <label for="quantity">수량</label>
+            <input type="text" class="form-control" id="quantity" name="quantity" required>
+        </div>
+        <div class="form-group">
+            <label for="name">쿠폰이름</label>
+            <input type="text" class="form-control" id="name" name="name" required>
+        </div>
+        <div class="form-group">
+            <label for="startDate">쿠폰시작일</label>
+            <div class="input-group date" id="startDatePicker" data-target-input="nearest">
+                <input type="text" class="form-control datetimepicker-input" data-target="#startDatePicker" id="startDate" name="startDate" required/>
+
+                <div class="input-group-append" data-target="#startDatePicker" data-toggle="datetimepicker">
+                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="endDate">쿠폰만료일</label>
+            <div class="input-group date" id="endDatePicker" data-target-input="nearest">
+                <input type="text" class="form-control datetimepicker-input" data-target="#endDatePicker" id="endDate" name="endDate" required/>
+
+                <div class="input-group-append" data-target="#endDatePicker" data-toggle="datetimepicker">
+                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="maxPrice">최대 사용 금액</label>
+            <input type="number" class="form-control" id="maxPrice" name="maxPrice" required>
+        </div>
+        <div class="form-group">
+            <label for="minPrice">최소 사용 금액</label>
+            <input type="number" class="form-control" id="minPrice" name="minPrice" required>
+        </div>
+        <div class="form-group">
+            <label for="couponTypeId">쿠폰 타입</label>
+            <select class="form-control" id="couponTypeId" name="couponTypeId" required>
+                <option value="" disabled selected>Select a type</option>
+                <option th:each="type : ${types}" th:value="${type.couponTypeId()}" th:text="${type.type()}"></option>
+            </select>
+
+        </div>
+        <div class="form-group">
+            <label for="couponUsageId">쿠폰 사용처</label>
+            <select class="form-control" id="couponUsageId" name="couponUsageId" required>
+                <option value="" disabled selected>Select a usage</option>
+                <option th:each="usage : ${usages}" th:value="${usage.couponUsageId()}" th:text="${usage.usage()}"></option>
+            </select>
+
+        </div>
+        <button type="submit" class="btn btn-primary">발급하기</button>
+
+
+        <a class="btn btn-secondary" href="/admin/purchases">돌아가기</a>
+    </form>
+
+
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('#startDatePicker').datetimepicker({
+            format: 'YYYY-MM-DD HH:mm'
+        });
+        $('#endDatePicker').datetimepicker({
+            format: 'YYYY-MM-DD HH:mm',
+            useCurrent: false
+        });
+        $("#startDatePicker").on("change.datetimepicker", function (e) {
+            $('#endDatePicker').datetimepicker('minDate', e.date);
+        });
+        $("#endDatePicker").on("change.datetimepicker", function (e) {
+            $('#startDatePicker').datetimepicker('maxDate', e.date);
+        });
+    });
+</script>
+<script src="/js/admin.js"></script>
+</body>
+</html>

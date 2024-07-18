@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>주문</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/order-detail.css">
+    <link rel="stylesheet" th:href="@{/css/main/default.css}">
+</head>
+<body>
+
+<header class="header-custom" th:replace="fragments/no-nav-header :: header"></header>
+
+<div id="orderDelivery" class="order-delivery" th:if="${orders}">
+
+    <h2>주문내역</h2>
+    <ul class="order-list">
+        <li class="order-item" th:each="order : ${orders}">
+            <div class="order-info">
+                <div>
+                    <p>주문 번호123:</p>
+                    <p th:text="${order.orderNumber.toString()}">주문 번호</p>
+                </div>
+                <div>
+                    <p>주문 날짜:</p>
+                    <p th:text="${order.createdAt()}">주문 날짜</p>
+                </div>
+                <div>
+                    <p>상태:</p>
+                    <p th:text="${order.status()}" id="order-status-${order.orderNumber}">상태</p>
+                </div>
+                <div>
+                    <p>총 금액:</p>
+                    <p th:text="${order.totalPrice()}+' ₩'">총 금액</p>
+                </div>
+            </div>
+            <div class="order-buttons">
+                <button class="details-btn" th:attr="data-order-id=${order.id()}">자세히 보기</button>
+                <form method="post" th:action="@{'/orders/members/{purchaseId}' (purchaseId = ${order.id()})}">
+                    <button type="submit" class="confirm-order-btn" th:if="${order.status.toString() != 'CONFIRMATION'
+                        and order.status.toString() != 'REFUNDED_REQUEST' and order.status.toString() != 'REFUNDED_COMPLETE'}">
+                        주문 확정
+                    </button>
+                </form>
+
+                <button class="payment-cancel-btn"
+                        th:if="${order.status.toString() == 'COMPLETED'}"
+                        th:attr="data-order-id=${order.id()}"
+                        th:text="'결제 취소'">
+                </button>
+                <button class="refund-btn"
+                        th:if="${order.status.toString() != 'COMPLETED' && order.status.toString() != 'CONFIRMATION' && order.status.toString() != 'REFUNDED_REQUEST' && order.status.toString() != 'REFUNDED_COMPLETE'}"
+                        th:attr="data-order-id=${order.id()}"
+                        th:text="'환불'">
+                </button>
+<!--                <button class="refund-detail-btn"-->
+<!--                        th:if="${order.status.toString() == 'REFUNDED_REQUEST' or order.status.toString() == 'REFUNDED_COMPLETE'}"-->
+<!--                        th:attr="data-order-id=${order.id}"-->
+<!--                        th:text="'환불 내역'">-->
+<!--                </button>-->
+
+            </div>
+        </li>
+    </ul>
+    <div class="text-center mt-4">
+        <nav>
+            <ul class="pagination justify-content-center">
+                <li class="page-item" th:if="${page > 0}">
+                    <a class="page-link" th:href="@{'/orders/members?page={page}' (page = ${page - 1})}">이전</a>
+                </li>
+                <li class="page-item" th:each="i : ${#numbers.sequence(0, orders.totalPages - 1)}"
+                    th:if="${i >= (page / 5) * 5 and i < ((page / 5) + 1) * 5}">
+                    <a class="page-link" th:href="@{'/orders/members?page={page}' (page = ${i})}"
+                       th:text="${i + 1}"
+                       th:classappend="${i == page} ? 'active' : ''"></a>
+                </li>
+                <li class="page-item" th:if="${page < orders.totalPages - 1 }">
+                    <a class="page-link" th:href="@{'/orders/members?page={page}' (page = ${page + 1})}">다음</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+</div>
+<div th:replace="fragments/footer :: footer"></div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        console.log('DOMContentLoaded event fired');
+
+
+        document.querySelectorAll('.details-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                const orderId = this.getAttribute('data-order-id');
+                window.location.href = `/orders/members/books/${orderId}`;
+            });
+        });
+
+        document.querySelectorAll('.refund-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                const orderId = this.getAttribute('data-order-id');
+
+                window.location.href = `/refund/members/${orderId}?type=refund`;
+            });
+        });
+        document.querySelectorAll('.payment-cancel-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                const orderId = this.getAttribute('data-order-id');
+
+                window.location.href = `/refund/members/${orderId}?type=cancel`;
+            });
+        });
+    });
+</script>
+
+</body>
+</html>

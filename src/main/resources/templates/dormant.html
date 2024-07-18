@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>휴면 해지</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 400px;
+            width: 100%;
+        }
+        .hidden {
+            display: none;
+        }
+        .error-message {
+            color: red;
+            font-weight: bold;
+        }
+        .success-message {
+            color: green;
+            font-weight: bold;
+        }
+        .timer {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-top: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2 class="mb-4 text-center">휴면 해지</h2>
+    <form id="deactivationForm">
+        <div class="form-group mb-3">
+            <button type="button" id="send-code-btn" class="btn btn-secondary w-100">인증코드 보내기</button>
+        </div>
+        <div class="form-group hidden mb-3" id="verification-section">
+            <label for="verification-code">인증번호 입력</label>
+            <input type="text" class="form-control" id="verification-code" placeholder="인증번호 입력" disabled>
+            <button type="button" id="submit-code-btn" class="btn btn-primary w-100 mt-2" disabled>인증번호 제출</button>
+            <div id="timer" class="timer hidden"></div>
+        </div>
+    </form>
+    <div id="response-message" class="mt-3 text-center"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const sendCodeBtn = document.getElementById('send-code-btn');
+        const verificationSection = document.getElementById('verification-section');
+        const verificationCodeInput = document.getElementById('verification-code');
+        const submitCodeBtn = document.getElementById('submit-code-btn');
+        const responseMessage = document.getElementById('response-message');
+        const timerElement = document.getElementById('timer');
+        let timer;
+        let countdown;
+
+        sendCodeBtn.addEventListener('click', function() {
+            // 인증코드 보내기 로직
+
+            fetch('/member/dormant/resend', {
+                method: 'GET'
+            })
+                .then(response => {
+                    if (response) {
+                        alert('인증코드가 전송되었습니다!');
+                        verificationSection.classList.remove('hidden');
+                        verificationCodeInput.disabled = false;
+                        submitCodeBtn.disabled = false;
+                        timerElement.classList.remove('hidden');
+                        startTimer();
+                    } else {
+                        alert("인증 번호를 전송하는데 실패하였습니다.")
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    responseMessage.textContent = "서버와의 통신 중 오류가 발생했습니다.";
+                    responseMessage.className = 'error-message';
+                });
+
+        });
+
+        submitCodeBtn.addEventListener('click', function() {
+            const verificationCode = verificationCodeInput.value;
+            if (!verificationCode) {
+                responseMessage.textContent = "인증번호를 입력하세요.";
+                responseMessage.className = 'error-message';
+                return;
+            }
+
+            // 인증번호 제출 로직
+            fetch('/member/dormant', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ code: verificationCode })
+            })
+                .then(response => {
+                    if (response) {
+                        responseMessage.textContent = "인증 성공!";
+                        responseMessage.className = 'success-message';
+                        window.location.href = '/';
+
+                    } else {
+                        responseMessage.textContent = "인증 실패. 다시 시도하세요.";
+                        responseMessage.className = 'error-message';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    responseMessage.textContent = "서버와의 통신 중 오류가 발생했습니다.";
+                    responseMessage.className = 'error-message';
+                });
+        });
+
+        function startTimer() {
+            clearInterval(countdown);
+            let timeRemaining = 180; // 3분
+
+            countdown = setInterval(() => {
+                let minutes = Math.floor(timeRemaining / 60);
+                let seconds = timeRemaining % 60;
+                timerElement.textContent = `남은 시간: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+                timeRemaining--;
+
+                if (timeRemaining < 0) {
+                    clearInterval(countdown);
+                    verificationCodeInput.disabled = true;
+                    submitCodeBtn.disabled = true;
+                    timerElement.textContent = "인증 시간이 만료되었습니다.";
+                    responseMessage.textContent = "인증 시간이 만료되었습니다. 인증코드를 다시 요청하세요.";
+                    responseMessage.className = 'error-message';
+                    // 시간이 만료되면 로그인 페이지로 리디렉션하고 알림창 띄우기
+                    alert('인증 시간이 만료되었습니다. 다시 로그인해주세요.');
+                    window.location.href = '/login'; // 로그인 페이지 URL로 변경
+                }
+            }, 1000);
+        }
+    });
+</script>
+</body>
+</html>

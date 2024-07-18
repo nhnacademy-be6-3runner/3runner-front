@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Point Policy</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/admin_styles.css}">
+</head>
+<body>
+<!-- Header -->
+<nav th:replace="fragments/admin_nav :: nav"></nav>
+<div class="container">
+    <h1 class="mt-5">Create Point Policy</h1>
+    <form action="/admin/points/policies" method="post">
+        <div class="form-group">
+            <label for="policyKey">Key</label>
+            <input type="text" class="form-control" id="policyKey" name="policyKey" required>
+        </div>
+        <div class="form-group">
+            <label for="policyValue">Value</label>
+            <input type="number" class="form-control" id="policyValue" name="policyValue" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    <a class="btn btn-secondary mt-3" href="/purchase/admin">Back</a>
+</div>
+<script src="/js/admin.js"></script>
+</body>
+
+</html>

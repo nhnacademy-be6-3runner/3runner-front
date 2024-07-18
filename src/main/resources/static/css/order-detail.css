@@ -1,0 +1,287 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #ffffff;
+    color: #333;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.section-body {
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    padding: 20px;
+    background-color: #f6f6f6;
+    border-bottom: 1px solid #ddd;
+}
+
+.section-body button {
+    background-color: #ffffff;
+    border: 1px solid #444;
+    color: #444;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 20px;
+    margin: 5px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.section-body button:hover {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+.hidden {
+    display: none;
+}
+
+.order-delivery {
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: none;
+    flex: 1;
+}
+
+.review-button {
+    padding: 10px 20px;
+    background: #ffffff;
+    border: 2px solid #ddd;
+    color: #333;
+    border-radius: 30px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+    display: block;
+    margin-top: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.review-button:hover {
+    background: #f0f0f0;
+    border-color: #ccc;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    transform: translateY(-3px);
+}
+
+.order-list {
+    list-style: none;
+    padding: 0;
+}
+
+.order-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    margin-bottom: 10px;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    align-items: center; /* Ensure items are aligned vertically */
+}
+
+.order-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    flex: 1; /* Ensure order-info takes up available space */
+}
+
+/* 수정된 부분: form 요소를 포함하여 주문 확정 버튼을 총 금액 바로 아래로 이동 */
+.order-info > div,
+.order-info > form {
+    display: flex;
+    align-items: center;
+}
+
+.order-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end; /* Align buttons to the right */
+    gap: 10px; /* Space between buttons */
+}
+
+.order-info > div {
+    display: flex;
+    align-items: center;
+}
+
+.order-info p {
+    margin: 0;
+}
+
+.book-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+.book-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: calc(20% - 20px);
+    box-sizing: border-box;
+    margin-bottom: 20px;
+}
+
+.book-details,
+.book-quantity-price {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+
+.book-item img {
+    max-width: 100%;
+    margin-bottom: 10px;
+}
+
+.book-item .review-button-container {
+    position: absolute;
+    bottom: 10px; /* 위치를 고정하여 아래쪽에 배치 */
+    left: 50%;
+    transform: translateX(-50%); /* 중앙 정렬 */
+}
+
+.book-details h4,
+.book-details h5,
+.book-details p {
+
+    margin: 0;
+}
+
+.book-details h5,
+.book-details p {
+    margin-top: 2px;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pagination button {
+    background-color: #ffffff;
+    border: 1px solid #444;
+    color: #444;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 5px;
+    margin: 0 auto;
+    display: block;
+}
+
+.pagination button:hover {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+.loading-spinner {
+    display: none;
+    width: 40px;
+    height: 40px;
+    border: 5px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 5px solid #444;
+    animation: spin 1s linear infinite;
+    margin: 20px auto;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.confirm-order-btn,
+.details-btn,
+.refund-btn,
+.payment-cancel-btn,
+.refund-detail-btn {
+
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+    border-radius: 5px;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 100px;
+}
+
+.confirm-order-btn {
+    background-color: #28a745;
+}
+
+
+.confirm-order-btn:hover {
+    background-color: #218838;
+}
+
+.details-btn,
+.refund-detail-btn {
+    background-color: #007bff;
+}
+
+.details-btn:hover,
+.refund-detail-btn:hover {
+    background-color: #0056b3;
+}
+
+.refund-btn,
+.payment-cancel-btn {
+    background-color: #dc3545;
+}
+
+.refund-btn:hover,
+.payment-cancel-btn:hover {
+
+    background-color: #c82333;
+}
+
+.page-link.active {
+    background-color: #007bff; /* 원하는 색상으로 변경 가능 */
+    color: white; /* 글자 색상을 흰색으로 */
+    border-color: #007bff; /* 버튼 테두리 색상 */
+}
+
+.footer {
+    background-color: #353535;
+    color: white;
+    padding: 1rem;
+    text-align: center;
+    width: 100%; /* 푸터를 전체 너비로 설정 */
+    margin-top: auto; /* 푸터를 화면 하단에 고정 */
+}

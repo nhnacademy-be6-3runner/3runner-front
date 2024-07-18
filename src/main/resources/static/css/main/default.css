@@ -1,0 +1,158 @@
+/* 전체적인 스타일 초기화 및 레이아웃 설정 */
+@font-face {
+    font-family: 'YourFont';
+    src: url('../../fonts/YouandiModernTR.ttf') format('truetype');
+}
+* {
+    font-family: 'YourFont', sans-serif;
+}
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow: auto;
+}
+
+/* 스크롤바 스타일 설정 */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #2f3542;
+}
+
+::-webkit-scrollbar-track {
+    background-color: grey;
+    box-shadow: inset 0px 0px 5px white;
+}
+
+/* 헤더 스타일 설정 */
+.header-custom,
+.navbar-custom {
+    background-color: #353535;
+    color: white;
+}
+
+/* 헤더 내부 컨테이너 스타일 설정 */
+.header-custom .container {
+    justify-content: center;
+}
+
+.header-custom .container a {
+    font-size: 3.0rem;
+}
+
+.header-custom svg {
+    margin-right: 8px;
+}
+
+.header-custom .form-control {
+    flex-grow: 1;
+}
+
+/* 헤더 링크 스타일 설정 */
+.header-custom .nav-link,
+.header-custom .navbar-brand,
+.navbar-custom .nav-link,
+.navbar-custom .navbar-brand {
+    color: white;
+}
+
+.header-custom .nav-link:hover,
+.header-custom .navbar-brand:hover,
+.navbar-custom .nav-link:hover,
+.navbar-custom .navbar-brand:hover {
+    color: #ddd;
+}
+
+/* 헤더 사이 간격 제거 */
+.header-custom,
+.container-header {
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+
+/* 콘텐츠 스타일 설정 */
+.main-content {
+    padding: 1rem;
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+/* 검색창 스타일 설정 */
+.form-control {
+    max-width: 600px;
+    width: 80%;
+    margin: 0 auto;
+}
+
+/* 드롭다운 스타일 설정 */
+.dropdown-submenu {
+    position: relative;
+}
+
+.dropdown-submenu > .dropdown-menu {
+    top: 0;
+    left: 100%;
+}
+
+.dropdown-submenu:hover > .dropdown-menu {
+    display: block;
+}
+
+.dropdown-menu {
+    background-color: #353535;
+}
+
+.dropdown-menu .dropdown-item {
+    color: white;
+}
+
+.dropdown-menu .dropdown-item:hover {
+    background-color: yellow;
+    color: black;
+}
+
+/* 리스트 스타일 설정 */
+ul {
+    list-style-type: none;
+}
+
+.nested {
+    display: none;
+}
+
+.active {
+    display: block;
+}
+
+.caret-down::after {
+    content: "\25BC";
+}
+
+/* 푸터 스타일 설정 */
+.footer {
+    background-color: #353535;
+    color: white;
+    padding: 1rem;
+    text-align: center;
+    position: relative;
+    bottom: 0;
+}
+
+.footer .footer-link,
+.footer .text-body-secondary {
+    color: white !important;
+}
+
+.footer .footer-link:hover {
+    color: #ddd !important;
+}
+
+.footer .footer-text {
+    color: white !important;
+}

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>회원 주문 상세보기</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/order-detail.css">
+</head>
+<body th:data-purchase-id="${purchaseId}">
+<div class="order-details">
+    <ul class="book-list">
+        <li class="book-item" th:each="book, iter : ${books}">
+            <img th:src="@{/api/images/book/download(fileName=${book.readBookByPurchase().bookImage()})}" th:data-book-image="${book.readBookByPurchase().bookImage()}" alt="Product Image">
+            <div class="book-details">
+                <p style="font-size: 18px" th:text="${book.readBookByPurchase().title()}">Product</p>
+                <p style="font-size: 16px" th:text="${book.readBookByPurchase().author()}">저자</p>
+                <p style="font-size: 14px" th:text="${book.readBookByPurchase().publisher()}">출판사</p>
+            </div>
+            <div class="book-quantity-price">
+                <p>수량 : <span th:text="${book.quantity()}"></span></p>
+                <p>₩<span th:text="${book.price()}"></span></p>
+            </div>
+            <button class="review-button" th:data-purchase-book-id="${book.id()}" th:if="${purchaseStatus == 'CONFIRMATION'}" onclick="createReview(this)">리뷰</button>
+        </li>
+
+    </ul>
+
+</div>
+
+<script>
+    const purchaseId = document.body.getAttribute('data-purchase-id');
+
+    function loadBooks(page, size) {
+        window.location.href = `/bookstore/members/purchases/books/${purchaseId}?page=${page}&size=${size}`;
+    }
+
+    function createReview(button){
+        const purchaseBookId = button.getAttribute('data-purchase-book-id')
+        window.location.href = `/${purchaseBookId}/review`;
+    }
+</script>
+
+</body>
+</html>

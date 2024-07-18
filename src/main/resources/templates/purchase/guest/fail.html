@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout Page</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{/css/main/default.css}">
+    <link rel="stylesheet" th:href="@{/css/detail/book-detail.css}">
+    <style>
+        .info-box {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            font-weight: bold;
+        }
+
+        .btn-lg {
+            padding: 10px 20px;
+            font-size: 1.25rem;
+            line-height: 1.5;
+            border-radius: .3rem;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- Header -->
+<header class="header-custom" th:replace="fragments/no-nav-header :: header"></header>
+
+<main class="container my-5">
+    <div class="checkout-header text-center">
+        <h2> 결제 실패 </h2>
+        <p id="code"></p>
+        <p id="message"></p>
+    </div>
+</main>
+
+<!-- footer -->
+<footer class="header-custom" th:replace="fragments/footer :: footer"></footer>
+</body>
+</html>
+
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+
+    const codeElement = document.getElementById("code");
+    const messageElement = document.getElementById("message");
+
+    codeElement.textContent = "에러코드: " + urlParams.get("code");
+    messageElement.textContent = "실패 사유: " + urlParams.get("message");
+</script>

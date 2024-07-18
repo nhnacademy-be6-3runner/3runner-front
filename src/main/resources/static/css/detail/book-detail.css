@@ -1,0 +1,270 @@
+/* 컨테이너 스타일 */
+.container {
+    padding: 20px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: #f9f9f9;
+    font-family: 'Arial', sans-serif;
+}
+
+/* 카테고리 리스트 스타일 */
+.category-list {
+    background-color: #EAEAEA;
+    padding: 15px 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.category-list span {
+    font-size: 16px;
+    color: #333;
+}
+
+.category-list a {
+    color: #007BFF;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.category-list a:hover {
+    text-decoration: underline;
+}
+
+/* 제품 상세 스타일 */
+.product-detail {
+    display: flex;
+    justify-content: space-around;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.product-images {
+    width: 45%;
+}
+
+.product-images img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+.product-info {
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 5px; /* 각 요소 사이의 간격 */
+    padding : 10px;
+}
+
+.product-info h1 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+}
+
+.price-container {
+    font-size: 20px;
+    color: #e74c3c;
+}
+
+.rating {
+    font-size: 18px;
+    color: #f39c12;
+}
+
+.rating i {
+    margin-right: 5px;
+}
+
+.reviews {
+    font-size: 16px;
+    color: #555;
+}
+
+.purchase-button {
+    background-color: #F6F6F6;
+    padding: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+    border-radius: 8px;
+}
+
+.options label {
+    font-size: 16px;
+    color: #333;
+    margin-right: 10px;
+}
+
+.options input {
+    width: 50px;
+    padding: 5px;
+    font-size: 16px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* 액션 버튼 스타일 */
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px; /* 간격 조정 */
+}
+
+.action-buttons .btn {
+    margin: 0 10px; /* 좌우 간격 추가 */
+}
+
+.action-buttons button, .action-buttons input {
+}
+
+    /* .additional-info 스타일 */
+.additional-info {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 가로 가운데 정렬 */
+}
+
+.additional-info h2 {
+    font-size: 22px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.additional-info .table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.additional-info .table th, .additional-info .table td {
+    padding: 20px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.additional-info .table th {
+    width: 150px;
+    background-color: #f5f5f5;
+    font-weight: bold;
+}
+
+.description {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.total-price {
+    font-size: 18px; /* 글자 크기 */
+    font-weight: bold;
+    color: #e74c3c;
+    margin-top: 10px;
+    padding: 10px;
+    text-align: center;
+}
+
+.like {
+    margin-bottom: 15px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.like.active path {
+    fill: #e30d0d;
+}
+
+.like path {
+    fill: #777;
+}
+
+.like:hover {
+    transform: scale(1.2);
+}
+
+.sorting-options {
+    align-items: flex-start;
+}
+
+.review-list {
+    margin-top: 20px;
+}
+
+.review-list h2 {
+    font-size: 22px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.list-group-item {
+    display: flex;
+    align-items: center;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    margin-bottom: 1.5rem;
+}
+
+.review-img {
+    width: 5rem;
+    height: 5rem;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-right: 1.5rem;
+}
+
+.review-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.rating {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.rating i {
+    color: #ffc107;
+    font-size: 1.2rem;
+    margin-right: 0.2rem;
+}
+
+.rating i.bi-star {
+    color: #ccc;
+    margin-right: 0.2rem;
+}
+
+h5 {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+    cursor: pointer;
+    transition: color 0.3s, transform 0.3s;
+}
+
+h5.click-animation {
+    color: #007bff;
+}
+
+small {
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+.review-avg {
+    margin-bottom: 20px;
+}

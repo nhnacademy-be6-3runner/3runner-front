@@ -1,0 +1,7 @@
+feign:
+  client:
+    url: 133.186.143.40:8080
+
+server:
+  port: 3000
+

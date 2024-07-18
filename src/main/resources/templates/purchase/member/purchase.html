@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <script src="https://js.tosspayments.com/v1/payment-widget"></script>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" th:href="@{/css/main/default.css}">
+    <link rel="stylesheet" th:href="@{/css/detail/book-detail.css}">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .menu-desktop {
+            background-color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .checkout-header {
+            margin: 20px 0;
+        }
+        .cart-item {
+            background-color: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+        }
+        .cart-item img {
+            border-radius: 5px;
+        }
+        footer {
+            margin-top: 50px;
+            background-color: #fff;
+            border-top: 1px solid #dee2e6;
+        }
+        .footer-content {
+            padding: 20px 0;
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .info-box {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            font-weight: bold;
+        }
+
+        .btn-lg {
+            padding: 10px 20px;
+            font-size: 1.25rem;
+            line-height: 1.5;
+            border-radius: .3rem;
+        }
+
+        .fieldError {
+            border-color: #bd2130;
+        }
+        @font-face {
+            font-family: 'YourFont';
+            src: url('/fonts/YouandiModernTR.ttf') format('truetype');
+        }
+
+        * {
+            font-family: 'YourFont', sans-serif;
+        }
+    </style>
+</head>
+<body>
+<!-- Header -->
+<header class="header-custom" th:replace="fragments/no-nav-header :: header"></header>
+<main class="container my-5">
+    <div class="checkout-header text-center">
+        <h2>주문하기</h2>
+        <h4 id="orderNumber" th:text="${orderNumber}"></h4>
+    </div>
+
+
+    <form>
+        <div th:each="item : ${response}" class="cart-item d-flex justify-content-between align-items-center">
+            <div class="cart-item-info d-flex align-items-center">
+                <div class="ml-3">
+                    <img th:src="@{/api/images/book/download(fileName=${item.url()})}"
+                         src="/static/img/no-image.png" alt="Product Image" class="mr-3" style="width: 150px">
+                </div>
+
+                <div class="ml-3" style="margin-left: 20px">
+                    <h4 th:text="${item.title()}">Product</h4>
+                    <p>₩<span class="price-input" th:text="${item.price()}"></span></p>
+                    <div class="d-flex align-items-center">
+                        <input type="hidden" th:id="${item.bookId()}" th:value="${item.bookId()}">
+                        <input type="hidden" th:id="${item.bookCartId()}" th:value="${item.bookCartId()}">
+                        <input type="number" class="form-control mx-2 quantity-input" th:value="${item.quantity}" readonly>
+                        <span th:if="${item.leftQuantity != null and item.quantity != null and item.leftQuantity - item.quantity < 0}">재고가 없습니다.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br/>
+        <div class="d-flex justify-content-end">
+            <div class="checkout-summary text-left mb-3" style="text-align: right; margin-right: 20px">
+                <h4>배송비 추가금 : 3000원</h4>
+                <h4>도서 가격 : <span id="total-book-price"></span> 원</h4>
+                <h4>총 가격 : <span id="total-price"></span> 원</h4>
+            </div>
+        </div>
+
+        <!-- 포장 유무 체크 -->
+        <div class="form-group text-left mb-3">
+            <label for="gift-box">포장 유무</label>
+            <div class="info-box">
+                <input type="checkbox" id="gift-box" name="giftWrap">
+                <span>포장을 원하시면 체크해주세요.</span>
+            </div>
+        </div>
+
+        <!-- 배송 날짜 지정 -->
+        <div class="form-group text-left mb-3">
+            <label for="delivery-box">배송 희망 날짜 지정</label>
+            <div class="info-box">
+                <input type="date" id="delivery-box" name="deliveryDate" class="form-control">
+            </div>
+        </div>
+
+        <!-- 주소 선택 -->
+        <div class="form-group">
+            <label for="address-box">주소 선택</label>
+            <div class="info-box">
+                <select class="form-control" id="address-box">
+                    <option th:each="address : ${addresses}" th:value="${address.addressId()}" th:text="${address.state()} + ${address.city()} + ${address.road()} +'  '+${address.name()}"></option>
+                </select>
+                <p></p>
+
+                <div class="d-flex justify-content-end">
+                    <button id="newwin" class="btn btn-success btn-lg mb-2" type="button">주소추가</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 포인트 사용 -->
+        <div class="form-group">
+            <label for="point-box">포인트 사용 (잔여 포인트: <span th:text="${memberInfo.point()}"></span>)</label>
+            <div class="info-box">
+                <input type="number" id="point-box" class="form-control" value="0" th:max="${memberInfo.point()}">
+            </div>
+        </div>
+
+        <!-- 할인 쿠폰 -->
+        <div class="form-group">
+            <label for="coupon-box">쿠폰 적용</label>
+            <div class="info-box">
+                <select class="form-control" id="coupon-box">
+                    <option value="0" data-final-discount-price="0">-- 쿠폰을 선택하세요 --</option>
+                    <option th:each="coupon : ${coupons}" th:value="${coupon.couponFormId()}" th:attr="final-discount-price=${coupon.finalDiscountPrice()}" th:text="'최종할인가 : ' + ${coupon.finalDiscountPrice()} +',  '+${coupon.name()} +',  '+ ${coupon.type()} +',  '+ ${coupon.usage()}"></option>
+                </select>
+            </div>
+        </div>
+
+        <!-- 결제 UI, 이용약관 UI 영역 -->
+        <div id="payment-method" class="mb-3"></div>
+        <div id="agreement" class="mb-3"></div>
+
+    </form>
+
+
+        <!-- 결제하기 버튼 -->
+        <div class="form-group text-center">
+            <div class="d-flex justify-content-end">
+                <button id="payment-button" class="btn btn-primary btn-lg">결제하기</button>
+            </div>
+        </div>
+</main>
+
+<!-- footer -->
+<footer class="header-custom" th:replace="fragments/footer :: footer"></footer>
+<!--주소매핑-->
+<script type="text/javascript">
+    window.onload = function(){
+        document.getElementById("newwin").onclick = function(){
+            window.open("https://business.juso.go.kr/addrlink/addrLinkUrl.do?confmKey=U01TX0FVVEgyMDI0MDcwNjAwMTkyNjExNDg5NzI=&returnUrl="+ window.location.origin +"/purchases/members/addresses","","width=700px,height=500px,top=200px,left=200px;");
+        }
+    };
+    function setCountyOffice(name){
+        document.getElementById('countyOfficeName').value = name;
+    }
+</script>
+<!--토스결제창-->
+<script th:inline="javascript">
+    const button = document.getElementById("payment-button");
+
+    var amount = 0.0;
+    var discountedPrice = 0.0;
+    var discountedPoint = 0.0;
+    var isPacking = false;
+    var shipping = null;
+    var road = null;
+    var couponFormId = 0;
+
+    const orderNumber = document.getElementById("orderNumber").textContent;
+    <!--총 가격-->
+    document.addEventListener('DOMContentLoaded', function() {
+        var today = new Date();
+        var year = today.getFullYear();
+        var month = String(today.getMonth() + 1).padStart(2, '0');
+        var day = String(today.getDate()+1).padStart(2, '0');
+        var minDate = year + '-' + month + '-' + day;
+
+        var deliveryBox = document.getElementById('delivery-box');
+        deliveryBox.setAttribute('min', minDate);
+        deliveryBox.setAttribute('value', minDate);
+
+        calculateTotal();
+    });
+
+    function windowReload(){
+        window.location.reload();
+    }
+    function calculateTotal() {
+        var total = 0.0;
+        var cartItems = document.querySelectorAll('.cart-item');
+        cartItems.forEach(function(item) {
+            var price = parseFloat(item.querySelector('.price-input').innerText);
+            var quantity = parseInt(item.querySelector('.quantity-input').value);
+
+            total += price * quantity;
+        });
+
+        if (isNaN(total)) {
+            total = 0.0;
+        }
+        amount = (total+3000).toFixed(0);
+
+        document.getElementById('total-book-price').innerText = total.toFixed(0);
+        document.getElementById('total-price').innerText = amount
+    }
+
+    const widgetClientKey = "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm";
+
+    const customerKey = "[[${memberId}]]"+"@3-runner-store";
+    const paymentWidget = PaymentWidget(widgetClientKey, customerKey); // 회원 결제
+
+    const paymentMethodWidget = paymentWidget.renderPaymentMethods(
+        "#payment-method",
+        { value: amount },
+        { variantKey: "DEFAULT" }
+    );
+
+    paymentWidget.renderAgreement(
+        "#agreement",
+        { variantKey: "AGREEMENT" }
+    );
+
+
+    // 포장 유무 체크 이벤트 리스너
+    document.getElementById('gift-box').addEventListener('change', function () {
+        var isGiftWrap = this.checked;
+        console.log("Gift Wrap: ", isGiftWrap);
+        isPacking = isGiftWrap;
+    });
+
+    // 배송 날짜 지정 이벤트 리스너
+    document.getElementById('delivery-box').addEventListener('change', function () {
+        var deliveryDate = this.value;
+        console.log("Delivery Date: ", deliveryDate);
+        shipping = deliveryDate;
+    });
+
+
+    document.getElementById('point-box').addEventListener('input', function () {
+        var usedPoints = parseInt(this.value);
+        var max = parseInt(this.max);
+
+        if (usedPoints > max){
+            this.value = max;
+            usedPoints = max;
+        } else if (usedPoints < 0) {
+            this.value = 0;
+            usedPoints = 0;
+        }
+
+        discountedPoint = parseInt(usedPoints);
+        console.log("Used Points: ", usedPoints);
+    });
+
+    document.getElementById('address-box').addEventListener('change', function () {
+        var addressText = this.options[this.selectedIndex].text;
+
+        road = addressText;
+        console.log("selected address: ", addressText);
+    });
+
+    document.getElementById('coupon-box').addEventListener('change', function () {
+        var selectedOption = this.options[this.selectedIndex];
+        var selectedCouponId = selectedOption.value;
+        var selectedFinalDiscountPrice = selectedOption.getAttribute('final-discount-price');
+
+
+        discountedPrice = parseInt(selectedFinalDiscountPrice);
+        couponFormId = parseInt(selectedCouponId);
+
+        console.log("Selected Coupon Form ID: ", selectedCouponId);
+        console.log("Selected Final Discount Price: ", selectedFinalDiscountPrice);
+        console.log("updated amount", amount)
+    });
+
+    button.addEventListener("click", function () {
+        paymentMethodWidget.updateAmount(parseInt(amount)-parseInt(discountedPrice)-parseInt(discountedPoint));
+        paymentWidget.requestPayment({
+            orderId: orderNumber,
+            orderName: '3runner Store:'+orderNumber,
+            successUrl: window.location.origin + "/payments/members/success?discountedPrice="+discountedPrice+"&discountedPoint="+discountedPoint+"&isPacking="+isPacking+"&shipping="+shipping+"&road="+road+"&couponFormId="+couponFormId,
+            failUrl: window.location.origin + "/payments/members/fail",
+            customerEmail: [[${memberInfo.email()}]],
+            customerName: [[${memberInfo.name()}]],
+            customerMobilePhone: "01012345678"//[[${memberInfo.phone()}]],
+        });
+    });
+</script>
+</body>
+</html>

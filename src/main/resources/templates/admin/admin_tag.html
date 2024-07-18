@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>태그 관리</title>
+    <link rel="stylesheet" href="/css/admin_styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>태그 관리</h1>
+    </header>
+    <nav th:replace="fragments/admin_nav :: nav"></nav>
+    <main>
+        <h2>태그 목록</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>태그 아이디</th>
+                <th>태그 이름</th>
+                <th>삭제</th>
+            </tr>
+            </thead>
+            <tbody id="book-table-body1">
+            </tbody>
+        </table>
+        <div class="pagination">
+            <button id="prev-page" disabled>&laquo; 이전</button>
+            <span id="current-page">1</span>
+            <button id="next-page">다음 &raquo;</button>
+        </div>
+
+        <br>
+        <h2>태그 추가</h2>
+        <br>
+        <form action="/admin/tag/management" method="post">
+            <label for="tag-name">태그 이름:</label>
+            <input type="text" id="tag-name" name="tag-name" required>
+            <button type="submit">추가</button>
+        </form>
+
+    </main>
+</div>
+<script src="/js/admin.js"></script>
+<script>
+    let currentPage = 0;
+
+    function loadTags(page) {
+        $.ajax({
+            url: `/api/tagPages?page=${page}`,
+            method: 'GET',
+            success: function (data) {
+                const tbody = $('#book-table-body1');
+                tbody.empty();
+                data.content.forEach(tag => {
+                    const row = `<tr>
+                                    <td>${tag.id}</td>
+                                    <td>${tag.name}</td>
+                                    <td><a href="/admin/tag/delete/${tag.id}">삭제</a></td>
+                                 </tr>`;
+                    tbody.append(row);
+                });
+                $('#current-page').text(page + 1);
+                currentPage = page;
+                $('#prev-page').prop('disabled', currentPage === 0);
+                $('#next-page').prop('disabled', currentPage >= data.totalPages - 1);
+            }
+        });
+    }
+
+    function addTag(tagName) {
+        $.ajax({
+            url: '/api/tags',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({name: tagName}),
+            success: function () {
+                loadTags(currentPage);
+                $('#tag-name').val('');
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        loadTags(0);
+
+        $('#prev-page').click(function () {
+            if (currentPage > 0) {
+                loadTags(currentPage - 1);
+            }
+        });
+
+        $('#next-page').click(function () {
+            loadTags(currentPage + 1);
+        });
+
+    });
+</script>
+</body>
+</html>

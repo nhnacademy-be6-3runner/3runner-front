@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>도서 관리</title>
+    <link rel="stylesheet" href="/css/admin_styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>도서 관리</h1>
+    </header>
+    <nav th:replace="fragments/admin_nav :: nav"></nav>
+    <main>
+        <h2>책 목록</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>책 아이디</th>
+                <th>책 제목</th>
+                <th>적정가</th>
+                <th>판매가</th>
+                <th>수량</th>
+                <th>조회수</th>
+                <th>작가</th>
+                <th>수정</th>
+                <th>삭제</th>
+            </tr>
+            </thead>
+            <tbody id="book-table-body1">
+            </tbody>
+        </table>
+        <div class="pagination">
+            <button id="prev-page" disabled>&laquo; 이전</button>
+            <span id="current-page">1</span>
+            <button id="next-page">다음 &raquo;</button>
+        </div>
+    </main>
+</div>
+<script src="/js/admin.js"></script>
+<script>
+    let currentPage = 0;
+
+    function loadBooks(page) {
+        $.ajax({
+            url: `/api/books?page=${page}`,
+            method: 'GET',
+            success: function (data) {
+                const tbody = $('#book-table-body1');
+                tbody.empty();
+                data.content.forEach(book => {
+                    const row = `<tr>
+                                    <td>${book.id}</td>
+                                    <td><a href="/book/${book.id}">${book.title}</a></td>
+                                    <td>${book.price}</td>
+                                    <td>${book.sellingPrice}</td>
+                                    <td>${book.quantity}</td>
+                                    <td>${book.viewCount}</td>
+                                    <td>${book.author}</td>
+                                    <td><a href="/publisher/book/update/${book.id}">수정</a></td>
+                                    <td><a href="/admin/book/delete/${book.id}">삭제</a></td>
+                                 </tr>`;
+                    tbody.append(row);
+                });
+                $('#current-page').text(page + 1);
+                currentPage = page;
+                $('#prev-page').prop('disabled', currentPage === 0);
+                $('#next-page').prop('disabled', currentPage >= data.totalPages - 1);
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        loadBooks(0);
+
+        $('#prev-page').click(function () {
+            if (currentPage > 0) {
+                loadBooks(currentPage - 1);
+            }
+        });
+
+        $('#next-page').click(function () {
+            loadBooks(currentPage + 1);
+        });
+    });
+
+
+</script>
+</body>
+</html>

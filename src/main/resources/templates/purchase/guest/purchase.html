@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <script src="https://js.tosspayments.com/v1/payment-widget"></script>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" th:href="@{/css/detail/book-detail.css}">
+    <link rel="stylesheet" th:href="@{/css/main/default.css}">
+
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .menu-desktop {
+            background-color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .checkout-header {
+            margin: 20px 0;
+        }
+        .cart-item {
+            background-color: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+        }
+        .cart-item img {
+            border-radius: 5px;
+        }
+        footer {
+            margin-top: 50px;
+            background-color: #fff;
+            border-top: 1px solid #dee2e6;
+        }
+        .footer-content {
+            padding: 20px 0;
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .info-box {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            font-weight: bold;
+        }
+        .btn-lg {
+             padding: 10px 20px;
+             font-size: 1.25rem;
+             line-height: 1.5;
+             border-radius: .3rem;
+        }
+    </style>
+</head>
+<body>
+<!-- Header -->
+<header class="header-custom" th:replace="fragments/no-nav-header :: header"></header>
+
+
+<main class="container my-5">
+    <div class="checkout-header text-center">
+        <h2>주문하기</h2>
+        <h4 id="orderNumber" th:text="${orderNumber}"></h4>
+    </div>
+
+
+    <form>
+        <div th:each="item : ${response}" class="cart-item d-flex justify-content-between align-items-center">
+            <div class="cart-item-info d-flex align-items-center">
+                <div class="ml-3">
+                    <img th:src="@{/api/images/book/download(fileName=${item.url()})}"
+                         src="/static/img/no-image.png" alt="Product Image" class="mr-3" style="width: 150px">
+                </div>
+
+                <div class="ml-3" style="margin-left: 20px">
+                    <h4 th:text="${item.title()}">Product</h4>
+                    <p>₩<span class="price-input" th:text="${item.price()}"></span></p>
+                    <div class="d-flex align-items-center">
+                        <input type="hidden" th:id="${item.bookId()}" th:value="${item.bookId()}">
+                        <input type="hidden" th:id="${item.bookCartId()}" th:value="${item.bookCartId()}">
+                        <input type="number" class="form-control mx-2 quantity-input" th:value="${item.quantity}" readonly>
+                        <span th:if="${item.leftQuantity != null and item.quantity != null and item.leftQuantity - item.quantity < 0}">재고가 없습니다.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br/>
+        <div class="d-flex justify-content-end">
+            <div class="checkout-summary text-left mb-3" style="text-align: right; margin-right: 20px">
+                <h4>배송비 추가금 : 3000원</h4>
+                <h4>도서 가격 : <span id="total-book-price"></span> 원</h4>
+                <h4>총 가격 : <span id="total-price"></span> 원</h4>
+            </div>
+        </div>
+
+
+        <!-- 주소찾기 -->
+        <div class="form-group">
+            <label for="countyOfficeName">주소찾기</label>
+            <div class="info-box">
+                <input type="text" id="countyOfficeName" class="form-control" placeholder="주소" value="주소없음" disabled>
+                <small id="address-error" class="text-danger text-center" style="display: none;">주소를 입력해 주세요.</small>
+                <p></p>
+                <div class="d-flex justify-content-end">
+                    <button id="newwin" class="btn btn-success mb-2 btn-lg" type="button">주소찾기</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 비회원 비밀번호 -->
+        <div class="form-group">
+            <label for="password">비회원 비밀번호</label>
+            <div class="info-box">
+                <input type="password" id="password" class="form-control" placeholder="비밀번호 입력">
+                <small id="password-error" class="text-danger text-center" style="display: none;">비밀번호를 입력해 주세요.</small>
+            </div>
+        </div>
+
+        <!-- 포장 유무 체크 -->
+        <div class="form-group">
+            <label for="gift-box">포장 유무</label>
+            <div class="info-box">
+                <input type="checkbox" id="gift-box" name="giftWrap">
+                <span>포장을 원하시면 체크해주세요.</span>
+            </div>
+        </div>
+
+        <!-- 배송 날짜 지정 -->
+        <div class="form-group">
+            <label for="delivery-box">배송 희망 날짜 지정</label>
+            <div class="info-box">
+                <input type="date" id="delivery-box" name="deliveryDate" value="0" class="form-control">
+            </div>
+        </div>
+
+
+        <!-- 결제 UI, 이용약관 UI 영역 -->
+        <div id="payment-method" class="mb-3"></div>
+        <div id="agreement" class="mb-3"></div>
+
+    </form>
+
+    <!-- 결제하기 버튼 -->
+    <div class="form-group">
+        <div class="d-flex justify-content-end">
+            <button id="payment-button" class="btn btn-primary btn-block btn-lg">결제하기</button>
+        </div>
+    </div>
+</main>
+
+<!-- footer -->
+<footer class="header-custom" th:replace="fragments/footer :: footer"></footer>
+<!--주소매핑-->
+<script type="text/javascript">
+    window.onload = function(){
+        document.getElementById("newwin").onclick = function(){
+            window.open("https://business.juso.go.kr/addrlink/addrLinkUrl.do?confmKey=U01TX0FVVEgyMDI0MDcwNjAwMTkyNjExNDg5NzI=&returnUrl="+ window.location.origin+"/purchases/guests/addresses","","width=700px,height=500px,top=200px,left=200px;");
+        }
+    };
+    function setCountyOffice(name){
+        document.getElementById('countyOfficeName').value = name;
+    }
+</script>
+<!--토스결제창-->
+<script th:inline="javascript">
+    const button = document.getElementById("payment-button");
+
+    var amount = 0.0;
+    const totalPrice = document.getElementById("total-price").textContent;
+    const address = document.getElementById("countyOfficeName").value;
+    const orderNumber = document.getElementById("orderNumber").textContent;
+    var orderForm = document.getElementById('order-form');
+    var deliveryError = document.getElementById('delivery-error');
+    var deliveryDate = document.getElementById('delivery-box').value;
+    var passwordError = document.getElementById('password-error');
+    var passwordInput = document.getElementById("password");
+    var addressInput = document.getElementById('newwin');
+    var addressError = document.getElementById('address-error');
+
+    var isPacking = false;
+    var shipping = null;
+    var road = null;
+
+    <!--총 가격-->
+    document.addEventListener('DOMContentLoaded', function() {
+        var today = new Date();
+        var year = today.getFullYear();
+        var month = String(today.getMonth() + 1).padStart(2, '0');
+        var day = String(today.getDate()+1).padStart(2, '0');
+        var minDate = year + '-' + month + '-' + day;
+
+        var deliveryBox = document.getElementById('delivery-box');
+        deliveryBox.setAttribute('min', minDate);
+        deliveryBox.setAttribute('value', minDate);
+
+        calculateTotal();
+    });
+    function calculateTotal() {
+        var total = 0.0;
+        var cartItems = document.querySelectorAll('.cart-item');
+        cartItems.forEach(function(item) {
+            var price = parseFloat(item.querySelector('.price-input').innerText);
+            var quantity = parseInt(item.querySelector('.quantity-input').value);
+
+            total += price * quantity;
+        });
+
+        if (isNaN(total)) {
+            total = 0.0;
+        }
+        amount = (total+3000).toFixed(0);
+
+        document.getElementById('total-book-price').innerText = total.toFixed(0);
+        document.getElementById('total-price').innerText = amount;
+    }
+
+    const widgetClientKey = "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm";
+
+    const customerKey = orderNumber;
+    const paymentWidget = PaymentWidget(widgetClientKey, PaymentWidget.ANONYMOUS) // 비회원 결제
+
+    const paymentMethodWidget = paymentWidget.renderPaymentMethods(
+        "#payment-method",
+        { value: amount },
+        { variantKey: "DEFAULT" }
+    );
+
+    paymentWidget.renderAgreement(
+        "#agreement",
+        { variantKey: "AGREEMENT" }
+    );
+    // 배송 날짜 지정 이벤트 리스너
+    document.getElementById('delivery-box').addEventListener('change', function () {
+        var deliveryDate = this.value;
+        console.log("Delivery Date: ", deliveryDate);
+        shipping = deliveryDate;
+    });
+
+    addressInput.addEventListener('input', function () {
+        if (addressInput.value.trim()) {
+            addressError.style.display = 'none';
+        }
+    });
+
+    // 비밀번호 입력 필드 변경 이벤트 리스너
+    passwordInput.addEventListener('input', function () {
+        if (passwordInput.value.trim()) {
+            passwordError.style.display = 'none';
+        }
+    });
+
+    // 포장 유무 체크 이벤트 리스너
+    document.getElementById('gift-box').addEventListener('change', function () {
+        var isGiftWrap = this.checked;
+        console.log("Gift Wrap: ", isGiftWrap);
+        isPacking = isGiftWrap;
+    });
+
+    // 배송 날짜 지정 이벤트 리스너
+    document.getElementById('delivery-box').addEventListener('change', function () {
+        deliveryDate = this.value;
+
+        console.log("Delivery Date: ", deliveryDate);
+        shipping = deliveryDate;
+    });
+
+
+    button.addEventListener("click", function () {
+        const cartId = [[${cartId}]];
+        var address = document.getElementById("countyOfficeName").value;
+        var password = document.getElementById("password").value;
+
+
+        console.log(amount);
+        console.log(address);
+        console.log(password);
+        console.log(isPacking);
+        console.log(shipping);
+        paymentMethodWidget.updateAmount(amount);
+
+        if (!password) {
+            event.preventDefault();
+            passwordError.style.display = 'block';
+            alert('비회원 비밀번호를 입력해 주세요.');
+            return;
+        } else {
+            passwordError.style.display = 'none';
+        }
+
+        if(address === "주소없음"){
+            event.preventDefault(); // 폼 제출 중단
+            addressError.style.display = 'block';
+            alert('주소를 입력해 주세요.');
+            paymentWidget.cancel;
+            return;
+        } else {
+            addressError.style.display = 'none';
+        }
+        paymentWidget.requestPayment({
+            orderId: orderNumber,
+            orderName: '3runner Store:'+orderNumber,
+            successUrl: window.location.origin + "/payments/guests/success?cartId="+cartId+"&address="+address+"&password="+password+"&isPacking="+isPacking+"&shipping="+shipping,
+            failUrl: window.location.origin + "/payments/guests/fail",
+            customerEmail: "비회원",
+            customerName: "비회원",
+            customerMobilePhone: "01012345678",
+        });
+    });
+</script>
+</body>
+</html>

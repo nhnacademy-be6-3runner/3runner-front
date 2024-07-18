@@ -1,0 +1,7 @@
+feign:
+  client:
+    url: localhost:8080
+
+server:
+  port: 3000
+

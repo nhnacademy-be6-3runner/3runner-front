@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Detail</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <link rel="stylesheet" th:href="@{/css/main/default.css}">
+    <link rel="stylesheet" th:href="@{/css/detail/book-detail.css}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+</head>
+<body>
+<header class="header-custom" th:replace="fragments/no-nav-header :: header"></header>
+
+<div class="container">
+    <div class="category-list">
+        <div th:each="category : ${book.categoryList()}">
+            <span th:if="${category.name != null}" th:text="${category.name}"></span>
+            <span th:if="${category.childrenList != null && !category.childrenList.isEmpty()}">
+                <span th:each="child : ${category.childrenList}">
+                    &gt; <a th:href="'/categories/' + ${child.id}" th:text="${child.name}"></a>
+                    <span th:if="${child.childrenList != null && !child.childrenList.isEmpty()}">
+                        <span th:each="subChild : ${child.childrenList}">
+                            &gt; <a th:href="'/categories/' + ${subChild.id}" th:text="${subChild.name}"></a>
+                        </span>
+                    </span>
+                </span>
+            </span>
+        </div>
+    </div>
+
+    <hr class="my-4">
+
+    <div class="product-detail">
+        <div class="product-images">
+            <img th:src="@{/api/images/book/download(fileName=${book.imagePath()})}" alt="book main image">
+        </div>
+        <div class="product-info">
+            <svg id="like" class="like" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="30" height="30">
+                <path d="M47.6 300.4L228.3 469.1c7.5 7 17.4 10.9 27.7 10.9s20.2-3.9 27.7-10.9L464.4 300.4c30.4-28.3 47.6-68 47.6-109.5v-5.8c0-69.9-50.5-129.5-119.4-141C347 36.5 300.6 51.4 268 84L256 96 244 84c-32.6-32.6-79-47.5-124.6-39.9C50.5 55.6 0 115.2 0 185.1v5.8c0 41.5 17.2 81.2 47.6 109.5z"/>
+            </svg>
+            <span id="likeCount" style="margin-left: 10px;">0</span>
+            <h1><span th:text="${book.title()}"></span></h1>
+            <div class="price-container">
+                <span class="original-price" style="text-decoration: line-through; color: #999999;">
+                    <span th:text="${book.price()}"></span>원
+                </span>
+                <span class="selling-price"> → <span th:text="${book.sellingPrice()}"></span>원</span>
+            </div>
+            <div class="rating">
+                <span id="star-container"></span>
+                <span class="reviews">
+                (<span id="review-count"></span> reviews)
+            </span>
+            </div>
+
+            <hr class="my-3">
+
+            <div class="coupon" style="display: none;">
+                <div class="input-group mb-3">
+                    <button class="btn btn-primary" id="downloadCoupon" onclick="downloadSelectedCoupon()">쿠폰 다운로드</button>
+                </div>
+            </div>
+
+            <div class="purchase-button">
+                <div class="options">
+                    <label for="quantity">수량</label>
+                    <div class="input-group">
+                        <button type="button" class="btn btn-outline-secondary" onclick="decreaseQuantity()">-</button>
+                        <input type="number" id="quantity" name="quantity" value="1" min="1" class="form-control text-center" onchange="updateTotalPrice()">
+                        <button type="button" class="btn btn-outline-secondary" onclick="increaseQuantity()">+</button>
+                    </div>
+                </div>
+                <div class="total-price">
+                    총 가격 <span id="totalPrice" th:text="${book.sellingPrice()}"></span>원
+                </div>
+                <div class="action-buttons">
+                    <button id="cartButton" class="btn btn-outline-success">장바구니 담기</button>
+                    <button id="purchaseButton" class="btn btn-outline-primary">바로 구매</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Popup Message -->
+    <div id="popupMessage" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">알림</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>찜 기능은 로그인을 해야합니다.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">확인</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr class="my-4">
+
+    <div class="additional-info">
+        <h2>책 정보</h2>
+        <table class="table">
+            <tr>
+                <th>작가</th>
+                <td th:text="${book.author()}"></td>
+            </tr>
+            <tr>
+                <th>출판일</th>
+                <td th:text="${book.publishedDate()}"></td>
+            </tr>
+            <tr>
+                <th>출판사</th>
+                <td th:text="${book.publisher()}"></td>
+            </tr>
+            <tr>
+                <th>ISBN</th>
+                <td th:text="${book.isbn()}"></td>
+            </tr>
+        </table>
+        <div class="description">
+            <div th:utext="${book.description()}"></div>
+        </div>
+    </div>
+    <div class="review-list additional-info">
+        <h2>리뷰</h2>
+        <div class="review-avg" id="average-rating-container" style="font-size: 24px; font-weight: bold;"></div>
+        <div class="sorting-options mb-3">
+            <label for="reviewSort"></label>
+            <select id="reviewSort" class="form-select d-inline-block w-auto" onchange="changeReviewSorting()">
+                <option value="createdAt">최신순</option>
+                <option value="likes">좋아요순</option>
+            </select>
+
+            <label for="reviewSortOrder" class="ms-3"></label>
+            <select id="reviewSortOrder" class="form-select d-inline-block w-auto" onchange="changeReviewSorting()">
+                <option value="desc">내림차순</option>
+                <option value="asc">오름차순</option>
+            </select>
+        </div>
+        <div id="review-list-items" class="list-group">
+            <!--리뷰 목록-->
+        </div>
+        <div class="text-center mt-4">
+            <button class="btn btn-primary" onclick="loadMoreReviews()">리뷰 더보기</button>
+        </div>
+    </div>
+</div>
+<script th:src="@{/js/detail/book-detail.js}"></script>
+<script th:src="@{/js/detail/book-like.js}"></script>
+<script th:src="@{/js/list/review-page-list.js}"></script>
+<script th:src="@{/js/auth/checked-login.js}"></script>
+<!-- Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css">
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

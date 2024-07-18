@@ -1,0 +1,5816 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "API 명세서",
+    "description": "3runner-backend",
+    "version": "0.0.1-SNAPSHOT"
+  },
+  "servers": [
+    {
+      "url": "http://coupon"
+    },
+    {
+      "url": "http://bookstore"
+    }
+  ],
+  "tags": [],
+  "paths": {
+    "/coupon/forms": {
+      "get": {
+        "tags": [
+          "coupon"
+        ],
+        "summary": "쿠폰 폼 조회 API",
+        "description": "쿠폰 폼 조회 API",
+        "operationId": "coupon-form-controller-test/test-read-all-coupon-forms",
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/coupon-forms1239783233"
+                },
+                "examples": {
+                  "coupon-form-controller-test/test-read-all-coupon-forms": {
+                    "value": "{\n  \"header\" : {\n    \"resultCode\" : 200,\n    \"successful\" : true\n  },\n  \"body\" : {\n    \"data\" : [ {\n      \"couponFormId\" : 1,\n      \"startDate\" : \"2024-01-01T00:00:00Z\",\n      \"endDate\" : \"2024-12-31T23:59:59Z\",\n      \"createdAt\" : \"2024-07-18T10:45:27.445725+09:00\",\n      \"name\" : \"Test Coupon 1\",\n      \"code\" : \"91fb922b-3fa9-4ea8-a505-3b915d957058\",\n      \"maxPrice\" : 1000,\n      \"minPrice\" : 500,\n      \"couponTypeId\" : 1,\n      \"couponUsageId\" : 1,\n      \"type\" : \"Fixed\",\n      \"usage\" : \"Books\",\n      \"books\" : [ 1, 2 ],\n      \"categorys\" : [ 1, 2 ],\n      \"discountPrice\" : 1000,\n      \"discountRate\" : 0.0,\n      \"discountMax\" : 0\n    }, {\n      \"couponFormId\" : 2,\n      \"startDate\" : \"2024-01-01T00:00:00Z\",\n      \"endDate\" : \"2024-12-31T23:59:59Z\",\n      \"createdAt\" : \"2024-07-18T10:45:27.446094+09:00\",\n      \"name\" : \"Test Coupon 2\",\n      \"code\" : \"c9b7c707-8257-45bb-ae87-c9d7d92a0a20\",\n      \"maxPrice\" : 2000,\n      \"minPrice\" : 1000,\n      \"couponTypeId\" : 2,\n      \"couponUsageId\" : 2,\n      \"type\" : \"Ratio\",\n      \"usage\" : \"Categories\",\n      \"books\" : [ 1, 2 ],\n      \"categorys\" : [ 1, 2 ],\n      \"discountPrice\" : 0,\n      \"discountRate\" : 0.2,\n      \"discountMax\" : 500\n    } ]\n  }\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "coupon"
+        ],
+        "summary": "쿠폰 폼을 생성하는 API",
+        "description": "쿠폰 폼을 생성하는 API",
+        "operationId": "coupon-form-controller-test/test-create-coupon-form",
+        "requestBody": {
+          "content": {
+            "application/json;charset=UTF-8": {
+              "schema": {
+                "$ref": "#/components/schemas/coupon-forms1145792621"
+              },
+              "examples": {
+                "coupon-form-controller-test/test-create-coupon-form": {
+                  "value": "{\n  \"startDate\" : \"2024-01-01T00:00:00Z\",\n  \"endDate\" : \"2024-12-31T23:59:59Z\",\n  \"name\" : \"Test Coupon\",\n  \"maxPrice\" : 1000,\n  \"minPrice\" : 500,\n  \"couponTypeId\" : 1,\n  \"couponUsageId\" : 1\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/coupon-types-ratios-353172180"
+                },
+                "examples": {
+                  "coupon-form-controller-test/test-create-coupon-form": {
+                    "value": "{\n  \"header\" : {\n    \"resultCode\" : 201,\n    \"successful\" : true\n  },\n  \"body\" : {\n    \"data\" : 1\n  }\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/coupon/types": {
+      "get": {
+        "tags": [
+          "coupon"
+        ],
+        "summary": "타입 조회 API",
+        "description": "타입 조회 API",
+        "operationId": "coupon-policy-controller-test/test-read-all-types",
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/coupon-types431443586"
+                },
+                "examples": {
+                  "coupon-policy-controller-test/test-read-all-types": {
+                    "value": "{\n  \"header\" : {\n    \"resultCode\" : 200,\n    \"successful\" : true\n  },\n  \"body\" : {\n    \"data\" : [ {\n      \"couponTypeId\" : 1,\n      \"type\" : \"Fixed Coupon\"\n    }, {\n      \"couponTypeId\" : 2,\n      \"type\" : \"Ratio Coupon\"\n    } ]\n  }\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/coupon/usages": {
+      "get": {
+        "tags": [
+          "coupon"
+        ],
+        "summary": "사용처 조회 API",
+        "description": "사용처 조회 API",
+        "operationId": "coupon-policy-controller-test/test-read-all-usages",
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/coupon-usages-1828167700"
+                },
+                "examples": {
+                  "coupon-policy-controller-test/test-read-all-usages": {
+                    "value": "{\n  \"header\" : {\n    \"resultCode\" : 200,\n    \"successful\" : true\n  },\n  \"body\" : {\n    \"data\" : [ {\n      \"couponUsageId\" : 1,\n      \"usage\" : \"Usage 1\"\n    }, {\n      \"couponUsageId\" : 2,\n      \"usage\" : \"Usage 2\"\n    } ]\n  }\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/coupon/members/forms": {
+      "post": {
+        "tags": [
+          "coupon"
+        ],
+        "summary": "쿠폰 폼 조회 API",
+        "description": "쿠폰 폼 조회 API",
+        "operationId": "coupon-form-controller-test/test-read-coupon-form",
+        "requestBody": {
+          "content": {
+            "application/json;charset=UTF-8": {
+              "schema": {
+                "$ref": "#/components/schemas/coupon-members-forms1082241324"
+              },
+              "examples": {
+                "coupon-form-controller-test/test-read-coupon-form": {
+                  "value": "{\n  \"couponFormIds\" : [ 1, 2, 3 ]\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/coupon-forms1239783233"
+                },
+                "examples": {
+                  "coupon-form-controller-test/test-read-coupon-form": {
+                    "value": "{\n  \"header\" : {\n    \"resultCode\" : 200,\n    \"successful\" : true\n  },\n  \"body\" : {\n    \"data\" : [ {\n      \"couponFormId\" : 1,\n      \"startDate\" : \"2024-01-01T00:00:00Z\",\n      \"endDate\" : \"2024-12-31T23:59:59Z\",\n      \"createdAt\" : \"2024-07-18T10:45:27.582564+09:00\",\n      \"name\" : \"Test Coupon 1\",\n      \"code\" : \"449bb1d8-fe02-4935-bb81-977901fa9469\",\n      \"maxPrice\" : 1000,\n      \"minPrice\" : 500,\n      \"couponTypeId\" : 1,\n      \"couponUsageId\" : 1,\n      \"type\" : \"Fixed\",\n      \"usage\" : \"Books\",\n      \"books\" : [ 1, 2 ],\n      \"categorys\" : [ 1, 2 ],\n      \"discountPrice\" : 1000,\n      \"discountRate\" : 0.0,\n      \"discountMax\" : 0\n    }, {\n      \"couponFormId\" : 2,\n      \"startDate\" : \"2024-01-01T00:00:00Z\",\n      \"endDate\" : \"2024-12-31T23:59:59Z\",\n      \"createdAt\" : \"2024-07-18T10:45:27.582847+09:00\",\n      \"name\" : \"Test Coupon 2\",\n      \"code\" : \"8871d393-27df-4a2a-9943-566bb4822a90\",\n      \"maxPrice\" : 2000,\n      \"minPrice\" : 1000,\n      \"couponTypeId\" : 2,\n      \"couponUsageId\" : 2,\n      \"type\" : \"Ratio\",\n      \"usage\" : \"Categories\",\n      \"books\" : [ 1, 2 ],\n      \"categorys\" : [ 1, 2 ],\n      \"discountPrice\" : 0,\n      \"discountRate\" : 0.2,\n      \"discountMax\" : 500\n    } ]\n  }\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/coupon/types/fixes": {
+      "post": {
+        "tags": [
+          "coupon"
+        ],
+        "summary": "쿠폰 정책 고정 쿠폰을 생성하는 API",
+        "description": "쿠폰 정책 고정 쿠폰을 생성하는 API",
+        "operationId": "coupon-policy-controller-test/test-create-fixed-coupon-policy",
+        "requestBody": {
+          "content": {
+            "application/json;charset=UTF-8": {
+              "schema": {
+                "$ref": "#/components/schemas/coupon-types-fixes1982406581"
+              },
+              "examples": {
+                "coupon-policy-controller-test/test-create-fixed-coupon-policy": {
+                  "value": "{\n  \"discountPrice\" : 1000\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/coupon-types-ratios-353172180"
+                },
+                "examples": {
+                  "coupon-policy-controller-test/test-create-fixed-coupon-policy": {
+                    "value": "{\n  \"header\" : {\n    \"resultCode\" : 201,\n    \"successful\" : true\n  },\n  \"body\" : {\n    \"data\" : 1\n  }\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/coupon/types/ratios": {
+      "post": {
+        "tags": [
+          "coupon"
+        ],
+        "summary": "쿠폰 정책 비율 쿠폰을 생성하는 API",
+        "description": "쿠폰 정책 비율 쿠폰을 생성하는 API",
+        "operationId": "coupon-policy-controller-test/test-create-ratio-coupon-policy",
+        "requestBody": {
+          "content": {
+            "application/json;charset=UTF-8": {
+              "schema": {
+                "$ref": "#/components/schemas/coupon-types-ratios-1269597648"
+              },
+              "examples": {
+                "coupon-policy-controller-test/test-create-ratio-coupon-policy": {
+                  "value": "{\n  \"discountRate\" : 0.1,\n  \"discountMaxPrice\" : 1000\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/coupon-types-ratios-353172180"
+                },
+                "examples": {
+                  "coupon-policy-controller-test/test-create-ratio-coupon-policy": {
+                    "value": "{\n  \"header\" : {\n    \"resultCode\" : 201,\n    \"successful\" : true\n  },\n  \"body\" : {\n    \"data\" : 1\n  }\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/coupon/usages/books": {
+      "post": {
+        "tags": [
+          "coupon"
+        ],
+        "summary": "북 쿠폰 사용처 정책 쿠폰을 생성하는 API",
+        "description": "북 쿠폰 사용처 정책 쿠폰을 생성하는 API",
+        "operationId": "coupon-policy-controller-test/test-create-book-coupon-policy",
+        "requestBody": {
+          "content": {
+            "application/json;charset=UTF-8": {
+              "schema": {
+                "$ref": "#/components/schemas/coupon-usages-books-1462525840"
+              },
+              "examples": {
+                "coupon-policy-controller-test/test-create-book-coupon-policy": {
+                  "value": "{\n  \"bookIds\" : [ 1, 2, 3 ]\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/coupon-types-ratios-353172180"
+                },
+                "examples": {
+                  "coupon-policy-controller-test/test-create-book-coupon-policy": {
+                    "value": "{\n  \"header\" : {\n    \"resultCode\" : 201,\n    \"successful\" : true\n  },\n  \"body\" : {\n    \"data\" : 1\n  }\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/coupon/usages/categories": {
+      "post": {
+        "tags": [
+          "coupon"
+        ],
+        "summary": "카테고리 쿠폰 사용처 정책 쿠폰을 생성하는 API",
+        "description": "카테고리 쿠폰 사용처 정책 쿠폰을 생성하는 API",
+        "operationId": "coupon-policy-controller-test/test-create-category-coupon-policy",
+        "requestBody": {
+          "content": {
+            "application/json;charset=UTF-8": {
+              "schema": {
+                "$ref": "#/components/schemas/coupon-usages-categories1845900452"
+              },
+              "examples": {
+                "coupon-policy-controller-test/test-create-category-coupon-policy": {
+                  "value": "{\n  \"categoryIds\" : [ 1, 2, 3 ]\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/coupon-types-ratios-353172180"
+                },
+                "examples": {
+                  "coupon-policy-controller-test/test-create-category-coupon-policy": {
+                    "value": "{\n  \"header\" : {\n    \"resultCode\" : 201,\n    \"successful\" : true\n  },\n  \"body\" : {\n    \"data\" : 1\n  }\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/coupon/types/fixes/{couponTypeId}": {
+      "get": {
+        "tags": [
+          "coupon"
+        ],
+        "summary": "고정 타입 쿠폰 조회 API",
+        "description": "고정 타입 쿠폰 조회 API",
+        "operationId": "coupon-policy-controller-test/test-read-fixed-type",
+        "parameters": [
+          {
+            "name": "couponTypeId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/coupon-types-fixes-couponTypeId-1047919030"
+                },
+                "examples": {
+                  "coupon-policy-controller-test/test-read-fixed-type": {
+                    "value": "{\n  \"header\" : {\n    \"resultCode\" : 200,\n    \"successful\" : true\n  },\n  \"body\" : {\n    \"data\" : {\n      \"fixedCouponId\" : 1,\n      \"couponTypeId\" : 1,\n      \"discountPrice\" : 1000\n    }\n  }\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/coupon/types/ratios/{couponTypeId}": {
+      "get": {
+        "tags": [
+          "coupon"
+        ],
+        "summary": "비율 타입 쿠폰 조회 API",
+        "description": "비율 타입 쿠폰 조회 API",
+        "operationId": "coupon-policy-controller-test/test-read-ratio-type",
+        "parameters": [
+          {
+            "name": "couponTypeId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/coupon-types-ratios-couponTypeId1609426391"
+                },
+                "examples": {
+                  "coupon-policy-controller-test/test-read-ratio-type": {
+                    "value": "{\n  \"header\" : {\n    \"resultCode\" : 200,\n    \"successful\" : true\n  },\n  \"body\" : {\n    \"data\" : {\n      \"ratioCouponId\" : 1,\n      \"couponTypeId\" : 1,\n      \"discountRate\" : 0.1,\n      \"discountMaxPrice\" : 1000\n    }\n  }\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/coupon/usages/books/{couponTypeId}": {
+      "get": {
+        "tags": [
+          "coupon"
+        ],
+        "summary": "북 사용처 조회 API",
+        "description": "북 사용처 조회 API",
+        "operationId": "coupon-policy-controller-test/test-read-book-usages",
+        "parameters": [
+          {
+            "name": "couponTypeId",
+            "in": "path",
+            "description": "쿠폰타입아이디",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/coupon-usages-books-couponTypeId1760074859"
+                },
+                "examples": {
+                  "coupon-policy-controller-test/test-read-book-usages": {
+                    "value": "{\n  \"header\" : {\n    \"resultCode\" : 200,\n    \"successful\" : true\n  },\n  \"body\" : {\n    \"data\" : [ 1, 2 ]\n  }\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/coupon/usages/categories/{couponTypeId}": {
+      "get": {
+        "tags": [
+          "coupon"
+        ],
+        "summary": "카테고리 사용처 조회 API",
+        "description": "카테고리 사용처 조회 API",
+        "operationId": "coupon-policy-controller-test/test-read-category-usages",
+        "parameters": [
+          {
+            "name": "couponTypeId",
+            "in": "path",
+            "description": "쿠폰타입아이디",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/coupon-usages-categories-couponTypeId620553210"
+                },
+                "examples": {
+                  "coupon-policy-controller-test/test-read-category-usages": {
+                    "value": "{\n  \"header\" : {\n    \"resultCode\" : 200,\n    \"successful\" : true\n  },\n  \"body\" : {\n    \"data\" : [ 1, 2 ]\n  }\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookstore/books": {
+      "get": {
+        "tags": [
+          "bookstore"
+        ],
+        "summary": "도서 폼을 생성하는 API",
+        "description": "도서 폼을 생성하는 API",
+        "operationId": "book-controller-test/read-all-books-test",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "페이지 번호",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "페이지 사이즈",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "정렬 기준",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-books585976303"
+                },
+                "examples": {
+                  "book-controller-test/read-all-books-test": {
+                    "value": "{\n  \"header\" : {\n    \"resultCode\" : 200,\n    \"successful\" : true\n  },\n  \"body\" : {\n    \"data\" : {\n      \"totalPages\" : 2,\n      \"totalElements\" : 14,\n      \"sort\" : {\n        \"empty\" : false,\n        \"sorted\" : true,\n        \"unsorted\" : false\n      },\n      \"number\" : 1,\n      \"size\" : 12,\n      \"content\" : [ {\n        \"id\" : 1,\n        \"title\" : \"Test Title 1\",\n        \"price\" : 10000,\n        \"sellingPrice\" : 9000,\n        \"author\" : \"Test Author 2\",\n        \"thumbnail\" : \"test1.png\"\n      }, {\n        \"id\" : 2,\n        \"title\" : \"Test Title 2\",\n        \"price\" : 10000,\n        \"sellingPrice\" : 9000,\n        \"author\" : \"Test Author 2\",\n        \"thumbnail\" : \"test2.png\"\n      } ],\n      \"pageable\" : {\n        \"pageNumber\" : 1,\n        \"pageSize\" : 12,\n        \"sort\" : {\n          \"empty\" : false,\n          \"sorted\" : true,\n          \"unsorted\" : false\n        },\n        \"offset\" : 12,\n        \"paged\" : true,\n        \"unpaged\" : false\n      },\n      \"first\" : false,\n      \"last\" : true,\n      \"numberOfElements\" : 2,\n      \"empty\" : false\n    }\n  }\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "bookstore"
+        ],
+        "summary": "도서 폼을 생성하는 API",
+        "description": "도서 폼을 생성하는 API",
+        "operationId": "book-controller-test/create",
+        "requestBody": {
+          "content": {
+            "application/json;charset=UTF-8": {
+              "schema": {
+                "$ref": "#/components/schemas/bookstore-books398657681"
+              },
+              "examples": {
+                "book-controller-test/create_-exception": {
+                  "value": "{\n  \"title\" : \"Test title\",\n  \"description\" : \"\",\n  \"publishedDate\" : \"2023-07-17T12:34:56.789Z\",\n  \"price\" : 10000,\n  \"quantity\" : 100,\n  \"sellingPrice\" : 9000,\n  \"packing\" : true,\n  \"author\" : \"Test author\",\n  \"isbn\" : \"1234567890123\",\n  \"publisher\" : \"Test publisher\",\n  \"imageName\" : \"Test image\",\n  \"imageList\" : [ \"Test image\", \"Test image1\", \"Test image2\" ],\n  \"tagIds\" : [ 1, 2, 3 ],\n  \"categoryIds\" : [ 1, 2, 3 ]\n}"
+                },
+                "book-controller-test/create": {
+                  "value": "{\n  \"title\" : \"Test title\",\n  \"description\" : \"Test description\",\n  \"publishedDate\" : \"2023-07-17T12:34:56.789Z\",\n  \"price\" : 10000,\n  \"quantity\" : 100,\n  \"sellingPrice\" : 9000,\n  \"packing\" : true,\n  \"author\" : \"Test author\",\n  \"isbn\" : \"1234567890123\",\n  \"publisher\" : \"Test publisher\",\n  \"imageName\" : \"Test image\",\n  \"imageList\" : [ \"Test image\", \"Test image1\", \"Test image2\" ],\n  \"tagIds\" : [ 1, 2, 3 ],\n  \"categoryIds\" : [ 1, 2, 3 ]\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "400",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-books-875510385"
+                },
+                "examples": {
+                  "book-controller-test/create_-exception": {
+                    "value": "{\n  \"header\" : {\n    \"resultCode\" : 400,\n    \"successful\" : false\n  },\n  \"body\" : {\n    \"data\" : {\n      \"title\" : \"책의 항목들의 범위가 잘못되었습니다.\",\n      \"status\" : 400,\n      \"timestamp\" : \"2024-07-18T13:07:06.524044+09:00[Asia/Seoul]\"\n    }\n  }\n}"
+                  }
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-books-bookId717793826"
+                },
+                "examples": {
+                  "book-controller-test/create": {
+                    "value": "{\n  \"header\" : {\n    \"resultCode\" : 201,\n    \"successful\" : true\n  }\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookstore/categories": {
+      "get": {
+        "tags": [
+          "bookstore"
+        ],
+        "summary": "모든 카테고리 읽기",
+        "description": "모든 카테고리 읽기",
+        "operationId": "category-controller-test/read-all-categories",
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-categories749949214"
+                },
+                "examples": {
+                  "category-controller-test/read-all-categories": {
+                    "value": "{\n  \"header\" : {\n    \"resultCode\" : 200,\n    \"successful\" : true\n  },\n  \"body\" : {\n    \"data\" : [ {\n      \"id\" : 1,\n      \"name\" : \"카테고리 1\",\n      \"childrenList\" : [ ]\n    } ]\n  }\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "bookstore"
+        ],
+        "summary": "카테고리 추가 오류 API",
+        "description": "카테고리 추가 오류 API",
+        "operationId": "category-controller-test/create-category",
+        "requestBody": {
+          "content": {
+            "application/json;charset=UTF-8": {
+              "schema": {
+                "$ref": "#/components/schemas/bookstore-categories1122069570"
+              },
+              "examples": {
+                "category-controller-test/create-category_validate-exception": {
+                  "value": "{\n  \"name\" : \" \",\n  \"parentId\" : 1\n}"
+                },
+                "category-controller-test/create-category": {
+                  "value": "{\n  \"name\" : \"Test\",\n  \"parentId\" : 1\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "400",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-categories-1558151550"
+                },
+                "examples": {
+                  "category-controller-test/create-category_validate-exception": {
+                    "value": "{\n  \"header\" : {\n    \"resultCode\" : 400,\n    \"successful\" : false\n  },\n  \"body\" : {\n    \"data\" : {\n      \"title\" : \"[Field error in object 'createCategoryRequest' on field 'name': rejected value [ ]; codes [NotBlank.createCategoryRequest.name,NotBlank.name,NotBlank.java.lang.String,NotBlank]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [createCategoryRequest.name,name]; arguments []; default message [name]]; default message [must not be blank]]\",\n      \"status\" : 400,\n      \"timestamp\" : \"2024-07-18T13:06:24.434213+09:00[Asia/Seoul]\"\n    }\n  }\n}"
+                  }
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "201",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-categories472683520"
+                },
+                "examples": {
+                  "category-controller-test/create-category": {
+                    "value": "{\n  \"header\" : {\n    \"resultCode\" : 201,\n    \"successful\" : true\n  }\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookstore/login": {
+      "post": {
+        "tags": [
+          "bookstore"
+        ],
+        "summary": "존재하는 멤버 이메일로 권한을 가져오는 API",
+        "description": "존재하는 멤버 이메일로 권한을 가져오는 API",
+        "operationId": "get-member-auth-not-foundmember-auth-controller-test/test-get-member-auth_-success",
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "description": "Content Type",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "application/json;charset=UTF-8"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json;charset=UTF-8": {
+              "schema": {
+                "$ref": "#/components/schemas/bookstore-reviews-reviewId-delete486549215"
+              },
+              "examples": {
+                "get-member-auth-not-found": {
+                  "value": "{\"email\":\"unknown@example.com\"}"
+                },
+                "member-auth-controller-test/test-get-member-auth_-success": {
+                  "value": "{\"email\":\"test@example.com\"}"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-login-1717727360"
+                },
+                "examples": {
+                  "member-auth-controller-test/test-get-member-auth_-success": {
+                    "value": "{\"header\":{\"resultCode\":200,\"successful\":true},\"body\":{\"data\":{\"email\":\"test@example.com\",\"password\":\"password\",\"auth\":[\"USER\",\"ADMIN\"],\"memberId\":1}}}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookstore/members": {
+      "get": {
+        "tags": [
+          "bookstore"
+        ],
+        "summary": "멤버의 정보를 가져오는 API",
+        "description": "멤버의 정보를 가져오는 API",
+        "operationId": "member-controller-test/read-by-id",
+        "parameters": [
+          {
+            "name": "Member-Id",
+            "in": "header",
+            "description": "멤버 아이디",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-members-166951780"
+                },
+                "examples": {
+                  "member-controller-test/read-by-id": {
+                    "value": "{\"header\":{\"resultCode\":200,\"successful\":true},\"body\":{\"data\":{\"password\":null,\"point\":null,\"name\":\"Test User\",\"age\":25,\"phone\":null,\"email\":\"test@example.com\",\"birthday\":null,\"grade\":null,\"lastLoginDate\":null,\"createdAt\":null,\"modifiedAt\":null}}}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "bookstore"
+        ],
+        "summary": "업데이트 정보를 받아 멤버를 업데이트 하는 API",
+        "description": "업데이트 정보를 받아 멤버를 업데이트 하는 API",
+        "operationId": "member-controller-test/update-member",
+        "parameters": [
+          {
+            "name": "Member-Id",
+            "in": "header",
+            "description": "멤버 아이디",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "1"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json;charset=UTF-8": {
+              "schema": {
+                "$ref": "#/components/schemas/bookstore-members1360135849"
+              },
+              "examples": {
+                "member-controller-test/update-member": {
+                  "value": "{\"name\":\"Updated User\",\"age\":0,\"phone\":null,\"birthday\":null}"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-members1743573538"
+                },
+                "examples": {
+                  "member-controller-test/update-member": {
+                    "value": "{\"header\":{\"resultCode\":200,\"successful\":true},\"body\":{\"data\":{\"id\":\"1\",\"name\":\"Updated User\"}}}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "bookstore"
+        ],
+        "summary": "회원의 정보를 받아 등록하는 API",
+        "description": "회원의 정보를 받아 등록하는 API",
+        "operationId": "member-controller-test/create-member",
+        "requestBody": {
+          "content": {
+            "application/json;charset=UTF-8": {
+              "schema": {
+                "$ref": "#/components/schemas/bookstore-members-180897306"
+              },
+              "examples": {
+                "member-controller-test/create-member": {
+                  "value": "{ \"email\": \"test@example.com\", \"password\": \"password\", \"name\": \"Test User\", \"age\": 25 ,\"phone\":\"01000000000\",\"birthday\": \"2022-04-22\"}"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-members-addresses-1276904213"
+                },
+                "examples": {
+                  "member-controller-test/create-member": {
+                    "value": "{\"header\":{\"resultCode\":201,\"successful\":true},\"body\":{\"data\":null}}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "bookstore"
+        ],
+        "operationId": "delete-member",
+        "parameters": [
+          {
+            "name": "Member-Id",
+            "in": "header",
+            "description": "멤버 아이디",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-books-bookId717793826"
+                },
+                "examples": {
+                  "delete-member": {
+                    "value": "{\"header\":{\"resultCode\":204,\"successful\":true}}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookstore/reviews": {
+      "get": {
+        "tags": [
+          "bookstore"
+        ],
+        "summary": "리뷰 전체 조회 API",
+        "description": "리뷰 전체 조회 API",
+        "operationId": "review-controller-test/read-all-reviews",
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-reviews120567052"
+                },
+                "examples": {
+                  "review-controller-test/read-all-reviews": {
+                    "value": "{\n  \"header\" : {\n    \"resultCode\" : 200,\n    \"successful\" : true\n  },\n  \"body\" : {\n    \"data\" : {\n      \"totalPages\" : 1,\n      \"totalElements\" : 0,\n      \"sort\" : {\n        \"empty\" : true,\n        \"sorted\" : false,\n        \"unsorted\" : true\n      },\n      \"number\" : 0,\n      \"size\" : 0,\n      \"content\" : [ ],\n      \"pageable\" : \"INSTANCE\",\n      \"first\" : true,\n      \"last\" : true,\n      \"numberOfElements\" : 0,\n      \"empty\" : true\n    }\n  }\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookstore/books/admin": {
+      "get": {
+        "tags": [
+          "bookstore"
+        ],
+        "summary": "관리자 페이지용 모든 책을 조회하는 API",
+        "description": "관리자 페이지용 모든 책을 조회하는 API",
+        "operationId": "book-controller-test/read-all-admin-books",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "페이지 번호",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "페이지 사이즈",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-books-admin-919044019"
+                },
+                "examples": {
+                  "book-controller-test/read-all-admin-books": {
+                    "value": "{\n  \"header\" : {\n    \"resultCode\" : 200,\n    \"successful\" : true\n  },\n  \"body\" : {\n    \"data\" : {\n      \"totalPages\" : 1,\n      \"totalElements\" : 2,\n      \"sort\" : {\n        \"empty\" : true,\n        \"sorted\" : false,\n        \"unsorted\" : true\n      },\n      \"number\" : 0,\n      \"size\" : 10,\n      \"content\" : [ {\n        \"id\" : 1,\n        \"title\" : \"Admin Book 1\",\n        \"price\" : 10000,\n        \"sellingPrice\" : 9000,\n        \"author\" : \"Author 1\",\n        \"quantity\" : 100,\n        \"viewCount\" : 0\n      }, {\n        \"id\" : 2,\n        \"title\" : \"Admin Book 2\",\n        \"price\" : 10000,\n        \"sellingPrice\" : 9000,\n        \"author\" : \"Author 2\",\n        \"quantity\" : 100,\n        \"viewCount\" : 0\n      } ],\n      \"pageable\" : {\n        \"pageNumber\" : 0,\n        \"pageSize\" : 10,\n        \"sort\" : {\n          \"empty\" : true,\n          \"sorted\" : false,\n          \"unsorted\" : true\n        },\n        \"offset\" : 0,\n        \"paged\" : true,\n        \"unpaged\" : false\n      },\n      \"first\" : true,\n      \"last\" : true,\n      \"numberOfElements\" : 2,\n      \"empty\" : false\n    }\n  }\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookstore/books/list": {
+      "get": {
+        "tags": [
+          "bookstore"
+        ],
+        "summary": "쿠폰을 위한 모든 책을 조회하는 API",
+        "description": "쿠폰을 위한 모든 책을 조회하는 API",
+        "operationId": "book-controller-test/read-all-books-for-coupon",
+        "parameters": [
+          {
+            "name": "ids",
+            "in": "query",
+            "description": "책 ID 리스트",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-books-list-1422788593"
+                },
+                "examples": {
+                  "book-controller-test/read-all-books-for-coupon": {
+                    "value": "{\n  \"header\" : {\n    \"resultCode\" : 200,\n    \"successful\" : true\n  },\n  \"body\" : {\n    \"data\" : [ {\n      \"id\" : 1,\n      \"title\" : \"Book 1\"\n    }, {\n      \"id\" : 2,\n      \"title\" : \"Book 2\"\n    }, {\n      \"id\" : 3,\n      \"title\" : \"Book 3\"\n    } ]\n  }\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookstore/books/{bookId}": {
+      "get": {
+        "tags": [
+          "bookstore"
+        ],
+        "summary": "아이디 통해 책을 조회하는 API",
+        "description": "아이디 통해 책을 조회하는 API",
+        "operationId": "book-controller-test/read-book",
+        "parameters": [
+          {
+            "name": "bookId",
+            "in": "path",
+            "description": "책 아이디",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-books-bookId-987686746"
+                },
+                "examples": {
+                  "book-controller-test/read-book": {
+                    "value": "{\n  \"header\" : {\n    \"resultCode\" : 200,\n    \"successful\" : true\n  },\n  \"body\" : {\n    \"data\" : {\n      \"id\" : 1,\n      \"title\" : \"test Title\",\n      \"description\" : \"Test description\",\n      \"publishedDate\" : \"2024-07-18T13:07:06.4129+09:00\",\n      \"price\" : 10000,\n      \"quantity\" : 10,\n      \"sellingPrice\" : 10000,\n      \"viewCount\" : 777,\n      \"packing\" : true,\n      \"author\" : \"Test Author\",\n      \"isbn\" : \"1234567890123\",\n      \"publisher\" : \"Test Publisher\",\n      \"imagePath\" : \"Test Image Path\",\n      \"categoryList\" : [ {\n        \"id\" : 2,\n        \"name\" : \"Test Category1\",\n        \"childrenList\" : [ {\n          \"id\" : 1,\n          \"name\" : \"Test Category1\",\n          \"childrenList\" : null\n        } ]\n      } ],\n      \"tagList\" : [ {\n        \"id\" : 1,\n        \"name\" : \"Test tag\"\n      } ]\n    }\n  }\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "bookstore"
+        ],
+        "summary": "책을 업데이트하는 API",
+        "description": "책을 업데이트하는 API",
+        "operationId": "book-controller-test/update-book-test",
+        "parameters": [
+          {
+            "name": "bookId",
+            "in": "path",
+            "description": "책 아이디",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json;charset=UTF-8": {
+              "schema": {
+                "$ref": "#/components/schemas/bookstore-books-bookId12455769"
+              },
+              "examples": {
+                "book-controller-test/update-book-test": {
+                  "value": "{\n  \"title\" : \"Updated title\",\n  \"description\" : \"Updated description\",\n  \"publishedDate\" : \"2023-07-17T12:34:56.789Z\",\n  \"price\" : 20000,\n  \"quantity\" : 50,\n  \"sellingPrice\" : 18000,\n  \"packing\" : false,\n  \"author\" : \"Updated author\",\n  \"isbn\" : \"9876543210987\",\n  \"publisher\" : \"Updated publisher\",\n  \"imageName\" : \"Updated image\",\n  \"imageList\" : [ \"Updated image\", \"Updated image1\", \"Updated image2\" ],\n  \"tagIds\" : [ 4, 5, 6 ],\n  \"categoryIds\" : [ 4, 5, 6 ]\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-books-bookId717793826"
+                },
+                "examples": {
+                  "book-controller-test/update-book-test": {
+                    "value": "{\n  \"header\" : {\n    \"resultCode\" : 200,\n    \"successful\" : true\n  }\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "bookstore"
+        ],
+        "summary": "책을 삭제하는 API",
+        "description": "책을 삭제하는 API",
+        "operationId": "book-controller-test/delete-book",
+        "parameters": [
+          {
+            "name": "bookId",
+            "in": "path",
+            "description": "책 아이디",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-books-bookId717793826"
+                },
+                "examples": {
+                  "book-controller-test/delete-book": {
+                    "value": "{\n  \"header\" : {\n    \"resultCode\" : 200,\n    \"successful\" : true\n  }\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookstore/categories/books": {
+      "get": {
+        "tags": [
+          "bookstore"
+        ],
+        "summary": "카테고리에 속한 모든 책",
+        "description": "카테고리에 속한 모든 책",
+        "operationId": "category-controller-test/read-category-all-books",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Page size",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort criteria",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "categoryId",
+            "in": "query",
+            "description": "ID of the category",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-books585976303"
+                },
+                "examples": {
+                  "category-controller-test/read-category-all-books": {
+                    "value": "{\n  \"header\" : {\n    \"resultCode\" : 200,\n    \"successful\" : true\n  },\n  \"body\" : {\n    \"data\" : {\n      \"totalPages\" : 1,\n      \"totalElements\" : 1,\n      \"sort\" : {\n        \"empty\" : true,\n        \"sorted\" : false,\n        \"unsorted\" : true\n      },\n      \"number\" : 0,\n      \"size\" : 10,\n      \"content\" : [ {\n        \"id\" : 1,\n        \"title\" : \"Test Title\",\n        \"price\" : 12344,\n        \"sellingPrice\" : 1234444,\n        \"author\" : \"Test Author\",\n        \"thumbnail\" : \"Test Thumbnail\"\n      } ],\n      \"pageable\" : {\n        \"pageNumber\" : 0,\n        \"pageSize\" : 10,\n        \"sort\" : {\n          \"empty\" : true,\n          \"sorted\" : false,\n          \"unsorted\" : true\n        },\n        \"offset\" : 0,\n        \"paged\" : true,\n        \"unpaged\" : false\n      },\n      \"first\" : true,\n      \"last\" : true,\n      \"numberOfElements\" : 1,\n      \"empty\" : false\n    }\n  }\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookstore/categories/list": {
+      "get": {
+        "tags": [
+          "bookstore"
+        ],
+        "summary": "카테고리 아이디들로 카테고리 리스트 만들기",
+        "description": "카테고리 아이디들로 카테고리 리스트 만들기",
+        "operationId": "category-controller-test/read-all-categories-list",
+        "parameters": [
+          {
+            "name": "ids",
+            "in": "query",
+            "description": "검색할 카테고리 아이디들",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-categories-list1217744975"
+                },
+                "examples": {
+                  "category-controller-test/read-all-categories-list": {
+                    "value": "{\n  \"header\" : {\n    \"resultCode\" : 200,\n    \"successful\" : true\n  },\n  \"body\" : {\n    \"data\" : [ {\n      \"id\" : 1,\n      \"name\" : \"Category 1\"\n    }, {\n      \"id\" : 2,\n      \"name\" : \"Category 2\"\n    } ]\n  }\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookstore/categories/parents": {
+      "get": {
+        "tags": [
+          "bookstore"
+        ],
+        "summary": "상위 카테고리 조회",
+        "description": "상위 카테고리 조회",
+        "operationId": "category-controller-test/read-all-parent-categories",
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-categories-parents165910488"
+                },
+                "examples": {
+                  "category-controller-test/read-all-parent-categories": {
+                    "value": "{\n  \"header\" : {\n    \"resultCode\" : 200,\n    \"successful\" : true\n  },\n  \"body\" : {\n    \"data\" : [ {\n      \"id\" : 1,\n      \"name\" : \"Parent Category 1\",\n      \"parent\" : null\n    }, {\n      \"id\" : 2,\n      \"name\" : \"Parent Category 2\",\n      \"parent\" : null\n    } ]\n  }\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookstore/categories/{categoryId}": {
+      "get": {
+        "tags": [
+          "bookstore"
+        ],
+        "summary": "카테고리 읽기",
+        "description": "카테고리 읽기",
+        "operationId": "category-controller-test/read-category",
+        "parameters": [
+          {
+            "name": "categoryId",
+            "in": "path",
+            "description": "조회할 카테고리 ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-categories-categoryId806155017"
+                },
+                "examples": {
+                  "category-controller-test/read-category": {
+                    "value": "{\n  \"header\" : {\n    \"resultCode\" : 200,\n    \"successful\" : true\n  },\n  \"body\" : {\n    \"data\" : {\n      \"id\" : 1,\n      \"name\" : \"카테고리1\",\n      \"parent\" : {\n        \"id\" : 2,\n        \"name\" : \"부모 카테고리\",\n        \"parent\" : null\n      }\n    }\n  }\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "bookstore"
+        ],
+        "summary": "카테고리 수정 오류 API",
+        "description": "카테고리 수정 오류 API",
+        "operationId": "category-controller-test/update-category",
+        "parameters": [
+          {
+            "name": "categoryId",
+            "in": "path",
+            "description": "수정할 카테고리 ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json;charset=UTF-8": {
+              "schema": {
+                "$ref": "#/components/schemas/bookstore-categories1122069570"
+              },
+              "examples": {
+                "category-controller-test/update-category_validate-exception": {
+                  "value": "{\n  \"name\" : \" \",\n  \"parentId\" : 1\n}"
+                },
+                "category-controller-test/update-category": {
+                  "value": "{\n  \"name\" : \"Test\",\n  \"parentId\" : 1\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "400",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-categories-1558151550"
+                },
+                "examples": {
+                  "category-controller-test/update-category_validate-exception": {
+                    "value": "{\n  \"header\" : {\n    \"resultCode\" : 400,\n    \"successful\" : false\n  },\n  \"body\" : {\n    \"data\" : {\n      \"title\" : \"{name=must not be blank}\",\n      \"status\" : 400,\n      \"timestamp\" : \"2024-07-18T13:06:24.024885+09:00[Asia/Seoul]\"\n    }\n  }\n}"
+                  }
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "201",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-categories472683520"
+                },
+                "examples": {
+                  "category-controller-test/update-category": {
+                    "value": "{\n  \"header\" : {\n    \"resultCode\" : 201,\n    \"successful\" : true\n  }\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "bookstore"
+        ],
+        "summary": "카테고리 삭제",
+        "description": "카테고리 삭제",
+        "operationId": "category-controller-test/delete-category",
+        "parameters": [
+          {
+            "name": "categoryId",
+            "in": "path",
+            "description": "카테고리 아이디",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-categories472683520"
+                },
+                "examples": {
+                  "category-controller-test/delete-category": {
+                    "value": "{\n  \"header\" : {\n    \"resultCode\" : 204,\n    \"successful\" : true\n  }\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookstore/members/addresses": {
+      "get": {
+        "tags": [
+          "bookstore"
+        ],
+        "summary": "멤버의 모든 주소를 읽는 API",
+        "description": "멤버의 모든 주소를 읽는 API",
+        "operationId": "read-all-addresses",
+        "parameters": [
+          {
+            "name": "Member-Id",
+            "in": "header",
+            "description": "멤버 아이디",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-members-addresses-1714189391"
+                },
+                "examples": {
+                  "read-all-addresses": {
+                    "value": "{\"header\":{\"resultCode\":200,\"successful\":true},\"body\":{\"data\":[{\"addressId\":1,\"name\":\"name\",\"country\":\"country\",\"city\":\"city\",\"state\":\"state\",\"road\":\"road\",\"postalCode\":\"postalCode\"}]}}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "bookstore"
+        ],
+        "summary": "주소를 생성하는 api",
+        "description": "주소를 생성하는 api",
+        "operationId": "address-controller-test/create-address",
+        "parameters": [
+          {
+            "name": "Member-Id",
+            "in": "header",
+            "description": "멤버 아이디",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "1"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json;charset=UTF-8": {
+              "schema": {
+                "$ref": "#/components/schemas/bookstore-members-addresses-addressId-155188409"
+              },
+              "examples": {
+                "address-controller-test/create-address": {
+                  "value": "{ \"name\": \"Home\", \"country\": \"Country\", \"city\": \"City\", \"state\": \"State\", \"road\": \"Road\", \"postalCode\": \"12345\"}"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-members-addresses-1276904213"
+                },
+                "examples": {
+                  "address-controller-test/create-address": {
+                    "value": "{\"header\":{\"resultCode\":201,\"successful\":true},\"body\":{\"data\":null}}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookstore/members/auths": {
+      "get": {
+        "tags": [
+          "bookstore"
+        ],
+        "summary": "멤버의 권한이 담긴 리스트를 반환하는 API 문서화",
+        "description": "멤버의 권한이 담긴 리스트를 반환하는 API 문서화",
+        "operationId": "member-controller-test/read-auths",
+        "parameters": [
+          {
+            "name": "Member-Id",
+            "in": "header",
+            "description": "멤버 아이디",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-members-auths-1723971224"
+                },
+                "examples": {
+                  "member-controller-test/read-auths": {
+                    "value": "{\"header\":{\"resultCode\":200,\"successful\":true},\"body\":{\"data\":[{\"auth\":\"USER\"}]}}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookstore/members/email": {
+      "get": {
+        "tags": [
+          "bookstore"
+        ],
+        "operationId": "check-email-exists",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "query",
+            "description": "이메일",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-members-email1317837945"
+                },
+                "examples": {
+                  "check-email-exists": {
+                    "value": "{\"header\":{\"resultCode\":200,\"successful\":true},\"body\":{\"data\":true}}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookstore/members/lastLogin": {
+      "put": {
+        "tags": [
+          "bookstore"
+        ],
+        "operationId": "last-login-update",
+        "requestBody": {
+          "content": {
+            "application/json;charset=UTF-8": {
+              "schema": {
+                "$ref": "#/components/schemas/bookstore-members-lastLogin705495931"
+              },
+              "examples": {
+                "last-login-update": {
+                  "value": "{ \"memberId\": 1 }"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-books-bookId717793826"
+                },
+                "examples": {
+                  "last-login-update": {
+                    "value": "{\"header\":{\"resultCode\":202,\"successful\":true}}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookstore/members/oauth": {
+      "post": {
+        "tags": [
+          "bookstore"
+        ],
+        "operationId": "oauth-member",
+        "requestBody": {
+          "content": {
+            "application/json;charset=UTF-8": {
+              "schema": {
+                "$ref": "#/components/schemas/bookstore-members-oauth-1080614628"
+              },
+              "examples": {
+                "oauth-member": {
+                  "value": "{ \"email\": \"test@example.com\", \"name\": \"Test User\" }"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-members-oauth342739957"
+                },
+                "examples": {
+                  "oauth-member": {
+                    "value": "{\"email\":\"test@example.com\",\"password\":null,\"auth\":[\"USER\"],\"memberId\":1}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookstore/members/password": {
+      "put": {
+        "tags": [
+          "bookstore"
+        ],
+        "operationId": "update-password",
+        "parameters": [
+          {
+            "name": "Member-Id",
+            "in": "header",
+            "description": "회원 ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "1"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json;charset=UTF-8": {
+              "schema": {
+                "$ref": "#/components/schemas/bookstore-members-password-847963803"
+              },
+              "examples": {
+                "update-password": {
+                  "value": "{ \"newPassword\": \"newpassword\" }"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-reviews-reviewId-delete486549215"
+                },
+                "examples": {
+                  "update-password": {
+                    "value": "{\"header\":{\"resultCode\":202,\"successful\":true}}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "bookstore"
+        ],
+        "operationId": "check-password-match",
+        "parameters": [
+          {
+            "name": "Member-Id",
+            "in": "header",
+            "description": "멤버 아이디",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "1"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json;charset=UTF-8": {
+              "schema": {
+                "$ref": "#/components/schemas/bookstore-members-password-1969572391"
+              },
+              "examples": {
+                "check-password-match": {
+                  "value": "{ \"password\": \"newpassword\" }"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-books-bookId717793826"
+                },
+                "examples": {
+                  "check-password-match": {
+                    "value": "{\"header\":{\"resultCode\":202,\"successful\":true}}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookstore/review/{reviewId}": {
+      "put": {
+        "tags": [
+          "bookstore"
+        ],
+        "summary": "리뷰 수정 API",
+        "description": "리뷰 수정 API",
+        "operationId": "review-controller-test/update-review",
+        "parameters": [
+          {
+            "name": "reviewId",
+            "in": "path",
+            "description": "리뷰 ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json;charset=UTF-8": {
+              "schema": {
+                "$ref": "#/components/schemas/bookstore-reviews-reviewId-delete486549215"
+              },
+              "examples": {
+                "review-controller-test/update-review": {
+                  "value": "{\n  \"title\" : \"좋은 책입니다\",\n  \"content\" : \"추천합니다\",\n  \"ratings\" : 5,\n  \"imageList\" : [ ]\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-review-reviewId-1997505446"
+                },
+                "examples": {
+                  "review-controller-test/update-review": {
+                    "value": "{\n  \"header\" : {\n    \"resultCode\" : 200,\n    \"successful\" : true\n  },\n  \"body\" : {\n    \"data\" : 1\n  }\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookstore/reviews/member": {
+      "get": {
+        "tags": [
+          "bookstore"
+        ],
+        "summary": "멤버 아이디로 리뷰 조회 API",
+        "description": "멤버 아이디로 리뷰 조회 API",
+        "operationId": "review-controller-test/read-reviews-by-member-id",
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-reviews-member2041513046"
+                },
+                "examples": {
+                  "review-controller-test/read-reviews-by-member-id": {
+                    "value": "{\n  \"header\" : {\n    \"resultCode\" : 200,\n    \"successful\" : true\n  },\n  \"body\" : {\n    \"data\" : {\n      \"totalPages\" : 1,\n      \"totalElements\" : 0,\n      \"sort\" : {\n        \"empty\" : true,\n        \"sorted\" : false,\n        \"unsorted\" : true\n      },\n      \"number\" : 0,\n      \"size\" : 0,\n      \"content\" : [ ],\n      \"pageable\" : \"INSTANCE\",\n      \"first\" : true,\n      \"last\" : true,\n      \"numberOfElements\" : 0,\n      \"empty\" : true\n    }\n  }\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookstore/reviews/{reviewId}": {
+      "get": {
+        "tags": [
+          "bookstore"
+        ],
+        "summary": "리뷰 상세 조회 API",
+        "description": "리뷰 상세 조회 API",
+        "operationId": "review-controller-test/read-review-detail",
+        "parameters": [
+          {
+            "name": "reviewId",
+            "in": "path",
+            "description": "리뷰 ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-reviews-reviewId1204142696"
+                },
+                "examples": {
+                  "review-controller-test/read-review-detail": {
+                    "value": "{\n  \"header\" : {\n    \"resultCode\" : 200,\n    \"successful\" : true\n  },\n  \"body\" : {\n    \"data\" : {\n      \"bookId\" : 1,\n      \"bookTitle\" : \"책 제목\",\n      \"reviewId\" : 1,\n      \"reviewTitle\" : \"리뷰 제목\",\n      \"reviewContent\" : \"리뷰 내용\",\n      \"ratings\" : 5.0,\n      \"memberEmail\" : \"member@example.com\",\n      \"createdAt\" : null,\n      \"updated\" : false,\n      \"updatedAt\" : null,\n      \"reviewLike\" : 0\n    }\n  }\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookstore/{bookId}/like": {
+      "post": {
+        "tags": [
+          "bookstore"
+        ],
+        "summary": "책 좋아요 추가",
+        "description": "책 좋아요 추가",
+        "operationId": "book-like-controller-test/create-book-like",
+        "parameters": [
+          {
+            "name": "bookId",
+            "in": "path",
+            "description": "ID of the book",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Member-Id",
+            "in": "header",
+            "description": "ID of the member",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-bookId-like-1210211622"
+                },
+                "examples": {
+                  "book-like-controller-test/create-book-like": {
+                    "value": "{\"header\":{\"resultCode\":200,\"successful\":true}}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookstore/{bookId}/likes": {
+      "get": {
+        "tags": [
+          "bookstore"
+        ],
+        "summary": "좋아요 갯수",
+        "description": "좋아요 갯수",
+        "operationId": "book-like-controller-test/count-like-by-book-id",
+        "parameters": [
+          {
+            "name": "bookId",
+            "in": "path",
+            "description": "ID of the book",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-bookId-likes-496753805"
+                },
+                "examples": {
+                  "book-like-controller-test/count-like-by-book-id": {
+                    "value": "{\"header\":{\"resultCode\":200,\"successful\":true},\"body\":{\"data\":10}}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookstore/{purchaseBookId}/create": {
+      "post": {
+        "tags": [
+          "bookstore"
+        ],
+        "summary": "리뷰 생성 API",
+        "description": "리뷰 생성 API",
+        "operationId": "review-controller-test/create-review",
+        "parameters": [
+          {
+            "name": "purchaseBookId",
+            "in": "path",
+            "description": "구매한 책 ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json;charset=UTF-8": {
+              "schema": {
+                "$ref": "#/components/schemas/bookstore-reviews-reviewId-delete486549215"
+              },
+              "examples": {
+                "review-controller-test/create-review": {
+                  "value": "{\n  \"title\" : \"좋은 책입니다\",\n  \"content\" : \"추천합니다\",\n  \"ratings\" : 5,\n  \"imageList\" : [ ]\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-purchaseBookId-create2007165537"
+                },
+                "examples": {
+                  "review-controller-test/create-review": {
+                    "value": "{\n  \"header\" : {\n    \"resultCode\" : 201,\n    \"successful\" : true\n  },\n  \"body\" : {\n    \"data\" : 1\n  }\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookstore/books/reviews/{commentId}": {
+      "put": {
+        "tags": [
+          "bookstore"
+        ],
+        "operationId": "comment-update",
+        "parameters": [
+          {
+            "name": "commentId",
+            "in": "path",
+            "description": "댓글 ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json;charset=UTF-8": {
+              "schema": {
+                "$ref": "#/components/schemas/bookstore-reviews-reviewId-delete486549215"
+              },
+              "examples": {
+                "comment-update": {
+                  "value": "{\n  \"content\" : \"수정된 댓글입니다\"\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-books-bookId717793826"
+                },
+                "examples": {
+                  "comment-update": {
+                    "value": "{\n  \"header\" : {\n    \"resultCode\" : 200,\n    \"successful\" : true\n  }\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookstore/books/reviews/{reviewId}": {
+      "post": {
+        "tags": [
+          "bookstore"
+        ],
+        "operationId": "comment-create",
+        "parameters": [
+          {
+            "name": "reviewId",
+            "in": "path",
+            "description": "리뷰 ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json;charset=UTF-8": {
+              "schema": {
+                "$ref": "#/components/schemas/bookstore-reviews-reviewId-delete486549215"
+              },
+              "examples": {
+                "comment-create": {
+                  "value": "{\n  \"content\" : \"좋은 댓글입니다\"\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-books-bookId717793826"
+                },
+                "examples": {
+                  "comment-create": {
+                    "value": "{\n  \"header\" : {\n    \"resultCode\" : 200,\n    \"successful\" : true\n  }\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookstore/books/{bookId}/categories": {
+      "get": {
+        "tags": [
+          "bookstore"
+        ],
+        "summary": "책의 카테고리를 조회하는 API",
+        "description": "책의 카테고리를 조회하는 API",
+        "operationId": "book-category-controller-test/read-categories",
+        "parameters": [
+          {
+            "name": "bookId",
+            "in": "path",
+            "description": "책 아이디",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-books-bookId-categories-13763382"
+                },
+                "examples": {
+                  "book-category-controller-test/read-categories": {
+                    "value": "{\n  \"header\" : {\n    \"resultCode\" : 200,\n    \"successful\" : true\n  },\n  \"body\" : {\n    \"data\" : [ {\n      \"id\" : 2,\n      \"name\" : \"Category 2\",\n      \"childrenList\" : [ {\n        \"id\" : 1,\n        \"name\" : \"Category 1\",\n        \"childrenList\" : null\n      } ]\n    } ]\n  }\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookstore/books/{bookId}/reviews": {
+      "get": {
+        "tags": [
+          "bookstore"
+        ],
+        "summary": "책 아이디로 리뷰 조회 API",
+        "description": "책 아이디로 리뷰 조회 API",
+        "operationId": "review-controller-test/read-reviews-by-book-id",
+        "parameters": [
+          {
+            "name": "bookId",
+            "in": "path",
+            "description": "책 ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-reviews-member2041513046"
+                },
+                "examples": {
+                  "review-controller-test/read-reviews-by-book-id": {
+                    "value": "{\n  \"header\" : {\n    \"resultCode\" : 200,\n    \"successful\" : true\n  },\n  \"body\" : {\n    \"data\" : {\n      \"totalPages\" : 1,\n      \"totalElements\" : 0,\n      \"sort\" : {\n        \"empty\" : true,\n        \"sorted\" : false,\n        \"unsorted\" : true\n      },\n      \"number\" : 0,\n      \"size\" : 0,\n      \"content\" : [ ],\n      \"pageable\" : \"INSTANCE\",\n      \"first\" : true,\n      \"last\" : true,\n      \"numberOfElements\" : 0,\n      \"empty\" : true\n    }\n  }\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookstore/members/addresses/{addressId}": {
+      "put": {
+        "tags": [
+          "bookstore"
+        ],
+        "summary": "요청대로 주소를 갱신한다.",
+        "description": "요청대로 주소를 갱신한다.",
+        "operationId": "address-controller-test/update-address",
+        "parameters": [
+          {
+            "name": "addressId",
+            "in": "path",
+            "description": "주소 ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json;charset=UTF-8": {
+              "schema": {
+                "$ref": "#/components/schemas/bookstore-members-addresses-addressId-155188409"
+              },
+              "examples": {
+                "address-controller-test/update-address": {
+                  "value": "{ \"name\": \"Home\", \"country\": \"Country\", \"city\": \"City\", \"state\": \"State\", \"road\": \"Road\", \"postalCode\": \"12345\" }"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-members-addresses-addressId-1705049866"
+                },
+                "examples": {
+                  "address-controller-test/update-address": {
+                    "value": "{\"header\":{\"resultCode\":200,\"successful\":true},\"body\":{\"data\":{\"id\":1,\"name\":\"Home\"}}}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "bookstore"
+        ],
+        "summary": "주소를 삭제하는 API",
+        "description": "주소를 삭제하는 API",
+        "operationId": "address-controller-test/delete-address",
+        "parameters": [
+          {
+            "name": "addressId",
+            "in": "path",
+            "description": "주소 ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-books-bookId717793826"
+                },
+                "examples": {
+                  "address-controller-test/delete-address": {
+                    "value": "{\"header\":{\"resultCode\":204,\"successful\":true}}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookstore/members/lastLogin/dormantAwake": {
+      "put": {
+        "tags": [
+          "bookstore"
+        ],
+        "operationId": "dormant-awake",
+        "requestBody": {
+          "content": {
+            "application/json;charset=UTF-8": {
+              "schema": {
+                "$ref": "#/components/schemas/bookstore-members-lastLogin-dormantAwake-8948590"
+              },
+              "examples": {
+                "dormant-awake": {
+                  "value": "{ \"email\": \"test@example.com\" }"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-books-bookId717793826"
+                },
+                "examples": {
+                  "dormant-awake": {
+                    "value": "{\"header\":{\"resultCode\":202,\"successful\":true}}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookstore/mypage/books/likes": {
+      "get": {
+        "tags": [
+          "bookstore"
+        ],
+        "summary": "내가 좋아요 한 책 API",
+        "description": "내가 좋아요 한 책 API",
+        "operationId": "book-like-controller-test/read-all-book-likes-by-member-id",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Page size",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Member-Id",
+            "in": "header",
+            "description": "ID of the member",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-mypage-books-likes359673337"
+                },
+                "examples": {
+                  "book-like-controller-test/read-all-book-likes-by-member-id": {
+                    "value": "{\"header\":{\"resultCode\":200,\"successful\":true},\"body\":{\"data\":{\"totalPages\":1,\"totalElements\":2,\"sort\":{\"empty\":true,\"sorted\":false,\"unsorted\":true},\"number\":0,\"size\":2,\"content\":[{\"id\":1,\"title\":\"Title1\",\"price\":1000,\"sellingPrice\":900,\"author\":\"Author1\",\"thumbnail\":\"Image1\"},{\"id\":2,\"title\":\"Title2\",\"price\":1200,\"sellingPrice\":1100,\"author\":\"Author2\",\"thumbnail\":\"Image2\"}],\"pageable\":\"INSTANCE\",\"first\":true,\"last\":true,\"numberOfElements\":2,\"empty\":false}}}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookstore/reviews/{reviewId}/delete": {
+      "put": {
+        "tags": [
+          "bookstore"
+        ],
+        "summary": "리뷰 삭제 API",
+        "description": "리뷰 삭제 API",
+        "operationId": "review-controller-test/delete-review",
+        "parameters": [
+          {
+            "name": "reviewId",
+            "in": "path",
+            "description": "리뷰 ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json;charset=UTF-8": {
+              "schema": {
+                "$ref": "#/components/schemas/bookstore-reviews-reviewId-delete486549215"
+              },
+              "examples": {
+                "review-controller-test/delete-review": {
+                  "value": "{\n  \"deletedReason\" : \"부적절한 내용\"\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-books-bookId717793826"
+                },
+                "examples": {
+                  "review-controller-test/delete-review": {
+                    "value": "{\n  \"header\" : {\n    \"resultCode\" : 200,\n    \"successful\" : true\n  }\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookstore/token/login/{token}": {
+      "post": {
+        "tags": [
+          "bookstore"
+        ],
+        "operationId": "login",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "description": "The authentication token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Member-Id",
+            "in": "header",
+            "description": "The ID of the member",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-token-login-token188558067"
+                },
+                "examples": {
+                  "login": {
+                    "value": "{\"header\":{\"resultCode\":200,\"successful\":true},\"body\":{\"data\":{\"email\":\"test@example.com\",\"password\":\"password\",\"auth\":[\"USER\",\"ADMIN\"],\"memberId\":1}}}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookstore/{bookId}/like/delete": {
+      "delete": {
+        "tags": [
+          "bookstore"
+        ],
+        "operationId": "delete-book-like",
+        "parameters": [
+          {
+            "name": "bookId",
+            "in": "path",
+            "description": "ID of the book",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Member-Id",
+            "in": "header",
+            "description": "ID of the member",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-bookId-like-delete2108991002"
+                },
+                "examples": {
+                  "delete-book-like": {
+                    "value": "{\"header\":{\"resultCode\":200,\"successful\":true}}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookstore/{bookId}/likes/status": {
+      "get": {
+        "tags": [
+          "bookstore"
+        ],
+        "summary": "멤버와 책의 좋아요 여부",
+        "description": "멤버와 책의 좋아요 여부",
+        "operationId": "book-like-controller-test/is-book-liked-by-member",
+        "parameters": [
+          {
+            "name": "bookId",
+            "in": "path",
+            "description": "책 ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Member-Id",
+            "in": "header",
+            "description": "멤버 ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-bookId-likes-status-1567817840"
+                },
+                "examples": {
+                  "book-like-controller-test/is-book-liked-by-member-exception": {
+                    "value": "{\"header\":{\"resultCode\":500,\"successful\":false},\"body\":{\"data\":false}}"
+                  },
+                  "book-like-controller-test/is-book-liked-by-member": {
+                    "value": "{\"header\":{\"resultCode\":200,\"successful\":true},\"body\":{\"data\":true}}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookstore/books/review/{reviewId}/like": {
+      "post": {
+        "tags": [
+          "bookstore"
+        ],
+        "summary": "리뷰 좋아요 생성 API",
+        "description": "리뷰 좋아요 생성 API",
+        "operationId": "review-like-controller-test/create-review-like",
+        "parameters": [
+          {
+            "name": "reviewId",
+            "in": "path",
+            "description": "리뷰 아이디",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-books-bookId717793826"
+                },
+                "examples": {
+                  "review-like-controller-test/create-review-like": {
+                    "value": "{\n  \"header\" : {\n    \"resultCode\" : 200,\n    \"successful\" : true\n  }\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "bookstore"
+        ],
+        "summary": "리뷰 좋아요 삭제 API",
+        "description": "리뷰 좋아요 삭제 API",
+        "operationId": "review-like-controller-test/delete-review-like",
+        "parameters": [
+          {
+            "name": "reviewId",
+            "in": "path",
+            "description": "리뷰 아이디",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-books-bookId717793826"
+                },
+                "examples": {
+                  "review-like-controller-test/delete-review-like": {
+                    "value": "{\n  \"header\" : {\n    \"resultCode\" : 200,\n    \"successful\" : true\n  }\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookstore/books/reviews/member/comments": {
+      "get": {
+        "tags": [
+          "bookstore"
+        ],
+        "summary": "멤버 아이디로 댓글 조회 API",
+        "description": "멤버 아이디로 댓글 조회 API",
+        "operationId": "comment-controller-test/read-all-comments-by-member-id",
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-books-reviews-member-comments-1649392343"
+                },
+                "examples": {
+                  "comment-controller-test/read-all-comments-by-member-id": {
+                    "value": "{\n  \"header\" : {\n    \"resultCode\" : 200,\n    \"successful\" : true\n  },\n  \"body\" : {\n    \"data\" : {\n      \"totalPages\" : 1,\n      \"totalElements\" : 0,\n      \"sort\" : {\n        \"empty\" : true,\n        \"sorted\" : false,\n        \"unsorted\" : true\n      },\n      \"number\" : 0,\n      \"size\" : 0,\n      \"content\" : [ ],\n      \"pageable\" : \"INSTANCE\",\n      \"first\" : true,\n      \"last\" : true,\n      \"numberOfElements\" : 0,\n      \"empty\" : true\n    }\n  }\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookstore/books/reviews/{commentId}/delete": {
+      "delete": {
+        "tags": [
+          "bookstore"
+        ],
+        "operationId": "comment-delete",
+        "parameters": [
+          {
+            "name": "commentId",
+            "in": "path",
+            "description": "댓글 ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-books-bookId717793826"
+                },
+                "examples": {
+                  "comment-delete": {
+                    "value": "{\n  \"header\" : {\n    \"resultCode\" : 200,\n    \"successful\" : true\n  }\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookstore/books/reviews/{reviewId}/comments": {
+      "get": {
+        "tags": [
+          "bookstore"
+        ],
+        "operationId": "comment-read-all-by-reviewId",
+        "parameters": [
+          {
+            "name": "reviewId",
+            "in": "path",
+            "description": "리뷰 ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-books-reviews-member-comments-1649392343"
+                },
+                "examples": {
+                  "comment-read-all-by-reviewId": {
+                    "value": "{\n  \"header\" : {\n    \"resultCode\" : 200,\n    \"successful\" : true\n  },\n  \"body\" : {\n    \"data\" : {\n      \"totalPages\" : 1,\n      \"totalElements\" : 0,\n      \"sort\" : {\n        \"empty\" : true,\n        \"sorted\" : false,\n        \"unsorted\" : true\n      },\n      \"number\" : 0,\n      \"size\" : 0,\n      \"content\" : [ ],\n      \"pageable\" : \"INSTANCE\",\n      \"first\" : true,\n      \"last\" : true,\n      \"numberOfElements\" : 0,\n      \"empty\" : true\n    }\n  }\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookstore/books/{bookId}/reviews/avg": {
+      "get": {
+        "tags": [
+          "bookstore"
+        ],
+        "summary": "책 아이디로 리뷰 평점 평균 조회 API",
+        "description": "책 아이디로 리뷰 평점 평균 조회 API",
+        "operationId": "review-controller-test/get-average-reviews-by-book-id",
+        "parameters": [
+          {
+            "name": "bookId",
+            "in": "path",
+            "description": "책 ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-books-bookId-reviews-avg155542544"
+                },
+                "examples": {
+                  "review-controller-test/get-average-reviews-by-book-id": {
+                    "value": "{\n  \"header\" : {\n    \"resultCode\" : 200,\n    \"successful\" : true\n  },\n  \"body\" : {\n    \"data\" : 4.5\n  }\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookstore/books/{bookId}/reviews/count": {
+      "get": {
+        "tags": [
+          "bookstore"
+        ],
+        "summary": "책 아이디로 리뷰 갯수 조회 API",
+        "description": "책 아이디로 리뷰 갯수 조회 API",
+        "operationId": "review-controller-test/get-count-reviews-by-book-id",
+        "parameters": [
+          {
+            "name": "bookId",
+            "in": "path",
+            "description": "책 ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-books-bookId-reviews-count-415979141"
+                },
+                "examples": {
+                  "review-controller-test/get-count-reviews-by-book-id": {
+                    "value": "{\n  \"header\" : {\n    \"resultCode\" : 200,\n    \"successful\" : true\n  },\n  \"body\" : {\n    \"data\" : 10\n  }\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookstore/books/review/{reviewId}/like/count": {
+      "get": {
+        "tags": [
+          "bookstore"
+        ],
+        "summary": "리뷰 좋아요 카운트 API",
+        "description": "리뷰 좋아요 카운트 API",
+        "operationId": "review-like-controller-test/count-review-like",
+        "parameters": [
+          {
+            "name": "reviewId",
+            "in": "path",
+            "description": "리뷰 아이디",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-books-review-reviewId-like-count1227294093"
+                },
+                "examples": {
+                  "review-like-controller-test/count-review-like": {
+                    "value": "{\n  \"header\" : {\n    \"resultCode\" : 200,\n    \"successful\" : true\n  },\n  \"body\" : {\n    \"data\" : 5\n  }\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookstore/books/review/{reviewId}/like/status": {
+      "get": {
+        "tags": [
+          "bookstore"
+        ],
+        "summary": "리뷰 좋아요 여부 판단 API",
+        "description": "리뷰 좋아요 여부 판단 API",
+        "operationId": "review-like-controller-test/is-review-liked-by-member",
+        "parameters": [
+          {
+            "name": "reviewId",
+            "in": "path",
+            "description": "리뷰 아이디",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/bookstore-books-review-reviewId-like-status360187608"
+                },
+                "examples": {
+                  "review-like-controller-test/is-review-liked-by-member": {
+                    "value": "{\n  \"header\" : {\n    \"resultCode\" : 200,\n    \"successful\" : true\n  },\n  \"body\" : {\n    \"data\" : true\n  }\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "coupon-types-fixes-couponTypeId-1047919030": {
+        "type": "object",
+        "properties": {
+          "header": {
+            "type": "object",
+            "properties": {
+              "resultCode": {
+                "type": "number",
+                "description": "결과 코드"
+              },
+              "successful": {
+                "type": "boolean",
+                "description": "성공 여부"
+              }
+            }
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "properties": {
+                  "fixedCouponId": {
+                    "type": "number",
+                    "description": "쿠폰 아이디"
+                  },
+                  "discountPrice": {
+                    "type": "number",
+                    "description": "할인가"
+                  },
+                  "couponTypeId": {
+                    "type": "number",
+                    "description": "타입 아이디"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "coupon-usages-categories1845900452": {
+        "type": "object",
+        "properties": {
+          "categoryIds": {
+            "type": "array",
+            "description": "사용가능 카테고리 아이디 리스트",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object"
+                },
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "number"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "coupon-types-ratios-1269597648": {
+        "type": "object",
+        "properties": {
+          "discountRate": {
+            "type": "number",
+            "description": "할인비율"
+          },
+          "discountMaxPrice": {
+            "type": "number",
+            "description": "할인최대가"
+          }
+        }
+      },
+      "coupon-usages-books-couponTypeId1760074859": {
+        "type": "object",
+        "properties": {
+          "header": {
+            "type": "object",
+            "properties": {
+              "resultCode": {
+                "type": "number",
+                "description": "결과코드"
+              },
+              "successful": {
+                "type": "boolean",
+                "description": "성공여부"
+              }
+            }
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "array",
+                "description": "사용가능 북 아이디 리스트",
+                "items": {
+                  "oneOf": [
+                    {
+                      "type": "object"
+                    },
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "number"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "coupon-usages-books-1462525840": {
+        "type": "object",
+        "properties": {
+          "bookIds": {
+            "type": "array",
+            "description": "사용가능 북 아이디 리스트",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object"
+                },
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "number"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "coupon-usages-1828167700": {
+        "type": "object",
+        "properties": {
+          "header": {
+            "type": "object",
+            "properties": {
+              "resultCode": {
+                "type": "number",
+                "description": "결과코드"
+              },
+              "successful": {
+                "type": "boolean",
+                "description": "성공여부"
+              }
+            }
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "usage": {
+                      "type": "string",
+                      "description": "사용처 이름"
+                    },
+                    "couponUsageId": {
+                      "type": "number",
+                      "description": "사용처 아이디"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "coupon-forms1239783233": {
+        "type": "object",
+        "properties": {
+          "header": {
+            "type": "object",
+            "properties": {
+              "resultCode": {
+                "type": "number",
+                "description": "결과코드"
+              },
+              "successful": {
+                "type": "boolean",
+                "description": "성공여부"
+              }
+            }
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "discountRate": {
+                      "type": "number",
+                      "description": "할인율"
+                    },
+                    "categorys": {
+                      "type": "array",
+                      "description": "카테고리 사용처 리스트",
+                      "items": {
+                        "oneOf": [
+                          {
+                            "type": "object"
+                          },
+                          {
+                            "type": "boolean"
+                          },
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "number"
+                          }
+                        ]
+                      }
+                    },
+                    "code": {
+                      "type": "string",
+                      "description": "쿠폰폼 코드"
+                    },
+                    "discountMax": {
+                      "type": "number",
+                      "description": "최대할인가"
+                    },
+                    "endDate": {
+                      "type": "string",
+                      "description": "쿠폰 만료일"
+                    },
+                    "usage": {
+                      "type": "string",
+                      "description": "쿠폰 사용처 이름"
+                    },
+                    "discountPrice": {
+                      "type": "number",
+                      "description": "고정할인가"
+                    },
+                    "couponUsageId": {
+                      "type": "number",
+                      "description": "쿠폰사용처 아이디"
+                    },
+                    "type": {
+                      "type": "string",
+                      "description": "쿠폰타입 "
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "description": "쿠폰 생성일"
+                    },
+                    "books": {
+                      "type": "array",
+                      "description": "북 사용처 리스트",
+                      "items": {
+                        "oneOf": [
+                          {
+                            "type": "object"
+                          },
+                          {
+                            "type": "boolean"
+                          },
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "number"
+                          }
+                        ]
+                      }
+                    },
+                    "minPrice": {
+                      "type": "number",
+                      "description": "쿠폰 적용 최소가"
+                    },
+                    "couponFormId": {
+                      "type": "number",
+                      "description": "쿠폰 폼 아이디"
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "쿠폰폼 이름"
+                    },
+                    "couponTypeId": {
+                      "type": "number",
+                      "description": "쿠폰타입 아이디"
+                    },
+                    "maxPrice": {
+                      "type": "number",
+                      "description": "쿠폰 적용 최대가"
+                    },
+                    "startDate": {
+                      "type": "string",
+                      "description": "쿠폰 시작일"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "coupon-usages-categories-couponTypeId620553210": {
+        "type": "object",
+        "properties": {
+          "header": {
+            "type": "object",
+            "properties": {
+              "resultCode": {
+                "type": "number",
+                "description": "결과코드"
+              },
+              "successful": {
+                "type": "boolean",
+                "description": "성공여부"
+              }
+            }
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "array",
+                "description": "사용 가능 카테고리 쿠폰 아아디 리스트",
+                "items": {
+                  "oneOf": [
+                    {
+                      "type": "object"
+                    },
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "number"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "coupon-forms1145792621": {
+        "type": "object",
+        "properties": {
+          "endDate": {
+            "type": "string",
+            "description": "쿠폰 종료일"
+          },
+          "minPrice": {
+            "type": "number",
+            "description": "최소 금액"
+          },
+          "name": {
+            "type": "string",
+            "description": "쿠폰 이름"
+          },
+          "couponTypeId": {
+            "type": "number",
+            "description": "쿠폰 타입 번호"
+          },
+          "couponUsageId": {
+            "type": "number",
+            "description": "쿠폰 사용 번호"
+          },
+          "maxPrice": {
+            "type": "number",
+            "description": "최대 금액"
+          },
+          "startDate": {
+            "type": "string",
+            "description": "쿠폰 시작일"
+          }
+        }
+      },
+      "coupon-members-forms1082241324": {
+        "type": "object",
+        "properties": {
+          "couponFormIds": {
+            "type": "array",
+            "description": "List of coupon form IDs to read",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object"
+                },
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "number"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "coupon-types431443586": {
+        "type": "object",
+        "properties": {
+          "header": {
+            "type": "object",
+            "properties": {
+              "resultCode": {
+                "type": "number",
+                "description": "결과 코드"
+              },
+              "successful": {
+                "type": "boolean",
+                "description": "성공 여부"
+              }
+            }
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "couponTypeId": {
+                      "type": "number",
+                      "description": "쿠폰 타입 아이디"
+                    },
+                    "type": {
+                      "type": "string",
+                      "description": "쿠폰 타입 이름"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "coupon-types-ratios-couponTypeId1609426391": {
+        "type": "object",
+        "properties": {
+          "header": {
+            "type": "object",
+            "properties": {
+              "resultCode": {
+                "type": "number",
+                "description": "결과 코드"
+              },
+              "successful": {
+                "type": "boolean",
+                "description": "성공 여부"
+              }
+            }
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "properties": {
+                  "ratioCouponId": {
+                    "type": "number",
+                    "description": "비율 쿠폰 아이디"
+                  },
+                  "discountRate": {
+                    "type": "number",
+                    "description": "할인율"
+                  },
+                  "couponTypeId": {
+                    "type": "number",
+                    "description": "쿠폰 타입 아이디"
+                  },
+                  "discountMaxPrice": {
+                    "type": "number",
+                    "description": "최대 할인가"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "coupon-types-fixes1982406581": {
+        "type": "object",
+        "properties": {
+          "discountPrice": {
+            "type": "number",
+            "description": "고정할인가"
+          }
+        }
+      },
+      "coupon-types-ratios-353172180": {
+        "type": "object",
+        "properties": {
+          "header": {
+            "type": "object",
+            "properties": {
+              "resultCode": {
+                "type": "number",
+                "description": "결과 코드"
+              },
+              "successful": {
+                "type": "boolean",
+                "description": "성공 여부"
+              }
+            }
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "number",
+                "description": "쿠폰 아이디"
+              }
+            }
+          }
+        }
+      },
+      "bookstore-books585976303": {
+        "type": "object",
+        "properties": {
+          "header": {
+            "type": "object",
+            "properties": {
+              "resultCode": {
+                "type": "number",
+                "description": "결과 코드"
+              },
+              "successful": {
+                "type": "boolean",
+                "description": "성공 여부"
+              }
+            }
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "properties": {
+                  "number": {
+                    "type": "number",
+                    "description": "현재 페이지 번호"
+                  },
+                  "numberOfElements": {
+                    "type": "number",
+                    "description": "현재 페이지 요소 수"
+                  },
+                  "last": {
+                    "type": "boolean",
+                    "description": "마지막 페이지 여부"
+                  },
+                  "size": {
+                    "type": "number",
+                    "description": "페이지 크기"
+                  },
+                  "totalPages": {
+                    "type": "number",
+                    "description": "총 페이지 수"
+                  },
+                  "pageable": {
+                    "type": "object",
+                    "properties": {
+                      "paged": {
+                        "type": "boolean",
+                        "description": "페이지가 페이징 되었는지 여부"
+                      },
+                      "pageNumber": {
+                        "type": "number",
+                        "description": "페이지 번호"
+                      },
+                      "offset": {
+                        "type": "number",
+                        "description": "페이지 오프셋"
+                      },
+                      "pageSize": {
+                        "type": "number",
+                        "description": "페이지 크기"
+                      },
+                      "unpaged": {
+                        "type": "boolean",
+                        "description": "페이지가 페이징 안 되었는지 여부"
+                      },
+                      "sort": {
+                        "type": "object",
+                        "properties": {
+                          "unsorted": {
+                            "type": "boolean",
+                            "description": "페이지 정렬이 안 되었는지 여부"
+                          },
+                          "sorted": {
+                            "type": "boolean",
+                            "description": "페이지 정렬이 되었는지 여부"
+                          },
+                          "empty": {
+                            "type": "boolean",
+                            "description": "페이지 정렬 정보가 비어 있는지 여부"
+                          }
+                        },
+                        "description": "페이지 정렬 정보"
+                      }
+                    },
+                    "description": "페이지 가능 정보"
+                  },
+                  "sort": {
+                    "type": "object",
+                    "properties": {
+                      "unsorted": {
+                        "type": "boolean",
+                        "description": "정렬이 안 되었는지 여부"
+                      },
+                      "sorted": {
+                        "type": "boolean",
+                        "description": "정렬이 되었는지 여부"
+                      },
+                      "empty": {
+                        "type": "boolean",
+                        "description": "정렬 정보가 비어 있는지 여부"
+                      }
+                    },
+                    "description": "정렬 정보"
+                  },
+                  "content": {
+                    "type": "array",
+                    "description": "도서 리스트",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "thumbnail": {
+                          "type": "string",
+                          "description": "썸네일"
+                        },
+                        "sellingPrice": {
+                          "type": "number",
+                          "description": "판매 가격"
+                        },
+                        "author": {
+                          "type": "string",
+                          "description": "저자"
+                        },
+                        "price": {
+                          "type": "number",
+                          "description": "책 가격"
+                        },
+                        "id": {
+                          "type": "number",
+                          "description": "책 아이디"
+                        },
+                        "title": {
+                          "type": "string",
+                          "description": "책 제목"
+                        }
+                      }
+                    }
+                  },
+                  "first": {
+                    "type": "boolean",
+                    "description": "첫 페이지 여부"
+                  },
+                  "empty": {
+                    "type": "boolean",
+                    "description": "비어있는 페이지 여부"
+                  },
+                  "totalElements": {
+                    "type": "number",
+                    "description": "총 요소 수"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "bookstore-categories-categoryId806155017": {
+        "type": "object",
+        "properties": {
+          "header": {
+            "type": "object",
+            "properties": {
+              "resultCode": {
+                "type": "number",
+                "description": "결과 코드"
+              },
+              "successful": {
+                "type": "boolean",
+                "description": "API 성공 여부 "
+              }
+            }
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "properties": {
+                  "parent": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "description": "부모 카테고리 이름"
+                      },
+                      "id": {
+                        "type": "number",
+                        "description": "부모 카테고리 아이디"
+                      }
+                    }
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "카테고리 이름"
+                  },
+                  "id": {
+                    "type": "number",
+                    "description": "카테고리 아이디"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "bookstore-bookId-like-1210211622": {
+        "type": "object",
+        "properties": {
+          "header": {
+            "type": "object",
+            "properties": {
+              "resultCode": {
+                "type": "number",
+                "description": "API 성공 코드"
+              },
+              "successful": {
+                "type": "boolean",
+                "description": "API 성공 해더"
+              }
+            }
+          }
+        }
+      },
+      "bookstore-members-addresses-addressId-155188409": {
+        "type": "object",
+        "properties": {
+          "country": {
+            "type": "string",
+            "description": "나라명"
+          },
+          "road": {
+            "type": "string",
+            "description": "도로명"
+          },
+          "city": {
+            "type": "string",
+            "description": "도시명"
+          },
+          "postalCode": {
+            "type": "string",
+            "description": "우편번호"
+          },
+          "name": {
+            "type": "string",
+            "description": "주소이름"
+          },
+          "state": {
+            "type": "string",
+            "description": "주"
+          }
+        }
+      },
+      "bookstore-books-bookId-987686746": {
+        "type": "object",
+        "properties": {
+          "header": {
+            "type": "object",
+            "properties": {
+              "resultCode": {
+                "type": "number",
+                "description": "결과 코드"
+              },
+              "successful": {
+                "type": "boolean",
+                "description": "성공 여부"
+              }
+            }
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "properties": {
+                  "quantity": {
+                    "type": "number",
+                    "description": "수량"
+                  },
+                  "imagePath": {
+                    "type": "string",
+                    "description": "책의 메인 이미지"
+                  },
+                  "author": {
+                    "type": "string",
+                    "description": "저자"
+                  },
+                  "isbn": {
+                    "type": "string",
+                    "description": "ISBN 번호"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "책 설명"
+                  },
+                  "packing": {
+                    "type": "boolean",
+                    "description": "포장 여부"
+                  },
+                  "title": {
+                    "type": "string",
+                    "description": "책 제목"
+                  },
+                  "tagList": {
+                    "type": "array",
+                    "description": "태그 리스트",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "description": "태그 이름"
+                        },
+                        "id": {
+                          "type": "number",
+                          "description": "태그 아이디"
+                        }
+                      }
+                    }
+                  },
+                  "sellingPrice": {
+                    "type": "number",
+                    "description": "판매 가격"
+                  },
+                  "price": {
+                    "type": "number",
+                    "description": "책 가격"
+                  },
+                  "categoryList": {
+                    "type": "array",
+                    "description": "카테고리 리스트",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "description": "카테고리 이름"
+                        },
+                        "id": {
+                          "type": "number",
+                          "description": "카테고리 아이디"
+                        },
+                        "childrenList": {
+                          "type": "array",
+                          "description": "하위 카테고리 리스트",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "name": {
+                                "type": "string",
+                                "description": "하위 카테고리 이름"
+                              },
+                              "id": {
+                                "type": "number",
+                                "description": "하위 카테고리 아이디"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "publisher": {
+                    "type": "string",
+                    "description": "책의 출판사"
+                  },
+                  "viewCount": {
+                    "type": "number",
+                    "description": "조회수"
+                  },
+                  "publishedDate": {
+                    "type": "string",
+                    "description": "출판 날짜"
+                  },
+                  "id": {
+                    "type": "number",
+                    "description": "책 아이디"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "bookstore-members-addresses-1276904213": {
+        "type": "object",
+        "properties": {
+          "header": {
+            "type": "object",
+            "properties": {
+              "resultCode": {
+                "type": "number",
+                "description": "결과 코드"
+              },
+              "successful": {
+                "type": "boolean",
+                "description": "성공 여부"
+              }
+            }
+          },
+          "body": {
+            "type": "object",
+            "properties": {}
+          }
+        }
+      },
+      "bookstore-mypage-books-likes359673337": {
+        "type": "object",
+        "properties": {
+          "header": {
+            "type": "object",
+            "properties": {
+              "resultCode": {
+                "type": "number",
+                "description": "API 결과 코드"
+              },
+              "successful": {
+                "type": "boolean",
+                "description": "API 성공"
+              }
+            }
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "properties": {
+                  "number": {
+                    "type": "number",
+                    "description": "페이지 번호"
+                  },
+                  "last": {
+                    "type": "boolean",
+                    "description": "마지막 페이지 여부"
+                  },
+                  "numberOfElements": {
+                    "type": "number",
+                    "description": "현재 페이지"
+                  },
+                  "size": {
+                    "type": "number",
+                    "description": "페이지 사이즈"
+                  },
+                  "totalPages": {
+                    "type": "number",
+                    "description": "총 페이지수"
+                  },
+                  "pageable": {
+                    "type": "string",
+                    "description": "페이지 정보"
+                  },
+                  "sort": {
+                    "type": "object",
+                    "properties": {
+                      "unsorted": {
+                        "type": "boolean",
+                        "description": "정렬되어있지 않음"
+                      },
+                      "sorted": {
+                        "type": "boolean",
+                        "description": "정렬 분류"
+                      },
+                      "empty": {
+                        "type": "boolean",
+                        "description": "정렬 정보"
+                      }
+                    }
+                  },
+                  "first": {
+                    "type": "boolean",
+                    "description": "첫 페이지 여부"
+                  },
+                  "content": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "thumbnail": {
+                          "type": "string",
+                          "description": "책 메인 이미지"
+                        },
+                        "sellingPrice": {
+                          "type": "number",
+                          "description": "책 판매가격"
+                        },
+                        "author": {
+                          "type": "string",
+                          "description": "책 작가"
+                        },
+                        "price": {
+                          "type": "number",
+                          "description": "책 가격"
+                        },
+                        "id": {
+                          "type": "number",
+                          "description": "책 id"
+                        },
+                        "title": {
+                          "type": "string",
+                          "description": "책 제목"
+                        }
+                      }
+                    }
+                  },
+                  "empty": {
+                    "type": "boolean",
+                    "description": "비어있는 페이지 여"
+                  },
+                  "totalElements": {
+                    "type": "number",
+                    "description": "총 갯수"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "bookstore-members-oauth-1080614628": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "이름"
+          },
+          "email": {
+            "type": "string",
+            "description": "이메일"
+          }
+        }
+      },
+      "bookstore-members-166951780": {
+        "type": "object",
+        "properties": {
+          "header": {
+            "type": "object",
+            "properties": {
+              "resultCode": {
+                "type": "number",
+                "description": "결과 코드"
+              },
+              "successful": {
+                "type": "boolean",
+                "description": "성공 여부"
+              }
+            }
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "이름"
+                  },
+                  "email": {
+                    "type": "string",
+                    "description": "이메일"
+                  },
+                  "age": {
+                    "type": "number",
+                    "description": "나이"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "bookstore-members-password-847963803": {
+        "type": "object",
+        "properties": {
+          "newPassword": {
+            "type": "string",
+            "description": "새로운 비밀번호"
+          }
+        }
+      },
+      "bookstore-bookId-likes-496753805": {
+        "type": "object",
+        "properties": {
+          "header": {
+            "type": "object",
+            "properties": {
+              "resultCode": {
+                "type": "number",
+                "description": "API 코드"
+              },
+              "successful": {
+                "type": "boolean",
+                "description": "API 해더"
+              }
+            }
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "number",
+                "description": "책 좋아요 숫자"
+              }
+            }
+          }
+        }
+      },
+      "bookstore-members-oauth342739957": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string",
+            "description": "비밀번호"
+          },
+          "auth": {
+            "type": "array",
+            "description": "권한 리스트",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object"
+                },
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "number"
+                }
+              ]
+            }
+          },
+          "email": {
+            "type": "string",
+            "description": "이메일"
+          },
+          "memberId": {
+            "type": "number",
+            "description": "멤버아이디"
+          }
+        }
+      },
+      "bookstore-books-reviews-member-comments-1649392343": {
+        "type": "object",
+        "properties": {
+          "header": {
+            "type": "object",
+            "properties": {
+              "resultCode": {
+                "type": "number",
+                "description": "결과 코드"
+              },
+              "successful": {
+                "type": "boolean",
+                "description": "성공 여부"
+              }
+            }
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "properties": {
+                  "number": {
+                    "type": "number",
+                    "description": "현재 페이지 번호"
+                  },
+                  "last": {
+                    "type": "boolean",
+                    "description": "마지막 페이지 여부"
+                  },
+                  "numberOfElements": {
+                    "type": "number",
+                    "description": "현재 페이지 댓글 수"
+                  },
+                  "size": {
+                    "type": "number",
+                    "description": "페이지 크기"
+                  },
+                  "totalPages": {
+                    "type": "number",
+                    "description": "총 페이지 수"
+                  },
+                  "pageable": {
+                    "type": "string",
+                    "description": "페이지 정보"
+                  },
+                  "sort": {
+                    "type": "object",
+                    "properties": {
+                      "unsorted": {
+                        "type": "boolean",
+                        "description": "정렬되지 않았는지 여부"
+                      },
+                      "sorted": {
+                        "type": "boolean",
+                        "description": "정렬되었는지 여부"
+                      },
+                      "empty": {
+                        "type": "boolean",
+                        "description": "정렬 정보가 비어있는지 여부"
+                      }
+                    }
+                  },
+                  "first": {
+                    "type": "boolean",
+                    "description": "첫 페이지 여부"
+                  },
+                  "content": {
+                    "type": "array",
+                    "description": "댓글 목록",
+                    "items": {
+                      "oneOf": [
+                        {
+                          "type": "object"
+                        },
+                        {
+                          "type": "boolean"
+                        },
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "number"
+                        }
+                      ]
+                    }
+                  },
+                  "empty": {
+                    "type": "boolean",
+                    "description": "비어 있는지 여부"
+                  },
+                  "totalElements": {
+                    "type": "number",
+                    "description": "총 댓글 수"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "bookstore-bookId-likes-status-1567817840": {
+        "type": "object",
+        "properties": {
+          "header": {
+            "type": "object",
+            "properties": {
+              "resultCode": {
+                "type": "number",
+                "description": "API 성공 코드"
+              },
+              "successful": {
+                "type": "boolean",
+                "description": "API 성공 해더"
+              }
+            }
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "boolean",
+                "description": "좋아요 여부"
+              }
+            }
+          }
+        }
+      },
+      "bookstore-login-1717727360": {
+        "type": "object",
+        "properties": {
+          "header": {
+            "type": "object",
+            "properties": {
+              "resultCode": {
+                "type": "number",
+                "description": "결과 코드"
+              },
+              "successful": {
+                "type": "boolean",
+                "description": "성공 여부"
+              }
+            }
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "properties": {
+                  "password": {
+                    "type": "string",
+                    "description": "비밀번호"
+                  },
+                  "auth": {
+                    "type": "array",
+                    "description": "권한 리스트",
+                    "items": {
+                      "oneOf": [
+                        {
+                          "type": "object"
+                        },
+                        {
+                          "type": "boolean"
+                        },
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "number"
+                        }
+                      ]
+                    }
+                  },
+                  "email": {
+                    "type": "string",
+                    "description": "이메일"
+                  },
+                  "memberId": {
+                    "type": "number",
+                    "description": "멤버 아이디"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "bookstore-books-review-reviewId-like-status360187608": {
+        "type": "object",
+        "properties": {
+          "header": {
+            "type": "object",
+            "properties": {
+              "resultCode": {
+                "type": "number",
+                "description": "결과 코드"
+              },
+              "successful": {
+                "type": "boolean",
+                "description": "성공 여부"
+              }
+            }
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "boolean",
+                "description": "좋아요 여부"
+              }
+            }
+          }
+        }
+      },
+      "bookstore-categories-1558151550": {
+        "type": "object",
+        "properties": {
+          "header": {
+            "type": "object",
+            "properties": {
+              "resultCode": {
+                "type": "number",
+                "description": "결과 코드"
+              },
+              "successful": {
+                "type": "boolean",
+                "description": "API 성공 여부 "
+              }
+            }
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "description": "오류 내용"
+                  },
+                  "timestamp": {
+                    "type": "string",
+                    "description": "오류 시간"
+                  },
+                  "status": {
+                    "type": "number",
+                    "description": "오류 코드"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "bookstore-categories1122069570": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "카테고리 이름"
+          },
+          "parentId": {
+            "type": "number",
+            "description": "부모 카테고리 ID"
+          }
+        }
+      },
+      "bookstore-reviews120567052": {
+        "type": "object",
+        "properties": {
+          "header": {
+            "type": "object",
+            "properties": {
+              "resultCode": {
+                "type": "number",
+                "description": "결과 코드"
+              },
+              "successful": {
+                "type": "boolean",
+                "description": "성공 여부"
+              }
+            }
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "properties": {
+                  "number": {
+                    "type": "number",
+                    "description": "현재 페이지 번호"
+                  },
+                  "last": {
+                    "type": "boolean",
+                    "description": "마지막 페이지 여부"
+                  },
+                  "numberOfElements": {
+                    "type": "number",
+                    "description": "현재 페이지 리뷰 수"
+                  },
+                  "size": {
+                    "type": "number",
+                    "description": "페이지 크기"
+                  },
+                  "totalPages": {
+                    "type": "number",
+                    "description": "총 페이지 수"
+                  },
+                  "pageable": {
+                    "type": "string",
+                    "description": "페이징 정보"
+                  },
+                  "sort": {
+                    "type": "object",
+                    "properties": {
+                      "unsorted": {
+                        "type": "boolean",
+                        "description": "정렬이 안 되었는지 여부"
+                      },
+                      "sorted": {
+                        "type": "boolean",
+                        "description": "정렬이 되었는지 여부"
+                      },
+                      "empty": {
+                        "type": "boolean",
+                        "description": "정렬이 비어 있는지 여부"
+                      }
+                    }
+                  },
+                  "first": {
+                    "type": "boolean",
+                    "description": "첫 페이지 여부"
+                  },
+                  "content": {
+                    "type": "array",
+                    "description": "리뷰 목록",
+                    "items": {
+                      "oneOf": [
+                        {
+                          "type": "object"
+                        },
+                        {
+                          "type": "boolean"
+                        },
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "number"
+                        }
+                      ]
+                    }
+                  },
+                  "empty": {
+                    "type": "boolean",
+                    "description": "비어 있는지 여부"
+                  },
+                  "totalElements": {
+                    "type": "number",
+                    "description": "총 리뷰 수"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "bookstore-members-addresses-addressId-1705049866": {
+        "type": "object",
+        "properties": {
+          "header": {
+            "type": "object",
+            "properties": {
+              "resultCode": {
+                "type": "number",
+                "description": "결과 코드"
+              },
+              "successful": {
+                "type": "boolean",
+                "description": "성공 여부"
+              }
+            }
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "주소명"
+                  },
+                  "id": {
+                    "type": "number",
+                    "description": "주소 ID"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "bookstore-review-reviewId-1997505446": {
+        "type": "object",
+        "properties": {
+          "header": {
+            "type": "object",
+            "properties": {
+              "resultCode": {
+                "type": "number",
+                "description": "결과 코드"
+              },
+              "successful": {
+                "type": "boolean",
+                "description": "성공 여부"
+              }
+            }
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "number",
+                "description": "수정된 리뷰 ID"
+              }
+            }
+          }
+        }
+      },
+      "bookstore-books-review-reviewId-like-count1227294093": {
+        "type": "object",
+        "properties": {
+          "header": {
+            "type": "object",
+            "properties": {
+              "resultCode": {
+                "type": "number",
+                "description": "결과 코드"
+              },
+              "successful": {
+                "type": "boolean",
+                "description": "성공 여부"
+              }
+            }
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "number",
+                "description": "좋아요 수"
+              }
+            }
+          }
+        }
+      },
+      "bookstore-categories472683520": {
+        "type": "object",
+        "properties": {
+          "header": {
+            "type": "object",
+            "properties": {
+              "resultCode": {
+                "type": "number",
+                "description": "결과 코드"
+              },
+              "successful": {
+                "type": "boolean",
+                "description": "API 성공 여부 "
+              }
+            }
+          }
+        }
+      },
+      "bookstore-reviews-reviewId1204142696": {
+        "type": "object",
+        "properties": {
+          "header": {
+            "type": "object",
+            "properties": {
+              "resultCode": {
+                "type": "number",
+                "description": "결과 코드"
+              },
+              "successful": {
+                "type": "boolean",
+                "description": "성공 여부"
+              }
+            }
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "properties": {
+                  "reviewContent": {
+                    "type": "string",
+                    "description": "리뷰 내용"
+                  },
+                  "ratings": {
+                    "type": "number",
+                    "description": "평점"
+                  },
+                  "reviewLike": {
+                    "type": "number",
+                    "description": "리뷰 좋아요 수"
+                  },
+                  "updated": {
+                    "type": "boolean",
+                    "description": "업데이트 여부"
+                  },
+                  "reviewId": {
+                    "type": "number",
+                    "description": "리뷰 ID"
+                  },
+                  "memberEmail": {
+                    "type": "string",
+                    "description": "작성자 이메일"
+                  },
+                  "reviewTitle": {
+                    "type": "string",
+                    "description": "리뷰 제목"
+                  },
+                  "bookTitle": {
+                    "type": "string",
+                    "description": "책 제목"
+                  },
+                  "bookId": {
+                    "type": "number",
+                    "description": "책 ID"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "bookstore-categories749949214": {
+        "type": "object",
+        "properties": {
+          "header": {
+            "type": "object",
+            "properties": {
+              "resultCode": {
+                "type": "number",
+                "description": "결과 코드"
+              },
+              "successful": {
+                "type": "boolean",
+                "description": "API 성공 여부 "
+              }
+            }
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "카테고리 이름"
+                    },
+                    "id": {
+                      "type": "number",
+                      "description": "카테고리 아이디"
+                    },
+                    "childrenList": {
+                      "type": "array",
+                      "description": "자식 카테고리",
+                      "items": {
+                        "oneOf": [
+                          {
+                            "type": "object"
+                          },
+                          {
+                            "type": "boolean"
+                          },
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "number"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "bookstore-bookId-like-delete2108991002": {
+        "type": "object",
+        "properties": {
+          "header": {
+            "type": "object",
+            "properties": {
+              "resultCode": {
+                "type": "number",
+                "description": "API 코드"
+              },
+              "successful": {
+                "type": "boolean",
+                "description": "API 해더"
+              }
+            }
+          }
+        }
+      },
+      "bookstore-members1360135849": {
+        "type": "object",
+        "properties": {
+          "birthday": {
+            "type": "string",
+            "description": "생일"
+          },
+          "phone": {
+            "type": "string",
+            "description": "핸드폰 번호"
+          },
+          "name": {
+            "type": "string",
+            "description": "이름"
+          },
+          "age": {
+            "type": "number",
+            "description": "나이"
+          }
+        }
+      },
+      "bookstore-categories-parents165910488": {
+        "type": "object",
+        "properties": {
+          "header": {
+            "type": "object",
+            "properties": {
+              "resultCode": {
+                "type": "number",
+                "description": "결과 코드"
+              },
+              "successful": {
+                "type": "boolean",
+                "description": "성공 여부"
+              }
+            }
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "array",
+                "description": "상위 카테고리 리스트",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "parent": {
+                      "type": "object",
+                      "description": "부모 카테고리 정보"
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "카테고리 이름"
+                    },
+                    "id": {
+                      "type": "number",
+                      "description": "카테고리 아이디"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "bookstore-books-list-1422788593": {
+        "type": "object",
+        "properties": {
+          "header": {
+            "type": "object",
+            "properties": {
+              "resultCode": {
+                "type": "number",
+                "description": "결과 코드"
+              },
+              "successful": {
+                "type": "boolean",
+                "description": "성공 여부"
+              }
+            }
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "array",
+                "description": "책 리스트",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number",
+                      "description": "책 ID"
+                    },
+                    "title": {
+                      "type": "string",
+                      "description": "책 제목"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "bookstore-purchaseBookId-create2007165537": {
+        "type": "object",
+        "properties": {
+          "header": {
+            "type": "object",
+            "properties": {
+              "resultCode": {
+                "type": "number",
+                "description": "결과 코드"
+              },
+              "successful": {
+                "type": "boolean",
+                "description": "성공 여부"
+              }
+            }
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "number",
+                "description": "생성된 리뷰 ID"
+              }
+            }
+          }
+        }
+      },
+      "bookstore-members-password-1969572391": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string",
+            "description": "입력한 비밀번호"
+          }
+        }
+      },
+      "bookstore-members1743573538": {
+        "type": "object",
+        "properties": {
+          "header": {
+            "type": "object",
+            "properties": {
+              "resultCode": {
+                "type": "number",
+                "description": "결과 코드"
+              },
+              "successful": {
+                "type": "boolean",
+                "description": "성공 여부"
+              }
+            }
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "멤버 이름"
+                  },
+                  "id": {
+                    "type": "string",
+                    "description": "멤버 아이디"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "bookstore-token-login-token188558067": {
+        "type": "object",
+        "properties": {
+          "header": {
+            "type": "object",
+            "properties": {
+              "resultCode": {
+                "type": "number",
+                "description": "The result code"
+              },
+              "successful": {
+                "type": "boolean",
+                "description": "Indicates if the request was successful"
+              }
+            }
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "properties": {
+                  "password": {
+                    "type": "string",
+                    "description": "The password of the member"
+                  },
+                  "auth": {
+                    "type": "array",
+                    "description": "The list of authorities for the member",
+                    "items": {
+                      "oneOf": [
+                        {
+                          "type": "object"
+                        },
+                        {
+                          "type": "boolean"
+                        },
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "number"
+                        }
+                      ]
+                    }
+                  },
+                  "email": {
+                    "type": "string",
+                    "description": "The email of the member"
+                  },
+                  "memberId": {
+                    "type": "number",
+                    "description": "The ID of the member"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "bookstore-books-bookId-reviews-count-415979141": {
+        "type": "object",
+        "properties": {
+          "header": {
+            "type": "object",
+            "properties": {
+              "resultCode": {
+                "type": "number",
+                "description": "결과 코드"
+              },
+              "successful": {
+                "type": "boolean",
+                "description": "성공 여부"
+              }
+            }
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "number",
+                "description": "리뷰 갯수"
+              }
+            }
+          }
+        }
+      },
+      "bookstore-members-180897306": {
+        "type": "object",
+        "properties": {
+          "birthday": {
+            "type": "string",
+            "description": "생일"
+          },
+          "password": {
+            "type": "string",
+            "description": "비밀번호"
+          },
+          "phone": {
+            "type": "string",
+            "description": "전화번호"
+          },
+          "name": {
+            "type": "string",
+            "description": "이름"
+          },
+          "age": {
+            "type": "number",
+            "description": "나이"
+          },
+          "email": {
+            "type": "string",
+            "description": "이메일"
+          }
+        }
+      },
+      "bookstore-books398657681": {
+        "type": "object",
+        "properties": {
+          "imageName": {
+            "type": "string",
+            "description": "메인 이미지"
+          },
+          "quantity": {
+            "type": "number",
+            "description": "책 수량"
+          },
+          "author": {
+            "type": "string",
+            "description": "작가"
+          },
+          "tagIds": {
+            "type": "array",
+            "description": "태그 아이디 리스트",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object"
+                },
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "number"
+                }
+              ]
+            }
+          },
+          "isbn": {
+            "type": "string",
+            "description": "책 isbn"
+          },
+          "description": {
+            "type": "string",
+            "description": "책 설명"
+          },
+          "packing": {
+            "type": "boolean",
+            "description": "포장 가능 여"
+          },
+          "title": {
+            "type": "string",
+            "description": "책 제목"
+          },
+          "categoryIds": {
+            "type": "array",
+            "description": "카테고리 아이디 리시트",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object"
+                },
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "number"
+                }
+              ]
+            }
+          },
+          "sellingPrice": {
+            "type": "number",
+            "description": "책 판매량"
+          },
+          "price": {
+            "type": "number",
+            "description": "책 정가"
+          },
+          "publisher": {
+            "type": "string",
+            "description": "출판사"
+          },
+          "publishedDate": {
+            "type": "string",
+            "description": "책 출판일"
+          },
+          "imageList": {
+            "type": "array",
+            "description": "들어간 이미지",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object"
+                },
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "number"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "bookstore-books-bookId-reviews-avg155542544": {
+        "type": "object",
+        "properties": {
+          "header": {
+            "type": "object",
+            "properties": {
+              "resultCode": {
+                "type": "number",
+                "description": "결과 코드"
+              },
+              "successful": {
+                "type": "boolean",
+                "description": "성공 여부"
+              }
+            }
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "number",
+                "description": "평균 평점"
+              }
+            }
+          }
+        }
+      },
+      "bookstore-members-auths-1723971224": {
+        "type": "object",
+        "properties": {
+          "header": {
+            "type": "object",
+            "properties": {
+              "resultCode": {
+                "type": "number",
+                "description": "결과 코드"
+              },
+              "successful": {
+                "type": "boolean",
+                "description": "성공 여부"
+              }
+            }
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "array",
+                "description": "권한 리스트",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "auth": {
+                      "type": "string",
+                      "description": "권한"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "bookstore-categories-list1217744975": {
+        "type": "object",
+        "properties": {
+          "header": {
+            "type": "object",
+            "properties": {
+              "resultCode": {
+                "type": "number",
+                "description": "결과 코드"
+              },
+              "successful": {
+                "type": "boolean",
+                "description": "성공 여부"
+              }
+            }
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "array",
+                "description": "카테고리 리스트",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "카테고리 이름"
+                    },
+                    "id": {
+                      "type": "number",
+                      "description": "카테고리 아이디"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "bookstore-reviews-reviewId-delete486549215": {
+        "type": "object"
+      },
+      "bookstore-books-875510385": {
+        "type": "object",
+        "properties": {
+          "header": {
+            "type": "object",
+            "properties": {
+              "resultCode": {
+                "type": "number",
+                "description": "결과 코드"
+              },
+              "successful": {
+                "type": "boolean",
+                "description": "성공 여부"
+              }
+            }
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "description": "오류 메시지"
+                  },
+                  "timestamp": {
+                    "type": "string",
+                    "description": "오류 시간"
+                  },
+                  "status": {
+                    "type": "number",
+                    "description": "오류 코드"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "bookstore-members-addresses-1714189391": {
+        "type": "object",
+        "properties": {
+          "header": {
+            "type": "object",
+            "properties": {
+              "resultCode": {
+                "type": "number",
+                "description": "결과 코드"
+              },
+              "successful": {
+                "type": "boolean",
+                "description": "성공 여부"
+              }
+            }
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "country": {
+                      "type": "string",
+                      "description": "나라"
+                    },
+                    "road": {
+                      "type": "string",
+                      "description": "도로명"
+                    },
+                    "city": {
+                      "type": "string",
+                      "description": "도시"
+                    },
+                    "postalCode": {
+                      "type": "string",
+                      "description": "우편번호"
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "주소 이름"
+                    },
+                    "state": {
+                      "type": "string",
+                      "description": "주"
+                    },
+                    "addressId": {
+                      "type": "number",
+                      "description": "주소 아이디"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "bookstore-members-lastLogin-dormantAwake-8948590": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "멤버 이메일"
+          }
+        }
+      },
+      "bookstore-books-bookId12455769": {
+        "type": "object",
+        "properties": {
+          "imageName": {
+            "type": "string",
+            "description": "메인 이미지"
+          },
+          "quantity": {
+            "type": "number",
+            "description": "책 수량"
+          },
+          "author": {
+            "type": "string",
+            "description": "작가"
+          },
+          "tagIds": {
+            "type": "array",
+            "description": "태그 아이디 리스트",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object"
+                },
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "number"
+                }
+              ]
+            }
+          },
+          "isbn": {
+            "type": "string",
+            "description": "책 isbn"
+          },
+          "description": {
+            "type": "string",
+            "description": "책 설명"
+          },
+          "packing": {
+            "type": "boolean",
+            "description": "포장 가능 여"
+          },
+          "title": {
+            "type": "string",
+            "description": "책 제목"
+          },
+          "categoryIds": {
+            "type": "array",
+            "description": "카테고리 아이디 리스트",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object"
+                },
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "number"
+                }
+              ]
+            }
+          },
+          "sellingPrice": {
+            "type": "number",
+            "description": "책 판매량"
+          },
+          "price": {
+            "type": "number",
+            "description": "책 정가"
+          },
+          "publisher": {
+            "type": "string",
+            "description": "출판사"
+          },
+          "publishedDate": {
+            "type": "string",
+            "description": "책 출판일"
+          },
+          "imageList": {
+            "type": "array",
+            "description": "들어간 이미지",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object"
+                },
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "number"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "bookstore-books-bookId-categories-13763382": {
+        "type": "object",
+        "properties": {
+          "header": {
+            "type": "object",
+            "properties": {
+              "resultCode": {
+                "type": "number",
+                "description": "결과 코드"
+              },
+              "successful": {
+                "type": "boolean",
+                "description": "성공 여부"
+              }
+            }
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "array",
+                "description": "카테고리 리스트",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "카테고리 이름"
+                    },
+                    "id": {
+                      "type": "number",
+                      "description": "카테고리 아이디"
+                    },
+                    "childrenList": {
+                      "type": "array",
+                      "description": "하위 카테고리 리스트",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string",
+                            "description": "하위 카테고리 이름"
+                          },
+                          "id": {
+                            "type": "number",
+                            "description": "하위 카테고리 아이디"
+                          },
+                          "childrenList": {
+                            "type": "array",
+                            "description": "더 하위 카테고리 리스트",
+                            "items": {
+                              "oneOf": [
+                                {
+                                  "type": "object"
+                                },
+                                {
+                                  "type": "boolean"
+                                },
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "number"
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "bookstore-books-bookId717793826": {
+        "type": "object",
+        "properties": {
+          "header": {
+            "type": "object",
+            "properties": {
+              "resultCode": {
+                "type": "number",
+                "description": "결과 코드"
+              },
+              "successful": {
+                "type": "boolean",
+                "description": "성공 여부"
+              }
+            }
+          }
+        }
+      },
+      "bookstore-members-email1317837945": {
+        "type": "object",
+        "properties": {
+          "header": {
+            "type": "object",
+            "properties": {
+              "resultCode": {
+                "type": "number",
+                "description": "결과 코드"
+              },
+              "successful": {
+                "type": "boolean",
+                "description": "성공 여부"
+              }
+            }
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "boolean",
+                "description": "이메일 존재 여부"
+              }
+            }
+          }
+        }
+      },
+      "bookstore-books-admin-919044019": {
+        "type": "object",
+        "properties": {
+          "header": {
+            "type": "object",
+            "properties": {
+              "resultCode": {
+                "type": "number",
+                "description": "결과 코드"
+              },
+              "successful": {
+                "type": "boolean",
+                "description": "성공 여부"
+              }
+            }
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "properties": {
+                  "number": {
+                    "type": "number",
+                    "description": "현재 페이지 번호"
+                  },
+                  "numberOfElements": {
+                    "type": "number",
+                    "description": "현재 페이지 요소 수"
+                  },
+                  "size": {
+                    "type": "number",
+                    "description": "페이지 크기"
+                  },
+                  "last": {
+                    "type": "boolean",
+                    "description": "마지막 페이지 여부"
+                  },
+                  "totalPages": {
+                    "type": "number",
+                    "description": "총 페이지 수"
+                  },
+                  "pageable": {
+                    "type": "object",
+                    "properties": {
+                      "paged": {
+                        "type": "boolean",
+                        "description": "페이지가 페이징 되었는지 여부"
+                      },
+                      "pageNumber": {
+                        "type": "number",
+                        "description": "페이지 번호"
+                      },
+                      "offset": {
+                        "type": "number",
+                        "description": "페이지 오프셋"
+                      },
+                      "pageSize": {
+                        "type": "number",
+                        "description": "페이지 크기"
+                      },
+                      "unpaged": {
+                        "type": "boolean",
+                        "description": "페이지가 페이징 안 되었는지 여부"
+                      },
+                      "sort": {
+                        "type": "object",
+                        "properties": {
+                          "unsorted": {
+                            "type": "boolean",
+                            "description": "페이지 정렬이 안 되었는지 여부"
+                          },
+                          "sorted": {
+                            "type": "boolean",
+                            "description": "페이지 정렬이 되었는지 여부"
+                          },
+                          "empty": {
+                            "type": "boolean",
+                            "description": "페이지 정렬 정보가 비어 있는지 여부"
+                          }
+                        },
+                        "description": "페이지 정렬 정보"
+                      }
+                    },
+                    "description": "페이지 가능 정보"
+                  },
+                  "sort": {
+                    "type": "object",
+                    "properties": {
+                      "unsorted": {
+                        "type": "boolean",
+                        "description": "정렬이 안 되었는지 여부"
+                      },
+                      "sorted": {
+                        "type": "boolean",
+                        "description": "정렬이 되었는지 여부"
+                      },
+                      "empty": {
+                        "type": "boolean",
+                        "description": "정렬 정보가 비어 있는지 여부"
+                      }
+                    },
+                    "description": "정렬 정보"
+                  },
+                  "first": {
+                    "type": "boolean",
+                    "description": "첫 페이지 여부"
+                  },
+                  "content": {
+                    "type": "array",
+                    "description": "책 리스트",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "sellingPrice": {
+                          "type": "number",
+                          "description": "판매 가격"
+                        },
+                        "quantity": {
+                          "type": "number",
+                          "description": "책 수량"
+                        },
+                        "price": {
+                          "type": "number",
+                          "description": "책 가격"
+                        },
+                        "author": {
+                          "type": "string",
+                          "description": "책 저자"
+                        },
+                        "viewCount": {
+                          "type": "number",
+                          "description": "책 조회수"
+                        },
+                        "id": {
+                          "type": "number",
+                          "description": "책 ID"
+                        },
+                        "title": {
+                          "type": "string",
+                          "description": "책 제목"
+                        }
+                      }
+                    }
+                  },
+                  "empty": {
+                    "type": "boolean",
+                    "description": "비어있는 페이지 여부"
+                  },
+                  "totalElements": {
+                    "type": "number",
+                    "description": "총 요소 수"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "bookstore-members-lastLogin705495931": {
+        "type": "object",
+        "properties": {
+          "memberId": {
+            "type": "number",
+            "description": "멤버 아이디"
+          }
+        }
+      },
+      "bookstore-reviews-member2041513046": {
+        "type": "object",
+        "properties": {
+          "header": {
+            "type": "object",
+            "properties": {
+              "resultCode": {
+                "type": "number",
+                "description": "결과 코드"
+              },
+              "successful": {
+                "type": "boolean",
+                "description": "성공 여부"
+              }
+            }
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "properties": {
+                  "number": {
+                    "type": "number",
+                    "description": "현재 페이지 번호"
+                  },
+                  "last": {
+                    "type": "boolean",
+                    "description": "마지막 페이지 여부"
+                  },
+                  "numberOfElements": {
+                    "type": "number",
+                    "description": "현재 페이지 리뷰 수"
+                  },
+                  "size": {
+                    "type": "number",
+                    "description": "페이지 크기"
+                  },
+                  "totalPages": {
+                    "type": "number",
+                    "description": "총 페이지 수"
+                  },
+                  "pageable": {
+                    "type": "string",
+                    "description": "페이지 정보"
+                  },
+                  "sort": {
+                    "type": "object",
+                    "properties": {
+                      "unsorted": {
+                        "type": "boolean",
+                        "description": "정렬되지 않았는지 여부"
+                      },
+                      "sorted": {
+                        "type": "boolean",
+                        "description": "정렬되었는지 여부"
+                      },
+                      "empty": {
+                        "type": "boolean",
+                        "description": "정렬 정보가 비어있는지 여부"
+                      }
+                    }
+                  },
+                  "first": {
+                    "type": "boolean",
+                    "description": "첫 페이지 여부"
+                  },
+                  "content": {
+                    "type": "array",
+                    "description": "리뷰 목록",
+                    "items": {
+                      "oneOf": [
+                        {
+                          "type": "object"
+                        },
+                        {
+                          "type": "boolean"
+                        },
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "number"
+                        }
+                      ]
+                    }
+                  },
+                  "empty": {
+                    "type": "boolean",
+                    "description": "비어 있는지 여부"
+                  },
+                  "totalElements": {
+                    "type": "number",
+                    "description": "총 리뷰 수"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout Page</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script type="text/javascript">
+
+        function sendCountyOffice(name){
+            window.opener.setCountyOffice(name);
+            window.close();
+        }
+
+    </script>
+    <style>
+        .info-box {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            font-weight: bold;
+        }
+
+        .btn-lg {
+            padding: 10px 20px;
+            font-size: 1.25rem;
+            line-height: 1.5;
+            border-radius: .3rem;
+        }
+    </style>
+</head>
+<body>
+
+    <main class="container my-5">
+        <div class="checkout-header text-center">
+            <button class="btn btn-outline-secondary" th:attr="onclick='sendCountyOffice(\''+${roadFullAddr}+'\')'">주소확정</button>
+            <span th:text="${roadFullAddr}"></span>
+        </div>
+    </main>
+    <footer class="bg-white text-dark p-3">
+        <div class="container text-center footer-content">
+            &copy; 2024 3runner
+        </div>
+    </footer>
+</body>
+</html>

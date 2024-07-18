@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>도서 카테고리 관리</title>
+    <link rel="stylesheet" href="/css/admin_styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <style>
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+        }
+
+        main h2 {
+            color: #333;
+        }
+
+        .tree ul {
+            padding-left: 20px;
+            border-left: 1px dashed #ccc;
+            margin-left: 20px;
+        }
+
+        .tree li {
+            list-style-type: none;
+            margin: 10px 0;
+            position: relative;
+        }
+
+        .tree li::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -20px;
+            border-left: 1px solid #ccc;
+            border-bottom: 1px solid #ccc;
+            width: 20px;
+            height: 20px;
+        }
+
+        .tree li::after {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: -20px;
+            border-left: 1px solid #ccc;
+            border-top: 1px solid #ccc;
+            width: 20px;
+            height: 100%;
+        }
+
+        .tree li:last-child::after {
+            height: 10px;
+        }
+
+        .tree ul::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -20px;
+            border-left: 1px solid #ccc;
+            border-top: 1px solid #ccc;
+            width: 20px;
+            height: 10px;
+        }
+
+        .actions {
+            display: inline-block;
+            margin-left: 10px;
+        }
+
+        .actions a {
+            margin-right: 5px;
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .actions a:hover {
+            text-decoration: underline;
+        }
+
+        .expand-toggle {
+            cursor: pointer;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            display: inline-block;
+            margin: 5px 0;
+            background-color: #fff;
+            transition: background-color 0.3s;
+        }
+
+        .expand-toggle:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>도서 카테고리 관리</h1>
+    </header>
+    <nav th:replace="fragments/admin_nav :: nav"></nav>
+    <main>
+        <h2>카테고리 목록</h2>
+        <div class="tree">
+            <ul id="category-tree">
+                <!-- 카테고리 목록이 여기에 표시됩니다 -->
+            </ul>
+        </div>
+
+        <h2>카테고리 추가</h2>
+        <form action="" method="post">
+            <br>
+            <label for="category-name">카테고리 이름:</label>
+            <input type="text" id="category-name" name="category-name" required>
+            <label for="parent-name"> 부모 카테고리 번호:</label>
+            <input type="number" id="parent-name" name="parent-name" required>
+            <br>
+
+            <br>
+            <button type="submit">추가</button>
+        </form>
+    </main>
+</div>
+<script src="/js/admin.js"></script>
+<script>
+    function loadCategories() {
+        $.ajax({
+            url: '/api/categories',
+            method: 'GET',
+            success: function (data) {
+                const tree = $('#category-tree');
+                tree.empty();
+
+                function buildTree(categories, parentElement) {
+                    categories.forEach(category => {
+                        const li = $(`<li>
+                                        <span class="expand-toggle">${category.id + ". " + category.name}</span>
+                                        <div class="actions">
+                                            <a href="/admin/category/delete/${category.id}">삭제</a>
+                                        </div>
+                                      </li>`);
+                        const ul = $('<ul></ul>');
+
+                        // 자녀 카테고리는 기본적으로 숨김
+                        if (category.childrenList && category.childrenList.length > 0) {
+                            ul.hide();
+                        }
+
+                        li.append(ul);
+                        parentElement.append(li);
+
+                        if (category.childrenList && category.childrenList.length > 0) {
+                            buildTree(category.childrenList, ul);
+                        }
+                    });
+                }
+
+                buildTree(data, tree);
+
+                // 부모 카테고리를 클릭하면 자녀 카테고리 토글
+                $('.expand-toggle').click(function () {
+                    $(this).siblings('ul').toggle();
+                });
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        loadCategories();
+
+        $('#add-category-form').submit(function (event) {
+            event.preventDefault();
+            const categoryName = $('#category-name').val();
+            const parentId = $('#parent-category').val() || null;
+            addCategory(categoryName, parentId);
+        });
+
+        $(document).on('click', '.delete-category', function (event) {
+            event.preventDefault();
+            const categoryId = $(this).data('id');
+            $.ajax({
+                url: `/api/categories/${categoryId}`,
+                method: 'DELETE',
+                success: function () {
+                    loadCategories();
+                }
+            });
+        });
+    });
+
+</script>
+</body>
+</html>

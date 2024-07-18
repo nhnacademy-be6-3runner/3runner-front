@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Coupon Usages</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/admin_styles.css}">
+    <style>
+        .table th, .table td {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .table th {
+            width: 150px;
+        }
+        .table td {
+            width: 200px;
+        }
+        .table th:last-child, .table td:last-child {
+            width: auto;
+        }
+        @font-face {
+            font-family: 'YourFont';
+            src: url('/fonts/YouandiModernTR.ttf') format('truetype');
+        }
+        * {
+            font-family: 'YourFont', sans-serif;
+        }
+    </style>
+</head>
+<body>
+<!-- Header -->
+<nav th:replace="fragments/admin_nav :: nav"></nav>
+<div class="container">
+    <h1 class="mt-5">쿠폰 사용처 리스트</h1>
+    <table class="table table-striped mt-3">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Usage</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="usage : ${usages}">
+            <td th:text="${usage.couponUsageId}">1</td>
+            <td th:text="${usage.usage}">Sample Usage</td>
+        </tr>
+        </tbody>
+    </table>
+    <a class="btn btn-secondary" href="/admin/coupons/usages/form">사용처 등록</a>
+    <a class="btn btn-secondary" href="/admin/purchases">돌아가기</a>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script src="/js/admin.js"></script>
+</body>
+
+</html>

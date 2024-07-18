@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Coupon Records</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <link rel="stylesheet" th:href="@{/css/main/default.css}">
+    <link rel="stylesheet" th:href="@{/css/detail/book-detail.css}">
+    <style>
+        body{
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+<!-- Header -->
+<header class="header-custom" th:replace="fragments/no-nav-header :: header"></header>
+<div class="container mt-5">
+    <h1 class="mb-4">쿠폰함(사용가능쿠폰)</h1>
+    <table class="table table-striped table-bordered">
+        <thead class="thead-dark">
+        <tr>
+            <th>쿠폰이름</th>
+            <th>쿠폰시작일</th>
+            <th>쿠폰만료일</th>
+            <th>쿠폰 사용처</th>
+            <th>쿠폰 타입</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="coupon : ${usableCoupons}">
+            <td th:text="${coupon.name()}"></td>
+            <td th:text="${coupon.startDate()}"></td>
+            <td th:text="${coupon.endDate()}"></td>
+            <td th:text="${coupon.usage()}"></td>
+            <td th:text="${coupon.type()}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+
+    <h1 class="mb-4">쿠폰 내역</h1>
+    <table class="table table-striped table-bordered">
+        <thead class="thead-dark">
+        <tr>
+            <th>주문 번호</th>
+            <th>할인된 가격</th>
+            <th>쿠폰 상태</th>
+            <th>주문 일시</th>
+            <th>쿠폰 이름</th>
+            <th>쿠폰 타입</th>
+            <th>쿠폰 사용처</th>
+            <th>쿠폰 코드</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="coupon : ${responses}">
+            <td th:text="${coupon.orderNumber()}"></td>
+            <td th:text="${coupon.discountPrice()}"></td>
+            <td th:text="${coupon.status()}"></td>
+            <td th:text="${coupon.createdAt()}"></td>
+            <td th:text="${coupon.name()}"></td>
+            <td th:text="${coupon.type()}"></td>
+            <td th:text="${coupon.usage()}"></td>
+            <td th:text="${coupon.code()}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<!-- footer -->
+<footer class="header-custom" th:replace="fragments/footer :: footer"></footer>
+</body>
+</html>

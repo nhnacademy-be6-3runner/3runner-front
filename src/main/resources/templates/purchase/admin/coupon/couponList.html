@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Coupon List</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <link rel="stylesheet" th:href="@{/css/admin_styles.css}">
+
+    <style>
+        .table th, .table td {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .table th {
+            width: 150px;
+        }
+        .table td {
+            width: 200px;
+        }
+        .table th:last-child, .table td:last-child {
+            width: auto;
+        }
+        @font-face {
+            font-family: 'YourFont';
+            src: url('/fonts/YouandiModernTR.ttf') format('truetype');
+        }
+        * {
+            font-family: 'YourFont', sans-serif;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Header -->
+<nav th:replace="fragments/admin_nav :: nav"></nav>
+<div class="container">
+    <h1 class="mt-5">쿠폰 리스트</h1>
+    <table class="table table-striped mt-3">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Created At</th>
+            <th>Name</th>
+            <th>Code</th>
+            <th>Max Price</th>
+            <th>Min Price</th>
+            <th>Coupon Type ID</th>
+            <th>Coupon Usage ID</th>
+            <th>Type</th>
+            <th>Usage</th>
+            <th>Books</th>
+            <th>Categories</th>
+            <th>Discount Price</th>
+            <th>Discount Rate</th>
+            <th>Discount Max</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="coupon : ${coupons}">
+            <td th:text="${coupon.couponFormId()}"></td>
+            <td th:text="${coupon.startDate().toString()}"></td>
+            <td th:text="${coupon.endDate().toString()}"></td>
+            <td th:text="${coupon.createdAt().toString()}"></td>
+            <td th:text="${coupon.name()}"></td>
+            <td th:text="${coupon.code()}"></td>
+            <td th:text="${coupon.maxPrice()}"></td>
+            <td th:text="${coupon.minPrice()}"></td>
+            <td th:text="${coupon.couponTypeId()}"></td>
+            <td th:text="${coupon.couponUsageId()}"></td>
+            <td th:text="${coupon.type()}"> </td>
+            <td th:text="${coupon.usage()}"> </td>
+            <td th:text="${coupon.books()}"></td>
+            <td th:text="${coupon.categorys()}"></td>
+            <td th:text="${coupon.discountPrice()}"></td>
+            <td th:text="${coupon.discountRate()}"></td>
+            <td th:text="${coupon.discountMax()}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <a class="btn btn-secondary" href="/admin/purchases">돌아가기</a>
+</div>
+
+<script src="/js/admin.js"></script>
+</body>
+</html>

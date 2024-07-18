@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <link rel="stylesheet" th:href="@{/css/main/default.css}">
+    <link rel="stylesheet" th:href="@{/css/detail/book-detail.css}">
+    <style>
+        body{
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+<!-- Header -->
+<header class="header-custom" th:replace="fragments/no-nav-header :: header"></header>
+
+<main class="container my-5">
+    <div class="cart-header d-flex justify-content-between align-items-center">
+<!--        <h2>My Cart (<span th:text="${#lists.size(response)}"></span> items)</h2>-->
+<!--        <button class="btn btn-danger">Empty Cart</button>-->
+    </div>
+    <br>
+    <div class="cart-item-actions">
+        <div class="d-flex justify-content-end">
+            <button class="btn btn-danger" th:attr="onclick='deleteAll('+${cartId}+')'">전체 삭제</button>
+        </div>
+    </div>
+    <div class="cart-items">
+        <div th:each="item, iter: ${response}" class="cart-item d-flex justify-content-between align-items-center" style="padding-bottom: 20px ">
+            <div class="cart-item-info d-flex">
+                <img th:src="@{/api/images/book/download(fileName=${item.url()})}"
+                     src="/static/img/no-image.png" alt="Product Image" class="mr-3" style="width: 150px">
+                <div style="margin-left: 10px">
+                    <h4 th:text="${item.title()}">Product</h4>
+                    <p>₩<span th:text="${item.price()}"></span></p>
+                    <div class="d-flex">
+                        <input type="hidden" th:id="'bookId-'+${iter.index}" th:value="${item.bookId()}">
+                        <input type="hidden" th:id="'bookCartId-' + ${iter.index}" th:value="${item.bookCartId()}">
+                        <button class="btn btn-outline-secondary" th:attr="onclick='updateQuantity(' + ${iter.index} + ', -1)'">-</button>
+                        <label>
+                            <input type="number" class="form-control mx-2 quantity-input" th:value="${item.quantity}" th:id="'quantity-' + ${iter.index}" style="width: 80px;" readonly>
+                        </label>
+                        <button class="btn btn-outline-secondary" th:attr="onclick='updateQuantity(' + ${iter.index} + ', 1)'">+</button>
+                    </div>
+                    <p>책 잔여 수량 : <span th:text="${item.leftQuantity}"></span></p>
+                    <span th:if="${item.leftQuantity != null and item.quantity != null and item.leftQuantity - item.quantity < 0}" style="color: red">재고가 없습니다.</span>
+                </div>
+
+            </div>
+            <div class="cart-item-actions">
+                <button class="btn btn-outline-danger" th:attr="onclick='deleteItem(' + ${item.bookCartId()} + ','+${cartId}+')'">제품 삭제</button>
+            </div>
+        </div>
+    </div>
+    <div class="cart-total d-flex justify-content-end">
+        <h4>합계: <span id="total-price">0.00</span>원</h4>
+    </div>
+    <div class="cart-footer">
+        <div th:if="${Access}==null">
+            <div class="d-flex justify-content-end">
+                <form action="/purchases" method="post">
+                    <input type="hidden" name="cartId" id="cartId" th:value="${cartId}">
+                    <button class="btn btn-primary">결제하기</button>
+                </form>
+            </div>
+        </div>
+        <div th:if="${Access}!=null">
+            <div class="d-flex justify-content-end">
+                <form action="/purchases" method="post">
+                    <input type="hidden" name="memberId" id="memberId" th:value="${memberId}">
+                    <button class="btn btn-primary">결제하기</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- footer -->
+<footer class="header-custom" th:replace="fragments/footer :: footer"></footer>
+
+<script th:inline="javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+        calculateTotal();
+    });
+
+
+    function updateQuantity(index, delta) {
+        const location = window.location;
+
+        const quantityInput = document.getElementById('quantity-'+index);
+        const bookId =  document.getElementById('bookId-'+index).value;
+        const bookCartId = document.getElementById('bookCartId-'+index).value;
+        const deltaInt = parseInt(delta);
+
+        var newQuantity = parseInt(quantityInput.value) + delta;
+        if (newQuantity < 0) {
+            newQuantity = 0;
+        }
+        quantityInput.value = newQuantity;
+
+        var url = window.location.origin +'/carts/'+bookId+'/updates/'+deltaInt
+        var method = 'GET';
+        var cartIdElement = [[${cartId}]];
+
+        if(newQuantity === 0){
+            if (confirm("아이템을 삭제하시겠습니까?")) {
+                url = window.location.origin + '/carts/deletes/books/' + bookCartId;
+                $.ajax({
+                    url: url,
+                    type: method,
+                    success: function(response) {
+                        console.log(response);
+                        location.reload();
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
+                        console.error('Status:', status);
+                        console.error('XHR:', xhr);
+                    }
+                });
+                calculateTotal();
+                return;
+            } else {
+                quantityInput.value = parseInt(quantityInput.value) - delta;
+                return;
+            }
+        }
+
+        $.ajax({
+            url: url,
+            type: method,
+            success: function(response) {
+                console.log(parseInt(newQuantity))
+                console.log(response);
+            },
+            error: function(xhr, status, error) {
+                console.log(parseInt(cartIdElement));
+                console.log(parseInt(bookId));
+                console.log(parseInt(bookCartId))
+                console.log(parseInt(newQuantity));
+                console.error('Error:', error);
+                console.error('Status:', status);
+                console.error('XHR:', xhr);
+            }
+        });
+        calculateTotal();
+    }
+
+    function calculateTotal() {
+        var total = 0.0;
+        var cartItems = document.querySelectorAll('.cart-item');
+        cartItems.forEach(function(item) {
+            var price = parseFloat(item.querySelector('p span').innerText);
+            var quantity = parseInt(item.querySelector('.quantity-input').value);
+
+            total += price * quantity;
+        });
+
+        if (isNaN(total)) {
+            total = 0.0;
+        }
+
+        document.getElementById('total-price').innerText = total.toFixed(0);
+    }
+    function deleteItem(bookCartId, cartId) {
+        const location = window.location;
+        var url = window.location.origin + '/carts/deletes/books/' + bookCartId;
+
+        $.ajax({
+            url: url,
+            type: 'GET',
+            success: function(response) {
+                console.log(response);
+                location.reload();
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);
+                console.error('Status:', status);
+                console.error('XHR:', xhr);
+            }
+        });
+    }
+
+    function deleteAll(cartId) {
+        const location = window.location;
+        var url = window.location.origin + '/carts/deletes';
+
+        $.ajax({
+            url: url,
+            type: 'GET',
+            success: function(response) {
+                console.log(response);
+                location.reload();
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);
+                console.error('Status:', status);
+                console.error('XHR:', xhr);
+            }
+        });
+    }
+
+    // function updateQuantity(index, delta) {
+    //     const quantityInput = document.getElementById('quantity-'+index);
+    //     const bookId =  document.getElementById('bookId-'+index).value;
+    //     const bookCartId = document.getElementById('bookCartId-'+index).value;
+    //     const deltaInt = parseInt(delta);
+    //
+    //     var url = window.location.origin +'/carts/'+bookId+'/updates/'+deltaInt
+    //     const form = document.createElement('form');
+    //     form.method = 'GET';
+    //     form.action = url;
+    //
+    //     document.body.appendChild(form);
+    //     form.submit();
+    //
+    //     calculateTotal();
+    // }
+    // function deleteItem(bookCartId, cartId) {
+    //
+    //     var url = window.location.origin + '/carts/deletes/books/' + bookCartId;
+    //
+    //     const form = document.createElement('form');
+    //     form.method = 'GET';
+    //     form.action = url;
+    //
+    //     document.body.appendChild(form);
+    //     form.submit();
+    // }
+    //
+    // function deleteAll(cartId) {
+    //     var url = window.location.origin + '/carts/deletes';
+    //
+    //     const form = document.createElement('form');
+    //     form.method = 'GET';
+    //     form.action = url;
+    //
+    //     document.body.appendChild(form);
+    //     form.submit();
+    // }
+</script>
+</body>
+</html>

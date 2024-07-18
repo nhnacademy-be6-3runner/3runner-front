@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Refund</title>
+    <script src="https://js.tosspayments.com/v1/payment-widget"></script>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/order-detail.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .menu-desktop {
+            background-color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .refund-header {
+            margin: 20px 0;
+        }
+
+        .order-item {
+            background-color: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
+        }
+
+        .order-item img {
+            border-radius: 5px;
+        }
+
+        footer {
+            margin-top: 50px;
+            background-color: #fff;
+            border-top: 1px solid #dee2e6;
+        }
+
+        .footer-content {
+            padding: 20px 0;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .toggle-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        .toggle-btn.active {
+            background-color: #28a745;
+        }
+
+        .book-quantity-price {
+            display: flex;
+            align-items: center;
+        }
+
+        .quantity-input {
+            width: 50px;
+            text-align: center;
+            margin: 0 5px;
+        }
+
+        .quantity-btn {
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body th:data-purchase-id="${orderNumber}">
+<!-- Header -->
+<header class="header-v4">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light menu-desktop">
+        <div class="container">
+            <!-- Logo -->
+            <a class="navbar-brand logo" href="#">
+                3runner
+            </a>
+
+            <!-- Toggler/collapsibe Button -->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Navbar links -->
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="login.html">login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="logout.html">logout</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="mypage.html">my page</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="register.html">register</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="cart.html">cart</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<main class="container my-5">
+    <div class="refund-header text-center">
+        <h2>결제 취소 요청</h2>
+        <h4 id="orderNumber" th:text="${orderNumber}" ></h4>
+    </div>
+
+    <form>
+        <div class="order-details">
+            <ul class="book-list">
+                <li class="book-item" th:each="book, iter : ${books}" th:data-book-id="${book.id()}" >
+                    <img th:src="@{/api/images/book/download(fileName=${book.readBookByPurchase().bookImage()})}"
+                         th:data-book-image="${book.readBookByPurchase().bookImage()}" alt="Product Image">
+                    <div class="book-details" >
+                        <p style="font-size: 18px" th:text="${book.readBookByPurchase().title()}">Product</p>
+                        <p style="font-size: 16px" th:text="${book.readBookByPurchase().author()}">저자</p>
+                        <p style="font-size: 14px" th:text="${book.readBookByPurchase().publisher()}">출판사</p>
+                        <p style="font-size: 14px" th:text="'구입수량: ' + ${book.quantity()}">구입수량</p>
+                        <p style="font-size: 14px" th:text="'가격: ' + ${book.readBookByPurchase().sellingPrice()} + '₩'">가격</p>
+                        <!-- 가격 추가 -->
+                    </div>
+                    <div class="book-quantity-price">
+                        <button class="btn btn-outline-secondary quantity-btn" type="button"
+                                th:onclick="'updateQuantity(' + ${iter.index} + ', -1)'">-
+                        </button>
+                        <input type="number" class="form-control mx-2 quantity-input" th:value="${book.quantity}"
+                               th:id="'quantity-' + ${iter.index}" th:data-max="${book.quantity()}" readonly>
+                        <button class="btn btn-outline-secondary quantity-btn" type="button"
+                                th:onclick="'updateQuantity(' + ${iter.index} + ', 1)'">+
+                        </button>
+                    </div>
+                </li>
+            </ul>
+            <div class="text-center mt-4">
+                <button type="button" class="toggle-btn" id="toggle-max-btn" onclick="toggleMaxQuantities()">모두 최대치로
+                    설정
+                </button>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4>총 결제 취소 금액</h4>
+            <h4 class="total-refund"><span id="total-refund">0</span>₩</h4>
+        </div>
+
+        <!-- 환불 신청 버튼 -->
+
+        <button id="refund-button" class="btn btn-danger btn-block" type="button">결제 취소</button>
+
+    </form>
+</main>
+<footer class="bg-white text-dark p-3">
+    <div class="container text-center footer-content">
+        &copy; 2024 3runner
+    </div>
+</footer>
+
+<script type="text/javascript">
+    let allMaxSet = false;
+    const orderNumber = document.getElementById('orderNumber').textContent;
+
+
+
+    function updateQuantity(index, delta) {
+        allMaxSet = false; // 토글 해제
+        document.getElementById('toggle-max-btn').classList.remove('active');
+        var quantityInput = document.getElementById('quantity-' + index);
+        var newQuantity = parseInt(quantityInput.value) + parseInt(delta); // 정수로 변환 후 더하기
+        var maxQuantity = parseInt(quantityInput.getAttribute('data-max'));
+        // purchaseBookId는 books[iter.index].id()에서 가져오기
+        var purchaseBookId = document.querySelectorAll('.book-item')[index].getAttribute('data-book-id');
+
+        // URL의 pathVariable에서 orderNumber 가져오기
+        var orderNumber = window.location.pathname.split('/').pop();
+
+        if (newQuantity < 0) {
+            newQuantity = 0;
+        } else if (newQuantity > maxQuantity) {
+            newQuantity = maxQuantity;
+        }
+        var url = window.location.origin + '/refund/guests/' + orderNumber + '/update/' + purchaseBookId + "?quantity=" + newQuantity;
+        var method = 'GET';
+
+        $.ajax({
+            url: url,
+            type: method,
+            success: function (response) {
+                console.log(parseInt(newQuantity))
+                console.log(response);
+            },
+            error: function (xhr, status, error) {
+                console.log(parseInt(purchaseBookId));
+                console.log(parseInt(orderNumber));
+                console.log(parseInt(newQuantity));
+                console.error('Error:', error);
+                console.error('Status:', status);
+                console.error('XHR:', xhr);
+            }
+        })
+
+        quantityInput.value = newQuantity;
+        calculateTotalRefund();
+    }
+
+    function toggleMaxQuantities() {
+        var toggleButton = document.getElementById('toggle-max-btn');
+        var quantityInputs = document.querySelectorAll('.quantity-input');
+        var orderNumber = window.location.pathname.split('/').pop();
+        if (!allMaxSet) {
+            quantityInputs.forEach(function (input) {
+                input.value = input.getAttribute('data-max');
+            });
+            toggleButton.classList.add('active');
+            allMaxSet = true;
+
+            var url = window.location.origin + '/refund/guests/' + orderNumber + '/update/all';
+            var method = 'GET';
+
+            $.ajax({
+                url: url,
+                type: method,
+                success: function (response) {
+                    console.log(parseInt(orderNumber))
+                    console.log(response);
+                },
+                error: function (xhr, status, error) {
+                    console.log(parseInt(orderNumber));
+                    console.error('Error:', error);
+                    console.error('Status:', status);
+                    console.error('XHR:', xhr);
+                }
+            })
+        } else {
+            quantityInputs.forEach(function (input) {
+                input.value = 0;
+            });
+            toggleButton.classList.remove('active');
+            allMaxSet = false;
+
+            var url2 = window.location.origin + '/refund/guests/' + orderNumber + '/update/all/zero';
+            var method = 'GET';
+
+            $.ajax({
+                url: url2,
+                type: method,
+                success: function (response) {
+                    console.log(parseInt(orderNumber))
+                    console.log(response);
+                },
+                error: function (xhr, status, error) {
+                    console.log(parseInt(orderNumber));
+                    console.error('Error:', error);
+                    console.error('Status:', status);
+                    console.error('XHR:', xhr);
+                }
+            })
+        }
+
+        calculateTotalRefund();
+    }
+
+    function calculateTotalRefund() {
+        var total = 0;
+        var orderItems = document.querySelectorAll('.book-item'); // 수정된 부분
+        orderItems.forEach(function (item) {
+            var priceText = item.querySelector('.book-details p:nth-child(5)').innerText; // 수정된 부분
+            var price = parseFloat(priceText.replace(/[^0-9.-]+/g, "")); // 숫자만 추출
+            var quantity = parseInt(item.querySelector('.quantity-input').value);
+
+            total += price * quantity;
+        });
+
+        if (isNaN(total)) {
+            total = 0;
+        }
+        document.getElementById('total-refund').innerText = total.toFixed(0);
+    }
+
+    document.getElementById('refund-button').addEventListener('click', function () {
+        var refundAmount = document.getElementById('total-refund').textContent;
+        var orderNumber = document.getElementById('orderNumber').textContent.trim();
+
+
+        // 환불 요청 데이터를 서버로 전송
+        fetch('/refund/guests/cancelPayment/' + orderNumber + '?refund-price=' + refundAmount, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('결제 취소에 실패했습니다. 상태 코드: ' + response.status);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("Refund Request Successful:", data);
+                alert("결제가 취소되었습니다.");
+                window.location.href = data.redirectUrl;
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("결제취소가 실패했습니다. 에러 메시지: " + error.message);
+            });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        calculateTotalRefund();
+    });
+</script>
+</body>
+</html>

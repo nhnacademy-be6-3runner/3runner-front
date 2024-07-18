@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>리뷰 관리</title>
+    <link rel="stylesheet" href="/css/admin_styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>리뷰 관리</h1>
+    </header>
+    <nav th:replace="fragments/admin_nav :: nav"></nav>
+    <main>
+        <h2>리뷰 목록</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>리뷰 아이디</th>
+                <th>제목</th>
+                <th>평점</th>
+                <th>작성자 이메일</th>
+                <th>작성일</th>
+                <th>좋아요 수</th>
+                <th>삭제</th>
+                <th>상태</th>
+                <th>생성 날짜</th>
+                <th>삭제 날짜</th>
+                <th>삭제 사유</th>
+            </tr>
+            </thead>
+            <tbody id="review-table-body">
+            </tbody>
+        </table>
+        <div class="pagination">
+            <button id="prev-page" disabled>&laquo; 이전</button>
+            <span id="current-page">1</span>
+            <button id="next-page">다음 &raquo;</button>
+        </div>
+    </main>
+</div>
+
+<!-- Delete Review Modal -->
+<div class="modal fade" id="deleteReviewModal" tabindex="-1" role="dialog" aria-labelledby="deleteReviewModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteReviewModalLabel">리뷰 삭제</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="deleteReviewForm">
+                    <div class="form-group">
+                        <label for="deletedReason">삭제 이유</label>
+                        <textarea class="form-control" id="deletedReason" rows="3" required></textarea>
+                    </div>
+                    <input type="hidden" id="deleteReviewId">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteButton">삭제</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentPage = 0;
+    function loadReviews(page) {
+        $.ajax({
+            url: `/api/reviews?page=${page}`,
+            method: 'GET',
+            success: function (data) {
+                console.log("Received data:", data); // 서버에서 반환된 데이터 구조 확인
+
+                const tbody = $('#review-table-body');
+                tbody.empty();
+
+                if (data.body && data.body.data && data.body.data.content) {
+                    data.body.data.content.forEach(review => {
+                        const createdAt = new Date(review.createdAt).toLocaleString();
+                        const deletedAt = review.deletedAt ? new Date(review.deletedAt).toLocaleString() : '-';
+                        const status = review.deletedAt ? '삭제됨' : '-';
+                        const deletedReason = review.deletedReason ? review.deletedReason : '-';
+                        const deleteButton = review.deletedAt ? '' : `<button class="delete-button btn btn-danger" data-id="${review.reviewId}">삭제</button>`;
+
+                        const row = `<tr>
+                                    <td>${review.reviewId}</td>
+                                    <td><a href="/review/${review.reviewId}">${review.title}</a></td>
+                                    <td>${review.rating}</td>
+                                    <td>${review.memberEmail}</td>
+                                    <td>${createdAt}</td>
+                                    <td>${review.reviewLike}</td>
+                                    <td>${deleteButton}</td>
+                                    <td>${status}</td>
+                                    <td>${createdAt}</td>
+                                    <td>${deletedAt}</td>
+                                    <td>${deletedReason}</td>
+                                 </tr>`;
+                        tbody.append(row);
+                    });
+                } else {
+                    tbody.append('<tr><td colspan="12">No reviews found</td></tr>');
+                }
+
+                $('#current-page').text(page + 1);
+                currentPage = page;
+                $('#prev-page').prop('disabled', currentPage === 0);
+                $('#next-page').prop('disabled', !data.body || !data.body.data || currentPage >= data.body.data.totalPages - 1);
+
+                $('.delete-button').click(function() {
+                    const reviewId = $(this).data('id');
+                    $('#deleteReviewId').val(reviewId);
+                    $('#deleteReviewModal').modal('show');
+                });
+            },
+            error: function(xhr) {
+                console.error('Error:', xhr.responseText);
+                alert('리뷰를 불러오는데 실패했습니다.');
+            }
+        });
+    }
+
+
+    function deleteReview(reviewId, deletedReason) {
+        console.log("Deleting review with reason:", deletedReason); // 삭제 사유 로그 추가
+        $.ajax({
+            url: `/admin/review/management/${reviewId}/delete`,
+            method: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify({ deletedReason: deletedReason }),
+            success: function() {
+                alert('리뷰가 성공적으로 삭제되었습니다.');
+                $('#deleteReviewModal').modal('hide');
+                loadReviews(currentPage);
+            },
+            error: function(xhr) {
+                console.error('Error:', xhr.responseText);
+                alert('리뷰 삭제에 실패했습니다.');
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        loadReviews(0);
+
+        $('#prev-page').click(function () {
+            if (currentPage > 0) {
+                loadReviews(currentPage - 1);
+            }
+        });
+
+        $('#next-page').click(function () {
+            loadReviews(currentPage + 1);
+        });
+
+        $('#confirmDeleteButton').click(function () {
+            const reviewId = $('#deleteReviewId').val();
+            const deletedReason = $('#deletedReason').val();
+            deleteReview(reviewId, deletedReason);
+        });
+    });
+</script>
+<script src="/js/admin.js"></script>
+</body>
+</html>

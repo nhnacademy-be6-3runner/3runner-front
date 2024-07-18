@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>환불 내역 관리</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: #333;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .refund-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .refund-item {
+            display: flex;
+            flex-direction: column;
+            padding: 15px;
+            margin-bottom: 10px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .refund-info > div {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .refund-info p {
+            margin: 0 10px 0 0;
+        }
+
+        .refund-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .btn-custom {
+            padding: 5px 10px;
+            font-size: 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            border: none;
+            color: white;
+        }
+
+        .btn-custom.accept {
+            background-color: #28a745;
+        }
+
+        .btn-custom.accept:hover {
+            background-color: #218838;
+        }
+
+        .btn-custom.reject {
+            background-color: #dc3545;
+        }
+
+        .btn-custom.reject:hover {
+            background-color: #c82333;
+        }
+    </style>
+
+    <link rel="stylesheet" href="/css/admin_styles.css">
+
+</head>
+<body>
+<header>
+    <h1>환불 관리</h1>
+</header>
+<nav th:replace="fragments/admin_nav :: nav"></nav>
+<div id="refundManagement" class="mt-5">
+
+    <ul class="refund-list">
+        <li class="refund-item" th:each="refund : ${refunds}">
+            <div class="refund-info">
+                <div>
+                    <p>환불 코드:</p>
+                    <p th:text="${refund.refundId()}">환불 코드</p>
+                </div>
+                <div>
+                    <p>주문 ID:</p>
+                    <p th:text="${refund.orderNumber()}">주문 ID</p>
+                </div>
+                <div>
+                    <p>환불 상태:</p>
+                    <p th:text="${refund.status().toString()}">환불 상태</p>
+                </div>
+                <div>
+                    <p>환불 사유:</p>
+                    <p th:text="${refund.refundContent()}">환불 사유</p>
+                </div>
+            </div>
+            <div class="refund-buttons" th:if="${refund.status().toString() == 'READY'}">
+                <button class="btn-custom accept"
+                        th:attr="data-refund-id=${refund.refundId()}"
+                        th:text="'수락'"></button>
+                <button class="btn-custom reject"
+                        th:attr="data-refund-id=${refund.refundId()}"
+                        th:text="'거절'"></button>
+            </div>
+        </li>
+    </ul>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script src="/js/admin.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.btn-custom.accept').forEach(button => {
+            button.addEventListener('click', function () {
+                const refundId = this.getAttribute('data-refund-id');
+                processRefund(refundId, 'accept');
+            });
+        });
+
+        document.querySelectorAll('.btn-custom.reject').forEach(button => {
+            button.addEventListener('click', function () {
+                const refundId = this.getAttribute('data-refund-id');
+                processRefund(refundId, 'reject');
+            });
+        });
+    });
+
+    function processRefund(refundId, action) {
+        let url = '/admin/refund/' + (action === 'accept' ? 'success' : 'reject') + '/' + refundId;
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('처리에 실패했습니다. 상태 코드: ' + response.status);
+                }
+                return response.text(); // 변경된 부분
+            })
+            .then(data => {
+                console.log(`Refund ${action}ed successfully:`, data);
+                alert(`환불이 ${action === 'accept' ? '수락' : '거절'}되었습니다.`);
+                location.reload();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert(`환불 ${action}에 실패했습니다. 에러 메시지: ` + error.message);
+            });
+    }
+</script>
+</body>
+</html>

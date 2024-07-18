@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>개인화 섹션</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta name="theme-color" content="#712cf9">
+    <link rel="stylesheet" th:href="@{/css/main/main.css}">
+    <link rel="stylesheet" th:href="@{/css/detail/mypage.css}">
+</head>
+<body>
+
+<div class="d-flex">
+        <main>
+            <div class="container2">
+                <div class="section">
+                    <div class="section-header">
+                        <img src="https://cdn-icons-png.flaticon.com/512/3524/3524472.png" alt="아이콘" class="icon">
+                    </div>
+                    <div class="section-body">
+                        <button id="orderBtn">주문/배송</button>
+                        <button id="profileBtn">내 정보 수정</button>
+                    </div>
+                </div>
+
+                <div id="orderDelivery" class="order-delivery hidden">
+                    <h2>주문/배송 페이지</h2>
+                    <p>주문/배송 정보를 여기에 넣으세요.</p>
+                </div>
+
+                <div id="userProfile" class="user-profile hidden">
+                    <h2>내 정보 수정 페이지</h2>
+                    <p>내 정보 수정 내용을 여기에 넣으세요.</p>
+                </div>
+            </div>
+        </main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/js/scripts.js"></script>
+<script th:src="@{/js/detail/mypage.js}"></script>
+</body>
+</html>
