@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Refund Requests</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .refund-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .refund-item {
+            display: flex;
+            flex-direction: column;
+            padding: 15px;
+            margin-bottom: 10px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .refund-item p {
+            margin: 0;
+        }
+
+        .refund-item .status {
+            font-weight: bold;
+            color: #28a745;
+        }
+
+        .refund-item .status.pending {
+            color: #ffc107;
+        }
+
+        .refund-item .status.rejected {
+            color: #dc3545;
+        }
+
+        .refund-item .refund-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .refund-item .btn {
+            padding: 5px 10px;
+            font-size: 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .refund-item .btn-accept {
+            background-color: #28a745;
+            border: none;
+            color: white;
+        }
+
+        .refund-item .btn-accept:hover {
+            background-color: #218838;
+        }
+
+        .refund-item .btn-reject {
+            background-color: #dc3545;
+            border: none;
+            color: white;
+        }
+
+        .refund-item .btn-reject:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>환불 요청 내역</h1>
+    <ul class="refund-list">
+        <!-- Example item -->
+        <li class="refund-item">
+            <div>
+                <p><strong>Order ID:</strong><p th:text="${refund.orderNumber()}"></p> </p>
+                <p><strong>환불 금액:</strong> <p th:text="${refund.price()}"></p></p>
+                <p><strong>환불 내용:</strong> <p th:text="${refund.refundContent()}"></p>
+            </div>
+            <div class="refund-buttons">
+                <button class="btn btn-accept" th:onclick="'acceptRefund('+${refund.refundId()}+')'">환불 수락</button>
+                <button class="btn btn-reject" th:onclick="'rejectRefund('+${refund.refundId()}+')'">환불 거절</button>
+            </div>
+        </li>
+    </ul>
+</div>
+
+<script>
+    function acceptRefund(orderId) {
+        // 환불 수락 로직 추가
+        console.log(`Refund accepted for order ID: ${orderId}`);
+
+        fetch('/admin/refund/success/'+ orderId, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+    }
+
+    function rejectRefund(orderId) {
+        // 환불 거절 로직 추가
+        console.log(`Refund rejected for order ID: ${orderId}`);
+        fetch('/admin/refund/reject/'+orderId,{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        // 추가로 서버 요청 등 필요시 작성
+    }
+</script>
+</body>
+</html>

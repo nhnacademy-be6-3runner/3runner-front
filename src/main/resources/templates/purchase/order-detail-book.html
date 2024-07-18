@@ -20,26 +20,10 @@
                 <p>수량 : <span th:text="${book.quantity()}"></span></p>
                 <p>₩<span th:text="${book.price()}"></span></p>
             </div>
-            <button class="order-delivery" th:if="${purchaseStatus == 'CONFIRMATION'}">리뷰</button>
+            <button class="review-button" th:data-purchase-book-id="${book.id()}" th:if="${purchaseStatus == 'CONFIRMATION'}" onclick="createReview(this)">리뷰</button>
         </li>
 
     </ul>
-    <div class="text-center mt-4">
-        <nav>
-            <ul class="pagination justify-content-center">
-                <li class="page-item" th:classappend="${books.hasPrevious()} ? '' : 'disabled'">
-                    <a class="page-link" href="#" th:onclick="'loadBooks(' + (${books.number} - 1) + ', ' + ${books.size} + '); return false;'">이전</a>
-                </li>
-                <li class="page-item" th:each="i : ${#numbers.sequence(0, books.totalPages - 1)}" th:classappend="${i} == ${books.number} ? 'active'">
-                    <a class="page-link" href="#" th:onclick="'loadBooks(' + ${i} + ', ' + ${books.size} + '); return false;'" th:text="${i + 1}">1</a>
-                </li>
-                <li class="page-item" th:classappend="${books.hasNext()} ? '' : 'disabled'">
-                    <a class="page-link" href="#" th:onclick="'loadBooks(' + (${books.number} + 1) + ', ' + ${books.size} + '); return false;'">다음</a>
-                </li>
-
-            </ul>
-        </nav>
-    </div>
 
 </div>
 
@@ -48,6 +32,11 @@
 
     function loadBooks(page, size) {
         window.location.href = `/bookstore/members/purchases/books/${purchaseId}?page=${page}&size=${size}`;
+    }
+
+    function createReview(button){
+        const purchaseBookId = button.getAttribute('data-purchase-book-id')
+        window.location.href = `/${purchaseBookId}/review`;
     }
 </script>
 

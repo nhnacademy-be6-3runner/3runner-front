@@ -27,8 +27,7 @@
     </div>
 </div>
 
-<form method="post"
-      th:action="@{'/orders/guests/{purchaseId}?password={password}' (purchaseId = ${guestorder.orderNumber().toString()},password = ${password})}">
+<form method="post" th:action="@{'/orders/guests/{purchaseId}' (purchaseId = ${guestorder.orderNumber().toString()})}">
     <button type="submit" class="confirm-order-btn" th:if="${guestorder.status.toString() != 'CONFIRMATION'}">주문 확정
     </button>
 </form>
@@ -37,7 +36,8 @@
 <button class="refund-btn"
         th:if="${guestorder.status.toString() == 'COMPLETED'}"
         th:attr="data-order-id=${guestorder.orderNumber}"
-        th:text="'결제 취소'">
+        th:text="'결제 취소'"
+        onclick="cancelOrder()">
 </button>
 
 <div class="order-details">
@@ -57,34 +57,15 @@
         </li>
 
     </ul>
-    <div class="text-center mt-4">
-        <nav>
-            <ul class="pagination justify-content-center">
 
-                <li class="page-item" th:if="${guestorderbooks.pageable.getPageNumber() > 4}">
-                    <a class="page-link" th:href="@{'/orders/guests/{orderNumber}?page={page}' (orderNumber = ${orderNumber},page = ${guestorderbooks.pageable.getPageNumber() - 1})}">이전</a>
-                </li>
-                <li class="page-item" th:each="i : ${#numbers.sequence(0, guestorderbooks.totalPages - 1)}"
-                    th:if="${i >= (guestorderbooks.pageable.getPageNumber() / 5) * 5 and i < ((guestorderbooks.pageable.getPageNumber() / 5) + 1) * 5}">
-                    <a class="page-link" th:href="@{'/orders/members?page={page}' (page = ${i})}"
-                       th:text="${i + 1}"
-                       th:classappend="${i == guestorderbooks.pageable.getPageNumber()} ? 'active' : ''"></a>
-                </li>
-                <li class="page-item" th:if="${guestorderbooks.pageable.getPageNumber() < guestorderbooks.totalPages - 1 }">
-                    <a class="page-link" th:href="@{'/orders/guests/{orderNumber}?page={page}' (orderNumber = ${orderNumber},page = ${guestorderbooks.pageable.getPageNumber() - 1})}">다음</a>
-                </li>
-            </ul>
-        </nav>
-    </div>
 
 
 </div>
 
 <script>
-    const purchaseId = document.body.getAttribute('data-purchase-id');
-
-    function loadBooks(page, size) {
-        window.location.href = `/orders/guests/${orderNumber}?page=${page}&size=${size}`;
+    function cancelOrder() {
+        const orderNumber = document.querySelector('.refund-btn').getAttribute('data-order-id');
+        window.location.href = '/refund/guests/' + orderNumber;
     }
 </script>
 
