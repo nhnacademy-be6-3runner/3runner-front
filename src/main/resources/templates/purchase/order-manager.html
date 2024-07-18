@@ -7,8 +7,8 @@
     <link rel="stylesheet" th:href="@{/css/admin_styles.css}">
     <style>
         .order-delivery-section {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0 auto;
+            margin: auto;
+
             padding: 20px;
             background-color: #ffffff;
             color: #333;
@@ -20,12 +20,11 @@
             align-items: center;
         }
 
-        .order-delivery-section .order-delivery {
-            padding: 20px;
-            background-color: #ffffff;
-            border-radius: 10px;
-            overflow-y: auto;
-            flex: 1;
+        .container-center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
             width: 100%;
         }
 
@@ -35,23 +34,15 @@
             width: 100%;
         }
 
-        .order-delivery-section .order-item {
-            display: flex;
-            flex-direction: column;
+        .order-item {
+
             padding: 20px;
             margin-bottom: 10px;
             background-color: #ffffff;
             border: 1px solid #ddd;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 100%;
-        }
 
-        .order-delivery-section .order-info {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-            flex: 1;
         }
 
         .order-delivery-section .order-info > div {
@@ -60,92 +51,58 @@
             margin-bottom: 5px;
         }
 
-        .order-delivery-section .order-info p {
+
+        .order-info p {
             margin: 0 10px 0 0;
         }
 
-        .order-delivery-section .order-buttons {
+        .order-buttons {
             display: flex;
+            justify-content: space-between;
             gap: 10px;
             margin-top: 10px;
         }
 
-        .order-delivery-section .order-buttons form,
-        .order-delivery-section .order-buttons .refund-buttons {
-            flex: 1;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .order-delivery-section .order-buttons .refund-buttons {
-            justify-content: flex-end;
-        }
-
-        .order-delivery-section .refund-detail-btn,
-        .order-delivery-section .btn-custom {
+        .btn-custom {
             padding: 5px 10px;
             font-size: 14px;
             border-radius: 5px;
             cursor: pointer;
-            transition: background-color 0.3s;
             width: 100px;
             border: none;
             color: white;
+            transition: background-color 0.3s;
         }
 
-        .order-delivery-section .btn-custom.accept {
-            background-color: #28a745;
-        }
+        .btn-custom.details {
 
-        .order-delivery-section .btn-custom.accept:hover {
-            background-color: #218838;
-        }
-
-        .order-delivery-section .btn-custom.reject {
-            background-color: #dc3545;
-        }
-
-        .order-delivery-section .btn-custom.reject:hover {
-            background-color: #c82333;
-        }
-
-        .order-delivery-section .refund-detail-btn,
-        .order-delivery-section .btn-custom.details {
             background-color: #007bff;
+            color: white;
+            border-color: #007bff;
         }
 
-        .order-delivery-section .btn-custom.details:hover,
-        .order-delivery-section .refund-detail-btn:hover {
+        .btn-custom.details:hover {
             background-color: #0056b3;
         }
 
-        .order-delivery-section .pagination {
+        .pagination {
             display: flex;
             justify-content: center;
             margin-top: 20px;
         }
 
-        .order-delivery-section .pagination button {
-            background-color: #ffffff;
-            border: 1px solid #444;
-            color: #444;
-            padding: 10px 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border-radius: 5px;
-            margin: 0 auto;
-            display: block;
-        }
-
-        .order-delivery-section .pagination button:hover {
-            background-color: #f0f0f0;
-            color: #333;
-        }
-
-        .order-delivery-section .page-link.active {
+        .page-link.active {
             background-color: #007bff;
             color: white;
             border-color: #007bff;
+        }
+
+        .my_nav {
+            background-color: #ffffff;
+            padding: 1rem;
+            width: 100%;
+            display: flex;
+            justify-content: center;
         }
 
     </style>
@@ -156,60 +113,62 @@
 </header>
 <nav th:replace="fragments/admin_nav :: nav"></nav>
 <main>
-    <div id="orderDelivery" class="order-delivery-section container mt-5">
-        <h2>주문내역</h2>
-        <ul class="order-list">
-            <li class="order-item" th:each="order : ${orderAll}">
-                <div class="order-info">
-                    <div>
-                        <p>주문 번호:</p>
-                        <p th:text="${order.orderNumber().toString()}">주문 번호</p>
-                    </div>
-                    <div>
-                        <p>주문 날짜:</p>
-                        <p th:text="${order.createdAt()}">주문 날짜</p>
-                    </div>
-                    <div>
-                        <p>상태:</p>
-                        <p th:text="${order.status()}" id="order-status-${order.orderNumber}">상태</p>
-                    </div>
-                </div>
-                <div class="order-buttons">
-                    <form th:action="@{/admin/orders/{purchaseId} (purchaseId= ${order.orderNumber()})}" method="POST">
+    <div class="container-center mt-5">
+        <div id="orderDelivery" class="order-delivery-section">
+            <ul class="order-list">
+                <li class="order-item" th:each="order : ${orderAll}">
+                    <div class="order-info">
                         <div>
-                            <select name="dropdown" class="form-control">
-                                <option value="DELIVERY_START">출고</option>
-                                <option value="DELIVERY_COMPLETED">배달 완료</option>
-                                <option value="DELIVERY_PROGRESS">배달 중</option>
-                                <option value="COMPLETED">주문 확인</option>
-                                <option value="REFUNDED_COMPLETED">환불 완료</option>
-                            </select>
-                            <button type="submit" class="btn-custom details" name="상태 변경">변경</button>
+                            <p>주문 번호:</p>
+                            <p th:text="${order.orderNumber().toString()}">주문 번호</p>
                         </div>
-                    </form>
-                </div>
-            </li>
-        </ul>
+                        <div>
+                            <p>주문 날짜:</p>
+                            <p th:text="${order.createdAt()}">주문 날짜</p>
+                        </div>
+                        <div>
+                            <p>상태:</p>
+                            <p th:text="${order.status()}" id="order-status-${order.orderNumber}">상태</p>
+                        </div>
+                    </div>
+                    <div class="order-buttons">
+                        <form th:action="@{/admin/orders/{purchaseId} (purchaseId= ${order.orderNumber()})}"
+                              method="POST">
+                            <div>
+                                <select name="dropdown" class="form-control">
+                                    <option value="DELIVERY_START">출고</option>
+                                    <option value="DELIVERY_COMPLETED">배달 완료</option>
+                                    <option value="DELIVERY_PROGRESS">배달 중</option>
+                                    <option value="COMPLETED">주문 확인</option>
+                                    <option value="REFUNDED_COMPLETED">환불 완료</option>
+                                </select>
+                                <button type="submit" class="btn-custom details" name="상태 변경">변경</button>
+                            </div>
+                        </form>
+                    </div>
+                </li>
+            </ul>
 
-        <div class="text-center mt-4">
-            <nav>
-                <ul class="pagination justify-content-center">
-                    <li class="page-item" th:if="${orderAll.pageable.getPageNumber() > 0}">
-                        <a class="page-link"
-                           th:href="@{'/admin/orders?page={page}' (page = ${orderAll.pageable.getPageNumber() - 1})}">이전</a>
-                    </li>
-                    <li class="page-item" th:each="i : ${#numbers.sequence(0, orderAll.totalPages - 1)}"
-                        th:if="${i >= (orderAll.pageable.getPageNumber() / 5) * 5 and i < ((orderAll.pageable.getPageNumber() / 5) + 1) * 5}">
-                        <a class="page-link" th:href="@{'/admin/orders?page={page}' (page = ${i})}"
-                           th:text="${i + 1}"
-                           th:classappend="${i == orderAll.pageable.getPageNumber()} ? 'active' : ''"></a>
-                    </li>
-                    <li class="page-item" th:if="${orderAll.pageable.getPageNumber() < orderAll.totalPages - 1 }">
-                        <a class="page-link"
-                           th:href="@{'/admin/orders?page={page}' (page = ${orderAll.pageable.getPageNumber() + 1})}">다음</a>
-                    </li>
-                </ul>
-            </nav>
+            <div class="text-center mt-4">
+                <nav class="my_nav">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item" th:if="${orderAll.pageable.getPageNumber() > 0}">
+                            <a class="page-link"
+                               th:href="@{'/admin/orders?page={page}' (page = ${orderAll.pageable.getPageNumber() - 1})}">이전</a>
+                        </li>
+                        <li class="page-item" th:each="i : ${#numbers.sequence(0, orderAll.totalPages - 1)}"
+                            th:if="${i >= (orderAll.pageable.getPageNumber() / 5) * 5 and i < ((orderAll.pageable.getPageNumber() / 5) + 1) * 5}">
+                            <a class="page-link" th:href="@{'/admin/orders?page={page}' (page = ${i})}"
+                               th:text="${i + 1}"
+                               th:classappend="${i == orderAll.pageable.getPageNumber()} ? 'active' : ''"></a>
+                        </li>
+                        <li class="page-item" th:if="${orderAll.pageable.getPageNumber() < orderAll.totalPages - 1 }">
+                            <a class="page-link" th:href="@{'/admin/orders?page={page}' (page = ${orderAll.pageable.getPageNumber() + 1})}">다음</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
         </div>
     </div>
 </main>
