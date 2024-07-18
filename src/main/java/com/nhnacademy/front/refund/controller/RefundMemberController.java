@@ -84,7 +84,7 @@ public class RefundMemberController {
 
 		Map<String, String> response = new HashMap<>();
 		response.put("message", "Refund request successful");
-		response.put("redirectUrl", "/refund/members/success");
+		response.put("redirectUrl", "/orders/members");
 
 		return ResponseEntity.ok(response);
 	}

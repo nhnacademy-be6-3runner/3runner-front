@@ -59,9 +59,13 @@ public class RefundServiceImpl implements RefundService {
 
 		Map<String, Object> result = new HashMap<>();
 		String paymentKey = "";
+		String orderId = "";
+		Long order= null;
 		if (orderNumber instanceof String) {
+			orderId = (String)orderNumber;
 			paymentKey = refundControllerClient.readTossOrderId((String)orderNumber).getBody().getData();
 		} else if (orderNumber instanceof Long) {
+			order = (Long)orderNumber;
 			paymentKey = refundControllerClient.readTossOrderIdMember((long)orderNumber).getBody().getData();
 		}
 
@@ -102,7 +106,14 @@ public class RefundServiceImpl implements RefundService {
 			result.put("isSuccess", isSuccess);
 			result.put("jsonObject", jsonObject);
 
-			Long refundId = refundControllerClient.createRefundCancelPartPayment(orderNumber,price).getBody().getData();
+			Long refundId;
+			if(orderNumber instanceof Long) {
+				refundId = refundControllerClient.createRefundCancelPartPayment(order,price).getBody().getData();
+			}
+			else{
+				refundId = refundControllerClient.createRefundCancelPartPayment(orderId,price).getBody().getData();
+			}
+
 
 		} catch (Exception e) {
 			e.printStackTrace();
