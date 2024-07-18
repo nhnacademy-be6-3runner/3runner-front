@@ -64,7 +64,7 @@ function addCart(bookId, quantity) {
 
         //TODO : 최종 배포시 변경오먕
         success: function (response) {
-            window.location.href = window.location.origin + '/carts';
+            window.location.href = '/carts';
         },
         error: function (xhr, status, error) {
             console.error('Error:', error);
@@ -76,7 +76,7 @@ function addCart(bookId, quantity) {
 
 function addPurchase(bookId, quantity) {
     $.ajax({
-        url: window.location.origin + '/purchases',
+        url: '/purchases',
         type: 'POST',
         contentType: 'application/x-www-form-urlencoded',
         data: $.param({ bookId: bookId, quantity: quantity }),
@@ -84,7 +84,7 @@ function addPurchase(bookId, quantity) {
         //TODO : 최종 배포시 변경오먕
         success: function (response) {
             console.log(response);
-            window.location.href = window.location.origin + '/carts';
+            window.location.href = '/carts';
         },
         error: function (xhr, status, error) {
             console.error('Error:', error);
