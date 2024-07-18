@@ -20,11 +20,13 @@ import com.nhnacademy.front.book.tag.dto.response.ReadTagByBookResponse;
 import com.nhnacademy.front.book.tag.dto.response.TagResponse;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author 한민기
  * 도서 관리에 관한 내용 -> 관리자, 출판사 출입에 관한 내용들
  */
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 public class BookManagementController {
@@ -150,7 +152,8 @@ public class BookManagementController {
 		for (CategoryParentWithChildrenResponse categoryResponse : parentCategoryList) {
 			categoryResponseList.add(
 				CategoryResponse.builder().id(categoryResponse.getId()).name(categoryResponse.getName()).build());
-			if (!Objects.nonNull(categoryResponse.getChildrenList()) || categoryResponse.getChildrenList().isEmpty()) {
+			if (!Objects.nonNull(categoryResponse.getChildrenList()) || categoryResponse.getChildrenList()
+				.isEmpty()) {
 				continue;
 			}
 			categoryResponseList.addAll(parentCategoryGetAllCategoryResponse(categoryResponse.getChildrenList()));
