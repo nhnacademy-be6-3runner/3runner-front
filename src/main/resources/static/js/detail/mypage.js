@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     body: json // 요청 본문에 JSON 데이터 첨부
                 })
                     .then(response => {
-                        if (response.ok) {
+                        if (response) {
                             alert('정보가 업데이트 되었습니다.');
                             fetchUserProfile(); // 페이지 새로고침
                         } else {
