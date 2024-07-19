@@ -49,7 +49,7 @@ function loadReviews(sort = 'createdAt,desc', page = 0) {
 
                 // 리뷰 클릭 이벤트 리스너 추가
                 reviewItem.addEventListener('click', () => {
-                    window.location.href = `http://localhost:3000/review/${review.reviewId}`;
+                    window.location.href = `/review/${review.reviewId}`;
                 });
 
             });
