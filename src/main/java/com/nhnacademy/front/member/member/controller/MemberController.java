@@ -1,5 +1,6 @@
 package com.nhnacademy.front.member.member.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import com.nhnacademy.front.purchase.purchase.dto.member.request.UpdateMemberRequest;
@@ -60,7 +61,7 @@ public class MemberController {
 	}//등록페이지
 
 	@PostMapping("/member")
-	public String signin(@RequestBody CreateMemberRequest createMemberRequest) {
+	public String signin(@RequestBody CreateMemberRequest createMemberRequest, HttpServletResponse response) throws IOException {
 		ApiResponse<Long> result = memberControllerClient.createMembers(createMemberRequest);
 		if(!result.getHeader().isSuccessful()){
 			return "redirect:/member/createForm";
@@ -88,6 +89,7 @@ public class MemberController {
 			model.addAttribute("addresses", addresses.getBody().getData());
 		return "memberdetail";
 	}
+
 	@DeleteMapping("/member")
 	public Boolean deleteMember(HttpServletRequest request, HttpServletResponse response) {
 		ApiResponse<Void> result = memberControllerClient.deleteMember();
