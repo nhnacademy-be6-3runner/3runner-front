@@ -197,7 +197,7 @@
         }
     };
     function setCountyOffice(name){
-        document.getElementById('countyOfficeName').value = name;
+        window.location.reload();
     }
 </script>
 <!--토스결제창-->
@@ -228,9 +228,6 @@
         calculateTotal();
     });
 
-    function windowReload(){
-        window.location.reload();
-    }
     function calculateTotal() {
         var total = 0.0;
         var cartItems = document.querySelectorAll('.cart-item');
@@ -301,8 +298,8 @@
     document.getElementById('address-box').addEventListener('change', function () {
         var addressText = this.options[this.selectedIndex].text;
 
-        road = addressText;
-        console.log("selected address: ", addressText);
+        road = this.options[this.selectedIndex].text;
+        console.log("selected address: ", road);
     });
 
     document.getElementById('coupon-box').addEventListener('change', function () {
@@ -320,7 +317,14 @@
     });
 
     button.addEventListener("click", function () {
+        shipping = document.getElementById('delivery-box').value;
+        road = document.getElementById('address-box').textContent;
+        discountedPoint = document.getElementById('point-box').value;
+        isPacking = document.getElementById('gift-box').checked;
+
         paymentMethodWidget.updateAmount(parseInt(amount)-parseInt(discountedPrice)-parseInt(discountedPoint));
+
+
         paymentWidget.requestPayment({
             orderId: orderNumber,
             orderName: '3runner Store:'+orderNumber,

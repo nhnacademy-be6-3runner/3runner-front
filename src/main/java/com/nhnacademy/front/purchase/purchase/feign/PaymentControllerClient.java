@@ -26,8 +26,7 @@ import java.util.Base64;
 @FeignClient(name = "PaymentControllerClient", url = "http://${feign.client.url}")
 public interface PaymentControllerClient {
      @RequestMapping(value = "/bookstore/payments/guests/confirm")
-     ResponseEntity<JSONObject> confirmPayment(
-            @RequestHeader(value = "Member-Id", required = false) Long memberId,
+     ResponseEntity<JSONObject> confirmGuestPayment(
             @RequestParam(required = false)  Long cartId,
             @RequestParam(required = false)  String address,
             @RequestParam(required = false)  String password,
@@ -36,8 +35,7 @@ public interface PaymentControllerClient {
             @RequestBody String jsonBody) throws Exception;
 
      @RequestMapping(value = "/bookstore/payments/members/confirm")
-     ResponseEntity<JSONObject> confirmPayment(
-            @RequestHeader(value = "Member-Id", required = false) Long memberId,
+     ResponseEntity<JSONObject> confirmMemberPayment(
             @RequestParam(required = false) String discountedPrice,
             @RequestParam(required = false) String discountedPoint,
             @RequestParam(required = false) String isPacking,

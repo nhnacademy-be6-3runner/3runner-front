@@ -18,6 +18,5 @@ public interface MemberAddressControllerClient {
     ApiResponse<List<AddressResponse>> readAllAddresses();
 
     @PostMapping("/bookstore/members/addresses")
-    ApiResponse<Void> createAddress(@RequestBody @Valid CreateAddressRequest request);
-
+    ApiResponse<Long> createAddress(@RequestBody CreateAddressRequest request);
 }

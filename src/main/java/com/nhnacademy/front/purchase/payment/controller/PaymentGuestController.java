@@ -6,6 +6,7 @@ import com.nhnacademy.front.purchase.cart.feign.BookCartControllerClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -37,8 +38,8 @@ public class PaymentGuestController {
      */
     @GetMapping("/payments/guests/success")
     public String paymentSuccessPage(
+            @CookieValue(value = "Access",required = false) String access,
             @RequestParam(required = false) Long cartId,
-            @RequestParam(required = false) Long memberId,
             @RequestParam(required = false) String isPacking,
             @RequestParam(required = false) String shipping,
             @RequestParam(required = false) String address,
@@ -48,17 +49,11 @@ public class PaymentGuestController {
             @RequestParam String paymentKey,
             @RequestParam String amount,
             Model model
-    ){
+    ) {
+        List<ReadBookCartGuestResponse> items = bookCartControllerClient.readCart(cartId).getBody().getData();
 
-        if(Objects.nonNull(memberId)){
-            List<ReadAllBookCartMemberResponse> items = bookCartControllerClient.readAllBookCartMember().getBody().getData();
-            model.addAttribute("response", items);
-            model.addAttribute("memberId", memberId);
-        } else {
-            List<ReadBookCartGuestResponse> items = bookCartControllerClient.readCart(cartId).getBody().getData();
-            model.addAttribute("response", items);
-            model.addAttribute("cartId", cartId);
-        }
+        model.addAttribute("response", items);
+        model.addAttribute("cartId", cartId);
         model.addAttribute("address", address);
         model.addAttribute("password", password);
         model.addAttribute("paymentType", paymentType);
@@ -67,6 +62,7 @@ public class PaymentGuestController {
         model.addAttribute("amount", amount);
         model.addAttribute("isPacking", isPacking);
         model.addAttribute("shipping", shipping);
+
         return "purchase/guest/success";
     }
 
@@ -84,11 +80,9 @@ public class PaymentGuestController {
             @RequestParam String message,
             @RequestParam String code,
             Model model
-    ){
+    ) {
         model.addAttribute("message", message);
         model.addAttribute("code", code);
         return "purchase/guest/fail";
     }
-
-
 }
