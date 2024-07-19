@@ -82,7 +82,7 @@ function addPurchase(bookId, quantity) {
 
         success: function (response) {
             console.log(response);
-            window.location.href = '/carts';
+            window.location.href = '/purchasesg';
         },
         error: function (xhr, status, error) {
             console.error('Error:', error);
