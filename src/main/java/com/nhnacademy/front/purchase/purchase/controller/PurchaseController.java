@@ -59,7 +59,7 @@ public class PurchaseController {
                 bookCartControllerClient.updateCart(UpdateBookCartRequest.builder().bookId(bookId).cartId(cartId).quantity(1).build());
             }
             Map<String, String> model = new HashMap<>();
-            model.put("redirectUrl", "purchases/guests/"+cartId);
+            model.put("redirectUrl", "/purchases/guests/"+cartId);
 
             return model;
 
@@ -74,7 +74,7 @@ public class PurchaseController {
                 bookCartControllerClient.createCart(CreateBookCartRequest.builder().bookId(bookId).quantity(1).build()).getBody().getData();
             }
             Map<String, String> model = new HashMap<>();
-            model.put("redirectUrl", "purchases/members");
+            model.put("redirectUrl", "/purchases/members");
 
             return model;
         }
