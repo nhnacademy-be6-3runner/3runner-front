@@ -94,7 +94,6 @@ function loadComments(page) {
                 commentDiv.classList.add('comment');
                 const createdAt = new Date(comment.createdAt).toLocaleString(); // 날짜와 시간 표시
                 commentDiv.innerHTML = `
-                <p><small class="text-muted">${comment.commentId}</small></p>
                 <p>${comment.content}</p>
                 <p><small class="text-muted">작성자: ${obfuscateEmail(comment.memberEmail)}</small></p>
                 <p><small class="text-muted">작성일: ${createdAt}</small></p>

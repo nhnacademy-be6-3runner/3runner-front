@@ -93,6 +93,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 		response.addCookie(cookie1);
 		Cookie cookie2 = new Cookie("Refresh", TokenHolder.getRefreshToken());
 		cookie2.setPath("/");
+		cookie2.setMaxAge(60 * 60 * 24 * 7);
 		response.addCookie(cookie2);
 		SecurityContextHolder.getContext().setAuthentication(authResult);
 		super.successfulAuthentication(request, response, chain, authResult);
