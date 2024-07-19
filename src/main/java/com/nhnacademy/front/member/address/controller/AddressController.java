@@ -49,10 +49,10 @@ public class AddressController {
 		//페이지 리로드 된다.
 	}//여기도 mypage창에 주소해서 해야할듯
 	@DeleteMapping("/member/address/{addressId}")
-	public Boolean deleteAddress(@PathVariable("addressId")Long addressId) {
+	public Boolean deleteAddress(@PathVariable("addressId")String addressId) {
 		System.out.println("HERE");
 
-		ApiResponse<Void> result = addressControllerClient.deleteAddress(addressId);
+		ApiResponse<Void> result = addressControllerClient.deleteAddress(Long.valueOf(addressId));
 
 		return result.getHeader().isSuccessful();
 	}//다시 페이지 리로드 된다.
