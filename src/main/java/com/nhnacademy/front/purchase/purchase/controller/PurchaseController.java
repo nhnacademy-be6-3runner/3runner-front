@@ -13,6 +13,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -20,7 +22,7 @@ import java.util.Objects;
  *
  * @author 김병우
  */
-@Controller
+@RestController
 @RequiredArgsConstructor
 public class PurchaseController {
     private final BookCartControllerClient bookCartControllerClient;
@@ -36,7 +38,7 @@ public class PurchaseController {
      * @throws IOException
      */
     @PostMapping("/purchases")
-    public void purchase(
+    public Map<String, String> purchase(
             @RequestParam(value = "cartId", required = false) Long cartId,
             @RequestParam(value = "bookId", required = false) Long bookId,
             @CookieValue(required = false) String Access,
@@ -56,7 +58,10 @@ public class PurchaseController {
 
                 bookCartControllerClient.updateCart(UpdateBookCartRequest.builder().bookId(bookId).cartId(cartId).quantity(1).build());
             }
-            response.sendRedirect("purchases/guests/"+cartId);
+            Map<String, String> model = new HashMap<>();
+            model.put("redirectUrl", "purchases/guests/"+cartId);
+
+            return model;
 
         } else {
 
@@ -68,8 +73,10 @@ public class PurchaseController {
                 }
                 bookCartControllerClient.createCart(CreateBookCartRequest.builder().bookId(bookId).quantity(1).build()).getBody().getData();
             }
-            response.sendRedirect("purchases/members");
+            Map<String, String> model = new HashMap<>();
+            model.put("redirectUrl", "purchases/members");
 
+            return model;
         }
     }
 }

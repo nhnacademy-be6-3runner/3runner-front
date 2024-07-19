@@ -81,12 +81,10 @@ function addPurchase(bookId, quantity) {
         data: $.param({ bookId: bookId, quantity: quantity }),
 
         success: function (response) {
-            console.log(response);
-            const accessToken = getCookie('Access');
-            if (accessToken) {
-                window.location.href = '/purchases/members';
+            if (response.redirectUrl) {
+                window.location.href = response.redirectUrl; // 서버로부터 받은 URL로 리다이렉트
             } else {
-                window.location.href = '/purchases/guests';
+                console.log(response);
             }
         },
         error: function (xhr, status, error) {
