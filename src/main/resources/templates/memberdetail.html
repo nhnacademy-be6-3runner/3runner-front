@@ -106,7 +106,7 @@
             <span th:text="${address.name()} + ', ' + ${address.country()} + ', ' + ${address.city()}
                 + ', ' + ${address.state()} + ', ' + ${address.road()}+ ', ' + ${address.postalCode()}"></span>
             <!-- 삭제 버튼 추가, 'deleteAddress' 자바스크립트 함수에 주소 ID 전달 -->
-            <button type="button" th:onclick="'deleteAddress(' + ${address.id()} + ');'">Delete</button>
+            <button type="button" th:onclick="'deleteAddress(' + ${address.addressId()} + ');'">Delete</button>
         </li>
     </ul>
     <button id="createAddressBtn">새로운 주소 생성하기</button>
