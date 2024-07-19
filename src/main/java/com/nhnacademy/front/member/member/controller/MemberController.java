@@ -60,9 +60,8 @@ public class MemberController {
 	}//등록페이지
 
 	@PostMapping("/member")
-	public String signin(@Valid @RequestBody CreateMemberRequest createMemberRequest) {
-		System.out.println(createMemberRequest);
-		ApiResponse<Void> result = memberControllerClient.createMembers(createMemberRequest);
+	public String signin(@RequestBody CreateMemberRequest createMemberRequest) {
+		ApiResponse<Long> result = memberControllerClient.createMembers(createMemberRequest);
 		if(!result.getHeader().isSuccessful()){
 			return "redirect:/member/createForm";
 		}
