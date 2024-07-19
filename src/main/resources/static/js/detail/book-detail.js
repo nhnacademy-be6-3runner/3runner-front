@@ -82,7 +82,12 @@ function addPurchase(bookId, quantity) {
 
         success: function (response) {
             console.log(response);
-            window.location.href = '/purchases';
+            const accessToken = getCookie('Access');
+            if (accessToken) {
+                window.location.href = '/purchases/members';
+            } else {
+                window.location.href = '/purchases/guests';
+            }
         },
         error: function (xhr, status, error) {
             console.error('Error:', error);
