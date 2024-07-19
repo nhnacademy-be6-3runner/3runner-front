@@ -244,7 +244,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     method: 'DELETE',
                 })
                     .then(response => {
-                        if (response.ok) {
+                        if (response) {
                             alert('Address deleted successfully');
                             fetchUserProfile();
                         } else {
