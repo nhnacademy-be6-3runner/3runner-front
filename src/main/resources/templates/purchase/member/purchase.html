@@ -324,8 +324,8 @@
         paymentWidget.requestPayment({
             orderId: orderNumber,
             orderName: '3runner Store:'+orderNumber,
-            successUrl: window.location.origin + "/payments/members/success?discountedPrice="+discountedPrice+"&discountedPoint="+discountedPoint+"&isPacking="+isPacking+"&shipping="+shipping+"&road="+road+"&couponFormId="+couponFormId,
-            failUrl: window.location.origin + "/payments/members/fail",
+            successUrl: "https://3runner.shop/payments/members/success?discountedPrice="+discountedPrice+"&discountedPoint="+discountedPoint+"&isPacking="+isPacking+"&shipping="+shipping+"&road="+road+"&couponFormId="+couponFormId,
+            failUrl: "https://3runner.shop/payments/members/fail",
             customerEmail: [[${memberInfo.email()}]],
             customerName: [[${memberInfo.name()}]],
             customerMobilePhone: "01012345678"//[[${memberInfo.phone()}]],

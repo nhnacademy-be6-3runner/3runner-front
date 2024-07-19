@@ -49,7 +49,7 @@ public class PurchaseDetailGuestController {
 		}
 		model.addAttribute("guestorder",response);
 		model.addAttribute("guestorderbooks",purchaseGuestService.readGuestPurchaseBooks(orderNumber));
-		return "/purchase/guest/order-detail-guest";
+		return "purchase/guest/order-detail-guest";
 	}
 
 	/**

@@ -67,7 +67,7 @@ public class MemberController {
 			return "redirect:/member/createForm";
 		}
 
-		return "test-main";
+		return "redirect:/";
 	}//등록 요청보낸후 메인페이지 반환
 
 	@GetMapping("/member/mypageForm")

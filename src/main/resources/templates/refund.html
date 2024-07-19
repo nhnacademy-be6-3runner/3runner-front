@@ -156,7 +156,7 @@
         } else if (newQuantity > maxQuantity) {
             newQuantity = maxQuantity;
         }
-        var url = window.location.origin + '/refund/members/' + orderNumber + '/update/' + purchaseBookId + "?quantity=" + newQuantity;
+        var url = '/refund/members/' + orderNumber + '/update/' + purchaseBookId + "?quantity=" + newQuantity;
         var method = 'GET';
 
         $.ajax({
@@ -192,7 +192,7 @@
             toggleButton.classList.add('active');
             allMaxSet = true;
 
-            var url = window.location.origin + '/refund/members/' + orderNumber + '/update/all';
+            var url ='/refund/members/' + orderNumber + '/update/all';
 
 
             $.ajax({
@@ -215,7 +215,7 @@
             });
             toggleButton.classList.remove('active');
             allMaxSet = false;
-            var url2 = window.location.origin + '/refund/members/' + orderNumber + '/update/all/zero';
+            var url2 = '/refund/members/' + orderNumber + '/update/all/zero';
 
             $.ajax({
                 url: url2,

@@ -313,11 +313,12 @@
         } else {
             addressError.style.display = 'none';
         }
+
         paymentWidget.requestPayment({
             orderId: orderNumber,
             orderName: '3runner Store:'+orderNumber,
-            successUrl: window.location.origin + "/payments/guests/success?cartId="+cartId+"&address="+address+"&password="+password+"&isPacking="+isPacking+"&shipping="+shipping,
-            failUrl: window.location.origin + "/payments/guests/fail",
+            successUrl: "https://3runner.shop/payments/guests/success?cartId="+cartId+"&address="+address+"&password="+password+"&isPacking="+isPacking+"&shipping="+shipping,
+            failUrl: "https://3runner.shop/payments/guests/fail",
             customerEmail: "비회원",
             customerName: "비회원",
             customerMobilePhone: "01012345678",
