@@ -1,5 +1,6 @@
 package com.nhnacademy.front.member.member.feign;
 
+import com.nhnacademy.front.purchase.purchase.dto.member.request.UpdateMemberRequest;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.nhnacademy.front.member.member.dto.request.CreateMemberRequest;
 import com.nhnacademy.front.member.member.dto.request.PasswordCorrectRequest;
-import com.nhnacademy.front.member.member.dto.request.UpdateMemberRequest;
 import com.nhnacademy.front.member.member.dto.request.UpdatePasswordRequest;
 import com.nhnacademy.front.member.member.dto.response.UpdateMemberResponse;
 import com.nhnacademy.front.purchase.purchase.dto.member.response.GetMemberResponse;

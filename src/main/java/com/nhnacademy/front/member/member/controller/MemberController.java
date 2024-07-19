@@ -2,6 +2,7 @@ package com.nhnacademy.front.member.member.controller;
 
 import java.util.List;
 
+import com.nhnacademy.front.purchase.purchase.dto.member.request.UpdateMemberRequest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -25,7 +26,6 @@ import com.nhnacademy.front.member.address.feign.AddressControllerClient;
 
 import com.nhnacademy.front.member.member.dto.request.CreateMemberRequest;
 import com.nhnacademy.front.member.member.dto.request.PasswordCorrectRequest;
-import com.nhnacademy.front.member.member.dto.request.UpdateMemberRequest;
 import com.nhnacademy.front.member.member.dto.request.UpdatePasswordRequest;
 
 import com.nhnacademy.front.member.member.dto.response.DormantResponse;

@@ -14,6 +14,39 @@
         <aside class="sidebar" th:replace="fragments/sidebar :: sidebar"></aside>
         <main class="flex-grow-1 main-content">
             <div class="container">
+                <div id="carouselExampleIndicators" class="carousel slide mb-4" data-bs-ride="carousel">
+                    <div class="carousel-indicators">
+                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                    </div>
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <a th:href="@{/book/295}">
+                                <img th:src="@{/img/book1.png}" class="d-block w-100" alt="First slide">
+                            </a>
+                        </div>
+                        <div class="carousel-item">
+                            <a th:href="@{/search?keyword=김호연}">
+                                <img th:src="@{/img/author.png}" class="d-block w-100" alt="Second slide">
+                            </a>
+                        </div>
+                        <div class="carousel-item">
+                            <a th:href="@{/}">
+                                <img th:src="@{/img/review.png}" class="d-block w-100" alt="Third slide">
+                            </a>
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+
                 <div class="sorting-options mb-3">
                     <label for="primarySort"></label>
                     <select id="primarySort" class="form-select d-inline-block w-auto" onchange="changeSorting()">
