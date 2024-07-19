@@ -62,7 +62,6 @@ function addCart(bookId, quantity) {
         contentType: 'application/x-www-form-urlencoded',
         data: $.param({ bookId: bookId, quantity: quantity }),
 
-        //TODO : 최종 배포시 변경오먕
         success: function (response) {
             window.location.href = '/carts';
         },
@@ -81,7 +80,6 @@ function addPurchase(bookId, quantity) {
         contentType: 'application/x-www-form-urlencoded',
         data: $.param({ bookId: bookId, quantity: quantity }),
 
-        //TODO : 최종 배포시 변경오먕
         success: function (response) {
             console.log(response);
             window.location.href = '/carts';
@@ -102,7 +100,7 @@ function submitCart() {
 
 function submitPurchase() {
     const bookId = getBookIdFromUrl();
-    const quantity = document.getElementById('quantityPurchase').value;
+    const quantity = document.getElementById('quantity').value;
     addPurchase(bookId, quantity);
 }
 
