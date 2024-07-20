@@ -89,6 +89,7 @@ public class MemberController {
 			model.addAttribute("addresses", addresses.getBody().getData());
 		return "memberdetail";
 	}
+	@ResponseBody
 	@DeleteMapping("/member")
 	public Boolean deleteMember(HttpServletRequest request, HttpServletResponse response) {
 		ApiResponse<Void> result = memberControllerClient.deleteMember();
@@ -111,6 +112,7 @@ public class MemberController {
 		}
 		return result.getHeader().isSuccessful();
 	}//삭제 후 메인 페이지 반환
+	@ResponseBody
 	@PutMapping("/member")
 	public Boolean updateMember(@Valid @RequestBody UpdateMemberRequest updateMemberRequest) {
 		ApiResponse<UpdateMemberResponse> response = memberControllerClient.updateMembers(updateMemberRequest);
@@ -124,12 +126,14 @@ public class MemberController {
 		ApiResponse<Boolean> result = memberControllerClient.emailExists(email);
 		return result;
 	}
+	@ResponseBody
 	@PutMapping("/member/password")
 	public Boolean updatePassword(@RequestBody UpdatePasswordRequest updatePasswordRequest) {
 		ApiResponse<Void> response = memberControllerClient.updatePassword(updatePasswordRequest);
 		return response.getHeader().isSuccessful();
 		//요청boolean은 잘들어오
 	}
+	@ResponseBody
 	@PostMapping("/member/password")
 	public Boolean isPasswordMatch(@RequestBody PasswordCorrectRequest passwordCorrectRequest) {
 		ApiResponse<Void> response = memberControllerClient.isPasswordMatch(passwordCorrectRequest);
@@ -139,12 +143,14 @@ public class MemberController {
 	public String dormantForm(Model model,HttpServletRequest request) {
 		return "dormant";
 	}
+	@ResponseBody
 	@GetMapping("/member/dormant/resend")
 	public boolean resendDormant(HttpSession session) {
 		String email = session.getAttribute("email").toString();
 		ApiResponse<Void> response = dormantAdapter.resendDormant(email);
 		return response.getHeader().isSuccessful();
 	}
+	@ResponseBody
 	@PostMapping("/member/dormant")
 	public boolean dormant(@RequestBody DormantCodeRequeset code, HttpSession session,HttpServletRequest servletRequest,HttpServletResponse servletResponse){
 		ApiResponse<DormantResponse> response = dormantAdapter.dormantCheck(
