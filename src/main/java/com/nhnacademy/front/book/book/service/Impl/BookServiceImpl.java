@@ -45,7 +45,7 @@ public class BookServiceImpl implements BookService {
 	 * @param userCreateBookRequest 입력 받은 항목들
 	 */
 	@Override
-	@CacheEvict(value = {"BookPage", "CategoryBooks", "AdminBookPage", "BookDetails", "BookSearch"}, allEntries = true)
+	@CacheEvict(value = {"BookPage", "CategoryBooks", "AdminBookPage"}, allEntries = true)
 	public void saveBook(UserCreateBookRequest userCreateBookRequest, String imageName) {
 
 		CreateBookRequest createBookRequest = CreateBookRequest.builder()
@@ -71,13 +71,12 @@ public class BookServiceImpl implements BookService {
 	}
 
 	@Override
-	@CacheEvict(value = {"BookPage", "CategoryBooks", "AdminBookPage", "BookDetails", "BookSearch"}, allEntries = true)
+	@CacheEvict(value = {"BookPage", "CategoryBooks", "AdminBookPage"}, allEntries = true)
 	public void saveApiBook(String isbn) {
 		apiBookClient.createApiBook(isbn);
 	}
 
 	@Override
-	@Cacheable(value = "BookDetails", key = "#bookId", cacheManager = "cacheManager")
 	public UserReadBookResponse readBook(long bookId) {
 		ApiResponse<UserReadBookResponse> getResponse = bookClient.getDetailBookById(bookId);
 		if (!getResponse.getHeader().isSuccessful()) {
@@ -87,7 +86,7 @@ public class BookServiceImpl implements BookService {
 	}
 
 	@Override
-	@CacheEvict(value = {"BookPage", "CategoryBooks", "AdminBookPage", "BookDetails", "BookSearch"}, allEntries = true)
+	@CacheEvict(value = {"BookPage", "CategoryBooks", "AdminBookPage"}, allEntries = true)
 	public void updateBook(long bookId, UserCreateBookRequest userCreateBookRequest, String imageName) {
 
 		CreateBookRequest updateBookRequest = CreateBookRequest.builder()
@@ -111,7 +110,7 @@ public class BookServiceImpl implements BookService {
 	}
 
 	@Override
-	@CacheEvict(value = {"BookPage", "CategoryBooks", "AdminBookPage", "BookDetails", "BookSearch"}, allEntries = true)
+	@CacheEvict(value = {"BookPage", "CategoryBooks", "AdminBookPage"}, allEntries = true)
 	public void deleteBook(long bookId) {
 		bookClient.deleteBook(bookId);
 	}
@@ -124,7 +123,6 @@ public class BookServiceImpl implements BookService {
 	 * @return 정보 리턴
 	 */
 	@Override
-	@Cacheable(value = "BookSearch", key = "#keyword + '-' + #page + '-' + #size", cacheManager = "cacheManager")
 	public Page<BookDocumentResponse> searchReadAllBooks(String keyword, int page, int size) {
 		ApiResponse<Page<BookDocumentResponse>> response = bookClient.searchReadAllBooks(page, size, keyword);
 		if (!response.getHeader().isSuccessful()) {
