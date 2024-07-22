@@ -1,22 +1,35 @@
 document.addEventListener('DOMContentLoaded', function () {
-    document.getElementById('cartButton').addEventListener('click', function(e) {
-        e.preventDefault();
-        submitCart();
-    });
-    document.getElementById('purchaseButton').addEventListener('click', function (e) {
-        e.preventDefault();
-        submitPurchase();
-    })
-    document.getElementById('like').addEventListener('click', function(e) {
-        e.preventDefault();
-        handleLikeClick();
-    });
+    const cartButton = document.getElementById('cartButton');
+    if (cartButton) {
+        cartButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            submitCart();
+        });
+    }
+
+    const purchaseButton = document.getElementById('purchaseButton');
+    if (purchaseButton) {
+        purchaseButton.addEventListener('click', function (e) {
+            e.preventDefault();
+            submitPurchase();
+        });
+    }
+
+    const likeButton = document.getElementById('like');
+    if (likeButton) {
+        likeButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            handleLikeClick();
+        });
+    }
+
     updateTotalPrice();
     loadReviewData();
     reviewRatings();
     checkAccessTokenForComments();
     checkAccessTokenForCoupon();
 });
+
 
 function handleLikeClick() {
     const accessToken = getCookie('Access');
