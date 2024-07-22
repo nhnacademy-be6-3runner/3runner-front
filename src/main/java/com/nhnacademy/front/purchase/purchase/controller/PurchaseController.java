@@ -22,7 +22,7 @@ import java.util.Objects;
  *
  * @author 김병우
  */
-@RestController
+@Controller
 @RequiredArgsConstructor
 public class PurchaseController {
     private final BookCartControllerClient bookCartControllerClient;
