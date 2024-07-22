@@ -125,10 +125,12 @@ function decreaseQuantity() {
 
 function updateTotalPrice() {
     const quantity = document.getElementById('quantity').value;
+    document.getElementById('quantity1').value = quantity;
     const price = parseInt(document.querySelector('.selling-price span').innerText);
     const totalPrice = quantity * price;
     document.getElementById('totalPrice').innerText = totalPrice;
 }
+
 
 function getBookIdFromUrl() {
     const pathSegments = window.location.pathname.split('/');
