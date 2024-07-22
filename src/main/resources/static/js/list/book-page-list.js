@@ -1,4 +1,4 @@
-let currentSort = 'publishedDate,desc';
+let currentSort = 'viewCount,desc';
 let currentPage = 0;
 
 document.addEventListener("DOMContentLoaded", function() {
