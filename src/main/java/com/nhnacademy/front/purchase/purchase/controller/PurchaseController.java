@@ -60,7 +60,7 @@ public class PurchaseController {
             }
             Map<String, String> model = new HashMap<>();
             model.put("redirectUrl", "/purchases/guests/"+cartId);
-
+            response.sendRedirect("/purchases/guests/"+cartId);
             return model;
 
         } else {
@@ -75,7 +75,7 @@ public class PurchaseController {
             }
             Map<String, String> model = new HashMap<>();
             model.put("redirectUrl", "/purchases/members");
-
+            response.sendRedirect("/purchases/members");
             return model;
         }
     }
