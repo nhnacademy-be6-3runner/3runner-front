@@ -30,27 +30,6 @@ public class PurchaseDetailGuestController {
 
 	private final PurchaseDetailGuestService purchaseGuestService;
 
-	/**
-	 *
-	 * 비회원 주문내역 보여주기
-	 *
-	 * @param orderNumber 주문 번호
-	 * @param model
-	 * @return 주문 창으로 이동
-	 */
-	@GetMapping("/{orderNumber}")
-	public String orders(
-		@PathVariable(name = "orderNumber") String orderNumber,
-		@RequestParam(name = "password",required = false) String password,
-		Model model) {
-		ReadPurchaseResponse response = purchaseGuestService.readGuestPurchases(orderNumber,password);
-		if(Objects.isNull(response)){
-			return "redirect:/orders/guests/login";
-		}
-		model.addAttribute("guestorder",response);
-		model.addAttribute("guestorderbooks",purchaseGuestService.readGuestPurchaseBooks(orderNumber));
-		return "purchase/guest/order-detail-guest";
-	}
 
 	/**
 	 * 비회원 주문 확인 창
@@ -73,11 +52,18 @@ public class PurchaseDetailGuestController {
 	@PostMapping
 	public String login(
 		@RequestParam String orderNumber,
-		@RequestParam String password
+		@RequestParam String password,
+		Model model
 		) {
 		if(purchaseGuestService.validatePurchase(orderNumber, password)){
 
-			return "redirect:/orders/guests/"+orderNumber+"?password="+password;
+			ReadPurchaseResponse response = purchaseGuestService.readGuestPurchases(orderNumber,password);
+			if(Objects.isNull(response)){
+				return "redirect:/orders/guests/login";
+			}
+			model.addAttribute("guestorder",response);
+			model.addAttribute("guestorderbooks",purchaseGuestService.readGuestPurchaseBooks(orderNumber));
+			return "purchase/guest/order-detail-guest";
 		}
 		else{
 			return "redirect:/orders/guests/login";
