@@ -19,7 +19,7 @@ document.getElementById('load-more-btn').addEventListener('click', function() {
     loadMoreBooks();
 });
 
-function loadBooks(sort = 'publishedDate,desc', page = 0) {
+function loadBooks(sort = currentSort, page = currentPage) {
     const url = `/api/books/main?sort=${sort}&page=${page}`;
     console.log("Request URL:", url);
 

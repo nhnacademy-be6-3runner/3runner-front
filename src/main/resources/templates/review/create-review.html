@@ -296,7 +296,7 @@
         })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('이미 등록한 적 있는 리뷰입니다.');
+                    throw new Error('리뷰 등록에 실패했습니다.');
                 }
                 return response.json();
             })

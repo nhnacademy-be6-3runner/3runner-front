@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +45,7 @@ public class BookServiceImpl implements BookService {
 	 * @param userCreateBookRequest 입력 받은 항목들
 	 */
 	@Override
+	@CacheEvict(value = {"BookPage", "CategoryBooks", "AdminBookPage", "BookDetails", "BookSearch"}, allEntries = true)
 	public void saveBook(UserCreateBookRequest userCreateBookRequest, String imageName) {
 
 		CreateBookRequest createBookRequest = CreateBookRequest.builder()
@@ -68,11 +71,13 @@ public class BookServiceImpl implements BookService {
 	}
 
 	@Override
+	@CacheEvict(value = {"BookPage", "CategoryBooks", "AdminBookPage", "BookDetails", "BookSearch"}, allEntries = true)
 	public void saveApiBook(String isbn) {
 		apiBookClient.createApiBook(isbn);
 	}
 
 	@Override
+	@Cacheable(value = "BookDetails", key = "#bookId", cacheManager = "cacheManager")
 	public UserReadBookResponse readBook(long bookId) {
 		ApiResponse<UserReadBookResponse> getResponse = bookClient.getDetailBookById(bookId);
 		if (!getResponse.getHeader().isSuccessful()) {
@@ -82,6 +87,7 @@ public class BookServiceImpl implements BookService {
 	}
 
 	@Override
+	@CacheEvict(value = {"BookPage", "CategoryBooks", "AdminBookPage", "BookDetails", "BookSearch"}, allEntries = true)
 	public void updateBook(long bookId, UserCreateBookRequest userCreateBookRequest, String imageName) {
 
 		CreateBookRequest updateBookRequest = CreateBookRequest.builder()
@@ -105,6 +111,7 @@ public class BookServiceImpl implements BookService {
 	}
 
 	@Override
+	@CacheEvict(value = {"BookPage", "CategoryBooks", "AdminBookPage", "BookDetails", "BookSearch"}, allEntries = true)
 	public void deleteBook(long bookId) {
 		bookClient.deleteBook(bookId);
 	}
@@ -117,6 +124,7 @@ public class BookServiceImpl implements BookService {
 	 * @return 정보 리턴
 	 */
 	@Override
+	@Cacheable(value = "BookSearch", key = "#keyword + '-' + #page + '-' + #size", cacheManager = "cacheManager")
 	public Page<BookDocumentResponse> searchReadAllBooks(String keyword, int page, int size) {
 		ApiResponse<Page<BookDocumentResponse>> response = bookClient.searchReadAllBooks(page, size, keyword);
 		if (!response.getHeader().isSuccessful()) {
@@ -134,6 +142,7 @@ public class BookServiceImpl implements BookService {
 	 * @return 정보 리턴
 	 */
 	@Override
+	@Cacheable(value = "CategoryBooks", key = "#page + '-' + #size + '-' + #sort + '-' + #categoryId", cacheManager = "cacheManager")
 	public Page<BookListResponse> readCategoryAllBooks(int page, int size, String sort, long categoryId) {
 		ApiResponse<Page<BookListResponse>> response = categoryClient.readCategoryAllBooks(page, size, sort,
 			categoryId);
@@ -147,7 +156,7 @@ public class BookServiceImpl implements BookService {
 
 	/**
 	 *
-	 *  내용 에서 이미지 추출하는 코드
+	 * 내용 에서 이미지 추출하는 코드
 	 * @param description
 	 * @return
 	 */
@@ -203,6 +212,7 @@ public class BookServiceImpl implements BookService {
 	 * @return 도서 리스트
 	 */
 	@Override
+	@Cacheable(value = "BookPage", key = "#page + '-' + #size + '-' + #sort", cacheManager = "cacheManager")
 	public Page<BookListResponse> readAllBooks(int page, int size, String sort) {
 		ApiResponse<Page<BookListResponse>> response = bookClient.readAllBooks(page, size, sort);
 
@@ -214,6 +224,7 @@ public class BookServiceImpl implements BookService {
 	}
 
 	@Override
+	@Cacheable(value = "AdminBookPage", key = "#page + '-' + #size", cacheManager = "cacheManager")
 	public Page<BookManagementResponse> readAllAdminBooks(int page, int size) {
 		ApiResponse<Page<BookManagementResponse>> response = bookClient.readAllAdminBooks(page, size);
 
