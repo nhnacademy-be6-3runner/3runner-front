@@ -82,7 +82,11 @@
                 </div>
                 <div class="action-buttons">
                     <button id="cartButton" class="btn btn-outline-success">장바구니 담기</button>
-                    <button id="purchaseButton" class="btn btn-outline-primary">바로 구매</button>
+                    <form action="purchases" method="post">
+                        <input type="hidden" id="quantity1" name="quantity" value="1">
+                        <input type="hidden" name="bookId" th:value="${bookId}">
+                        <button id="purchaseButton" class="btn btn-outline-primary">바로 구매</button>
+                    </form>
                 </div>
             </div>
         </div>
