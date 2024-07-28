@@ -34,7 +34,7 @@ public class CustomErrorDecoder implements ErrorDecoder {
 
 		try {
 			body = Util.toString(response.body().asReader());
-			log.warn("response body: {}", body);
+			// log.warn("response body: {}", body);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

@@ -69,6 +69,118 @@ public class BookManagementController {
 		return "book/api_book_create";
 	}
 
+	@GetMapping("/book/api/create/1")
+	public String apiCreateBook1() {
+		for (long i = 1; i < 100000; i++) {
+			long s = 9791141606725L + i;
+			try {
+				bookService.saveApiBook(String.valueOf(s));
+				log.info("성공 : {} ", s);
+
+			} catch (Exception e) {
+				// log.error(e.getMessage());
+			}
+		}
+
+		return "book/api_book_create";
+	}
+
+	@GetMapping("/book/api/create/2")
+	public String apiCreateBook2() {
+
+		for (long i = 1; i < 100000; i++) {
+			long s = 9788982183461L + i;
+			try {
+				bookService.saveApiBook(String.valueOf(s));
+				log.info("성공 : {} ", s);
+
+			} catch (Exception e) {
+			}
+		}
+
+		return "book/api_book_create";
+	}
+
+	@GetMapping("/book/api/create/3")
+	public String apiCreateBook3() {
+
+		for (long i = 1; i < 100000; i++) {
+			long s = 9788998441012L + i;
+			try {
+				bookService.saveApiBook(String.valueOf(s));
+				log.info("성공 : {} ", s);
+
+			} catch (Exception e) {
+			}
+		}
+
+		return "book/api_book_create";
+	}
+
+	@GetMapping("/book/api/create/4")
+	public String apiCreateBook4() {
+
+		for (long i = 1; i < 100000; i++) {
+			long s = 9791198098863L + i;
+			try {
+				bookService.saveApiBook(String.valueOf(s));
+				log.info("성공 : {} ", s);
+
+			} catch (Exception e) {
+			}
+		}
+
+		return "book/api_book_create";
+	}
+
+	@GetMapping("/book/api/create/5")
+	public String apiCreateBook5() {
+
+		for (long i = 1; i < 100000; i++) {
+			long s = 9791196999117L + i;
+			try {
+				bookService.saveApiBook(String.valueOf(s));
+				log.info("성공 : {} ", s);
+
+			} catch (Exception e) {
+			}
+		}
+
+		return "book/api_book_create";
+	}
+
+	@GetMapping("/book/api/create/6")
+	public String apiCreateBook6() {
+
+		for (long i = 1; i < 100000; i++) {
+			long s = 9788985231084L + i;
+			try {
+				bookService.saveApiBook(String.valueOf(s));
+				log.info("성공 : {} ", s);
+
+			} catch (Exception e) {
+			}
+		}
+
+		return "book/api_book_create";
+	}
+
+	@GetMapping("/book/api/create/7")
+	public String apiCreateBook7() {
+
+		for (long i = 1; i < 100000; i++) {
+			long s = 9791193612040L + i;
+			try {
+				bookService.saveApiBook(String.valueOf(s));
+				log.info("성공 : {} ", s);
+
+			} catch (Exception e) {
+			}
+		}
+
+		return "book/api_book_create";
+	}
+
 	/**
 	 * api 로 북 추가하는 post 문
 	 * @param isbnId 추가할 책의 isbn

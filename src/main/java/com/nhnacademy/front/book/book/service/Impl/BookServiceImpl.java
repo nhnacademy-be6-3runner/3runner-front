@@ -123,6 +123,7 @@ public class BookServiceImpl implements BookService {
 	 * @return 정보 리턴
 	 */
 	@Override
+	@Cacheable(value = "Search", key = "#page + '-' + #size + '-' +#keyword", cacheManager = "cacheManager")
 	public Page<BookDocumentResponse> searchReadAllBooks(String keyword, int page, int size) {
 		ApiResponse<Page<BookDocumentResponse>> response = bookClient.searchReadAllBooks(page, size, keyword);
 		if (!response.getHeader().isSuccessful()) {
