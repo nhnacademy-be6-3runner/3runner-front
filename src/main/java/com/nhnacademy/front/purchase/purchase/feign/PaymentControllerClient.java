@@ -1,6 +1,5 @@
 package com.nhnacademy.front.purchase.purchase.feign;
 
-
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -23,25 +22,25 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 
-@FeignClient(name = "PaymentControllerClient", url = "http://${feign.client.url}")
+@FeignClient(name = "PaymentControllerClient", url = "${feign.client.url}")
 public interface PaymentControllerClient {
-     @RequestMapping(value = "/bookstore/payments/guests/confirm")
-     ResponseEntity<JSONObject> confirmGuestPayment(
-            @RequestParam(required = false)  Long cartId,
-            @RequestParam(required = false)  String address,
-            @RequestParam(required = false)  String password,
-            @RequestParam(required = false) String isPacking,
-            @RequestParam(required = false) String shipping,
-            @RequestBody String jsonBody) throws Exception;
+	@RequestMapping(value = "/bookstore/payments/guests/confirm")
+	ResponseEntity<JSONObject> confirmGuestPayment(
+		@RequestParam(required = false) Long cartId,
+		@RequestParam(required = false) String address,
+		@RequestParam(required = false) String password,
+		@RequestParam(required = false) String isPacking,
+		@RequestParam(required = false) String shipping,
+		@RequestBody String jsonBody) throws Exception;
 
-     @RequestMapping(value = "/bookstore/payments/members/confirm")
-     ResponseEntity<JSONObject> confirmMemberPayment(
-            @RequestParam(required = false) String discountedPrice,
-            @RequestParam(required = false) String discountedPoint,
-            @RequestParam(required = false) String isPacking,
-            @RequestParam(required = false) String shipping,
-            @RequestParam(required = false) String road,
-            @RequestParam(required = false) Long couponFormId,
-            @RequestBody String jsonBody) throws Exception;
+	@RequestMapping(value = "/bookstore/payments/members/confirm")
+	ResponseEntity<JSONObject> confirmMemberPayment(
+		@RequestParam(required = false) String discountedPrice,
+		@RequestParam(required = false) String discountedPoint,
+		@RequestParam(required = false) String isPacking,
+		@RequestParam(required = false) String shipping,
+		@RequestParam(required = false) String road,
+		@RequestParam(required = false) Long couponFormId,
+		@RequestBody String jsonBody) throws Exception;
 
 }

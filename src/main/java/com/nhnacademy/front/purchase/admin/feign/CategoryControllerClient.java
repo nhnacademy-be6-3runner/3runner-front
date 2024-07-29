@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
 
-@FeignClient(name = "CategoryControllerClient", url = "http://${feign.client.url}" , configuration = FeignConfiguration.class)
+@FeignClient(name = "CategoryControllerClient", url = "${feign.client.url}", configuration = FeignConfiguration.class)
 public interface CategoryControllerClient {
-    @GetMapping("/bookstore/categories")
-    ApiResponse<List<CategoryParentWithChildrenResponse>> readAllCategories();
+	@GetMapping("/bookstore/categories")
+	ApiResponse<List<CategoryParentWithChildrenResponse>> readAllCategories();
 }

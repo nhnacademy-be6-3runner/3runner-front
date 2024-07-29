@@ -15,15 +15,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
-@FeignClient(name = "CouponFormControllerClient", url = "http://${feign.client.url}" , configuration = FeignConfiguration.class)
+@FeignClient(name = "CouponFormControllerClient", url = "${feign.client.url}", configuration = FeignConfiguration.class)
 public interface CouponFormControllerClient {
 
-    @GetMapping("/coupon/forms")
-    ApiResponse<List<ReadCouponFormResponse>> readAllCouponForms();
+	@GetMapping("/coupon/forms")
+	ApiResponse<List<ReadCouponFormResponse>> readAllCouponForms();
 
-    @PostMapping("/coupon/forms")
-    ApiResponse<Long> createCouponForm(@RequestBody CreateCouponFormRequest createCouponFormRequest);
+	@PostMapping("/coupon/forms")
+	ApiResponse<Long> createCouponForm(@RequestBody CreateCouponFormRequest createCouponFormRequest);
 
-    @PostMapping("/coupon/forms/{quantity}")
-    ApiResponse<Void> createCouponFormWithMq(@RequestBody CreateCouponFormRequest createCouponFormRequest, @PathVariable Long quantity);
+	@PostMapping("/coupon/forms/{quantity}")
+	ApiResponse<Void> createCouponFormWithMq(@RequestBody CreateCouponFormRequest createCouponFormRequest,
+		@PathVariable Long quantity);
 }

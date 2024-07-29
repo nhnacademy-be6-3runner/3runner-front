@@ -15,16 +15,17 @@ import com.nhnacademy.front.util.ApiResponse;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * 카테고리 관련 서비스.
+ *
+ * @author 한민기
+ */
 @Service
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
 
 	private final CategoryClient categoryClient;
 
-	/**
-	 * 전체 카테고리 조회하는 서비스
-	 * @return 전체 카테고리를 부모 밑에 자식을 넣어 조회
-	 */
 	@Override
 	@Cacheable(value = "CategoryList", cacheManager = "cacheManager")
 	public List<CategoryChildrenResponse> readAllCategoryList() {
@@ -38,7 +39,8 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	/**
-	 * 관리자가 카테고리 삭제
+	 * 관리자가 카테고리 삭제.
+	 *
 	 * @param categoryId 카테고리 아이디
 	 */
 	@Override

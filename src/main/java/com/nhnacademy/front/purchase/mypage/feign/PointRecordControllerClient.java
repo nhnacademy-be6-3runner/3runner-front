@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RequestHeader;
 
 import java.util.Objects;
 
-@FeignClient(name = "PointRecordControllerClient", url = "http://${feign.client.url}")
+@FeignClient(name = "PointRecordControllerClient", url = "${feign.client.url}")
 public interface PointRecordControllerClient {
-    @PostMapping("/bookstore/members/points")
-    ApiResponse<Page<ReadPointRecordResponse>> readPointRecord(
-            @RequestBody ReadPointRecordRequest readPointRecordRequest
-    );
+	@PostMapping("/bookstore/members/points")
+	ApiResponse<Page<ReadPointRecordResponse>> readPointRecord(
+		@RequestBody ReadPointRecordRequest readPointRecordRequest
+	);
 }

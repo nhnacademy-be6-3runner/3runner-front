@@ -10,17 +10,16 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
-@FeignClient(name = "MemberMessageControllerClient", url = "http://${feign.client.url}")
+@FeignClient(name = "MemberMessageControllerClient", url = "${feign.client.url}")
 public interface MemberMessageControllerClient {
-    @GetMapping("/bookstore/messages")
-    ApiResponse<Page<ReadMemberMessageResponse>> readAllById(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size);
+	@GetMapping("/bookstore/messages")
+	ApiResponse<Page<ReadMemberMessageResponse>> readAllById(
+		@RequestParam(defaultValue = "0") int page,
+		@RequestParam(defaultValue = "10") int size);
 
-    @GetMapping("/bookstore/messages/counts")
-    ApiResponse<Long> readUnreadedMessage();
+	@GetMapping("/bookstore/messages/counts")
+	ApiResponse<Long> readUnreadedMessage();
 
-    @PutMapping("/bookstore/messages")
-    ApiResponse<Void> updateMessage(@RequestBody UpdateMemberMessageRequest updateMemberMessageRequest);
+	@PutMapping("/bookstore/messages")
+	ApiResponse<Void> updateMessage(@RequestBody UpdateMemberMessageRequest updateMemberMessageRequest);
 }

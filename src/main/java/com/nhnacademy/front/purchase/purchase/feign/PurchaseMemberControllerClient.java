@@ -20,25 +20,26 @@ import com.nhnacademy.front.purchase.purchase.dto.purchase.request.CreatePurchas
 import com.nhnacademy.front.purchase.purchase.dto.purchase.request.UpdatePurchaseMemberRequest;
 import com.nhnacademy.front.purchase.purchase.dto.purchase.response.ReadPurchaseResponse;
 
-
 import jakarta.validation.Valid;
 
-@FeignClient(name = "purchaseMemberControllerClient", url = "http://${feign.client.url}")
+@FeignClient(name = "purchaseMemberControllerClient", url = "${feign.client.url}")
 public interface PurchaseMemberControllerClient {
 
-    @GetMapping("/bookstore/members/purchases/{purchaseId}")
-    ApiResponse<ReadPurchaseResponse> readPurchase (@PathVariable(value = "purchaseId", required = false) Long purchaseId);
+	@GetMapping("/bookstore/members/purchases/{purchaseId}")
+	ApiResponse<ReadPurchaseResponse> readPurchase(
+		@PathVariable(value = "purchaseId", required = false) Long purchaseId);
 
-    @GetMapping("/bookstore/members/purchases")
-    ApiResponse<List<ReadPurchaseResponse>> readPurchases ();
+	@GetMapping("/bookstore/members/purchases")
+	ApiResponse<List<ReadPurchaseResponse>> readPurchases();
 
-    @PostMapping("/bookstore/members/purchases")
-    ApiResponse<Void> createPurchase (@Valid @RequestBody CreatePurchaseRequest createPurchaseRequest);
+	@PostMapping("/bookstore/members/purchases")
+	ApiResponse<Void> createPurchase(@Valid @RequestBody CreatePurchaseRequest createPurchaseRequest);
 
-    @PutMapping("/bookstore/members/purchases/{purchaseId}")
-    ApiResponse<Void> updatePurchaseStatus (@Valid @RequestBody UpdatePurchaseMemberRequest updatePurchaseRequest,@PathVariable Long purchaseId);
+	@PutMapping("/bookstore/members/purchases/{purchaseId}")
+	ApiResponse<Void> updatePurchaseStatus(@Valid @RequestBody UpdatePurchaseMemberRequest updatePurchaseRequest,
+		@PathVariable Long purchaseId);
 
-    @DeleteMapping("/bookstore/members/purchases/{purchaseId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    ApiResponse<Void> deletePurchases (@PathVariable Long purchaseId);
+	@DeleteMapping("/bookstore/members/purchases/{purchaseId}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	ApiResponse<Void> deletePurchases(@PathVariable Long purchaseId);
 }

@@ -32,7 +32,7 @@ spring:
       max-request-size: 20MB
 
   profiles:
-    active: prod
+    active: dev
   thymeleaf:
     cache: false
     prefix: classpath:/templates/

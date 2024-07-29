@@ -14,32 +14,30 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Objects;
 
-
-@FeignClient(name = "bookCartControllerClient", url = "http://${feign.client.url}" , configuration = FeignConfiguration.class)
+@FeignClient(name = "bookCartControllerClient", url = "${feign.client.url}", configuration = FeignConfiguration.class)
 public interface BookCartControllerClient {
-        @GetMapping("/bookstore/carts/{cartId}")
-        ApiResponse<List<ReadBookCartGuestResponse>> readCart(@PathVariable("cartId") Long cartId);
+	@GetMapping("/bookstore/carts/{cartId}")
+	ApiResponse<List<ReadBookCartGuestResponse>> readCart(@PathVariable("cartId") Long cartId);
 
-        @GetMapping("/bookstore/carts")
-        ApiResponse<List<ReadAllBookCartMemberResponse>> readAllBookCartMember();
+	@GetMapping("/bookstore/carts")
+	ApiResponse<List<ReadAllBookCartMemberResponse>> readAllBookCartMember();
 
-        @PostMapping("/bookstore/carts")
-        ApiResponse<Long> createCart(
-                @Valid @RequestBody CreateBookCartRequest createBookCartGuestRequest
-        );
+	@PostMapping("/bookstore/carts")
+	ApiResponse<Long> createCart(
+		@Valid @RequestBody CreateBookCartRequest createBookCartGuestRequest
+	);
 
-        @PutMapping("/bookstore/carts")
-        ApiResponse<Long> updateCart(
-                @Valid @RequestBody UpdateBookCartRequest updateBookCartGuestRequest
-        );
+	@PutMapping("/bookstore/carts")
+	ApiResponse<Long> updateCart(
+		@Valid @RequestBody UpdateBookCartRequest updateBookCartGuestRequest
+	);
 
-        @DeleteMapping("/bookstore/carts")
-        ApiResponse<Long> deleteCart(@Valid @RequestBody DeleteBookCartRequest deleteBookCartGuestRequest);
+	@DeleteMapping("/bookstore/carts")
+	ApiResponse<Long> deleteCart(@Valid @RequestBody DeleteBookCartRequest deleteBookCartGuestRequest);
 
-        @PostMapping("/bookstore/guests/carts")
-        ApiResponse<Long> createGuestCart();
+	@PostMapping("/bookstore/guests/carts")
+	ApiResponse<Long> createGuestCart();
 
-
-        @DeleteMapping("/bookstore/carts/{cartId}")
-        ApiResponse<Long> deleteAllCart(@PathVariable(required = false) Long cartId);
+	@DeleteMapping("/bookstore/carts/{cartId}")
+	ApiResponse<Long> deleteAllCart(@PathVariable(required = false) Long cartId);
 }

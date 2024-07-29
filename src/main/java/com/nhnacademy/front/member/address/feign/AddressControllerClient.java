@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-
-
 import com.nhnacademy.front.member.address.dto.request.UpdateAddressRequest;
 import com.nhnacademy.front.member.address.dto.response.AddressResponse;
 import com.nhnacademy.front.member.address.dto.response.UpdateAddressResponse;
@@ -20,14 +18,18 @@ import com.nhnacademy.front.util.ApiResponse;
 
 import jakarta.validation.Valid;
 
-@FeignClient(name = "addressControllerClient",url = "http://${feign.client.url}")
+@FeignClient(name = "addressControllerClient", url = "${feign.client.url}")
 public interface AddressControllerClient {
 	@PostMapping("/bookstore/members/addresses")
 	ApiResponse<Void> createAddress(@Valid @RequestBody CreateAddressRequest request);
+
 	@GetMapping("/bookstore/members/addresses")
 	ApiResponse<List<AddressResponse>> readAllAddresses();
+
 	@PutMapping("/bookstore/members/addresses/{addressId}")
-	ApiResponse<UpdateAddressResponse> updateAddress(@Valid @RequestBody UpdateAddressRequest request,@PathVariable(name = "addressId") Long addressId);
+	ApiResponse<UpdateAddressResponse> updateAddress(@Valid @RequestBody UpdateAddressRequest request,
+		@PathVariable(name = "addressId") Long addressId);
+
 	@DeleteMapping("/bookstore/members/addresses/{addressId}")
 	ApiResponse<Void> deleteAddress(@PathVariable(name = "addressId") Long addressId);
 }

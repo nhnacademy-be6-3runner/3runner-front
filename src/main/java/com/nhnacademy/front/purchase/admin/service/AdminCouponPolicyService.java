@@ -17,17 +17,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.util.List;
 
 public interface AdminCouponPolicyService {
-    List<CategoryParentWithChildrenResponse> getCategories();
-    Page<BookListResponse> getBookes(int size, int page, String sort);
+	List<CategoryParentWithChildrenResponse> getCategories();
 
-    List<ReadCouponUsageResponse> getUsages();
-    List<ReadCouponTypeResponse> getTypes();
+	Page<BookListResponse> getBooks(int size, int page, String sort);
 
-    Long createCategoryUsages(CreateCategoryCouponRequest createCategoryCouponRequest);
+	List<ReadCouponUsageResponse> getUsages();
 
-    Long createBookUsages(CreateBookCouponRequest createBookCouponRequest);
+	List<ReadCouponTypeResponse> getTypes();
 
-    Long createFixedTypes(CreateFixedCouponRequest createFixedCouponRequest);
+	Long createCategoryUsages(CreateCategoryCouponRequest createCategoryCouponRequest);
 
-    Long createRatioTypes(CreateRatioCouponRequest createRatioCouponRequest);
+	Long createBookUsages(CreateBookCouponRequest createBookCouponRequest);
+
+	Long createFixedTypes(CreateFixedCouponRequest createFixedCouponRequest);
+
+	Long createRatioTypes(CreateRatioCouponRequest createRatioCouponRequest);
 }

@@ -8,17 +8,22 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
-@FeignClient(name = "CommentClient", url = "http://${feign.client.url}/bookstore")
+@FeignClient(name = "CommentClient", url = "${feign.client.url}/bookstore")
 public interface CommentClient {
-    @PostMapping("/books/reviews/{reviewId}")
-    ApiResponse<Void> createComment(@PathVariable Long reviewId, @RequestHeader("Member-id") Long memberId, @RequestBody CreateCommentRequest createCommentRequest);
+	@PostMapping("/books/reviews/{reviewId}")
+	ApiResponse<Void> createComment(@PathVariable Long reviewId, @RequestHeader("Member-id") Long memberId,
+		@RequestBody CreateCommentRequest createCommentRequest);
 
-    @GetMapping("/books/reviews/{reviewId}/comments")
-    ApiResponse<Page<CommentResponse>> readAllCommentsByReviewId(@PathVariable Long reviewId, @RequestParam int page, @RequestParam int size);
+	@GetMapping("/books/reviews/{reviewId}/comments")
+	ApiResponse<Page<CommentResponse>> readAllCommentsByReviewId(@PathVariable Long reviewId, @RequestParam int page,
+		@RequestParam int size);
 
-    @GetMapping("/books/reviews/member/comments")
-    ApiResponse<Page<CommentResponse>> readAllCommentsByMemberId(@RequestHeader(value = "Member-Id", required = false) Long memberId, @RequestParam int page, @RequestParam int size);
+	@GetMapping("/books/reviews/member/comments")
+	ApiResponse<Page<CommentResponse>> readAllCommentsByMemberId(
+		@RequestHeader(value = "Member-Id", required = false) Long memberId, @RequestParam int page,
+		@RequestParam int size);
 
-    @DeleteMapping("/books/reviews/{commentId}/delete")
-    ApiResponse<Void> deleteComment(@PathVariable Long commentId, @RequestHeader(value = "Member-Id", required = false) Long memberId);
+	@DeleteMapping("/books/reviews/{commentId}/delete")
+	ApiResponse<Void> deleteComment(@PathVariable Long commentId,
+		@RequestHeader(value = "Member-Id", required = false) Long memberId);
 }

@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
-@FeignClient(name = "MemberAddressControllerClient", url = "http://${feign.client.url}")
+@FeignClient(name = "MemberAddressControllerClient", url = "${feign.client.url}")
 public interface MemberAddressControllerClient {
-    @GetMapping("/bookstore/members/addresses")
-    ApiResponse<List<AddressResponse>> readAllAddresses();
+	@GetMapping("/bookstore/members/addresses")
+	ApiResponse<List<AddressResponse>> readAllAddresses();
 
-    @PostMapping("/bookstore/members/addresses")
-    ApiResponse<Long> createAddress(@RequestBody CreateAddressRequest request);
+	@PostMapping("/bookstore/members/addresses")
+	ApiResponse<Long> createAddress(@RequestBody CreateAddressRequest request);
 }

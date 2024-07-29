@@ -3,7 +3,7 @@ package com.nhnacademy.front.purchase.purchase.dto.purchase.request;
 import lombok.Builder;
 
 /**
- * 주문-책 생성 requestDto
+ * 주문-책 생성 requestDto.
  *
  * @author 정주혁
  *

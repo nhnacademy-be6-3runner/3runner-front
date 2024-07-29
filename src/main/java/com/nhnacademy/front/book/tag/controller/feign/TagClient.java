@@ -1,7 +1,8 @@
 package com.nhnacademy.front.book.tag.controller.feign;
 
+import com.nhnacademy.front.book.tag.dto.response.TagResponse;
+import com.nhnacademy.front.util.ApiResponse;
 import java.util.List;
-
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -9,10 +10,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.nhnacademy.front.book.tag.dto.response.TagResponse;
-import com.nhnacademy.front.util.ApiResponse;
-
-@FeignClient(name = "BookTagClient", url = "http://${feign.client.url}/bookstore/tags")
+/**
+ * 도서 태그 관련 client.
+ *
+ * @author 한민기
+ */
+@FeignClient(name = "BookTagClient", url = "${feign.client.url}/bookstore/tags")
 public interface TagClient {
 	@GetMapping
 	ApiResponse<List<TagResponse>> readAllTagSet();

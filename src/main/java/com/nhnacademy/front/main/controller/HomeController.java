@@ -14,12 +14,13 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class HomeController {
 	private final MemberMessageService memberMessageService;
+
 	@GetMapping
 	public String home(
-			@CookieValue(value = "Access", required = false) String access,
-			Model model) {
-		if(Objects.nonNull(access)){
-			model.addAttribute("unreadMessageCount", memberMessageService.readUnreadedMessage());
+		@CookieValue(value = "Access", required = false) String access,
+		Model model) {
+		if (Objects.nonNull(access)) {
+			model.addAttribute("unreadMessageCount", memberMessageService.readUnReadedMessage());
 		}
 		return "main/main";
 	}

@@ -15,19 +15,20 @@ import java.util.List;
 @Transactional
 @RequiredArgsConstructor
 public class MemberMessageServiceImpl implements MemberMessageService {
-    private final MemberMessageControllerClient memberMessageControllerClient;
-    @Override
-    public Page<ReadMemberMessageResponse> readAllById(int page, int size) {
-        return memberMessageControllerClient.readAllById(page, size).getBody().getData();
-    }
+	private final MemberMessageControllerClient memberMessageControllerClient;
 
-    @Override
-    public Long readUnreadedMessage() {
-        return memberMessageControllerClient.readUnreadedMessage().getBody().getData();
-    }
+	@Override
+	public Page<ReadMemberMessageResponse> readAllById(int page, int size) {
+		return memberMessageControllerClient.readAllById(page, size).getBody().getData();
+	}
 
-    @Override
-    public Void updateMessage(UpdateMemberMessageRequest updateMemberMessageRequest) {
-        return memberMessageControllerClient.updateMessage(updateMemberMessageRequest).getBody().getData();
-    }
+	@Override
+	public Long readUnReadedMessage() {
+		return memberMessageControllerClient.readUnreadedMessage().getBody().getData();
+	}
+
+	@Override
+	public Void updateMessage(UpdateMemberMessageRequest updateMemberMessageRequest) {
+		return memberMessageControllerClient.updateMessage(updateMemberMessageRequest).getBody().getData();
+	}
 }

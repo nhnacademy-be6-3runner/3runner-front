@@ -8,15 +8,15 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@FeignClient(name = "CouponMemberControllerClient2", url = "http://${feign.client.url}")
+@FeignClient(name = "CouponMemberControllerClient2", url = "${feign.client.url}")
 public interface CouponRegisterControllerClient {
-    @PostMapping("/bookstore/members/coupons")
-    ApiResponse<Long> registerCoupon(@RequestBody CouponRegistorRequest couponRegistorRequest);
+	@PostMapping("/bookstore/members/coupons")
+	ApiResponse<Long> registerCoupon(@RequestBody CouponRegistorRequest couponRegistorRequest);
 
-    @GetMapping("/bookstore/members/coupons")
-    ApiResponse<List<ReadCouponFormResponse>> readCoupons();
+	@GetMapping("/bookstore/members/coupons")
+	ApiResponse<List<ReadCouponFormResponse>> readCoupons();
 
-    @PostMapping("/bookstore/members/coupons/books/{bookId}")
-    ApiResponse<Boolean> registerCouponBook(@PathVariable Long bookId);
+	@PostMapping("/bookstore/members/coupons/books/{bookId}")
+	ApiResponse<Boolean> registerCouponBook(@PathVariable Long bookId);
 
 }

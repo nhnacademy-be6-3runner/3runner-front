@@ -13,16 +13,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
-@FeignClient(name = "PointPolicyControllerClient", url = "http://${feign.client.url}" , configuration = FeignConfiguration.class)
+@FeignClient(name = "PointPolicyControllerClient", url = "${feign.client.url}", configuration = FeignConfiguration.class)
 public interface PointPolicyControllerClient {
 
-    @PostMapping("/bookstore/points/policies")
-    ApiResponse<Long> saveOrUpdatePolicy(@RequestBody PointPolicyResponseRequest pointPolicyResponseRequest);
+	@PostMapping("/bookstore/points/policies")
+	ApiResponse<Long> saveOrUpdatePolicy(@RequestBody PointPolicyResponseRequest pointPolicyResponseRequest);
 
-    @GetMapping("/bookstore/points/policies")
-    ApiResponse<List<PointPolicyResponseRequest>> readPolicy();
+	@GetMapping("/bookstore/points/policies")
+	ApiResponse<List<PointPolicyResponseRequest>> readPolicy();
 
-
-    @GetMapping("/bookstore/points/policies/{policyKey}")
-    ApiResponse<PointPolicyResponseRequest> readOne(@PathVariable String policyKey);
+	@GetMapping("/bookstore/points/policies/{policyKey}")
+	ApiResponse<PointPolicyResponseRequest> readOne(@PathVariable String policyKey);
 }
