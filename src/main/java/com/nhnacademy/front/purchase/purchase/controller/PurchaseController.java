@@ -13,6 +13,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -51,12 +53,13 @@ public class PurchaseController {
                 }
                 if (cartGuestService.checkBookCart(cartId, bookId)) {
                     bookCartControllerClient.createCart(CreateBookCartRequest.builder().bookId(bookId).quantity(1).build()).getBody().getData();
+                } else {
+                    bookCartControllerClient.updateCart(UpdateBookCartRequest.builder().bookId(bookId).cartId(cartId).quantity(1).build());
                 }
 
 
-                bookCartControllerClient.updateCart(UpdateBookCartRequest.builder().bookId(bookId).cartId(cartId).quantity(1).build());
             }
-            response.sendRedirect("purchases/guests/"+cartId);
+            response.sendRedirect("/purchases/guests/"+cartId);
 
         } else {
 
@@ -64,12 +67,11 @@ public class PurchaseController {
 
                 if (cartMemberService.checkBookCart(bookId)) {
                     bookCartControllerClient.updateCart(UpdateBookCartRequest.builder().bookId(bookId).cartId(0).quantity(1).build());
-
+                } else {
+                    bookCartControllerClient.createCart(CreateBookCartRequest.builder().bookId(bookId).quantity(1).build()).getBody().getData();
                 }
-                bookCartControllerClient.createCart(CreateBookCartRequest.builder().bookId(bookId).quantity(1).build()).getBody().getData();
             }
-            response.sendRedirect("purchases/members");
-
+            response.sendRedirect("/purchases/members");
         }
     }
 }

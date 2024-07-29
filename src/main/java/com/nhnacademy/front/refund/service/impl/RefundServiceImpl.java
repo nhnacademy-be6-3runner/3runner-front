@@ -1,5 +1,13 @@
 package com.nhnacademy.front.refund.service.impl;
 
+import com.nhnacademy.front.purchase.purchase.dto.purchase.response.ReadPurchaseBookResponse;
+import com.nhnacademy.front.purchase.purchase.feign.PurchaseBookControllerClient;
+import com.nhnacademy.front.refund.dto.request.CreateRefundRequest;
+import com.nhnacademy.front.refund.dto.response.ReadRefundResponse;
+import com.nhnacademy.front.refund.feign.RefundControllerClient;
+import com.nhnacademy.front.refund.feign.RefundRecordGuestControllerClient;
+import com.nhnacademy.front.refund.feign.RefundRecordMemberControllerClient;
+import com.nhnacademy.front.refund.service.RefundService;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -7,37 +15,23 @@ import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.stereotype.Service;
 
-import com.nhnacademy.front.purchase.purchase.dto.purchase.response.ReadPurchaseBookResponse;
-import com.nhnacademy.front.purchase.purchase.dto.purchase.response.ReadPurchaseResponse;
-import com.nhnacademy.front.purchase.purchase.feign.PurchaseBookControllerClient;
-import com.nhnacademy.front.purchase.purchase.feign.PurchaseManagerControllerClient;
-import com.nhnacademy.front.refund.dto.request.CreateRefundRequest;
-import com.nhnacademy.front.refund.dto.response.ReadRefundResponse;
-import com.nhnacademy.front.refund.feign.RefundControllerClient;
-import com.nhnacademy.front.refund.feign.RefundRecordGuestControllerClient;
-import com.nhnacademy.front.refund.feign.RefundRecordMemberControllerClient;
-import com.nhnacademy.front.refund.service.RefundService;
-
-import lombok.RequiredArgsConstructor;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class RefundServiceImpl implements RefundService {
 
 	private final PurchaseBookControllerClient purchaseBookControllerClient;
 	private final RefundControllerClient refundControllerClient;
-	private final PurchaseManagerControllerClient purchaseManagerControllerClient;
 	private final RefundRecordGuestControllerClient refundRecordGuestControllerClient;
 	private final RefundRecordMemberControllerClient refundRecordMemberControllerClient;
 
@@ -53,14 +47,13 @@ public class RefundServiceImpl implements RefundService {
 		return purchaseBookControllerClient.readGuestPurchaseBook(orderNumber).getBody().getData();
 	}
 
-
 	@Override
 	public Map<String, Object> refundToss(Object orderNumber, Integer price, String cancelReason) {
 
 		Map<String, Object> result = new HashMap<>();
 		String paymentKey = "";
 		String orderId = "";
-		Long order= null;
+		Long order = null;
 		if (orderNumber instanceof String) {
 			orderId = (String)orderNumber;
 			paymentKey = refundControllerClient.readTossOrderId((String)orderNumber).getBody().getData();
@@ -107,16 +100,14 @@ public class RefundServiceImpl implements RefundService {
 			result.put("jsonObject", jsonObject);
 
 			Long refundId;
-			if(orderNumber instanceof Long) {
-				refundId = refundControllerClient.createRefundCancelPartPayment(order,price).getBody().getData();
+			if (orderNumber instanceof Long) {
+				refundId = refundControllerClient.createRefundCancelPartPayment(order, price).getBody().getData();
+			} else {
+				refundId = refundControllerClient.createRefundCancelPartPayment(orderId, price).getBody().getData();
 			}
-			else{
-				refundId = refundControllerClient.createRefundCancelPartPayment(orderId,price).getBody().getData();
-			}
-
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage());
 		}
 
 		return result;
@@ -128,7 +119,6 @@ public class RefundServiceImpl implements RefundService {
 		return refundControllerClient.createRefund(orderId,
 			CreateRefundRequest.builder().refundContent(refundReason).price(price).build()).getBody().getData();
 	}
-
 
 	@Override
 	public Boolean updateRefundSuccess(Long refundId) {

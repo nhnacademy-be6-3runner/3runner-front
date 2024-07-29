@@ -24,7 +24,7 @@ public interface MemberControllerClient {
 	ApiResponse<GetMemberResponse> readById();
 
 	@PostMapping("/bookstore/members")
-	ApiResponse<Void> createMembers(@Valid @RequestBody CreateMemberRequest createMemberRequest);
+	ApiResponse<Long> createMembers(@RequestBody CreateMemberRequest createMemberRequest);
 
 	@PutMapping("/bookstore/members")
 	ApiResponse<UpdateMemberResponse> updateMembers(@Valid @RequestBody UpdateMemberRequest updateMemberRequest);

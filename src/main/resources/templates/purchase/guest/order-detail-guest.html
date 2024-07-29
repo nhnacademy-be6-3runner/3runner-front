@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>비회원 주문 확인</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
     <link rel="stylesheet" href="/css/order-detail.css">
 </head>
 <body th:data-purchase-id="${orderNumber}">
@@ -28,9 +30,12 @@
 </div>
 
 <form method="post" th:action="@{'/orders/guests/{purchaseId}' (purchaseId = ${guestorder.orderNumber().toString()})}">
-    <button type="submit" class="confirm-order-btn" th:if="${guestorder.status.toString() != 'CONFIRMATION'}">주문 확정
+    <button type="submit" class="confirm-order-btn" th:if="${guestorder.status.toString() != 'CONFIRMATION'
+                        and guestorder.status.toString() != 'REFUNDED_REQUEST' and guestorder.status.toString() != 'REFUNDED_COMPLETED'}">
+        주문 확정
     </button>
 </form>
+
 
 <!-- 결제 취소 버튼 (COMPLETED 상태인 경우)-->
 <button class="refund-btn"

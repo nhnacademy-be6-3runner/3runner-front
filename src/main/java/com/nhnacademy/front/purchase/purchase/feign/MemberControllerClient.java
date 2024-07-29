@@ -5,8 +5,8 @@ import com.nhnacademy.front.util.ApiResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 
-@FeignClient(name = "MemberControllerClient", url = "http://${feign.client.url}")
+@FeignClient(name = "MemberControllerClient", url = "${feign.client.url}")
 public interface MemberControllerClient {
-    @GetMapping("/bookstore/members")
-    ApiResponse<GetMemberResponse> readById();
+	@GetMapping("/bookstore/members")
+	ApiResponse<GetMemberResponse> readById();
 }

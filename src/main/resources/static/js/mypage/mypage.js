@@ -38,8 +38,8 @@ function loadReviews(page = 0) {
                     <div class="col-md-8">
                         <div class="review-content" data-id="${review.reviewId}">
                             <div class="rating">
-                                ${Array.from({ length: review.rating }, () => '<i class="bi bi-star-fill"></i>').join('')}
-                                ${Array.from({ length: 5 - review.rating }, () => '<i class="bi bi-star"></i>').join('')}
+                                ${Array.from({length: review.rating}, () => '<i class="bi bi-star-fill"></i>').join('')}
+                                ${Array.from({length: 5 - review.rating}, () => '<i class="bi bi-star"></i>').join('')}
                             </div>
                             <h5 class="review-title">${review.title}</h5>
                         </div>
@@ -54,7 +54,7 @@ function loadReviews(page = 0) {
 
                 // 리뷰 클릭 이벤트 리스너 추가
                 reviewItem.addEventListener('click', () => {
-                    window.location.href = `http://localhost:3000/review/${review.reviewId}`;
+                    window.location.href = `/review/${review.reviewId}`;
                 });
 
                 // 수정 버튼 클릭 이벤트 리스너 추가
@@ -62,7 +62,7 @@ function loadReviews(page = 0) {
                 editButton.addEventListener('click', (event) => {
                     event.stopPropagation(); // 클릭 이벤트가 상위 요소로 전달되지 않도록 막음
                     const reviewId = event.target.dataset.id;
-                    window.location.href = `http://localhost:3000/review/edit/${reviewId}`;
+                    window.location.href = `/review/edit/${reviewId}`;
                 });
             });
 
@@ -87,7 +87,6 @@ function loadReviews(page = 0) {
         })
         .catch(error => console.error('Error loading reviews:', error));
 }
-
 
 
 function loadUserComments(page = 0) {

@@ -1,15 +1,5 @@
 package com.nhnacademy.front.book.book.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-
 import com.nhnacademy.front.book.book.dto.request.UserCreateBookRequest;
 import com.nhnacademy.front.book.book.dto.response.UserReadBookResponse;
 import com.nhnacademy.front.book.book.service.BookService;
@@ -18,13 +8,21 @@ import com.nhnacademy.front.book.categroy.dto.response.CategoryResponse;
 import com.nhnacademy.front.book.image.service.ImageService;
 import com.nhnacademy.front.book.tag.dto.response.ReadTagByBookResponse;
 import com.nhnacademy.front.book.tag.dto.response.TagResponse;
-
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 /**
+ * 도서 관리 컨트롤러 입니다.
+ *
  * @author 한민기
- * 도서 관리에 관한 내용 -> 관리자, 출판사 출입에 관한 내용들
  */
 @Slf4j
 @Controller
@@ -35,8 +33,8 @@ public class BookManagementController {
 	private final ImageService imageService;
 
 	/**
-	 * 책 등록 화면
-	 * 출판사, 관리자만 가능
+	 * 책 등록 화면으로 가는 메소드 입니다.
+	 *
 	 * @return 책 등록 화면
 	 */
 	@GetMapping("/publisher/book/create")
@@ -45,7 +43,8 @@ public class BookManagementController {
 	}
 
 	/**
-	 * 책 등록
+	 * 책 등록을 처리하는 메소드 입니다.
+	 *
 	 * @param bookRequest 등록할 책의 정보
 	 * @return 책 등록
 	 */
@@ -61,8 +60,9 @@ public class BookManagementController {
 	}
 
 	/**
-	 * api 로 북 추가하는 화면
-	 * @return api로 북 추가하는 화면
+	 * Isbn 으로 북 추가하는 화면으로 가는 메소드 입니다.
+	 *
+	 * @return Isbn 으로 책 등록하는 화면
 	 */
 	@GetMapping("/admin/book/api/create")
 	public String apiCreateBook() {
@@ -70,7 +70,8 @@ public class BookManagementController {
 	}
 
 	/**
-	 * api 로 북 추가하는 post 문
+	 * api 로 북 추가하는 post 문.
+	 *
 	 * @param isbnId 추가할 책의 isbn
 	 * @return 추가후 움직일 페이지
 	 */

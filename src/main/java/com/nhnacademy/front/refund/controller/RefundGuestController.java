@@ -1,10 +1,14 @@
 package com.nhnacademy.front.refund.controller;
 
+import com.nhnacademy.front.purchase.purchase.dto.purchase.response.ReadPurchaseBookResponse;
+import com.nhnacademy.front.refund.service.RefundRecordGuestService;
+import com.nhnacademy.front.refund.service.RefundService;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -16,16 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.nhnacademy.front.purchase.purchase.dto.purchase.response.ReadPurchaseBookResponse;
-import com.nhnacademy.front.refund.feign.RefundRecordGuestControllerClient;
-import com.nhnacademy.front.refund.service.RefundRecordGuestService;
-import com.nhnacademy.front.refund.service.RefundService;
-
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
-
 /**
- * 환불 컨트롤러(비회원)
+ * 환불 컨트롤러(비회원).
  *
  * @author 정주혁
  */
@@ -57,7 +53,6 @@ public class RefundGuestController {
 	 * @param orderNumber
 	 * @param purchaseBookId
 	 * @param quantity
-	 * @return
 	 */
 	@GetMapping("/{orderNumber}/update/{purchaseBookId}")
 	public void updateRefund(@PathVariable(name = "orderNumber") String orderNumber,

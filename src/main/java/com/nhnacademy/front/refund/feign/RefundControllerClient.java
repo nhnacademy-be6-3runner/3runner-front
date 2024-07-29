@@ -16,7 +16,7 @@ import com.nhnacademy.front.util.ApiResponse;
 
 import jakarta.validation.Valid;
 
-@FeignClient(name = "refundControllerClient", url = "http://${feign.client.url}")
+@FeignClient(name = "refundControllerClient", url = "${feign.client.url}")
 public interface RefundControllerClient {
 
 	@GetMapping("/bookstore/refund/{purchaseId}")
@@ -26,7 +26,7 @@ public interface RefundControllerClient {
 	ApiResponse<String> readTossOrderIdMember(@PathVariable("purchaseId") Long purchaseId);
 
 	@GetMapping("/bookstore/refund/managers/{refundRecord}")
-	ApiResponse<ReadRefundResponse> readRefundRecprd(@PathVariable("refundRecord") Long refundRecord);
+	ApiResponse<ReadRefundResponse> readRefundRecord(@PathVariable("refundRecord") Long refundRecord);
 
 	@PostMapping("/bookstore/refund/{orderId}")
 	ApiResponse<Long> createRefund(@PathVariable("orderId") Long orderId,
@@ -38,11 +38,10 @@ public interface RefundControllerClient {
 	@PutMapping("/bookstore/refund/reject/{refundRecord}")
 	ApiResponse<Boolean> updateRefundRejected(@PathVariable("refundRecord") Long refundRecord);
 
-
 	@PostMapping("/bookstore/refund/cancel/payment/part/{orderNumber}")
-	ApiResponse<Long> createRefundCancelPartPayment( @PathVariable("orderNumber") Object orderNumber,@RequestParam(name = "price") Integer price);
+	ApiResponse<Long> createRefundCancelPartPayment(@PathVariable("orderNumber") Object orderNumber,
+		@RequestParam(name = "price") Integer price);
 
-
-		@GetMapping("/bookstore/refund/managers/all")
+	@GetMapping("/bookstore/refund/managers/all")
 	ApiResponse<List<ReadRefundResponse>> readAllRefund();
 }

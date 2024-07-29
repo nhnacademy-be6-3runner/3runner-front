@@ -11,7 +11,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
             crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/order-detail.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <style>
@@ -91,43 +90,6 @@
 </head>
 <body th:data-purchase-id="${orderNumber}">
 <!-- Header -->
-<header class="header-v4">
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light menu-desktop">
-        <div class="container">
-            <!-- Logo -->
-            <a class="navbar-brand logo" href="#">
-                3runner
-            </a>
-
-            <!-- Toggler/collapsibe Button -->
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <!-- Navbar links -->
-            <div class="collapse navbar-collapse" id="collapsibleNavbar">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="login.html">login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="logout.html">logout</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="mypage.html">my page</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="register.html">register</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="cart.html">cart</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-</header>
 
 <main class="container my-5">
     <div class="refund-header text-center">
@@ -208,7 +170,7 @@
         } else if (newQuantity > maxQuantity) {
             newQuantity = maxQuantity;
         }
-        var url = window.location.origin + '/refund/guests/' + orderNumber + '/update/' + purchaseBookId + "?quantity=" + newQuantity;
+        var url = '/refund/guests/' + orderNumber + '/update/' + purchaseBookId + "?quantity=" + newQuantity;
         var method = 'GET';
 
         $.ajax({
@@ -243,7 +205,7 @@
             toggleButton.classList.add('active');
             allMaxSet = true;
 
-            var url = window.location.origin + '/refund/guests/' + orderNumber + '/update/all';
+            var url = '/refund/guests/' + orderNumber + '/update/all';
             var method = 'GET';
 
             $.ajax({
@@ -267,7 +229,7 @@
             toggleButton.classList.remove('active');
             allMaxSet = false;
 
-            var url2 = window.location.origin + '/refund/guests/' + orderNumber + '/update/all/zero';
+            var url2 = '/refund/guests/' + orderNumber + '/update/all/zero';
             var method = 'GET';
 
             $.ajax({

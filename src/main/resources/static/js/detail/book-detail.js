@@ -1,22 +1,35 @@
 document.addEventListener('DOMContentLoaded', function () {
-    document.getElementById('cartButton').addEventListener('click', function(e) {
-        e.preventDefault();
-        submitCart();
-    });
-    document.getElementById('purchaseButton').addEventListener('click', function (e) {
-        e.preventDefault();
-        submitPurchase();
-    })
-    document.getElementById('like').addEventListener('click', function(e) {
-        e.preventDefault();
-        handleLikeClick();
-    });
+    const cartButton = document.getElementById('cartButton');
+    if (cartButton) {
+        cartButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            submitCart();
+        });
+    }
+
+    const purchaseButton = document.getElementById('purchaseButton');
+    if (purchaseButton) {
+        purchaseButton.addEventListener('click', function (e) {
+            e.preventDefault();
+            submitPurchase();
+        });
+    }
+
+    const likeButton = document.getElementById('like');
+    if (likeButton) {
+        likeButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            handleLikeClick();
+        });
+    }
+
     updateTotalPrice();
     loadReviewData();
     reviewRatings();
     checkAccessTokenForComments();
     checkAccessTokenForCoupon();
 });
+
 
 function handleLikeClick() {
     const accessToken = getCookie('Access');
@@ -62,14 +75,8 @@ function addCart(bookId, quantity) {
         contentType: 'application/x-www-form-urlencoded',
         data: $.param({ bookId: bookId, quantity: quantity }),
 
-        //TODO : 최종 배포시 변경오먕
         success: function (response) {
-            console.log(response);
-            try{
-                window.location.href = window.location.origin + '/carts';
-            } catch (error) {
-                window.location.href = 'https://'+ window.location.host + '/carts';
-            }
+            window.location.href = '/carts';
         },
         error: function (xhr, status, error) {
             console.error('Error:', error);
@@ -81,18 +88,16 @@ function addCart(bookId, quantity) {
 
 function addPurchase(bookId, quantity) {
     $.ajax({
-        url: window.location.origin + '/purchases',
+        url: '/purchases',
         type: 'POST',
         contentType: 'application/x-www-form-urlencoded',
         data: $.param({ bookId: bookId, quantity: quantity }),
 
-        //TODO : 최종 배포시 변경오먕
         success: function (response) {
-            console.log(response);
-            try{
-                window.location.href = window.location.origin + '/carts';
-            } catch (error) {
-                window.location.href = 'https://'+ window.location.host + '/carts';
+            if (response.redirectUrl) {
+                window.location.href = response.redirectUrl; // 서버로부터 받은 URL로 리다이렉트
+            } else {
+                console.log(response);
             }
         },
         error: function (xhr, status, error) {
@@ -111,7 +116,7 @@ function submitCart() {
 
 function submitPurchase() {
     const bookId = getBookIdFromUrl();
-    const quantity = document.getElementById('quantityPurchase').value;
+    const quantity = document.getElementById('quantity').value;
     addPurchase(bookId, quantity);
 }
 
@@ -133,10 +138,12 @@ function decreaseQuantity() {
 
 function updateTotalPrice() {
     const quantity = document.getElementById('quantity').value;
+    document.getElementById('quantity1').value = quantity;
     const price = parseInt(document.querySelector('.selling-price span').innerText);
     const totalPrice = quantity * price;
     document.getElementById('totalPrice').innerText = totalPrice;
 }
+
 
 function getBookIdFromUrl() {
     const pathSegments = window.location.pathname.split('/');

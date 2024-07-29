@@ -61,15 +61,23 @@ public class PurchaseMemberController {
     }
 
     @PostMapping("/purchases/members/addresses")
-    public String address(@RequestHeader(value = "Member-Id", required = false) Long memberId,
-                          String addrDetail,
+    public String address(String addrDetail,
                           String roadAddrPart1,
                           String roadAddrPart2,
                           String zipNo,
                           String roadFullAddr,
                           Model model) {
+        String state = roadAddrPart1.split(" ")[0];
+        roadAddrPart1 = roadAddrPart1.replaceFirst(state, "");
 
-        memberAddressControllerClient.createAddress(CreateAddressRequest.builder().city(roadAddrPart1).state(roadAddrPart2).road(zipNo).name(addrDetail).country("대한민국").postalCode(zipNo).build());
+        memberAddressControllerClient.createAddress(CreateAddressRequest.builder()
+                .city(roadAddrPart1)
+                .state(state)
+                .road(zipNo)
+                .name(addrDetail)
+                .country("대한민국")
+                .postalCode(zipNo)
+                .build());
 
         model.addAttribute("roadFullAddr", roadFullAddr);
 
@@ -79,7 +87,6 @@ public class PurchaseMemberController {
     @PostMapping("/purchases/members/confirm")
     @ResponseBody
     public void purchase(
-            @RequestHeader(value = "Member-Id", required = false) Long memberId,
             @RequestParam(required = false) String discountedPrice,
             @RequestParam(required = false) String discountedPoint,
             @RequestParam(required = false) String isPacking,
@@ -87,7 +94,7 @@ public class PurchaseMemberController {
             @RequestParam(required = false) String road,
             @RequestParam(required = false) Long couponFormId,
             @RequestBody String jsonBody) throws Exception {
-        paymentControllerClient.confirmPayment(memberId, discountedPrice, discountedPoint,isPacking,shipping,road,couponFormId,jsonBody);
+        paymentControllerClient.confirmMemberPayment(discountedPrice, discountedPoint,isPacking, shipping, road, couponFormId, jsonBody);
 
 
         return;

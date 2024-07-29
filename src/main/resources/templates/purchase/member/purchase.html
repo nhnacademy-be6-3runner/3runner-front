@@ -34,14 +34,6 @@
         .cart-item img {
             border-radius: 5px;
         }
-        footer {
-            margin-top: 50px;
-            background-color: #fff;
-            border-top: 1px solid #dee2e6;
-        }
-        .footer-content {
-            padding: 20px 0;
-        }
         a {
             color: #007bff;
             text-decoration: none;
@@ -197,7 +189,7 @@
         }
     };
     function setCountyOffice(name){
-        document.getElementById('countyOfficeName').value = name;
+        window.location.reload();
     }
 </script>
 <!--토스결제창-->
@@ -228,9 +220,6 @@
         calculateTotal();
     });
 
-    function windowReload(){
-        window.location.reload();
-    }
     function calculateTotal() {
         var total = 0.0;
         var cartItems = document.querySelectorAll('.cart-item');
@@ -301,8 +290,8 @@
     document.getElementById('address-box').addEventListener('change', function () {
         var addressText = this.options[this.selectedIndex].text;
 
-        road = addressText;
-        console.log("selected address: ", addressText);
+        road = this.options[this.selectedIndex].text;
+        console.log("selected address: ", road);
     });
 
     document.getElementById('coupon-box').addEventListener('change', function () {
@@ -320,12 +309,19 @@
     });
 
     button.addEventListener("click", function () {
+        shipping = document.getElementById('delivery-box').value;
+        road = document.getElementById('address-box').textContent;
+        discountedPoint = document.getElementById('point-box').value;
+        isPacking = document.getElementById('gift-box').checked;
+
         paymentMethodWidget.updateAmount(parseInt(amount)-parseInt(discountedPrice)-parseInt(discountedPoint));
+
+
         paymentWidget.requestPayment({
             orderId: orderNumber,
             orderName: '3runner Store:'+orderNumber,
-            successUrl: window.location.origin + "/payments/members/success?discountedPrice="+discountedPrice+"&discountedPoint="+discountedPoint+"&isPacking="+isPacking+"&shipping="+shipping+"&road="+road+"&couponFormId="+couponFormId,
-            failUrl: window.location.origin + "/payments/members/fail",
+            successUrl: "https://3runner.shop/payments/members/success?discountedPrice="+discountedPrice+"&discountedPoint="+discountedPoint+"&isPacking="+isPacking+"&shipping="+shipping+"&road="+road+"&couponFormId="+couponFormId,
+            failUrl: "https://3runner.shop/payments/members/fail",
             customerEmail: [[${memberInfo.email()}]],
             customerName: [[${memberInfo.name()}]],
             customerMobilePhone: "01012345678"//[[${memberInfo.phone()}]],

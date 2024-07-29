@@ -1,22 +1,19 @@
 package com.nhnacademy.front.interceptor;
 
-import java.util.Optional;
-
-import org.springframework.cloud.client.actuator.HasFeatures;
-import org.springframework.stereotype.Component;
-import org.springframework.web.cors.CorsUtils;
-import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.nhnacademy.front.threadlocal.TokenHolder;
 import com.nhnacademy.front.token.service.TokenService;
 import com.nhnacademy.front.util.CookieUtil;
 import com.nhnacademy.front.util.JWTUtil;
-
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+import org.springframework.web.cors.CorsUtils;
+import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.ModelAndView;
 
 /**
  * 컨트롤러 실행 전 쿠키 유무 확인 후, 스레드 로컬에 토큰 값 설정하는 인터셉터
@@ -25,17 +22,11 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class CustomInterceptor implements HandlerInterceptor {
 
-	private final HasFeatures feignFeature;
-	private JWTUtil jwtUtil;
-	private TokenService tokenService;
-
-	public CustomInterceptor(JWTUtil jwtUtil, TokenService tokenService, HasFeatures feignFeature) {
-		this.jwtUtil = jwtUtil;
-		this.tokenService = tokenService;
-		this.feignFeature = feignFeature;
-	}
+	private final JWTUtil jwtUtil;
+	private final TokenService tokenService;
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws
@@ -105,14 +96,13 @@ public class CustomInterceptor implements HandlerInterceptor {
 
 	@Override
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
-		ModelAndView modelAndView) throws Exception {
+		ModelAndView modelAndView) {
 		TokenHolder.resetAccessToken();
 		TokenHolder.resetRefreshToken();
 		log.info("Interceptor, Access token 토큰 홀더 리셋");
 	}
 
 	private String findRefreshToken(HttpServletRequest request, HttpServletResponse response) {
-		// Access Token 검증, 만료 되었으면 REFRESH TOKEN 전송
 		Cookie[] cookies = request.getCookies();
 		String refreshToken = null;
 		if (cookies != null) {

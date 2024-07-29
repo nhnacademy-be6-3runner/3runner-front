@@ -57,7 +57,6 @@ public class PurchaseGuestController {
     @PostMapping("/purchases/guests/confirm")
     @ResponseBody
     public void purchase(
-            @RequestHeader(value = "Member-Id", required = false) Long memberId,
             @RequestParam(required = false)  Long cartId,
             @RequestParam(required = false)  String address,
             @RequestParam(required = false)  String password,
@@ -65,7 +64,7 @@ public class PurchaseGuestController {
             @RequestParam(required = false) String shipping,
             @RequestBody String jsonBody) throws Exception {
 
-        paymentControllerClient.confirmPayment(memberId,cartId,address,password,isPacking,shipping,jsonBody);
+        paymentControllerClient.confirmGuestPayment(cartId,address,password,isPacking,shipping,jsonBody);
 
     }
 }

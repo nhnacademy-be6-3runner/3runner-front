@@ -6,6 +6,7 @@ import com.nhnacademy.front.purchase.cart.feign.BookCartControllerClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -35,7 +36,7 @@ public class PaymentMemberController {
      */
     @GetMapping("/payments/members/success")
     public String paymentSuccessPage(
-            @RequestParam(required = false) Long memberId,
+            @CookieValue(value = "Access", required = false) String access,
             @RequestParam(required = false) String discountedPrice,
             @RequestParam(required = false) String discountedPoint,
             @RequestParam(required = false) String isPacking,
@@ -49,10 +50,9 @@ public class PaymentMemberController {
             Model model
     ){
 
-        if(Objects.nonNull(memberId)){
+        if(Objects.nonNull(access)){
             List<ReadAllBookCartMemberResponse> items = bookCartControllerClient.readAllBookCartMember().getBody().getData();
             model.addAttribute("response", items);
-            model.addAttribute("memberId", memberId);
         }
         model.addAttribute("discountedPrice", discountedPrice);
         model.addAttribute("discountedPoint", discountedPoint);
@@ -65,6 +65,7 @@ public class PaymentMemberController {
         model.addAttribute("orderId", orderId);
         model.addAttribute("paymentKey", paymentKey);
         model.addAttribute("amount", amount);
+
         return "purchase/member/success";
     }
 
@@ -85,6 +86,7 @@ public class PaymentMemberController {
     ){
         model.addAttribute("message", message);
         model.addAttribute("code", code);
+
         return "purchase/member/fail";
     }
 

@@ -35,26 +35,27 @@ public class PurchaseDetailMemberServiceImpl implements PurchaseDetailMemberServ
 	private final PurchaseMemberControllerClient purchaseMemberControllerClient;
 
 	/**
-	 * 주문 내역 조회
+	 * 주문 내역 조회.
 	 *
 	 * @return 주문 내역 Page 반환
 	 */
 	@Override
-	public Page<ReadPurchase> readPurchases(int page){
+	public Page<ReadPurchase> readPurchases(int page) {
 		List<ReadPurchase> orderDetail = new ArrayList<>();
-		ApiResponse<List<ReadPurchaseResponse>> responses =  purchaseMemberControllerClient.readPurchases();
-		for(ReadPurchaseResponse response : responses.getBody().getData()){
+		ApiResponse<List<ReadPurchaseResponse>> responses = purchaseMemberControllerClient.readPurchases();
+		for (ReadPurchaseResponse response : responses.getBody().getData()) {
 			orderDetail.add(ReadPurchase.builder()
-					.id(response.id())
-					.orderNumber(response.orderNumber().toString())
-					.memberType(response.memberType())
-					.road(response.road())
-					.createdAt(
-						response.createdAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH"))+" "+response.createdAt().getZone())
-					.deliveryPrice(response.deliveryPrice())
-					.password(response.password())
-					.status(response.status())
-					.totalPrice(response.totalPrice())
+				.id(response.id())
+				.orderNumber(response.orderNumber().toString())
+				.memberType(response.memberType())
+				.road(response.road())
+				.createdAt(
+					response.createdAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH")) + " "
+						+ response.createdAt().getZone())
+				.deliveryPrice(response.deliveryPrice())
+				.password(response.password())
+				.status(response.status())
+				.totalPrice(response.totalPrice())
 				.build());
 
 		}
@@ -67,35 +68,36 @@ public class PurchaseDetailMemberServiceImpl implements PurchaseDetailMemberServ
 	}
 
 	/**
-	 * 회원 주문 내역 조회
+	 * 회원 주문 내역 조회.
 	 *
 	 * @param purchaseId 주문 아이디
 	 * @return 해당 주문 - 책 page 리스트
 	 */
 	@Override
-	public List<ReadPurchaseBookResponse> readPurchaseBookResponses(Long purchaseId){
+	public List<ReadPurchaseBookResponse> readPurchaseBookResponses(Long purchaseId) {
 		return purchaseBookControllerClient.readPurchaseBook(purchaseId).getBody().getData();
 	}
 
 	/**
-	 * 회원 주문 상태 조회
+	 * 회원 주문 상태 조회.
 	 *
 	 * @param purchaseId 상태 조회할 주문id
 	 * @return 해당 주문 상태
 	 */
 	@Override
-	public PurchaseStatus readPurchaseStatus(Long purchaseId){
+	public PurchaseStatus readPurchaseStatus(Long purchaseId) {
 		return purchaseMemberControllerClient.readPurchase(purchaseId).getBody().getData().status();
 	}
 
 	/**
-	 * 회원 주문 상태 -> 주문 확정 변경
+	 * 회원 주문 상태 -> 주문 확정 변경.
 	 *
 	 * @param purchaseId 확정으로 변경할 주문 id
 	 */
 	@Override
-	public void updatePurchaseStatus(long purchaseId){
-		purchaseMemberControllerClient.updatePurchaseStatus(UpdatePurchaseMemberRequest.builder().purchaseStatus(PurchaseStatus.CONFIRMATION).build(),purchaseId);
+	public void updatePurchaseStatus(long purchaseId) {
+		purchaseMemberControllerClient.updatePurchaseStatus(
+			UpdatePurchaseMemberRequest.builder().purchaseStatus(PurchaseStatus.CONFIRMATION).build(), purchaseId);
 	}
 
 }

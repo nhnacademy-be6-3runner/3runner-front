@@ -1,32 +1,14 @@
+let currentSort = 'viewCount,desc';
+let currentPage = 0;
+
 document.addEventListener("DOMContentLoaded", function() {
-    const savedSort = localStorage.getItem('currentSort');
-    const savedPage = localStorage.getItem('currentPage');
-    const savedBooks = localStorage.getItem('loadedBooks');
-
-    if (savedSort) {
-        currentSort = savedSort;
-    }
-    if (savedPage) {
-        currentPage = parseInt(savedPage, 10);
-    }
-
-    // 정렬 옵션을 설정
+    // 초기 정렬 옵션 설정
     const [primarySort, sortOrder] = currentSort.split(',');
     document.getElementById('primarySort').value = primarySort;
     document.getElementById('sortOrder').value = sortOrder;
 
-    // 저장된 책 목록이 있으면 복원, 없으면 책 목록 로드
-    if (savedBooks) {
-        document.getElementById('book-list-items').innerHTML = savedBooks;
-
-    } else {
-        loadBooks(currentSort, 0);
-    }
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const viewReview = urlParams.get('viewReview');
-
-    console.log("viewReview parameter: ", viewReview); // 디버깅 메시지 추가
+    // 초기 페이지 로드
+    loadBooks(currentSort, currentPage);
 
     // 이벤트 위임 설정
     setupEventDelegation();
@@ -37,7 +19,7 @@ document.getElementById('load-more-btn').addEventListener('click', function() {
     loadMoreBooks();
 });
 
-function loadBooks(sort = 'publishedDate,desc', page = 0) {
+function loadBooks(sort = currentSort, page = currentPage) {
     const url = `/api/books/main?sort=${sort}&page=${page}`;
     console.log("Request URL:", url);
 
@@ -53,7 +35,6 @@ function loadBooks(sort = 'publishedDate,desc', page = 0) {
 
             if (page === 0) {
                 bookListItems.innerHTML = ""; // 기존 목록 초기화 (첫 페이지 로드 시)
-                currentPage = 0; // 페이지 번호 초기화
             }
 
             console.log("Loaded Data:", data.body.data.content);
@@ -72,11 +53,6 @@ function loadBooks(sort = 'publishedDate,desc', page = 0) {
                 `;
                 bookListItems.appendChild(bookItem);
             });
-
-            // 현재 상태를 localStorage에 저장
-            localStorage.setItem('currentSort', currentSort);
-            localStorage.setItem('currentPage', currentPage);
-            localStorage.setItem('loadedBooks', bookListItems.innerHTML);
         })
         .catch(error => console.error('Error loading books:', error));
 }
@@ -100,17 +76,11 @@ function changeSorting() {
     currentSort = `${primarySort},${sortOrder}`; // 현재 정렬 상태 업데이트
     currentPage = 0; // 페이지 번호 초기화
 
-    // 정렬 상태와 페이지 번호를 localStorage에 저장
-    localStorage.setItem('currentSort', currentSort);
-    localStorage.setItem('currentPage', currentPage);
-
     loadBooks(currentSort, 0); // 새로 정렬된 책 목록 로드
 }
 
 function loadMoreBooks() {
     currentPage++; // 페이지 번호 증가
-    // 페이지 번호를 localStorage에 저장
-    localStorage.setItem('currentPage', currentPage);
 
     loadBooks(currentSort, currentPage); // 기존 정렬 기준 유지하며 다음 페이지 로드
 }

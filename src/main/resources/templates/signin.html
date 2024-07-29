@@ -184,6 +184,7 @@
                 .then(response => response.text()) // HTML로 응답을 받음
                 .then(html => {
                     document.body.innerHTML = html;// 전체 body의 내용을 받은 HTML로 교체
+                    window.location.href = '/'; // "/"로 리다이렉트
                 })
                 .catch(error => console.error('Error:', error));
         });

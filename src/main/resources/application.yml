@@ -2,6 +2,13 @@ spring:
   application:
     name: 3runner-front
 
+  data:
+    redis:
+      host: 133.186.241.167
+      port: 6379
+      database: 11
+      password: "*N2vya7H@muDTwdNMR!"
+
   security:
     oauth2:
       client:
@@ -21,8 +28,8 @@ spring:
   servlet:
     multipart:
       enabled: true
-      max-file-size: 10MB
-      max-request-size: 10MB
+      max-file-size: 20MB
+      max-request-size: 20MB
 
   profiles:
     active: prod

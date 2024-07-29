@@ -1,18 +1,24 @@
 package com.nhnacademy.front.auth.adapter;
 
+import com.nhnacademy.front.auth.dto.request.DormantRequest;
+import com.nhnacademy.front.member.member.dto.response.DormantResponse;
+import com.nhnacademy.front.util.ApiResponse;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import com.nhnacademy.front.auth.config.LoginResponseConfig;
-import com.nhnacademy.front.auth.dto.request.DormantRequest;
-import com.nhnacademy.front.auth.dto.request.LoginRequest;
-import com.nhnacademy.front.auth.dto.response.LoginResponse;
-import com.nhnacademy.front.member.member.dto.response.DormantResponse;
-import com.nhnacademy.front.util.ApiResponse;
-@FeignClient(value = "dormant-api",url = "http://${feign.client.url}")
+/**
+ * @author 유지아
+ * 휴먼 관련 feignClient
+ */
+@FeignClient(value = "dormant-api", url = "${feign.client.url}")
 public interface DormantAdapter {
+	/**
+	 * 휴먼.
+	 *
+	 * @param email 휴면 계정의 이메일
+	 * @return 응답
+	 */
 	@PostMapping("/auth/dormant/resend")
 	ApiResponse<Void> resendDormant(@RequestBody String email);
 
