@@ -3,10 +3,15 @@ package com.nhnacademy.front.book.comment.controller.fegin;
 import com.nhnacademy.front.book.comment.dto.request.CreateCommentRequest;
 import com.nhnacademy.front.book.comment.dto.response.CommentResponse;
 import com.nhnacademy.front.util.ApiResponse;
-import jakarta.validation.Valid;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient(name = "CommentClient", url = "${feign.client.url}/bookstore")
 public interface CommentClient {
@@ -27,3 +32,4 @@ public interface CommentClient {
 	ApiResponse<Void> deleteComment(@PathVariable Long commentId,
 		@RequestHeader(value = "Member-Id", required = false) Long memberId);
 }
+

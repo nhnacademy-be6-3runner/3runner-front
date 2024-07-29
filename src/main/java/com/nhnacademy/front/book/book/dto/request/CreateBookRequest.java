@@ -3,12 +3,9 @@ package com.nhnacademy.front.book.book.dto.request;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.Builder;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.time.ZonedDateTime;
 import java.util.List;
+import lombok.Builder;
 
 /**
  * 책 생성 관련 레코드.

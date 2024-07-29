@@ -9,8 +9,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -24,7 +22,7 @@ public class MemberMessageServiceImpl implements MemberMessageService {
 
 	@Override
 	public Long readUnReadedMessage() {
-		return memberMessageControllerClient.readUnreadedMessage().getBody().getData();
+		return memberMessageControllerClient.readUnReadMessage().getBody().getData();
 	}
 
 	@Override

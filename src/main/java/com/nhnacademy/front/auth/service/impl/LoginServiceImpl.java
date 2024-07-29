@@ -24,13 +24,11 @@ public class LoginServiceImpl implements LoginService {
 	private final LogoutAdapter logoutAdapter;
 
 	public LoginResponse getLoginResponse(LoginRequest loginRequest) {
-		ApiResponse<LoginResponse> response = null;
 		try {
-			response = loginAdapter.login(loginRequest);
+			return loginAdapter.login(loginRequest).getBody().getData();
 		} catch (Exception e) {
 			throw new LoginException(e.getMessage());
 		}
-		return response.getBody().getData();
 	}
 
 	@Override

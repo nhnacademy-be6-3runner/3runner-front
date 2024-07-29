@@ -3,7 +3,6 @@ package com.nhnacademy.front.purchase.admin.service.impl;
 import com.nhnacademy.front.book.book.controller.feign.BookClient;
 import com.nhnacademy.front.book.book.dto.response.BookListResponse;
 import com.nhnacademy.front.book.categroy.dto.response.CategoryParentWithChildrenResponse;
-import com.nhnacademy.front.book.categroy.dto.response.CategoryResponse;
 import com.nhnacademy.front.purchase.admin.feign.CategoryControllerClient;
 import com.nhnacademy.front.purchase.admin.feign.CouponPolicyControllerClient;
 import com.nhnacademy.front.purchase.admin.service.AdminCouponPolicyService;
@@ -13,11 +12,10 @@ import com.nhnacademy.front.purchase.purchase.dto.coupon.request.CreateFixedCoup
 import com.nhnacademy.front.purchase.purchase.dto.coupon.request.CreateRatioCouponRequest;
 import com.nhnacademy.front.purchase.purchase.dto.coupon.response.ReadCouponTypeResponse;
 import com.nhnacademy.front.purchase.purchase.dto.coupon.response.ReadCouponUsageResponse;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @Service

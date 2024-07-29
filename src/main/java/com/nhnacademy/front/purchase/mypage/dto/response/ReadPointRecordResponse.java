@@ -2,8 +2,6 @@ package com.nhnacademy.front.purchase.mypage.dto.response;
 
 import lombok.Builder;
 
-import java.time.ZonedDateTime;
-
 /**
  * 포인트 레코드 반환 Dto.
  *

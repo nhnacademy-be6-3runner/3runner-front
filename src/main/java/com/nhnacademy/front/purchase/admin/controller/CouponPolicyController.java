@@ -1,8 +1,6 @@
 package com.nhnacademy.front.purchase.admin.controller;
 
 import com.nhnacademy.front.book.book.dto.response.BookListResponse;
-import com.nhnacademy.front.purchase.admin.feign.CategoryControllerClient;
-import com.nhnacademy.front.purchase.admin.feign.CouponPolicyControllerClient;
 import com.nhnacademy.front.purchase.admin.service.AdminCouponPolicyService;
 import com.nhnacademy.front.purchase.purchase.dto.coupon.request.CreateBookCouponRequest;
 import com.nhnacademy.front.purchase.purchase.dto.coupon.request.CreateCategoryCouponRequest;
@@ -14,7 +12,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequiredArgsConstructor
@@ -56,8 +57,7 @@ public class CouponPolicyController {
 
 	@PostMapping("/admin/coupons/usages/categories")
 	public String createCategoryUsages(@Valid @ModelAttribute CreateCategoryCouponRequest createCategoryCouponRequest,
-		BindingResult bindingResult,
-		Model model) {
+		BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			return "purchase/admin/coupon/usageForm";
 		}
@@ -68,8 +68,7 @@ public class CouponPolicyController {
 
 	@PostMapping("/admin/coupons/usages/books")
 	public String createBookUsages(@Valid @ModelAttribute CreateBookCouponRequest createBookCouponRequest,
-		BindingResult bindingResult,
-		Model model) {
+		BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			return "purchase/admin/coupon/usageForm";
 		}
@@ -80,8 +79,7 @@ public class CouponPolicyController {
 
 	@PostMapping("/admin/coupons/types/ratios")
 	public String createRatioTypes(@Valid @ModelAttribute CreateRatioCouponRequest createRatioCouponRequest,
-		BindingResult bindingResult,
-		Model model) {
+		BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			return "purchase/admin/coupon/types";
 		}
@@ -92,8 +90,7 @@ public class CouponPolicyController {
 
 	@PostMapping("/admin/coupons/types/fixes")
 	public String createFixedTypes(@ModelAttribute CreateFixedCouponRequest createFixedCouponRequest,
-		BindingResult bindingResult,
-		Model model) {
+		BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			return "purchase/admin/coupon/types";
 		}

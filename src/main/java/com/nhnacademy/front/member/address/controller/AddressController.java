@@ -22,11 +22,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class AddressController {
 	private final AddressControllerClient addressControllerClient;
 
-	@GetMapping("/member/address/creatForm")
-	public String registerForm() {
-		return "addresscreate";
-	}
-
 	@PostMapping("/member/address")
 	@ResponseBody
 	public Boolean createAddress(@RequestBody CreateAddressRequest createAddressRequest) {

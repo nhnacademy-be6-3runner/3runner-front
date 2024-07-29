@@ -10,7 +10,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cloud.client.actuator.HasFeatures;
 import org.springframework.stereotype.Component;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -26,7 +25,6 @@ import org.springframework.web.servlet.ModelAndView;
 @RequiredArgsConstructor
 public class CustomInterceptor implements HandlerInterceptor {
 
-	private final HasFeatures feignFeature;
 	private final JWTUtil jwtUtil;
 	private final TokenService tokenService;
 
@@ -98,7 +96,7 @@ public class CustomInterceptor implements HandlerInterceptor {
 
 	@Override
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
-		ModelAndView modelAndView) throws Exception {
+		ModelAndView modelAndView) {
 		TokenHolder.resetAccessToken();
 		TokenHolder.resetRefreshToken();
 		log.info("Interceptor, Access token 토큰 홀더 리셋");
