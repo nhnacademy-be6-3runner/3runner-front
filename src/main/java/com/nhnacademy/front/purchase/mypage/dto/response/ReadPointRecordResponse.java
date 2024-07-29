@@ -2,10 +2,8 @@ package com.nhnacademy.front.purchase.mypage.dto.response;
 
 import lombok.Builder;
 
-import java.time.ZonedDateTime;
-
 /**
- * 포인트 레코드 반환 Dto
+ * 포인트 레코드 반환 Dto.
  *
  * @param recordId 레코드아이디
  * @param usePoint 포인트사용 금액
@@ -14,8 +12,8 @@ import java.time.ZonedDateTime;
  */
 @Builder
 public record ReadPointRecordResponse(
-        Long recordId,
-        Long usePoint,
-        String createdAt,
-        String content) {
-    }
+	Long recordId,
+	Long usePoint,
+	String createdAt,
+	String content) {
+}

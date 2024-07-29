@@ -1,17 +1,16 @@
 package com.nhnacademy.front.book.book.dto.response;
 
-import java.time.ZonedDateTime;
-import java.util.List;
-
 import com.nhnacademy.front.book.categroy.dto.response.CategoryParentWithChildrenResponse;
 import com.nhnacademy.front.book.tag.dto.response.ReadTagByBookResponse;
-
+import java.time.ZonedDateTime;
+import java.util.List;
 import lombok.Builder;
 
 /**
  * book response form validate.
  *
  * @author 김병우
+ *
  * @param title                제목
  * @param description        설명
  * @param publishedDate        출판일

@@ -1,5 +1,8 @@
 package com.nhnacademy.front.refund.feign;
 
+import com.nhnacademy.front.refund.dto.request.CreateRefundRecordRedisRequest;
+import com.nhnacademy.front.util.ApiResponse;
+import jakarta.validation.Valid;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -8,12 +11,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.nhnacademy.front.refund.dto.request.CreateRefundRecordRedisRequest;
-import com.nhnacademy.front.util.ApiResponse;
-
-import jakarta.validation.Valid;
-
-@FeignClient(name = "refundRecordGuestControllerClient", url = "http://${feign.client.url}")
+@FeignClient(name = "refundRecordGuestControllerClient", url = "${feign.client.url}")
 public interface RefundRecordGuestControllerClient {
 	@PostMapping("/bookstore/refundRecord/guests/{orderNumber}/{purchaseBookId}")
 	ApiResponse<Long> createRefundRecordGuestRedis(

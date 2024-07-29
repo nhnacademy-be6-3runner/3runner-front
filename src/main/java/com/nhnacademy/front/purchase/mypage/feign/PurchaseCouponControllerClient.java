@@ -7,11 +7,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-
-@FeignClient(name = "PurchaseCouponControllerClient", url = "http://${feign.client.url}")
+@FeignClient(name = "PurchaseCouponControllerClient", url = "${feign.client.url}")
 public interface PurchaseCouponControllerClient {
-    @GetMapping("/bookstore/purchases/coupons")
-    ApiResponse<Page<ReadPurchaseCouponDetailResponse>> readPurchaseCoupons(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size);
+	@GetMapping("/bookstore/purchases/coupons")
+	ApiResponse<Page<ReadPurchaseCouponDetailResponse>> readPurchaseCoupons(
+		@RequestParam(defaultValue = "0") int page,
+		@RequestParam(defaultValue = "10") int size);
 }

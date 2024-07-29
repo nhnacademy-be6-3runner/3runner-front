@@ -1,23 +1,20 @@
 package com.nhnacademy.front.auth.config;
 
+import com.nhnacademy.front.threadlocal.TokenHolder;
+import feign.FeignException;
+import feign.Response;
+import feign.codec.DecodeException;
+import feign.codec.Decoder;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.cloud.openfeign.support.SpringDecoder;
 import org.springframework.context.annotation.Bean;
-
-import com.nhnacademy.front.threadlocal.TokenHolder;
-
-import feign.FeignException;
-import feign.Response;
-import feign.codec.DecodeException;
-import feign.codec.Decoder;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * Login 요청 Feign 관련 Decoder 설정
@@ -74,6 +71,7 @@ public class LoginResponseConfig {
 				}
 			}
 
+			assert customHeader != null;
 			TokenHolder.setAccessToken(customHeader.split(" ")[1]);
 
 			// 기본 디코더로 응답 처리

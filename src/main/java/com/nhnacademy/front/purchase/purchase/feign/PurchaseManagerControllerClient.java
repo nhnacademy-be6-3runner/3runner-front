@@ -1,5 +1,7 @@
 package com.nhnacademy.front.purchase.purchase.feign;
 
+import com.nhnacademy.front.purchase.purchase.dto.purchase.response.ReadPurchaseResponse;
+import com.nhnacademy.front.util.ApiResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -7,10 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.nhnacademy.front.purchase.purchase.dto.purchase.response.ReadPurchaseResponse;
-import com.nhnacademy.front.util.ApiResponse;
-
-@FeignClient(name = "purchaseManagerControllerClient", url = "http://${feign.client.url}")
+@FeignClient(name = "purchaseManagerControllerClient", url = "${feign.client.url}")
 public interface PurchaseManagerControllerClient {
 	@GetMapping("/bookstore/managers/purchases")
 	ApiResponse<Page<ReadPurchaseResponse>> readPurchases(

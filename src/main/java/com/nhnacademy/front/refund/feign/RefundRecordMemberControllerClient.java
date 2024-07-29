@@ -1,16 +1,14 @@
 package com.nhnacademy.front.refund.feign;
 
+import com.nhnacademy.front.util.ApiResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.nhnacademy.front.util.ApiResponse;
-
-@FeignClient(name = "refundRecordMemberControllerClient", url = "http://${feign.client.url}")
+@FeignClient(name = "refundRecordMemberControllerClient", url = "${feign.client.url}")
 public interface RefundRecordMemberControllerClient {
 
 	@PostMapping("/bookstore/refundRecord/members/{purchaseBookId}")

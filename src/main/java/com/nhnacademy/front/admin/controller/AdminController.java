@@ -9,7 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class AdminController {
 
 	/**
-	 * 관리자 메인 화면
+	 * 관리자 메인 화면.
+	 *
 	 * @return 관리자 메인 화면
 	 */
 	@GetMapping

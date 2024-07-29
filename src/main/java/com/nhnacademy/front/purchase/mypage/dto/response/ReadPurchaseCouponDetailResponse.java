@@ -5,7 +5,7 @@ import lombok.Builder;
 import java.time.ZonedDateTime;
 
 /**
- * 주무쿠폰Dto
+ * 주무쿠폰Dto.
  *
  * @param purchaseCouponId 주문쿠폰아이디
  * @param discountPrice 할인가격
@@ -15,15 +15,15 @@ import java.time.ZonedDateTime;
  */
 @Builder
 public record ReadPurchaseCouponDetailResponse(
-        Long purchaseCouponId,
-        int discountPrice,
-        String status,
-        Long purchaseId,
-        Long couponId,
-        String orderNumber,
-        ZonedDateTime createdAt,
-        String name,
-        String type,
-        String usage,
-        String code) {
-    }
+	Long purchaseCouponId,
+	int discountPrice,
+	String status,
+	Long purchaseId,
+	Long couponId,
+	String orderNumber,
+	ZonedDateTime createdAt,
+	String name,
+	String type,
+	String usage,
+	String code) {
+}

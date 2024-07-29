@@ -1,7 +1,15 @@
 package com.nhnacademy.front.util.security.config;
 
-import java.util.Arrays;
-
+import com.nhnacademy.front.auth.service.LoginService;
+import com.nhnacademy.front.token.service.TokenService;
+import com.nhnacademy.front.util.JWTUtil;
+import com.nhnacademy.front.util.security.CustomUserDetailService;
+import com.nhnacademy.front.util.security.filter.AlwaysAuthenticationFilter;
+import com.nhnacademy.front.util.security.filter.CustomAuthenticationFilter;
+import com.nhnacademy.front.util.security.provider.CustomAuthenticationProvider;
+import jakarta.servlet.http.HttpServletResponse;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,25 +23,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nhnacademy.front.auth.service.LoginService;
-import com.nhnacademy.front.token.service.TokenService;
-import com.nhnacademy.front.util.JWTUtil;
-import com.nhnacademy.front.util.security.CustomUserDetailService;
-import com.nhnacademy.front.util.security.filter.AlwaysAuthenticationFilter;
-import com.nhnacademy.front.util.security.filter.CustomAuthenticationFilter;
-import com.nhnacademy.front.util.security.provider.CustomAuthenticationProvider;
-
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
-
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
 	private final CustomUserDetailService userDetailsService;
-	private final ObjectMapper objectMapper;
 	private final JWTUtil jwtUtil;
 	private final LoginService loginService;
 	private final TokenService tokenService;
@@ -47,7 +42,7 @@ public class SecurityConfig {
 	public AuthenticationManager authenticationManager() {
 		CustomAuthenticationProvider customAuthenticationProvider = new CustomAuthenticationProvider(
 			userDetailsService, passwordEncoder());
-		return new ProviderManager(Arrays.asList(customAuthenticationProvider));
+		return new ProviderManager(List.of(customAuthenticationProvider));
 	}
 
 	@Bean
@@ -56,10 +51,6 @@ public class SecurityConfig {
 		http
 			.csrf(AbstractHttpConfigurer::disable)
 			.cors(AbstractHttpConfigurer::disable);
-		// http
-		// 	.formLogin(AbstractHttpConfigurer::disable);
-		// http
-		// 	.httpBasic(AbstractHttpConfigurer::disable);
 
 		http.authorizeHttpRequests(
 			(authorizeRequests) -> {
@@ -96,7 +87,7 @@ public class SecurityConfig {
 		);
 
 		http.addFilterAt(
-			new CustomAuthenticationFilter(authenticationManager(), objectMapper, loginService),
+			new CustomAuthenticationFilter(authenticationManager(), loginService),
 			UsernamePasswordAuthenticationFilter.class
 		);
 		http.addFilterAt(
@@ -106,15 +97,6 @@ public class SecurityConfig {
 		http
 			.sessionManagement(session -> session
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-
-		// http.addFilterBefore(new OncePerRequestFilter() {
-		// 	@Override
-		// 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-		// 		FilterChain filterChain) throws ServletException, IOException {
-		// 		request.getSession().invalidate(); // Invalidate any existing session
-		// 		filterChain.doFilter(request, response);
-		// 	}
-		// }, SecurityContextPersistenceFilter.class);
 
 		return http.build();
 	}

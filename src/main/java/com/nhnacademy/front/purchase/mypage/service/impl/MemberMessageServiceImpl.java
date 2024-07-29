@@ -9,25 +9,24 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class MemberMessageServiceImpl implements MemberMessageService {
-    private final MemberMessageControllerClient memberMessageControllerClient;
-    @Override
-    public Page<ReadMemberMessageResponse> readAllById(int page, int size) {
-        return memberMessageControllerClient.readAllById(page, size).getBody().getData();
-    }
+	private final MemberMessageControllerClient memberMessageControllerClient;
 
-    @Override
-    public Long readUnreadedMessage() {
-        return memberMessageControllerClient.readUnreadedMessage().getBody().getData();
-    }
+	@Override
+	public Page<ReadMemberMessageResponse> readAllById(int page, int size) {
+		return memberMessageControllerClient.readAllById(page, size).getBody().getData();
+	}
 
-    @Override
-    public Void updateMessage(UpdateMemberMessageRequest updateMemberMessageRequest) {
-        return memberMessageControllerClient.updateMessage(updateMemberMessageRequest).getBody().getData();
-    }
+	@Override
+	public Long readUnReadedMessage() {
+		return memberMessageControllerClient.readUnReadMessage().getBody().getData();
+	}
+
+	@Override
+	public Void updateMessage(UpdateMemberMessageRequest updateMemberMessageRequest) {
+		return memberMessageControllerClient.updateMessage(updateMemberMessageRequest).getBody().getData();
+	}
 }

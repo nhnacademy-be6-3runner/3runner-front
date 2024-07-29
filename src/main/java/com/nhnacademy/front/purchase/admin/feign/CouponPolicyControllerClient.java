@@ -12,35 +12,35 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
-@FeignClient(name = "CouponPolicyControllerClient", url = "http://${feign.client.url}" , configuration = FeignConfiguration.class)
+@FeignClient(name = "CouponPolicyControllerClient", url = "${feign.client.url}", configuration = FeignConfiguration.class)
 public interface CouponPolicyControllerClient {
-    @PostMapping("/coupon/types/fixes")
-    ApiResponse<Long> createFixedCouponPolicy(@RequestBody CreateFixedCouponRequest createFixedCouponRequest);
+	@PostMapping("/coupon/types/fixes")
+	ApiResponse<Long> createFixedCouponPolicy(@RequestBody CreateFixedCouponRequest createFixedCouponRequest);
 
-    @PostMapping("/coupon/types/ratios")
-    ApiResponse<Long> createRatioCouponPolicy(@RequestBody CreateRatioCouponRequest createRatioCouponRequest);
+	@PostMapping("/coupon/types/ratios")
+	ApiResponse<Long> createRatioCouponPolicy(@RequestBody CreateRatioCouponRequest createRatioCouponRequest);
 
-    @PostMapping("/coupon/usages/categories")
-    ApiResponse<Long> createCategoryCouponPolicy(@RequestBody CreateCategoryCouponRequest createCategoryCouponRequest);
+	@PostMapping("/coupon/usages/categories")
+	ApiResponse<Long> createCategoryCouponPolicy(@RequestBody CreateCategoryCouponRequest createCategoryCouponRequest);
 
-    @PostMapping("/coupon/usages/books")
-    ApiResponse<Long> createBookCouponPolicy(@RequestBody CreateBookCouponRequest createBookCouponRequest);
+	@PostMapping("/coupon/usages/books")
+	ApiResponse<Long> createBookCouponPolicy(@RequestBody CreateBookCouponRequest createBookCouponRequest);
 
-    @GetMapping("/coupon/types")
-    ApiResponse<List<ReadCouponTypeResponse>> readAllTypes();
+	@GetMapping("/coupon/types")
+	ApiResponse<List<ReadCouponTypeResponse>> readAllTypes();
 
-    @GetMapping("/coupon/types/fixes/{couponTypeId}")
-    ApiResponse<ReadFixedCouponResponse> readFixedType(@PathVariable Long couponTypeId);
+	@GetMapping("/coupon/types/fixes/{couponTypeId}")
+	ApiResponse<ReadFixedCouponResponse> readFixedType(@PathVariable Long couponTypeId);
 
-    @GetMapping("/coupon/types/ratios/{couponTypeId}")
-    ApiResponse<ReadRatioCouponResponse> readRatioType(@PathVariable Long couponTypeId);
+	@GetMapping("/coupon/types/ratios/{couponTypeId}")
+	ApiResponse<ReadRatioCouponResponse> readRatioType(@PathVariable Long couponTypeId);
 
-    @GetMapping("/coupon/usages")
-    ApiResponse<List<ReadCouponUsageResponse>> readAllUsages();
+	@GetMapping("/coupon/usages")
+	ApiResponse<List<ReadCouponUsageResponse>> readAllUsages();
 
-    @GetMapping("/coupon/usages/categories/{couponTypeId}")
-    ApiResponse<List<Long>> readCategoryUsages(@PathVariable Long couponTypeId);
+	@GetMapping("/coupon/usages/categories/{couponTypeId}")
+	ApiResponse<List<Long>> readCategoryUsages(@PathVariable Long couponTypeId);
 
-    @GetMapping("/coupon/usages/books/{couponTypeId}")
-    ApiResponse<List<Long>> readBookUsages(@PathVariable Long couponTypeId);
+	@GetMapping("/coupon/usages/books/{couponTypeId}")
+	ApiResponse<List<Long>> readBookUsages(@PathVariable Long couponTypeId);
 }
