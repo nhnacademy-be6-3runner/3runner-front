@@ -37,8 +37,9 @@ document.addEventListener('DOMContentLoaded', function() {
             deleteAccountBtn.onclick = function () {
                 fetch('/member', {
                     method: 'DELETE'
-                }).then(response => {
-                        if (response.ok) {
+                }).then(response => response.body)
+                    .then(data => {
+                        if (data) {
                             alert('회원 탈퇴 성공');
                             window.location.href = '/';
                         } else {
@@ -83,8 +84,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     },
                     body: json // 요청 본문에 JSON 데이터 첨부
                 })
-                    .then(response => {
-                        if (response) {
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data) {
                             alert('정보가 업데이트 되었습니다.');
                             fetchUserProfile(); // 페이지 새로고침
                         } else {
@@ -130,8 +132,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     },
                     body: json
                 })
-                    .then(response => {
-                        if (response.ok) {
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data) {
                             alert('저장 성공');
                             addressModal.style.display = 'none';
                             fetchUserProfile(); // 업데이트된 정보를 다시 가져옴
@@ -187,9 +190,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({ password: currentPassword })
-                })
-                    .then(response => {
-                        if (response.ok) {
+                }).then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                        if (data) {
+                            console.log("1");
                             errorMessage1.style.display = 'none';
                             newPasswordInput.disabled = false;
                             confirmNewPasswordInput.disabled = false;
@@ -226,8 +231,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     },
                     body: JSON.stringify({ password: newPassword })
                 })
-                    .then(response => {
-                        if (response.ok) {
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data) {
                             alert('비밀번호가 성공적으로 변경되었습니다.');
                             changePasswordModal.style.display = 'none';
                         } else {
@@ -242,9 +248,9 @@ document.addEventListener('DOMContentLoaded', function() {
             if (confirm('Are you sure you want to delete this address?')) {
                 fetch('/member/address/' + addressId, {
                     method: 'DELETE',
-                })
-                    .then(response => {
-                        if (response) {
+                }).then(response => response.json())
+                    .then(data => {
+                        if (data) {
                             alert('Address deleted successfully');
                             fetchUserProfile();
                         } else {

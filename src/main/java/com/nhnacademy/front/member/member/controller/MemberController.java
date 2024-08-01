@@ -73,88 +73,12 @@ public class MemberController {
 		return "memberdetail";
 	}
 
-	@DeleteMapping("/member")
-	public Boolean deleteMember(HttpServletRequest request, HttpServletResponse response) {
-		ApiResponse<Void> result = memberControllerClient.deleteMember();
-
-		try {
-			loginService.logout();
-			for (Cookie cookie : request.getCookies()) {
-				if (cookie.getName().equals("Access")) {
-					cookie.setMaxAge(0);
-					response.addCookie(cookie);
-				}
-				if (cookie.getName().equals("Refresh")) {
-					cookie.setMaxAge(0);
-					response.addCookie(cookie);
-				}
-			}
-		} catch (Exception e) {
-			return false;
-		}
-		return result.getHeader().isSuccessful();
-	}
-
-	@PutMapping("/member")
-	public Boolean updateMember(@Valid @RequestBody UpdateMemberRequest updateMemberRequest) {
-		ApiResponse<UpdateMemberResponse> response = memberControllerClient.updateMembers(updateMemberRequest);
-		return response.getHeader().isSuccessful();
-	}
-
-	@ResponseBody
-	@GetMapping("/member/email")
-	public ApiResponse<Boolean> checkEmailExists(@RequestParam String email) {
-		return memberControllerClient.emailExists(email);
-	}
-
-	@PutMapping("/member/password")
-	public Boolean updatePassword(@RequestBody UpdatePasswordRequest updatePasswordRequest) {
-		ApiResponse<Void> response = memberControllerClient.updatePassword(updatePasswordRequest);
-		return response.getHeader().isSuccessful();
-	}
-
-	@PostMapping("/member/password")
-	public Boolean isPasswordMatch(@RequestBody PasswordCorrectRequest passwordCorrectRequest) {
-		ApiResponse<Void> response = memberControllerClient.isPasswordMatch(passwordCorrectRequest);
-		return response.getHeader().isSuccessful();
-	}
 
 	@GetMapping("/member/dormant")
 	public String dormantForm() {
 		return "dormant";
 	}
 
-	@GetMapping("/member/dormant/resend")
-	public boolean resendDormant(HttpSession session) {
-		String email = session.getAttribute("email").toString();
-		ApiResponse<Void> response = dormantAdapter.resendDormant(email);
-		return response.getHeader().isSuccessful();
-	}
 
-	@PostMapping("/member/dormant")
-	public boolean dormant(@RequestBody DormantCodeRequest code, HttpSession session,
-		HttpServletResponse servletResponse) {
-		ApiResponse<DormantResponse> response = dormantAdapter.dormantCheck(
-			DormantRequest.builder().email(session.getAttribute("email").toString()).code(code.code()).build());
-		DormantResponse dormantResponse = response.getBody().getData();
-		if (response.getHeader().isSuccessful()) {
-			String access = dormantResponse.access();
-
-			String refresh = dormantResponse.refresh();
-
-			Cookie cookie1 = new Cookie("Access", access);
-			cookie1.setPath("/");
-			servletResponse.addCookie(cookie1);
-			Cookie cookie2 = new Cookie("Refresh", refresh);
-			cookie2.setPath("/");
-			servletResponse.addCookie(cookie2);
-
-			session.removeAttribute("email");
-			return true;
-		} else {
-			return false;
-		}
-
-	}
 }
 
