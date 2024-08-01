@@ -16,7 +16,7 @@ spring:
           payco:
             client-id: 3RDUR8qJyORVrsI2PdkInS1
             client-secret: yoA1FPvf5ievEnC7LkzJDp1x
-            redirect-uri: http://3runner.shop:3000/oauth2/callback/payco
+            redirect-uri: http://3runner.shop/oauth2/callback/payco
             authorization-grant-type: authorization_code
             scope: idNo, email, mobile, name
         provider:
